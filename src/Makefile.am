@@ -282,8 +282,9 @@ plugins_common_param_validation_libparam_validation_la_SOURCES = \
 #  -d : produce a header
 #  -v : verbose
 #  -Wno-yacc : disable POSIX Yacc incompatibilities warnings
+#  -Wall : Enable all other warnings
 AM_YFLAGS = \
-	-t -d -v -Wno-yacc
+	-t -d -v -Wno-yacc -Wall
 
 plugins_ctf_common_metadata_libctf_parser_la_SOURCES = \
 	plugins/ctf/common/src/metadata/tsdl/lexer.lpp \
