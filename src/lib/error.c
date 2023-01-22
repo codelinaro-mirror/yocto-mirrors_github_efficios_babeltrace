@@ -315,8 +315,10 @@ struct bt_error_cause_component_actor *create_error_cause_component_actor(
 	goto end;
 
 error:
-	destroy_error_cause(&cause->base);
-	cause = NULL;
+	if (cause) {
+		destroy_error_cause(&cause->base);
+		cause = NULL;
+	}
 
 end:
 	return cause;
@@ -356,8 +358,10 @@ create_error_cause_component_class_actor(struct bt_component_class *comp_cls,
 	goto end;
 
 error:
-	destroy_error_cause(&cause->base);
-	cause = NULL;
+	if (cause) {
+		destroy_error_cause(&cause->base);
+		cause = NULL;
+	}
 
 end:
 	return cause;
@@ -422,8 +426,10 @@ create_error_cause_message_iterator_actor(struct bt_message_iterator *iter,
 	goto end;
 
 error:
-	destroy_error_cause(&cause->base);
-	cause = NULL;
+	if (cause) {
+		destroy_error_cause(&cause->base);
+		cause = NULL;
+	}
 
 end:
 	return cause;
@@ -538,7 +544,10 @@ int bt_error_append_cause_from_component(
 	cause = NULL;
 
 end:
-	destroy_error_cause(&cause->base);
+	if (cause) {
+		destroy_error_cause(&cause->base);
+	}
+
 	return status;
 }
 
@@ -572,7 +581,10 @@ int bt_error_append_cause_from_component_class(
 	cause = NULL;
 
 end:
-	destroy_error_cause(&cause->base);
+	if (cause) {
+		destroy_error_cause(&cause->base);
+	}
+
 	return status;
 }
 
@@ -605,7 +617,10 @@ int bt_error_append_cause_from_message_iterator(
 	cause = NULL;
 
 end:
-	destroy_error_cause(&cause->base);
+	if (cause) {
+		destroy_error_cause(&cause->base);
+	}
+
 	return status;
 }
 
