@@ -23,7 +23,7 @@
 
 import sys
 import os
-import distutils.sysconfig
+import sysconfig
 
 from distutils.core import setup, Extension
 
@@ -37,7 +37,7 @@ following command to your .bashrc/.zshrc:
 --------------------------------------------------------------------------------
 """
 
-original_get_config_vars = distutils.sysconfig.get_config_vars
+original_get_config_vars = sysconfig.get_config_vars
 
 
 def get_cflags():
@@ -100,7 +100,7 @@ def our_get_config_vars(*args):
     return subset_config_vars
 
 
-distutils.sysconfig.get_config_vars = our_get_config_vars
+sysconfig.get_config_vars = our_get_config_vars
 
 
 def main():
