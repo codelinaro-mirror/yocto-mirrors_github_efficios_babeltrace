@@ -610,7 +610,7 @@ AS_IF([test "x$enable_api_doc" = "xyes"],
     DX_XML_FEATURE(OFF)
     DX_PDF_FEATURE(OFF)
     DX_PS_FEATURE(OFF)
-    DX_INIT_DOXYGEN([Babeltrace 2], [$(builddir)/Doxyfile], [output])
+    DX_INIT_DOXYGEN([babeltrace2], [$(builddir)/Doxyfile], [output])
     AS_IF([test -z "$DX_DOXYGEN"],
 	  [AC_MSG_ERROR([You need doxygen to enable the API documentation])]
     )
