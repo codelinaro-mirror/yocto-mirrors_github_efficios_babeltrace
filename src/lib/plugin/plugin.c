@@ -203,7 +203,7 @@ enum bt_plugin_find_all_from_file_status bt_plugin_find_all_from_file(
 
 	BT_ASSERT_PRE_NO_ERROR();
 	BT_ASSERT_PRE_NON_NULL(path, "Path");
-	BT_ASSERT_PRE_NON_NULL(path, "Plugin set (output)");
+	BT_ASSERT_PRE_NON_NULL(plugin_set_out, "Plugin set (output)");
 	BT_LOGI("Creating plugins from file: path=\"%s\"", path);
 
 	/* Try shared object plugins */
