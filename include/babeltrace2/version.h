@@ -37,8 +37,8 @@ extern "C" {
 @brief
     Library version getters.
 
-This module contains functions to get information about the library's
-version:
+This API offers functions to get information about the
+library's version:
 
 <dl>
   <dt>Major version</dt>
