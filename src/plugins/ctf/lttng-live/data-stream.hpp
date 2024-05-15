@@ -21,9 +21,9 @@ namespace live {
 
 struct CtfLiveMedium : Medium
 {
-    CtfLiveMedium(lttng_live_stream_iterator& liveStreamIter) :
-        _mLogger {liveStreamIter.logger, "PLUGIN/SRC.CTF.LTTNG-LIVE/CTF-LIVE-MEDIUM"},
-        _mLiveStreamIter(liveStreamIter)
+    CtfLiveMedium(lttng_live_stream_iterator& liveStreamIter)
+        : _mLogger {liveStreamIter.logger, "PLUGIN/SRC.CTF.LTTNG-LIVE/CTF-LIVE-MEDIUM"},
+          _mLiveStreamIter(liveStreamIter)
     {
     }
 

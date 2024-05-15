@@ -67,8 +67,9 @@ struct CommonClockClassSpec<const bt_clock_class> final
 class ClockOffset final
 {
 public:
-    explicit ClockOffset(const std::int64_t seconds, const std::uint64_t cycles) noexcept :
-        _mSeconds {seconds}, _mCycles {cycles}
+    explicit ClockOffset(const std::int64_t seconds, const std::uint64_t cycles) noexcept
+        : _mSeconds {seconds},
+          _mCycles {cycles}
     {
     }
 
@@ -100,13 +101,14 @@ public:
     using Shared = SharedObject<CommonClockClass, LibObjT, internal::ClockClassRefFuncs>;
     using UserAttributes = internal::DepUserAttrs<LibObjT>;
 
-    explicit CommonClockClass(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit CommonClockClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonClockClass(const CommonClockClass<OtherLibObjT> clkClass) noexcept :
-        _ThisBorrowedObject {clkClass}
+    CommonClockClass(const CommonClockClass<OtherLibObjT> clkClass) noexcept
+        : _ThisBorrowedObject {clkClass}
     {
     }
 
@@ -394,7 +396,8 @@ struct TypeDescr<ConstClockClass> : public ClockClassTypeDescr
 class ClockOriginView final
 {
 public:
-    explicit ClockOriginView(const ConstClockClass clockClass) noexcept : _mClkCls {clockClass}
+    explicit ClockOriginView(const ConstClockClass clockClass) noexcept
+        : _mClkCls {clockClass}
     {
     }
 

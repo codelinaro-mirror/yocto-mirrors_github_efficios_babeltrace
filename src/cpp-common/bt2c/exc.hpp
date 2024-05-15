@@ -31,7 +31,8 @@ namespace bt2c {
 class End : public std::exception
 {
 public:
-    explicit End() noexcept : std::exception {}
+    explicit End() noexcept
+        : std::exception {}
     {
     }
 };
@@ -40,7 +41,8 @@ public:
 class Error : public std::runtime_error
 {
 public:
-    explicit Error(std::string msg = "Error") : std::runtime_error {std::move(msg)}
+    explicit Error(std::string msg = "Error")
+        : std::runtime_error {std::move(msg)}
     {
     }
 };
@@ -49,7 +51,8 @@ public:
 class OverflowError : public Error
 {
 public:
-    explicit OverflowError() noexcept : Error {"Overflow error"}
+    explicit OverflowError() noexcept
+        : Error {"Overflow error"}
     {
     }
 };
@@ -58,7 +61,8 @@ public:
 class MemoryError : public std::bad_alloc
 {
 public:
-    explicit MemoryError() noexcept : std::bad_alloc {}
+    explicit MemoryError() noexcept
+        : std::bad_alloc {}
     {
     }
 };
@@ -67,7 +71,8 @@ public:
 class TryAgain : public std::exception
 {
 public:
-    explicit TryAgain() noexcept : std::exception {}
+    explicit TryAgain() noexcept
+        : std::exception {}
     {
     }
 };
@@ -76,7 +81,8 @@ public:
 class NoSuchFileOrDirectoryError : public Error
 {
 public:
-    explicit NoSuchFileOrDirectoryError() noexcept : Error {"No such file or directory"}
+    explicit NoSuchFileOrDirectoryError() noexcept
+        : Error {"No such file or directory"}
     {
     }
 };

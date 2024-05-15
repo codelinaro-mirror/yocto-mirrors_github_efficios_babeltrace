@@ -25,8 +25,8 @@ struct ctf_scanner_scope
 
 struct ctf_scanner
 {
-    explicit ctf_scanner(const bt2c::Logger& parentLogger) :
-        logger {parentLogger, "PLUGIN/CTF/META/PARSER"}
+    explicit ctf_scanner(const bt2c::Logger& parentLogger)
+        : logger {parentLogger, "PLUGIN/CTF/META/PARSER"}
     {
     }
 

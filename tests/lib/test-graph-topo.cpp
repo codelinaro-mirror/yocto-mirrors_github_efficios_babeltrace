@@ -102,8 +102,8 @@ class TestSourceMsgIter final : public bt2::UserMessageIterator<TestSourceMsgIte
 public:
     explicit TestSourceMsgIter(const bt2::SelfMessageIterator self,
                                const bt2::SelfMessageIteratorConfiguration,
-                               const bt2::SelfComponentOutputPort) :
-        bt2::UserMessageIterator<TestSourceMsgIter, TestSource> {self, "TEST-SRC-MSG-ITER"}
+                               const bt2::SelfComponentOutputPort)
+        : bt2::UserMessageIterator<TestSourceMsgIter, TestSource> {self, "TEST-SRC-MSG-ITER"}
     {
     }
 
@@ -118,8 +118,8 @@ class TestSource final : public bt2::UserSourceComponent<TestSource, TestSourceM
 public:
     static constexpr const char *name = "test-source";
 
-    explicit TestSource(const bt2::SelfSourceComponent selfComp, bt2::ConstMapValue, void *) :
-        bt2::UserSourceComponent<TestSource, TestSourceMsgIter> {selfComp, "TEST-SRC"}
+    explicit TestSource(const bt2::SelfSourceComponent selfComp, bt2::ConstMapValue, void *)
+        : bt2::UserSourceComponent<TestSource, TestSourceMsgIter> {selfComp, "TEST-SRC"}
     {
         this->_addOutputPort("out");
     }
@@ -149,8 +149,8 @@ class TestSink final : public bt2::UserSinkComponent<TestSink>
 public:
     static constexpr const char *name = "test-sink";
 
-    explicit TestSink(const bt2::SelfSinkComponent selfComp, bt2::ConstMapValue, void *) :
-        bt2::UserSinkComponent<TestSink> {selfComp, "TEST-SINK"}
+    explicit TestSink(const bt2::SelfSinkComponent selfComp, bt2::ConstMapValue, void *)
+        : bt2::UserSinkComponent<TestSink> {selfComp, "TEST-SINK"}
     {
         this->_addInputPort("in");
     }

@@ -41,9 +41,10 @@ class RunInSourceMsgIter final : public bt2::UserMessageIterator<RunInSourceMsgI
 public:
     explicit RunInSourceMsgIter(const bt2::SelfMessageIterator self,
                                 bt2::SelfMessageIteratorConfiguration,
-                                const bt2::SelfComponentOutputPort port) :
-        bt2::UserMessageIterator<RunInSourceMsgIter, RunInSource> {self, "RUN-IN-SRC-MSG-ITER"},
-        _mRunIn {&port.data<RunIn>()}, _mSelf {self}
+                                const bt2::SelfComponentOutputPort port)
+        : bt2::UserMessageIterator<RunInSourceMsgIter, RunInSource> {self, "RUN-IN-SRC-MSG-ITER"},
+          _mRunIn {&port.data<RunIn>()},
+          _mSelf {self}
     {
         _mRunIn->onMsgIterInit(self);
     }
@@ -65,10 +66,10 @@ public:
     static constexpr auto name = "run-in-src";
 
     explicit RunInSource(const bt2::SelfSourceComponent self, bt2::ConstMapValue,
-                         RunIn * const runIn) :
-        bt2::UserSourceComponent<RunInSource, RunInSourceMsgIter, RunIn, RunIn> {self,
-                                                                                 "RUN-IN-SRC"},
-        _mRunIn {runIn}
+                         RunIn * const runIn)
+        : bt2::UserSourceComponent<RunInSource, RunInSourceMsgIter, RunIn, RunIn> {self,
+                                                                                   "RUN-IN-SRC"},
+          _mRunIn {runIn}
     {
         this->_addOutputPort("out", *runIn);
         _mRunIn->onCompInit(self);

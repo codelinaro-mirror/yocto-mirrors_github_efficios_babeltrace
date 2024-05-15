@@ -24,7 +24,8 @@ class Error : public std::exception
     friend class Iter;
 
 protected:
-    explicit Error(const argpar_error& error) noexcept : _mError {&error}
+    explicit Error(const argpar_error& error) noexcept
+        : _mError {&error}
 
     {
     }
@@ -54,7 +55,8 @@ class UnknownOptError final : public Error
     friend class Iter;
 
 private:
-    explicit UnknownOptError(const argpar_error& error) noexcept : Error {error}
+    explicit UnknownOptError(const argpar_error& error) noexcept
+        : Error {error}
     {
     }
 
@@ -72,8 +74,9 @@ class OptArgErrorDescr final
     friend class OptArgError;
 
 private:
-    explicit OptArgErrorDescr(const argpar_opt_descr_t& descr, const bool isShort) noexcept :
-        _mDescr {&descr}, _mIsShort {isShort}
+    explicit OptArgErrorDescr(const argpar_opt_descr_t& descr, const bool isShort) noexcept
+        : _mDescr {&descr},
+          _mIsShort {isShort}
     {
     }
 
@@ -96,7 +99,8 @@ private:
 class OptArgError : public Error
 {
 protected:
-    explicit OptArgError(const argpar_error& error) : Error {error}
+    explicit OptArgError(const argpar_error& error)
+        : Error {error}
     {
     }
 
@@ -116,7 +120,8 @@ class MissingOptArgumentError final : public OptArgError
     friend class Iter;
 
 private:
-    explicit MissingOptArgumentError(const argpar_error& error) noexcept : OptArgError {error}
+    explicit MissingOptArgumentError(const argpar_error& error) noexcept
+        : OptArgError {error}
     {
     }
 };
@@ -127,7 +132,8 @@ class UnexpectedOptArgumentError final : public OptArgError
     friend class Iter;
 
 private:
-    explicit UnexpectedOptArgumentError(const argpar_error& error) noexcept : OptArgError {error}
+    explicit UnexpectedOptArgumentError(const argpar_error& error) noexcept
+        : OptArgError {error}
     {
     }
 };
@@ -162,7 +168,8 @@ public:
     };
 
 protected:
-    explicit Item(internal::ArgparItemUP item) : _mItem {std::move(item)}
+    explicit Item(internal::ArgparItemUP item)
+        : _mItem {std::move(item)}
     {
     }
 
@@ -194,7 +201,8 @@ namespace internal {
 class ItemView
 {
 protected:
-    explicit ItemView(const argpar_item_t& item) : _mItem {&item}
+    explicit ItemView(const argpar_item_t& item)
+        : _mItem {&item}
     {
     }
 
@@ -208,7 +216,8 @@ class OptItemView final : private internal::ItemView
     friend class Item;
 
 private:
-    explicit OptItemView(const argpar_item_t& item) : internal::ItemView {item}
+    explicit OptItemView(const argpar_item_t& item)
+        : internal::ItemView {item}
     {
     }
 
@@ -234,7 +243,8 @@ class NonOptItemView final : public internal::ItemView
     friend class Item;
 
 private:
-    explicit NonOptItemView(const argpar_item_t& item) : internal::ItemView {item}
+    explicit NonOptItemView(const argpar_item_t& item)
+        : internal::ItemView {item}
     {
     }
 
@@ -270,14 +280,14 @@ class Iter final
 
 public:
     explicit Iter(const unsigned int argc, const char * const * const argv,
-                  const argpar_opt_descr_t * const descrs) :
-        _mIter {[&] {
-            if (const auto iter = argpar_iter_create(argc, argv, descrs)) {
-                return iter;
-            }
+                  const argpar_opt_descr_t * const descrs)
+        : _mIter {[&] {
+              if (const auto iter = argpar_iter_create(argc, argv, descrs)) {
+                  return iter;
+              }
 
-            throw std::bad_alloc {};
-        }()}
+              throw std::bad_alloc {};
+          }()}
     {
     }
 

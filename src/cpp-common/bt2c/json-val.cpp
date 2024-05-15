@@ -14,7 +14,9 @@
 
 namespace bt2c {
 
-JsonVal::JsonVal(const Type type, TextLoc&& loc) noexcept : _mType {type}, _mLoc {std::move(loc)}
+JsonVal::JsonVal(const Type type, TextLoc&& loc) noexcept
+    : _mType {type},
+      _mLoc {std::move(loc)}
 {
 }
 
@@ -71,7 +73,8 @@ void JsonVal::accept(JsonValVisitor& visitor) const
     this->_accept(visitor);
 }
 
-JsonNullVal::JsonNullVal(TextLoc loc) noexcept : JsonVal {Type::Null, std::move(loc)}
+JsonNullVal::JsonNullVal(TextLoc loc) noexcept
+    : JsonVal {Type::Null, std::move(loc)}
 {
 }
 
@@ -106,8 +109,8 @@ bool valsNotNull(const ContainerT& vals, GetValueFuncT&& getValueFunc)
 
 #endif /* BT_DEBUG_MODE */
 
-JsonArrayVal::JsonArrayVal(Container&& vals, TextLoc loc) :
-    JsonCompoundVal {std::move(vals), std::move(loc)}
+JsonArrayVal::JsonArrayVal(Container&& vals, TextLoc loc)
+    : JsonCompoundVal {std::move(vals), std::move(loc)}
 {
 #ifdef BT_DEBUG_MODE
     BT_ASSERT_DBG(valsNotNull(_mVals, [](const auto& elem) -> const JsonVal::UP& {
@@ -121,8 +124,8 @@ void JsonArrayVal::_accept(JsonValVisitor& visitor) const
     visitor.visit(*this);
 }
 
-JsonObjVal::JsonObjVal(Container&& vals, TextLoc loc) :
-    JsonCompoundVal {std::move(vals), std::move(loc)}
+JsonObjVal::JsonObjVal(Container&& vals, TextLoc loc)
+    : JsonCompoundVal {std::move(vals), std::move(loc)}
 {
 #ifdef BT_DEBUG_MODE
     BT_ASSERT_DBG(valsNotNull(_mVals, [](const auto& elem) -> const JsonVal::UP& {

@@ -481,8 +481,8 @@ struct ctf_visitor_generate_ir
 {
     using UP = std::unique_ptr<ctf_visitor_generate_ir>;
 
-    explicit ctf_visitor_generate_ir(const bt2c::Logger& parentLogger) :
-        logger {parentLogger, "PLUGIN/CTF/VISITOR-GENERATE-IR"}
+    explicit ctf_visitor_generate_ir(const bt2c::Logger& parentLogger)
+        : logger {parentLogger, "PLUGIN/CTF/VISITOR-GENERATE-IR"}
     {
     }
 

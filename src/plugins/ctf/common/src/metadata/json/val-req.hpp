@@ -28,8 +28,8 @@ template <typename JsonIntValReqT>
 class Ctf2JsonIntRangeValReq final : public bt2c::JsonArrayValReq
 {
 public:
-    explicit Ctf2JsonIntRangeValReq(const bt2c::Logger& parentLogger) :
-        bt2c::JsonArrayValReq {2, JsonIntValReqT::shared(parentLogger), parentLogger}
+    explicit Ctf2JsonIntRangeValReq(const bt2c::Logger& parentLogger)
+        : bt2c::JsonArrayValReq {2, JsonIntValReqT::shared(parentLogger), parentLogger}
     {
     }
 
@@ -124,10 +124,10 @@ template <typename JsonIntValReqT>
 class Ctf2JsonIntRangeSetValReqBase final : public bt2c::JsonArrayValReq
 {
 public:
-    explicit Ctf2JsonIntRangeSetValReqBase(const bt2c::Logger& parentLogger) :
-        bt2c::JsonArrayValReq {1, std::nullopt,
-                               Ctf2JsonIntRangeValReq<JsonIntValReqT>::shared(parentLogger),
-                               parentLogger}
+    explicit Ctf2JsonIntRangeSetValReqBase(const bt2c::Logger& parentLogger)
+        : bt2c::JsonArrayValReq {1, std::nullopt,
+                                 Ctf2JsonIntRangeValReq<JsonIntValReqT>::shared(parentLogger),
+                                 parentLogger}
     {
     }
 

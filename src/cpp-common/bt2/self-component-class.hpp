@@ -18,23 +18,23 @@ namespace bt2 {
 class SelfComponentClass final : public BorrowedObject<bt_self_component_class>
 {
 public:
-    explicit SelfComponentClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit SelfComponentClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
-    explicit SelfComponentClass(bt_self_component_class_source * const libObjPtr) noexcept :
-        _ThisBorrowedObject {bt_self_component_class_source_as_self_component_class(libObjPtr)}
+    explicit SelfComponentClass(bt_self_component_class_source * const libObjPtr) noexcept
+        : _ThisBorrowedObject {bt_self_component_class_source_as_self_component_class(libObjPtr)}
     {
     }
 
-    explicit SelfComponentClass(bt_self_component_class_filter * const libObjPtr) noexcept :
-        _ThisBorrowedObject {bt_self_component_class_filter_as_self_component_class(libObjPtr)}
+    explicit SelfComponentClass(bt_self_component_class_filter * const libObjPtr) noexcept
+        : _ThisBorrowedObject {bt_self_component_class_filter_as_self_component_class(libObjPtr)}
     {
     }
 
-    explicit SelfComponentClass(bt_self_component_class_sink * const libObjPtr) noexcept :
-        _ThisBorrowedObject {bt_self_component_class_sink_as_self_component_class(libObjPtr)}
+    explicit SelfComponentClass(bt_self_component_class_sink * const libObjPtr) noexcept
+        : _ThisBorrowedObject {bt_self_component_class_sink_as_self_component_class(libObjPtr)}
     {
     }
 

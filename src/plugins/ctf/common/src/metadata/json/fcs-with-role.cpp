@@ -18,8 +18,9 @@ namespace {
 class Finder final : public ConstFcVisitor
 {
 public:
-    explicit Finder(const UIntFieldRoles& roles, const bool withMetadataStreamUuidRole) :
-        _mRoles {&roles}, _mWithMetadataStreamUuidRole {withMetadataStreamUuidRole}
+    explicit Finder(const UIntFieldRoles& roles, const bool withMetadataStreamUuidRole)
+        : _mRoles {&roles},
+          _mWithMetadataStreamUuidRole {withMetadataStreamUuidRole}
     {
     }
 

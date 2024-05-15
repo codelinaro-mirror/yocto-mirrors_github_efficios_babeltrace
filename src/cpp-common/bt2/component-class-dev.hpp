@@ -93,8 +93,9 @@ protected:
     @param[in] logTag
         Tag prefix of the provided logger.
     */
-    explicit UserComponent(const SelfCompT selfComp, const std::string& logTag) :
-        _mLogger {selfComp, fmt::format("{}/[{}]", logTag, selfComp.name())}, _mSelfComp {selfComp}
+    explicit UserComponent(const SelfCompT selfComp, const std::string& logTag)
+        : _mLogger {selfComp, fmt::format("{}/[{}]", logTag, selfComp.name())},
+          _mSelfComp {selfComp}
     {
     }
 
@@ -241,8 +242,8 @@ protected:
     @param[in] logTag
         Tag prefix of the provided logger.
     */
-    explicit UserSourceComponent(const SelfSourceComponent selfComp, const std::string& logTag) :
-        UserComponent<SelfSourceComponent, InitDataT, QueryDataT> {selfComp, logTag}
+    explicit UserSourceComponent(const SelfSourceComponent selfComp, const std::string& logTag)
+        : UserComponent<SelfSourceComponent, InitDataT, QueryDataT> {selfComp, logTag}
     {
     }
 
@@ -467,8 +468,8 @@ protected:
     @param[in] logTag
         Tag prefix of the provided logger.
     */
-    explicit UserFilterComponent(const SelfFilterComponent selfComp, const std::string& logTag) :
-        UserComponent<SelfFilterComponent, InitDataT, QueryDataT> {selfComp, logTag}
+    explicit UserFilterComponent(const SelfFilterComponent selfComp, const std::string& logTag)
+        : UserComponent<SelfFilterComponent, InitDataT, QueryDataT> {selfComp, logTag}
     {
     }
 
@@ -753,8 +754,8 @@ protected:
     @param[in] logTag
         Tag prefix of the provided logger.
     */
-    explicit UserSinkComponent(const SelfSinkComponent selfComp, const std::string& logTag) :
-        UserComponent<SelfSinkComponent, InitDataT, QueryDataT> {selfComp, logTag}
+    explicit UserSinkComponent(const SelfSinkComponent selfComp, const std::string& logTag)
+        : UserComponent<SelfSinkComponent, InitDataT, QueryDataT> {selfComp, logTag}
     {
     }
 
@@ -1019,10 +1020,10 @@ protected:
         Tag suffix of the provided logger.
     */
     explicit UserMessageIterator(const SelfMessageIterator selfMsgIter,
-                                 const std::string& logTagSuffix) :
-        _mSelfMsgIter {selfMsgIter},
-        _mLogger {selfMsgIter,
-                  fmt::format("{}/{}", this->_component()._mLogger.tag(), logTagSuffix)}
+                                 const std::string& logTagSuffix)
+        : _mSelfMsgIter {selfMsgIter},
+          _mLogger {selfMsgIter,
+                    fmt::format("{}/{}", this->_component()._mLogger.tag(), logTagSuffix)}
     {
     }
 

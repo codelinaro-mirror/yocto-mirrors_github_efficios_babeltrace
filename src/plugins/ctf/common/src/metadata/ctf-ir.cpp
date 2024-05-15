@@ -18,16 +18,19 @@ void DependentFcMixin::keyFcs(FcSet keyFcs)
     _mKeyFcs = std::move(keyFcs);
 }
 
-FieldLocMixin::FieldLocMixin(const bt2c::TextLoc& loc) noexcept : _mLoc {loc}
+FieldLocMixin::FieldLocMixin(const bt2c::TextLoc& loc) noexcept
+    : _mLoc {loc}
 {
 }
 
-FcMixin::FcMixin(const bt2c::TextLoc& loc) noexcept : _mLoc {loc}
+FcMixin::FcMixin(const bt2c::TextLoc& loc) noexcept
+    : _mLoc {loc}
 {
 }
 
-FcMixin::FcMixin(const FcDeepType deepType, const bt2c::TextLoc& loc) noexcept :
-    _mDeepType {deepType}, _mLoc {loc}
+FcMixin::FcMixin(const FcDeepType deepType, const bt2c::TextLoc& loc) noexcept
+    : _mDeepType {deepType},
+      _mLoc {loc}
 {
 }
 

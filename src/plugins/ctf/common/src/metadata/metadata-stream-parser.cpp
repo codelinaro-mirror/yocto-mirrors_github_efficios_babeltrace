@@ -63,8 +63,10 @@ using VariantOptIndexes = std::unordered_map<const Fc *, std::size_t>;
 class FcFinder final : public FcVisitor
 {
 public:
-    explicit FcFinder(const FieldLoc::Items& path, const VariantOptIndexes& dynIndexes) :
-        _mPath {&path}, _mPathIter {path.begin()}, _mVariantOptIndexes {&dynIndexes}
+    explicit FcFinder(const FieldLoc::Items& path, const VariantOptIndexes& dynIndexes)
+        : _mPath {&path},
+          _mPathIter {path.begin()},
+          _mVariantOptIndexes {&dynIndexes}
     {
     }
 
@@ -243,9 +245,10 @@ class DependentFcSavedKeyValIndexSetter final : public FcVisitor
 public:
     explicit DependentFcSavedKeyValIndexSetter(TraceCls& traceCls,
                                                DataStreamCls * const curDataStreamCls,
-                                               EventRecordCls * const curEventRecordCls) :
-        _mTraceCls {&traceCls}, _mCurDataStreamCls {curDataStreamCls},
-        _mCurEventRecordCls {curEventRecordCls}
+                                               EventRecordCls * const curEventRecordCls)
+        : _mTraceCls {&traceCls},
+          _mCurDataStreamCls {curDataStreamCls},
+          _mCurEventRecordCls {curEventRecordCls}
     {
     }
 
@@ -381,7 +384,8 @@ private:
 class SavedKeyValIndexesSetter final
 {
 public:
-    explicit SavedKeyValIndexesSetter(TraceCls& traceCls) : _mTraceCls {&traceCls}
+    explicit SavedKeyValIndexesSetter(TraceCls& traceCls)
+        : _mTraceCls {&traceCls}
     {
         /* Process the whole trace class */
         this->_setSavedKeyValIndexes();
@@ -500,7 +504,8 @@ void setSavedKeyValIndexes(TraceCls& traceCls)
 class FcContainsUIntFcWithRole final : public ConstFcVisitor
 {
 public:
-    explicit FcContainsUIntFcWithRole(const UIntFieldRole role) noexcept : _mRole {role}
+    explicit FcContainsUIntFcWithRole(const UIntFieldRole role) noexcept
+        : _mRole {role}
     {
     }
 
@@ -722,8 +727,9 @@ bt2::SignedIntegerRangeSet::Shared libIntRangeSetFromIntRangeSet(const SIntRange
 class LibFcFromFcTranslator final : public FcVisitor
 {
 public:
-    explicit LibFcFromFcTranslator(TraceCls& traceCls, const unsigned long long mipVersion) :
-        _mTraceCls {&traceCls}, _mMipVersion {mipVersion}
+    explicit LibFcFromFcTranslator(TraceCls& traceCls, const unsigned long long mipVersion)
+        : _mTraceCls {&traceCls},
+          _mMipVersion {mipVersion}
     {
         BT_ASSERT(traceCls.libCls());
     }
@@ -1606,8 +1612,10 @@ class LibTraceClsFromTraceClsTranslator final
 {
 public:
     explicit LibTraceClsFromTraceClsTranslator(TraceCls& traceCls,
-                                               const bt2::SelfComponent selfComp) :
-        _mTraceCls {&traceCls}, _mSelfComp {selfComp}, _mMipVersion {selfComp.graphMipVersion()}
+                                               const bt2::SelfComponent selfComp)
+        : _mTraceCls {&traceCls},
+          _mSelfComp {selfComp},
+          _mMipVersion {selfComp.graphMipVersion()}
     {
         /* Translate whole trace class */
         this->_translate();
@@ -1990,7 +1998,9 @@ void normalizeClkClsOffsetFromOrigin(ClkCls& clkCls) noexcept
 
 MetadataStreamParser::MetadataStreamParser(
     const bt2::OptionalBorrowedObject<bt2::SelfComponent> selfComp,
-    const ClkClsCfg& clkClsCfg) noexcept : _mClkClsCfg(clkClsCfg), _mSelfComp {selfComp}
+    const ClkClsCfg& clkClsCfg) noexcept
+    : _mClkClsCfg(clkClsCfg),
+      _mSelfComp {selfComp}
 {
 }
 

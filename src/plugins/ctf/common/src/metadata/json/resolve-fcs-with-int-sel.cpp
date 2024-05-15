@@ -35,8 +35,9 @@ SIntRangeSet sIntRangeSetFromUIntRangeSet(const UIntRangeSet& uIntRanges)
 class Resolver final : public FcVisitor
 {
 public:
-    explicit Resolver(const KeyFcTypes& keyFcTypes, const bt2c::Logger& parentLogger) :
-        _mKeyFcTypes {&keyFcTypes}, _mLogger {parentLogger, "PLUGIN/CTF/CTF-2-RES-FCS-WITH-INT-SEL"}
+    explicit Resolver(const KeyFcTypes& keyFcTypes, const bt2c::Logger& parentLogger)
+        : _mKeyFcTypes {&keyFcTypes},
+          _mLogger {parentLogger, "PLUGIN/CTF/CTF-2-RES-FCS-WITH-INT-SEL"}
     {
     }
 

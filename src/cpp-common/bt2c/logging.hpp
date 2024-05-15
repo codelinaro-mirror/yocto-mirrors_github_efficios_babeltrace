@@ -91,8 +91,10 @@ public:
      * the tag `tag` and the logging level `logLevel`.
      */
     explicit Logger(const bt2::SelfComponentClass selfCompCls, const bt2::LoggingLevel logLevel,
-                    std::string tag) noexcept :
-        _mSelfCompCls {selfCompCls}, _mLevel {static_cast<Level>(logLevel)}, _mTag {std::move(tag)}
+                    std::string tag) noexcept
+        : _mSelfCompCls {selfCompCls},
+          _mLevel {static_cast<Level>(logLevel)},
+          _mTag {std::move(tag)}
     {
     }
 
@@ -101,9 +103,10 @@ public:
      * the tag `tag` and the logging level of `privQueryExec`.
      */
     explicit Logger(const bt2::SelfComponentClass selfCompCls,
-                    const bt2::PrivateQueryExecutor privQueryExec, std::string tag) noexcept :
-        _mSelfCompCls {selfCompCls}, _mLevel {static_cast<Level>(privQueryExec.loggingLevel())},
-        _mTag {std::move(tag)}
+                    const bt2::PrivateQueryExecutor privQueryExec, std::string tag) noexcept
+        : _mSelfCompCls {selfCompCls},
+          _mLevel {static_cast<Level>(privQueryExec.loggingLevel())},
+          _mTag {std::move(tag)}
     {
     }
 
@@ -111,9 +114,10 @@ public:
      * Builds a logger from the self component `selfComp` using the tag
      * `tag`.
      */
-    explicit Logger(const bt2::SelfComponent selfComp, std::string tag) noexcept :
-        _mSelfComp {selfComp}, _mLevel {static_cast<Level>(selfComp.loggingLevel())},
-        _mTag {std::move(tag)}
+    explicit Logger(const bt2::SelfComponent selfComp, std::string tag) noexcept
+        : _mSelfComp {selfComp},
+          _mLevel {static_cast<Level>(selfComp.loggingLevel())},
+          _mTag {std::move(tag)}
     {
     }
 
@@ -121,10 +125,10 @@ public:
      * Builds a logger from the self source component `selfComp` using
      * the tag `tag`.
      */
-    explicit Logger(const bt2::SelfSourceComponent selfComp, std::string tag) noexcept :
-        Logger {
-            bt2::SelfComponent {bt_self_component_source_as_self_component(selfComp.libObjPtr())},
-            std::move(tag)}
+    explicit Logger(const bt2::SelfSourceComponent selfComp, std::string tag) noexcept
+        : Logger {
+              bt2::SelfComponent {bt_self_component_source_as_self_component(selfComp.libObjPtr())},
+              std::move(tag)}
     {
     }
 
@@ -132,10 +136,10 @@ public:
      * Builds a logger from the self filter component `selfComp` using
      * the tag `tag`.
      */
-    explicit Logger(const bt2::SelfFilterComponent selfComp, std::string tag) noexcept :
-        Logger {
-            bt2::SelfComponent {bt_self_component_filter_as_self_component(selfComp.libObjPtr())},
-            std::move(tag)}
+    explicit Logger(const bt2::SelfFilterComponent selfComp, std::string tag) noexcept
+        : Logger {
+              bt2::SelfComponent {bt_self_component_filter_as_self_component(selfComp.libObjPtr())},
+              std::move(tag)}
     {
     }
 
@@ -143,9 +147,10 @@ public:
      * Builds a logger from the self sink component `selfComp` using the
      * tag `tag`.
      */
-    explicit Logger(const bt2::SelfSinkComponent selfComp, std::string tag) noexcept :
-        Logger {bt2::SelfComponent {bt_self_component_sink_as_self_component(selfComp.libObjPtr())},
-                std::move(tag)}
+    explicit Logger(const bt2::SelfSinkComponent selfComp, std::string tag) noexcept
+        : Logger {
+              bt2::SelfComponent {bt_self_component_sink_as_self_component(selfComp.libObjPtr())},
+              std::move(tag)}
     {
     }
 
@@ -153,9 +158,10 @@ public:
      * Builds a logger from the self message iterator `selfMsgIter`
      * using the tag `tag`.
      */
-    explicit Logger(const bt2::SelfMessageIterator selfMsgIter, std::string tag) noexcept :
-        _mSelfMsgIter {selfMsgIter},
-        _mLevel {static_cast<Level>(selfMsgIter.component().loggingLevel())}, _mTag {std::move(tag)}
+    explicit Logger(const bt2::SelfMessageIterator selfMsgIter, std::string tag) noexcept
+        : _mSelfMsgIter {selfMsgIter},
+          _mLevel {static_cast<Level>(selfMsgIter.component().loggingLevel())},
+          _mTag {std::move(tag)}
     {
     }
 
@@ -163,8 +169,10 @@ public:
      * Builds a logger from the module named `moduleName` using the tag
      * `tag` and logging level `logLevel`.
      */
-    explicit Logger(std::string moduleName, std::string tag, const Level logLevel) noexcept :
-        _mModuleName {std::move(moduleName)}, _mLevel {logLevel}, _mTag {std::move(tag)}
+    explicit Logger(std::string moduleName, std::string tag, const Level logLevel) noexcept
+        : _mModuleName {std::move(moduleName)},
+          _mLevel {logLevel},
+          _mTag {std::move(tag)}
     {
     }
 
@@ -172,10 +180,14 @@ public:
      * Builds a logger from another logger `other` using the new tag
      * `newTag`.
      */
-    explicit Logger(const Logger& other, std::string newTag) :
-        _mSelfCompCls {other._mSelfCompCls}, _mSelfComp {other._mSelfComp},
-        _mSelfMsgIter {other._mSelfMsgIter}, _mModuleName {other._mModuleName},
-        _mLevel {other._mLevel}, _mTag {std::move(newTag)}, _mTextLocStrFmt {other._mTextLocStrFmt}
+    explicit Logger(const Logger& other, std::string newTag)
+        : _mSelfCompCls {other._mSelfCompCls},
+          _mSelfComp {other._mSelfComp},
+          _mSelfMsgIter {other._mSelfMsgIter},
+          _mModuleName {other._mModuleName},
+          _mLevel {other._mLevel},
+          _mTag {std::move(newTag)},
+          _mTextLocStrFmt {other._mTextLocStrFmt}
     {
     }
 

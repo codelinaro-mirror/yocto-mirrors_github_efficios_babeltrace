@@ -148,12 +148,14 @@ public:
     using Class = internal::DepType<LibObjT, CommonEventClass<bt_event_class>,
                                     CommonEventClass<const bt_event_class>>;
 
-    explicit CommonEvent(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit CommonEvent(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonEvent(const CommonEvent<OtherLibObjT> event) noexcept : _ThisBorrowedObject {event}
+    CommonEvent(const CommonEvent<OtherLibObjT> event) noexcept
+        : _ThisBorrowedObject {event}
     {
     }
 
@@ -271,12 +273,14 @@ public:
     using typename BorrowedObject<LibObjT>::LibObjPtr;
     using Shared = SharedObject<CommonPacket, LibObjT, internal::PacketRefFuncs>;
 
-    explicit CommonPacket(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit CommonPacket(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonPacket(const CommonPacket<OtherLibObjT> packet) noexcept : _ThisBorrowedObject {packet}
+    CommonPacket(const CommonPacket<OtherLibObjT> packet) noexcept
+        : _ThisBorrowedObject {packet}
     {
     }
 
@@ -411,12 +415,14 @@ public:
     using Class = internal::DepType<LibObjT, CommonStreamClass<bt_stream_class>,
                                     CommonStreamClass<const bt_stream_class>>;
 
-    explicit CommonStream(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit CommonStream(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonStream(const CommonStream<OtherLibObjT> stream) noexcept : _ThisBorrowedObject {stream}
+    CommonStream(const CommonStream<OtherLibObjT> stream) noexcept
+        : _ThisBorrowedObject {stream}
     {
     }
 
@@ -615,12 +621,14 @@ public:
         ConstValue value;
     };
 
-    explicit CommonTrace(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit CommonTrace(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonTrace(const CommonTrace<OtherLibObjT> trace) noexcept : _ThisBorrowedObject {trace}
+    CommonTrace(const CommonTrace<OtherLibObjT> trace) noexcept
+        : _ThisBorrowedObject {trace}
     {
     }
 
@@ -930,13 +938,14 @@ public:
     using Shared = SharedObject<CommonEventClass, LibObjT, internal::EventClassRefFuncs>;
     using UserAttributes = internal::DepUserAttrs<LibObjT>;
 
-    explicit CommonEventClass(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit CommonEventClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonEventClass(const CommonEventClass<OtherLibObjT> eventClass) noexcept :
-        _ThisBorrowedObject {eventClass}
+    CommonEventClass(const CommonEventClass<OtherLibObjT> eventClass) noexcept
+        : _ThisBorrowedObject {eventClass}
     {
     }
 
@@ -1261,13 +1270,14 @@ public:
     using Shared = SharedObject<CommonStreamClass, LibObjT, internal::StreamClassRefFuncs>;
     using UserAttributes = internal::DepUserAttrs<LibObjT>;
 
-    explicit CommonStreamClass(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit CommonStreamClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonStreamClass(const CommonStreamClass<OtherLibObjT> streamClass) noexcept :
-        _ThisBorrowedObject {streamClass}
+    CommonStreamClass(const CommonStreamClass<OtherLibObjT> streamClass) noexcept
+        : _ThisBorrowedObject {streamClass}
     {
     }
 
@@ -1689,13 +1699,14 @@ public:
     using Shared = SharedObject<CommonTraceClass, LibObjT, internal::TraceClassRefFuncs>;
     using UserAttributes = internal::DepUserAttrs<LibObjT>;
 
-    explicit CommonTraceClass(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit CommonTraceClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonTraceClass(const CommonTraceClass<OtherLibObjT> traceClass) noexcept :
-        _ThisBorrowedObject {traceClass}
+    CommonTraceClass(const CommonTraceClass<OtherLibObjT> traceClass) noexcept
+        : _ThisBorrowedObject {traceClass}
     {
     }
 

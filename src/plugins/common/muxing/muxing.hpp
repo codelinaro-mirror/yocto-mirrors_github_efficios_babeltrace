@@ -14,8 +14,8 @@ namespace muxing {
 class MessageComparator final
 {
 public:
-    explicit MessageComparator(const std::uint64_t graphMipVersion) :
-        _mGraphMipVersion {graphMipVersion}
+    explicit MessageComparator(const std::uint64_t graphMipVersion)
+        : _mGraphMipVersion {graphMipVersion}
     {
     }
 

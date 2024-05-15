@@ -22,8 +22,9 @@ namespace {
 class Normalizer final : public FcVisitor
 {
 public:
-    explicit Normalizer(const Scope scope, const bt2c::Logger& parentLogger) :
-        _mScope {scope}, _mLogger {parentLogger, "PLUGIN/CTF/CTF-2-NORMALIZE-FIELD-LOCS"}
+    explicit Normalizer(const Scope scope, const bt2c::Logger& parentLogger)
+        : _mScope {scope},
+          _mLogger {parentLogger, "PLUGIN/CTF/CTF-2-NORMALIZE-FIELD-LOCS"}
     {
     }
 

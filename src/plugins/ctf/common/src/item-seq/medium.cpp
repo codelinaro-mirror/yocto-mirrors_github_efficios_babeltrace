@@ -11,8 +11,9 @@
 namespace ctf {
 namespace src {
 
-Buf::Buf(const std::uint8_t * const addr, const bt2c::DataLen size) noexcept :
-    _mAddr {addr}, _mSize {size}
+Buf::Buf(const std::uint8_t * const addr, const bt2c::DataLen size) noexcept
+    : _mAddr {addr},
+      _mSize {size}
 {
     BT_ASSERT_DBG(!size.hasExtraBits());
 }

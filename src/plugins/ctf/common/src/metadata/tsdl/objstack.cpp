@@ -18,8 +18,8 @@
 
 struct objstack
 {
-    explicit objstack(const bt2c::Logger& parentLogger) :
-        logger {parentLogger, "PLUGIN/CTF/META/OBJSTACK"}
+    explicit objstack(const bt2c::Logger& parentLogger)
+        : logger {parentLogger, "PLUGIN/CTF/META/OBJSTACK"}
     {
     }
 

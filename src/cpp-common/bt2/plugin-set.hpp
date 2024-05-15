@@ -41,8 +41,8 @@ public:
     using Iterator = BorrowedObjectIterator<ConstPluginSet>;
     using Shared = SharedObject<ConstPluginSet, const bt_plugin_set, internal::PluginSetRefFuncs>;
 
-    explicit ConstPluginSet(const bt_plugin_set * const plugin_set) :
-        _ThisBorrowedObject {plugin_set}
+    explicit ConstPluginSet(const bt_plugin_set * const plugin_set)
+        : _ThisBorrowedObject {plugin_set}
     {
     }
 

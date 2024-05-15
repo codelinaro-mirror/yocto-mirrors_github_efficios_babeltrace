@@ -27,8 +27,8 @@ class ConstPluginComponentClasses final : public BorrowedObject<const bt_plugin>
 public:
     using Iterator = BorrowedObjectIterator<ConstPluginComponentClasses<PluginSpecCompClsT>>;
 
-    explicit ConstPluginComponentClasses(const LibObjPtr libPluginPtr) noexcept :
-        _ThisBorrowedObject {libPluginPtr}
+    explicit ConstPluginComponentClasses(const LibObjPtr libPluginPtr) noexcept
+        : _ThisBorrowedObject {libPluginPtr}
     {
     }
 
@@ -155,8 +155,11 @@ public:
     {
     public:
         explicit Version(const unsigned int major, const unsigned int minor,
-                         const unsigned int patch, const bt2c::CStringView extra) noexcept :
-            _mMajor {major}, _mMinor {minor}, _mPatch {patch}, _mExtra {extra}
+                         const unsigned int patch, const bt2c::CStringView extra) noexcept
+            : _mMajor {major},
+              _mMinor {minor},
+              _mPatch {patch},
+              _mExtra {extra}
         {
         }
 
@@ -187,7 +190,8 @@ public:
 
     using Shared = SharedObject<ConstPlugin, const bt_plugin, internal::PluginRefFuncs>;
 
-    explicit ConstPlugin(const LibObjPtr plugin) : _ThisBorrowedObject {plugin}
+    explicit ConstPlugin(const LibObjPtr plugin)
+        : _ThisBorrowedObject {plugin}
     {
     }
 

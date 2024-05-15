@@ -30,10 +30,11 @@ public:
     using CreateClockCls = std::function<bt2::ClockClass::Shared(bt2::SelfComponent)>;
 
     explicit ClockClsCompatRunIn(const MsgType msgType1, CreateClockCls createClockCls1,
-                                 const MsgType msgType2, CreateClockCls createClockCls2) noexcept :
-        _mMsgType1 {msgType1}, _mMsgType2 {msgType2},
-        _mCreateClockCls1 {std::move(createClockCls1)},
-        _mCreateClockCls2 {std::move(createClockCls2)}
+                                 const MsgType msgType2, CreateClockCls createClockCls2) noexcept
+        : _mMsgType1 {msgType1},
+          _mMsgType2 {msgType2},
+          _mCreateClockCls1 {std::move(createClockCls1)},
+          _mCreateClockCls2 {std::move(createClockCls2)}
     {
     }
 

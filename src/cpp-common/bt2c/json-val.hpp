@@ -566,8 +566,9 @@ public:
     @param[in] loc
         Text location of the created JSON scalar value.
     */
-    explicit JsonScalarVal(ValT val, TextLoc loc) noexcept :
-        JsonVal {TypeV, std::move(loc)}, _mVal {std::move(val)}
+    explicit JsonScalarVal(ValT val, TextLoc loc) noexcept
+        : JsonVal {TypeV, std::move(loc)},
+          _mVal {std::move(val)}
     {
     }
 
@@ -640,8 +641,9 @@ protected:
     @param[in] loc
         Text location of the created JSON compound value.
     */
-    explicit JsonCompoundVal(ContainerT&& vals, TextLoc&& loc) :
-        JsonVal {TypeV, std::move(loc)}, _mVals {std::move(vals)}
+    explicit JsonCompoundVal(ContainerT&& vals, TextLoc&& loc)
+        : JsonVal {TypeV, std::move(loc)},
+          _mVals {std::move(vals)}
     {
     }
 

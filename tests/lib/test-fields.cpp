@@ -14,8 +14,8 @@ namespace {
 class StringFieldRunIn final : public RunIn
 {
 public:
-    explicit StringFieldRunIn(std::function<void(bt2::StringField)> testFn) :
-        _mTestFn {std::move(testFn)}
+    explicit StringFieldRunIn(std::function<void(bt2::StringField)> testFn)
+        : _mTestFn {std::move(testFn)}
     {
     }
 

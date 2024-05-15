@@ -55,8 +55,9 @@ struct ctf_fs_ds_file
 {
     using UP = std::unique_ptr<ctf_fs_ds_file>;
 
-    explicit ctf_fs_ds_file(const bt2c::Logger& parentLogger, const size_t mmapMaxLenParam) :
-        logger {parentLogger, "PLUGIN/SRC.CTF.FS/DS"}, mmap_max_len {mmapMaxLenParam}
+    explicit ctf_fs_ds_file(const bt2c::Logger& parentLogger, const size_t mmapMaxLenParam)
+        : logger {parentLogger, "PLUGIN/SRC.CTF.FS/DS"},
+          mmap_max_len {mmapMaxLenParam}
     {
     }
 
@@ -86,9 +87,11 @@ struct ctf_fs_ds_file
 struct ctf_fs_ds_index_entry
 {
     ctf_fs_ds_index_entry(const bt2c::CStringView pathParam, const bt2c::DataLen offsetInFileParam,
-                          const bt2c::DataLen packetSizeParam) :
-        path {pathParam}, offsetInFile {offsetInFileParam}, offsetInStream {offsetInFileParam},
-        packetSize {packetSizeParam}
+                          const bt2c::DataLen packetSizeParam)
+        : path {pathParam},
+          offsetInFile {offsetInFileParam},
+          offsetInStream {offsetInFileParam},
+          packetSize {packetSizeParam}
     {
         BT_ASSERT(path);
     }
@@ -137,11 +140,12 @@ struct ctf_fs_ds_file_group
     explicit ctf_fs_ds_file_group(struct ctf_fs_trace * const ctfFsTrace,
                                   const ctf::src::DataStreamCls& dataStreamClsParam,
                                   const uint64_t streamInstanceId,
-                                  ctf_fs_ds_index indexParam) noexcept :
-        dataStreamCls {&dataStreamClsParam}, stream_id {streamInstanceId},
-        ctf_fs_trace {ctfFsTrace},
-        /* Don't use brace initialization, because of gcc 4.8. */
-        index(std::move(indexParam))
+                                  ctf_fs_ds_index indexParam) noexcept
+        : dataStreamCls {&dataStreamClsParam},
+          stream_id {streamInstanceId},
+          ctf_fs_trace {ctfFsTrace},
+          /* Don't use brace initialization, because of gcc 4.8. */
+          index(std::move(indexParam))
     {
     }
 

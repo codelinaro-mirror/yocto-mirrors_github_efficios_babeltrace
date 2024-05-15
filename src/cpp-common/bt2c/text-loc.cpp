@@ -9,8 +9,10 @@
 namespace bt2c {
 
 TextLoc::TextLoc(const unsigned long long offset, const unsigned long long lineNo,
-                 const unsigned long long colNo) noexcept :
-    _mOffset {offset}, _mLineNo {lineNo}, _mColNo {colNo}
+                 const unsigned long long colNo) noexcept
+    : _mOffset {offset},
+      _mLineNo {lineNo},
+      _mColNo {colNo}
 {
 }
 

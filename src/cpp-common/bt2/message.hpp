@@ -102,12 +102,14 @@ public:
     using typename BorrowedObject<LibObjT>::LibObjPtr;
     using Shared = SharedMessage<CommonMessage<LibObjT>, LibObjT>;
 
-    explicit CommonMessage(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit CommonMessage(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonMessage(const CommonMessage<OtherLibObjT> val) noexcept : _ThisBorrowedObject {val}
+    CommonMessage(const CommonMessage<OtherLibObjT> val) noexcept
+        : _ThisBorrowedObject {val}
     {
     }
 
@@ -246,15 +248,15 @@ public:
     using typename CommonMessage<LibObjT>::LibObjPtr;
     using Shared = SharedMessage<CommonStreamBeginningMessage<LibObjT>, LibObjT>;
 
-    explicit CommonStreamBeginningMessage(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonMessage {libObjPtr}
+    explicit CommonStreamBeginningMessage(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonMessage {libObjPtr}
     {
         BT_ASSERT_DBG(this->isStreamBeginning());
     }
 
     template <typename OtherLibObjT>
-    CommonStreamBeginningMessage(const CommonStreamBeginningMessage<OtherLibObjT> val) noexcept :
-        _ThisCommonMessage {val}
+    CommonStreamBeginningMessage(const CommonStreamBeginningMessage<OtherLibObjT> val) noexcept
+        : _ThisCommonMessage {val}
     {
     }
 
@@ -368,15 +370,15 @@ public:
     using typename CommonMessage<LibObjT>::LibObjPtr;
     using Shared = SharedMessage<CommonStreamEndMessage<LibObjT>, LibObjT>;
 
-    explicit CommonStreamEndMessage(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonMessage {libObjPtr}
+    explicit CommonStreamEndMessage(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonMessage {libObjPtr}
     {
         BT_ASSERT_DBG(this->isStreamEnd());
     }
 
     template <typename OtherLibObjT>
-    CommonStreamEndMessage(const CommonStreamEndMessage<OtherLibObjT> val) noexcept :
-        _ThisCommonMessage {val}
+    CommonStreamEndMessage(const CommonStreamEndMessage<OtherLibObjT> val) noexcept
+        : _ThisCommonMessage {val}
     {
     }
 
@@ -489,15 +491,15 @@ public:
     using typename CommonMessage<LibObjT>::LibObjPtr;
     using Shared = SharedMessage<CommonPacketBeginningMessage<LibObjT>, LibObjT>;
 
-    explicit CommonPacketBeginningMessage(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonMessage {libObjPtr}
+    explicit CommonPacketBeginningMessage(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonMessage {libObjPtr}
     {
         BT_ASSERT_DBG(this->isPacketBeginning());
     }
 
     template <typename OtherLibObjT>
-    CommonPacketBeginningMessage(const CommonPacketBeginningMessage<OtherLibObjT> val) noexcept :
-        _ThisCommonMessage {val}
+    CommonPacketBeginningMessage(const CommonPacketBeginningMessage<OtherLibObjT> val) noexcept
+        : _ThisCommonMessage {val}
     {
     }
 
@@ -606,15 +608,15 @@ public:
     using typename CommonMessage<LibObjT>::LibObjPtr;
     using Shared = SharedMessage<CommonPacketEndMessage<LibObjT>, LibObjT>;
 
-    explicit CommonPacketEndMessage(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonMessage {libObjPtr}
+    explicit CommonPacketEndMessage(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonMessage {libObjPtr}
     {
         BT_ASSERT_DBG(this->isPacketEnd());
     }
 
     template <typename OtherLibObjT>
-    CommonPacketEndMessage(const CommonPacketEndMessage<OtherLibObjT> val) noexcept :
-        _ThisCommonMessage {val}
+    CommonPacketEndMessage(const CommonPacketEndMessage<OtherLibObjT> val) noexcept
+        : _ThisCommonMessage {val}
     {
     }
 
@@ -722,14 +724,15 @@ public:
     using typename CommonMessage<LibObjT>::LibObjPtr;
     using Shared = SharedMessage<CommonEventMessage<LibObjT>, LibObjT>;
 
-    explicit CommonEventMessage(const LibObjPtr libObjPtr) noexcept : _ThisCommonMessage {libObjPtr}
+    explicit CommonEventMessage(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonMessage {libObjPtr}
     {
         BT_ASSERT_DBG(this->isEvent());
     }
 
     template <typename OtherLibObjT>
-    CommonEventMessage(const CommonEventMessage<OtherLibObjT> val) noexcept :
-        _ThisCommonMessage {val}
+    CommonEventMessage(const CommonEventMessage<OtherLibObjT> val) noexcept
+        : _ThisCommonMessage {val}
     {
     }
 
@@ -826,15 +829,15 @@ public:
     using typename CommonMessage<LibObjT>::LibObjPtr;
     using Shared = SharedMessage<CommonDiscardedEventsMessage<LibObjT>, LibObjT>;
 
-    explicit CommonDiscardedEventsMessage(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonMessage {libObjPtr}
+    explicit CommonDiscardedEventsMessage(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonMessage {libObjPtr}
     {
         BT_ASSERT_DBG(this->isDiscardedEvents());
     }
 
     template <typename OtherLibObjT>
-    CommonDiscardedEventsMessage(const CommonDiscardedEventsMessage<OtherLibObjT> val) noexcept :
-        _ThisCommonMessage {val}
+    CommonDiscardedEventsMessage(const CommonDiscardedEventsMessage<OtherLibObjT> val) noexcept
+        : _ThisCommonMessage {val}
     {
     }
 
@@ -963,15 +966,15 @@ public:
     using typename CommonMessage<LibObjT>::LibObjPtr;
     using Shared = SharedMessage<CommonDiscardedPacketsMessage<LibObjT>, LibObjT>;
 
-    explicit CommonDiscardedPacketsMessage(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonMessage {libObjPtr}
+    explicit CommonDiscardedPacketsMessage(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonMessage {libObjPtr}
     {
         BT_ASSERT_DBG(this->isDiscardedPackets());
     }
 
     template <typename OtherLibObjT>
-    CommonDiscardedPacketsMessage(const CommonDiscardedPacketsMessage<OtherLibObjT> val) noexcept :
-        _ThisCommonMessage {val}
+    CommonDiscardedPacketsMessage(const CommonDiscardedPacketsMessage<OtherLibObjT> val) noexcept
+        : _ThisCommonMessage {val}
     {
     }
 
@@ -1076,16 +1079,16 @@ public:
     using typename CommonMessage<LibObjT>::LibObjPtr;
     using Shared = SharedMessage<CommonMessageIteratorInactivityMessage<LibObjT>, LibObjT>;
 
-    explicit CommonMessageIteratorInactivityMessage(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonMessage {libObjPtr}
+    explicit CommonMessageIteratorInactivityMessage(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonMessage {libObjPtr}
     {
         BT_ASSERT_DBG(this->isMessageIteratorInactivity());
     }
 
     template <typename OtherLibObjT>
     CommonMessageIteratorInactivityMessage(
-        const CommonMessageIteratorInactivityMessage<OtherLibObjT> val) noexcept :
-        _ThisCommonMessage {val}
+        const CommonMessageIteratorInactivityMessage<OtherLibObjT> val) noexcept
+        : _ThisCommonMessage {val}
     {
     }
 

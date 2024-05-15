@@ -54,8 +54,9 @@ public:
         decltype(std::declval<ContainerT>()[std::declval<std::uint64_t>()])>;
 
 private:
-    explicit BorrowedObjectIterator(const ContainerT container, const uint64_t idx) :
-        _mContainer {container}, _mIdx {idx}
+    explicit BorrowedObjectIterator(const ContainerT container, const uint64_t idx)
+        : _mContainer {container},
+          _mIdx {idx}
     {
     }
 

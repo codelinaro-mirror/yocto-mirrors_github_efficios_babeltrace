@@ -86,7 +86,8 @@ the corresponding general <code>bt_error_cause_*</code> API.
 class ConstErrorCause : public BorrowedObject<const bt_error_cause>
 {
 public:
-    explicit ConstErrorCause(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit ConstErrorCause(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
@@ -155,7 +156,8 @@ the corresponding specific
 class ConstComponentClassErrorCause final : public ConstErrorCause
 {
 public:
-    explicit ConstComponentClassErrorCause(const LibObjPtr libObjPtr) : ConstErrorCause {libObjPtr}
+    explicit ConstComponentClassErrorCause(const LibObjPtr libObjPtr)
+        : ConstErrorCause {libObjPtr}
     {
         BT_ASSERT(this->actorTypeIsComponentClass());
     }
@@ -202,7 +204,8 @@ the corresponding specific
 class ConstComponentErrorCause final : public ConstErrorCause
 {
 public:
-    explicit ConstComponentErrorCause(const LibObjPtr libObjPtr) : ConstErrorCause {libObjPtr}
+    explicit ConstComponentErrorCause(const LibObjPtr libObjPtr)
+        : ConstErrorCause {libObjPtr}
     {
         BT_ASSERT(this->actorTypeIsComponent());
     }
@@ -254,7 +257,8 @@ the corresponding specific
 class ConstMessageIteratorErrorCause final : public ConstErrorCause
 {
 public:
-    explicit ConstMessageIteratorErrorCause(const LibObjPtr libObjPtr) : ConstErrorCause {libObjPtr}
+    explicit ConstMessageIteratorErrorCause(const LibObjPtr libObjPtr)
+        : ConstErrorCause {libObjPtr}
     {
         BT_ASSERT(this->actorTypeIsMessageIterator());
     }
@@ -298,7 +302,8 @@ class ConstErrorCauseProxy final
     friend ConstErrorIterator;
 
 private:
-    explicit ConstErrorCauseProxy(const ConstErrorCause cause) noexcept : _mCause {cause}
+    explicit ConstErrorCauseProxy(const ConstErrorCause cause) noexcept
+        : _mCause {cause}
     {
     }
 
@@ -332,8 +337,9 @@ class ConstErrorIterator final
     friend UniqueConstError;
 
 private:
-    explicit ConstErrorIterator(const UniqueConstError& error, const std::uint64_t index) noexcept :
-        _mError {&error}, _mIndex {index}
+    explicit ConstErrorIterator(const UniqueConstError& error, const std::uint64_t index) noexcept
+        : _mError {&error},
+          _mIndex {index}
     {
     }
 
@@ -411,7 +417,8 @@ public:
 
     @bt_pre_not_null{libObjPtr}
     */
-    explicit UniqueConstError(const LibObjPtr libError) noexcept : _mLibError {libError}
+    explicit UniqueConstError(const LibObjPtr libError) noexcept
+        : _mLibError {libError}
     {
     }
 

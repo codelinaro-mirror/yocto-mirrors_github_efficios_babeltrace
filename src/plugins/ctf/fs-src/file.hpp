@@ -19,8 +19,8 @@ struct ctf_fs_file
 {
     using UP = std::unique_ptr<ctf_fs_file>;
 
-    explicit ctf_fs_file(const bt2c::Logger& parentLogger) :
-        logger {parentLogger, "PLUGIN/SRC.CTF.FS/FILE"}
+    explicit ctf_fs_file(const bt2c::Logger& parentLogger)
+        : logger {parentLogger, "PLUGIN/SRC.CTF.FS/FILE"}
     {
     }
 

@@ -369,8 +369,8 @@ unsigned long long minAlignOfJsonFc(const bt2c::JsonObjVal& jsonFc) noexcept
 
 } /* namespace */
 
-Ctf2FcBuilder::Ctf2FcBuilder(const bt2c::Logger& parentLogger) :
-    _mLogger {parentLogger, "PLUGIN/CTF/CTF-2-FC-BUILDER"}
+Ctf2FcBuilder::Ctf2FcBuilder(const bt2c::Logger& parentLogger)
+    : _mLogger {parentLogger, "PLUGIN/CTF/CTF-2-FC-BUILDER"}
 {
 }
 

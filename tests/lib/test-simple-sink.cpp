@@ -62,8 +62,8 @@ class DummySourceMsgIter final : public bt2::UserMessageIterator<DummySourceMsgI
 public:
     explicit DummySourceMsgIter(const bt2::SelfMessageIterator self,
                                 const bt2::SelfMessageIteratorConfiguration,
-                                const bt2::SelfComponentOutputPort) :
-        bt2::UserMessageIterator<DummySourceMsgIter, DummySource> {self, "DUMMY-SRC-MSG-ITER"}
+                                const bt2::SelfComponentOutputPort)
+        : bt2::UserMessageIterator<DummySourceMsgIter, DummySource> {self, "DUMMY-SRC-MSG-ITER"}
     {
     }
 
@@ -77,8 +77,8 @@ class DummySource final : public bt2::UserSourceComponent<DummySource, DummySour
 public:
     static constexpr auto name = "dummy-source";
 
-    explicit DummySource(const bt2::SelfSourceComponent self, bt2::ConstMapValue, void *) :
-        bt2::UserSourceComponent<DummySource, DummySourceMsgIter> {self, "DUMMY-SRC"}
+    explicit DummySource(const bt2::SelfSourceComponent self, bt2::ConstMapValue, void *)
+        : bt2::UserSourceComponent<DummySource, DummySourceMsgIter> {self, "DUMMY-SRC"}
     {
         this->_addOutputPort("out");
     }
@@ -87,9 +87,9 @@ public:
 class SimpleSinkTestFixture
 {
 protected:
-    explicit SimpleSinkTestFixture(const bool doConnect = true) :
-        _graph {bt2::Graph::create(0)},
-        _srcComp {_graph->addComponent(*bt2::createComponentClass<DummySource>(), "the-source")}
+    explicit SimpleSinkTestFixture(const bool doConnect = true)
+        : _graph {bt2::Graph::create(0)},
+          _srcComp {_graph->addComponent(*bt2::createComponentClass<DummySource>(), "the-source")}
     {
         this->_addSimpleSink();
 
@@ -148,7 +148,8 @@ protected:
 class SimpleSinkTestFixtureNoConnect : public SimpleSinkTestFixture
 {
 protected:
-    explicit SimpleSinkTestFixtureNoConnect() : SimpleSinkTestFixture {false}
+    explicit SimpleSinkTestFixtureNoConnect()
+        : SimpleSinkTestFixture {false}
     {
     }
 };

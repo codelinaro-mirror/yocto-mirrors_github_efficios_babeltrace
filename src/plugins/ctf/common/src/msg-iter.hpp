@@ -109,23 +109,27 @@ private:
     class _StackFrame
     {
     public:
-        explicit _StackFrame(const bt2::StructureField field) noexcept :
-            _mFieldType {_FieldType::Struct}, _mField {field}
+        explicit _StackFrame(const bt2::StructureField field) noexcept
+            : _mFieldType {_FieldType::Struct},
+              _mField {field}
         {
         }
 
-        explicit _StackFrame(const bt2::VariantField field) noexcept :
-            _mFieldType {_FieldType::Variant}, _mField(field)
+        explicit _StackFrame(const bt2::VariantField field) noexcept
+            : _mFieldType {_FieldType::Variant},
+              _mField(field)
         {
         }
 
-        explicit _StackFrame(const bt2::OptionField field) noexcept :
-            _mFieldType {_FieldType::Option}, _mField(field)
+        explicit _StackFrame(const bt2::OptionField field) noexcept
+            : _mFieldType {_FieldType::Option},
+              _mField(field)
         {
         }
 
-        explicit _StackFrame(const bt2::ArrayField field) noexcept :
-            _mFieldType(_FieldType::Array), _mField(field)
+        explicit _StackFrame(const bt2::ArrayField field) noexcept
+            : _mFieldType(_FieldType::Array),
+              _mField(field)
         {
         }
 

@@ -20,7 +20,8 @@ namespace {
 class JsonValBuilder final
 {
 public:
-    explicit JsonValBuilder(const std::size_t baseOffset) : _mBaseOffset {baseOffset}
+    explicit JsonValBuilder(const std::size_t baseOffset)
+        : _mBaseOffset {baseOffset}
     {
     }
 
@@ -89,7 +90,8 @@ private:
      */
     struct _StackFrame final
     {
-        explicit _StackFrame(const _State stateParam) : state {stateParam}
+        explicit _StackFrame(const _State stateParam)
+            : state {stateParam}
         {
         }
 

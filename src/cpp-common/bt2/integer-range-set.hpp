@@ -152,8 +152,8 @@ public:
     using Value = typename Range::Value;
     using Iterator = BorrowedObjectIterator<CommonIntegerRangeSet>;
 
-    explicit CommonIntegerRangeSet(const LibObjPtr libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit CommonIntegerRangeSet(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
@@ -166,8 +166,8 @@ public:
     }
 
     template <typename OtherLibObjT>
-    CommonIntegerRangeSet(const CommonIntegerRangeSet<OtherLibObjT> rangeSet) noexcept :
-        _ThisBorrowedObject {rangeSet}
+    CommonIntegerRangeSet(const CommonIntegerRangeSet<OtherLibObjT> rangeSet) noexcept
+        : _ThisBorrowedObject {rangeSet}
     {
     }
 

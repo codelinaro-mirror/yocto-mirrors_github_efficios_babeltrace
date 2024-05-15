@@ -31,17 +31,18 @@ namespace src {
 
 Ctf2MetadataStreamParser::Ctf2MetadataStreamParser(
     const bt2::OptionalBorrowedObject<bt2::SelfComponent> selfComp, const ClkClsCfg& clkClsCfg,
-    const bt2c::Logger& parentLogger) :
-    MetadataStreamParser {selfComp, clkClsCfg},
-    _mLogger {parentLogger, "PLUGIN/CTF/CTF-2-META-STREAM-PARSER"}, _mFragmentValReq {_mLogger},
-    _mDefClkOffsetVal {std::invoke([] {
-        bt2c::JsonObjVal::Container entries;
+    const bt2c::Logger& parentLogger)
+    : MetadataStreamParser {selfComp, clkClsCfg},
+      _mLogger {parentLogger, "PLUGIN/CTF/CTF-2-META-STREAM-PARSER"},
+      _mFragmentValReq {_mLogger},
+      _mDefClkOffsetVal {std::invoke([] {
+          bt2c::JsonObjVal::Container entries;
 
-        entries.insert(std::pair {jsonstr::seconds, bt2c::createJsonVal(0LL, bt2c::TextLoc {})});
-        entries.insert(std::pair {jsonstr::cycles, bt2c::createJsonVal(0ULL, bt2c::TextLoc {})});
-        return bt2c::createJsonVal(std::move(entries), bt2c::TextLoc {});
-    })},
-    _mFcBuilder {_mLogger}
+          entries.insert(std::pair {jsonstr::seconds, bt2c::createJsonVal(0LL, bt2c::TextLoc {})});
+          entries.insert(std::pair {jsonstr::cycles, bt2c::createJsonVal(0ULL, bt2c::TextLoc {})});
+          return bt2c::createJsonVal(std::move(entries), bt2c::TextLoc {});
+      })},
+      _mFcBuilder {_mLogger}
 {
 }
 

@@ -31,9 +31,10 @@ struct ctf_fs_trace
 
     explicit ctf_fs_trace(const ctf::src::ClkClsCfg& clkClsCfg,
                           const bt2::OptionalBorrowedObject<bt2::SelfComponent> selfComp,
-                          const bt2c::Logger& parentLogger) :
-        _mLogger {parentLogger, "PLUGIN/SRC.CTF.FS/TRACE"}, _mClkClsCfg {clkClsCfg},
-        _mSelfComp {selfComp}
+                          const bt2c::Logger& parentLogger)
+        : _mLogger {parentLogger, "PLUGIN/SRC.CTF.FS/TRACE"},
+          _mClkClsCfg {clkClsCfg},
+          _mSelfComp {selfComp}
     {
     }
 
@@ -93,8 +94,9 @@ struct ctf_fs_component
     using UP = std::unique_ptr<ctf_fs_component>;
 
     explicit ctf_fs_component(const ctf::src::ClkClsCfg& clkClsCfgParam,
-                              const bt2c::Logger& parentLogger) noexcept :
-        logger {parentLogger, "PLUGIN/SRC.CTF.FS/COMP"}, clkClsCfg {clkClsCfgParam}
+                              const bt2c::Logger& parentLogger) noexcept
+        : logger {parentLogger, "PLUGIN/SRC.CTF.FS/COMP"},
+          clkClsCfg {clkClsCfgParam}
     {
     }
 
@@ -112,8 +114,9 @@ struct ctf_fs_msg_iter_data
 {
     using UP = std::unique_ptr<ctf_fs_msg_iter_data>;
 
-    explicit ctf_fs_msg_iter_data(const bt2::SelfMessageIterator selfMsgIterParam) :
-        selfMsgIter {selfMsgIterParam}, logger {selfMsgIter, "PLUGIN/SRC.CTF.FS/MSG-ITER"}
+    explicit ctf_fs_msg_iter_data(const bt2::SelfMessageIterator selfMsgIterParam)
+        : selfMsgIter {selfMsgIterParam},
+          logger {selfMsgIter, "PLUGIN/SRC.CTF.FS/MSG-ITER"}
     {
     }
 
@@ -187,7 +190,8 @@ namespace fs {
 
 struct Parameters
 {
-    explicit Parameters(const bt2::ConstArrayValue inputsParam) noexcept : inputs {inputsParam}
+    explicit Parameters(const bt2::ConstArrayValue inputsParam) noexcept
+        : inputs {inputsParam}
     {
     }
 

@@ -50,23 +50,23 @@ public:
     using Shared =
         SharedObject<ConstComponent, const bt_component, internal::ConstComponentRefFuncs>;
 
-    explicit ConstComponent(const bt_component * const libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit ConstComponent(const bt_component * const libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
-    explicit ConstComponent(const bt_component_source * const libObjPtr) noexcept :
-        _ThisBorrowedObject {bt_component_source_as_component_const(libObjPtr)}
+    explicit ConstComponent(const bt_component_source * const libObjPtr) noexcept
+        : _ThisBorrowedObject {bt_component_source_as_component_const(libObjPtr)}
     {
     }
 
-    explicit ConstComponent(const bt_component_filter * const libObjPtr) noexcept :
-        _ThisBorrowedObject {bt_component_filter_as_component_const(libObjPtr)}
+    explicit ConstComponent(const bt_component_filter * const libObjPtr) noexcept
+        : _ThisBorrowedObject {bt_component_filter_as_component_const(libObjPtr)}
     {
     }
 
-    explicit ConstComponent(const bt_component_sink * const libObjPtr) noexcept :
-        _ThisBorrowedObject {bt_component_sink_as_component_const(libObjPtr)}
+    explicit ConstComponent(const bt_component_sink * const libObjPtr) noexcept
+        : _ThisBorrowedObject {bt_component_sink_as_component_const(libObjPtr)}
     {
     }
 
@@ -117,8 +117,8 @@ public:
     using typename BorrowedObject<LibObjT>::LibObjPtr;
 
 protected:
-    explicit ConstSpecificComponent(const LibObjPtr libObjPtr) noexcept :
-        BorrowedObject<LibObjT> {libObjPtr}
+    explicit ConstSpecificComponent(const LibObjPtr libObjPtr) noexcept
+        : BorrowedObject<LibObjT> {libObjPtr}
     {
     }
 
@@ -250,8 +250,8 @@ public:
     using Port = ConstPort<LibPortT>;
     using Iterator = BorrowedObjectIterator<ConstComponentPorts>;
 
-    explicit ConstComponentPorts(const LibObjPtr libObjPtr) noexcept :
-        BorrowedObject<LibCompT> {libObjPtr}
+    explicit ConstComponentPorts(const LibObjPtr libObjPtr) noexcept
+        : BorrowedObject<LibCompT> {libObjPtr}
     {
     }
 
@@ -291,8 +291,8 @@ public:
 
     using OutputPorts = ConstComponentPorts<const bt_component_source, const bt_port_output>;
 
-    explicit ConstSourceComponent(const bt_component_source * const libObjPtr) noexcept :
-        ConstSpecificComponent {libObjPtr}
+    explicit ConstSourceComponent(const bt_component_source * const libObjPtr) noexcept
+        : ConstSpecificComponent {libObjPtr}
     {
     }
 
@@ -330,8 +330,8 @@ public:
     using InputPorts = ConstComponentPorts<const bt_component_filter, const bt_port_input>;
     using OutputPorts = ConstComponentPorts<const bt_component_filter, const bt_port_output>;
 
-    explicit ConstFilterComponent(const bt_component_filter * const libObjPtr) noexcept :
-        ConstSpecificComponent {libObjPtr}
+    explicit ConstFilterComponent(const bt_component_filter * const libObjPtr) noexcept
+        : ConstSpecificComponent {libObjPtr}
     {
     }
 
@@ -369,8 +369,8 @@ public:
 
     using InputPorts = ConstComponentPorts<const bt_component_sink, const bt_port_input>;
 
-    explicit ConstSinkComponent(const bt_component_sink * const libObjPtr) noexcept :
-        ConstSpecificComponent {libObjPtr}
+    explicit ConstSinkComponent(const bt_component_sink * const libObjPtr) noexcept
+        : ConstSpecificComponent {libObjPtr}
     {
     }
 
@@ -382,18 +382,18 @@ public:
     }
 };
 
-inline ConstComponent::ConstComponent(const ConstSourceComponent other) noexcept :
-    ConstComponent {other.libObjPtr()}
+inline ConstComponent::ConstComponent(const ConstSourceComponent other) noexcept
+    : ConstComponent {other.libObjPtr()}
 {
 }
 
-inline ConstComponent::ConstComponent(const ConstFilterComponent other) noexcept :
-    ConstComponent {other.libObjPtr()}
+inline ConstComponent::ConstComponent(const ConstFilterComponent other) noexcept
+    : ConstComponent {other.libObjPtr()}
 {
 }
 
-inline ConstComponent::ConstComponent(const ConstSinkComponent other) noexcept :
-    ConstComponent {other.libObjPtr()}
+inline ConstComponent::ConstComponent(const ConstSinkComponent other) noexcept
+    : ConstComponent {other.libObjPtr()}
 {
 }
 
@@ -463,7 +463,8 @@ public:
     using typename BorrowedObject<LibObjT>::LibObjPtr;
     using Shared = SharedObject<ConstPort, LibObjT, internal::ConstPortRefFuncs<LibObjT>>;
 
-    explicit ConstPort(const LibObjPtr libObjPtr) noexcept : BorrowedObject<LibObjT> {libObjPtr}
+    explicit ConstPort(const LibObjPtr libObjPtr) noexcept
+        : BorrowedObject<LibObjT> {libObjPtr}
     {
     }
 

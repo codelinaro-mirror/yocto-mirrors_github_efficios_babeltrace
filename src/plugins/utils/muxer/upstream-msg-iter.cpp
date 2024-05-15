@@ -16,10 +16,10 @@
 namespace bt2mux {
 
 UpstreamMsgIter::UpstreamMsgIter(bt2::MessageIterator::Shared msgIter, std::string portName,
-                                 const bt2c::Logger& parentLogger) :
-    _mMsgIter {std::move(msgIter)},
-    _mLogger {parentLogger, fmt::format("{}/[{}]", parentLogger.tag(), portName)},
-    _mPortName {std::move(portName)}
+                                 const bt2c::Logger& parentLogger)
+    : _mMsgIter {std::move(msgIter)},
+      _mLogger {parentLogger, fmt::format("{}/[{}]", parentLogger.tag(), portName)},
+      _mPortName {std::move(portName)}
 {
     BT_CPPLOGI("Created an upstream message iterator: this={}, port-name={}", fmt::ptr(this),
                _mPortName);

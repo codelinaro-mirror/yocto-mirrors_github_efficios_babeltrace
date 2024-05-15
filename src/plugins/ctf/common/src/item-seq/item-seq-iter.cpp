@@ -17,32 +17,34 @@ namespace src {
 using namespace bt2c::literals::datalen;
 
 ItemSeqIter::ItemSeqIter(std::unique_ptr<Medium> medium, const TraceCls& traceCls,
-                         const bt2c::Logger& parentLogger) :
-    _mMedium {std::move(medium)}, _mTraceCls {&traceCls},
-    _mTraceClsSavedKeyValCountUpdatedObservableToken(
-        _mTraceCls->savedKeyValCountUpdatedObservable().attach([this](const auto count) {
-            this->_savedKeyValCountUpdated(count);
-        })),
-    _mLogger {parentLogger, "PLUGIN/CTF/ITEM-SEQ-ITER"}
+                         const bt2c::Logger& parentLogger)
+    : _mMedium {std::move(medium)},
+      _mTraceCls {&traceCls},
+      _mTraceClsSavedKeyValCountUpdatedObservableToken(
+          _mTraceCls->savedKeyValCountUpdatedObservable().attach([this](const auto count) {
+              this->_savedKeyValCountUpdated(count);
+          })),
+      _mLogger {parentLogger, "PLUGIN/CTF/ITEM-SEQ-ITER"}
 {
     /* Allocate enough elements to save values for dependent fields */
     _mSavedKeyVals.resize(traceCls.savedKeyValCount());
 }
 
 ItemSeqIter::ItemSeqIter(std::unique_ptr<Medium> medium, const TraceCls& traceCls,
-                         const bt2c::DataLen pktOffset, const bt2c::Logger& parentLogger) :
-    ItemSeqIter {std::move(medium), traceCls, parentLogger}
+                         const bt2c::DataLen pktOffset, const bt2c::Logger& parentLogger)
+    : ItemSeqIter {std::move(medium), traceCls, parentLogger}
 {
     this->seekPkt(pktOffset);
 }
 
-ItemSeqIter::_StackFrame::_StackFrame(const _State restoringStateParam) noexcept :
-    restoringState {restoringStateParam}
+ItemSeqIter::_StackFrame::_StackFrame(const _State restoringStateParam) noexcept
+    : restoringState {restoringStateParam}
 {
 }
 
 ItemSeqIter::_StackFrame::_StackFrame(const _State restoringStateParam, const Fc& fcParam) noexcept
-    : restoringState {restoringStateParam}, fc {&fcParam}
+    : restoringState {restoringStateParam},
+      fc {&fcParam}
 {
 }
 

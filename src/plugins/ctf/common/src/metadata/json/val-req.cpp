@@ -26,8 +26,8 @@ namespace {
 class AlignValReq final : public bt2c::JsonValHasTypeReq
 {
 public:
-    explicit AlignValReq(const bt2c::Logger& parentLogger) noexcept :
-        bt2c::JsonValHasTypeReq {bt2c::ValType::UInt, parentLogger}
+    explicit AlignValReq(const bt2c::Logger& parentLogger) noexcept
+        : bt2c::JsonValHasTypeReq {bt2c::ValType::UInt, parentLogger}
     {
     }
 
@@ -57,9 +57,10 @@ protected:
 class ByteOrderValReq final : public bt2c::JsonStrValInSetReq
 {
 public:
-    explicit ByteOrderValReq(const bt2c::Logger& parentLogger) :
-        bt2c::JsonStrValInSetReq {
-            bt2c::JsonStrValInSetReq::Set {jsonstr::bigEndian, jsonstr::littleEndian}, parentLogger}
+    explicit ByteOrderValReq(const bt2c::Logger& parentLogger)
+        : bt2c::JsonStrValInSetReq {
+              bt2c::JsonStrValInSetReq::Set {jsonstr::bigEndian, jsonstr::littleEndian},
+              parentLogger}
     {
     }
 
@@ -86,9 +87,9 @@ private:
 class BitOrderValReq final : public bt2c::JsonStrValInSetReq
 {
 public:
-    explicit BitOrderValReq(const bt2c::Logger& parentLogger) :
-        bt2c::JsonStrValInSetReq {bt2c::JsonStrValInSetReq::Set {jsonstr::ftl, jsonstr::ltf},
-                                  parentLogger}
+    explicit BitOrderValReq(const bt2c::Logger& parentLogger)
+        : bt2c::JsonStrValInSetReq {bt2c::JsonStrValInSetReq::Set {jsonstr::ftl, jsonstr::ltf},
+                                    parentLogger}
     {
     }
 
@@ -115,9 +116,9 @@ private:
 class UuidValReq final : public bt2c::JsonArrayValReq
 {
 public:
-    explicit UuidValReq(const bt2c::Logger& parentLogger) :
-        bt2c::JsonArrayValReq {16, bt2c::JsonUIntValInRangeReq::shared(0, 255, parentLogger),
-                               parentLogger}
+    explicit UuidValReq(const bt2c::Logger& parentLogger)
+        : bt2c::JsonArrayValReq {16, bt2c::JsonUIntValInRangeReq::shared(0, 255, parentLogger),
+                                 parentLogger}
     {
     }
 
@@ -144,8 +145,8 @@ private:
 class FieldLocPathElemValReq final : public bt2c::JsonValReq
 {
 public:
-    explicit FieldLocPathElemValReq(const bt2c::Logger& parentLogger) :
-        bt2c::JsonValReq {parentLogger}
+    explicit FieldLocPathElemValReq(const bt2c::Logger& parentLogger)
+        : bt2c::JsonValReq {parentLogger}
     {
     }
 
@@ -173,8 +174,8 @@ private:
 class FieldLocValReq final : public bt2c::JsonObjValReq
 {
 public:
-    explicit FieldLocValReq(const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+    explicit FieldLocValReq(const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         bt2c::JsonObjValReq {{
             {jsonstr::origin, {
                 bt2c::JsonStrValInSetReq::shared({
@@ -231,8 +232,8 @@ private:
 class UserAttrsValReq final : public bt2c::JsonObjValReq
 {
 public:
-    explicit UserAttrsValReq(const bt2c::Logger& parentLogger) :
-        bt2c::JsonObjValReq {{}, true, parentLogger}
+    explicit UserAttrsValReq(const bt2c::Logger& parentLogger)
+        : bt2c::JsonObjValReq {{}, true, parentLogger}
     {
     }
 
@@ -259,8 +260,8 @@ private:
 class TraceEnvValReq final : public bt2c::JsonObjValReq
 {
 public:
-    explicit TraceEnvValReq(const bt2c::Logger& parentLogger) :
-        bt2c::JsonObjValReq {{}, true, parentLogger}
+    explicit TraceEnvValReq(const bt2c::Logger& parentLogger)
+        : bt2c::JsonObjValReq {{}, true, parentLogger}
     {
     }
 
@@ -296,8 +297,8 @@ private:
 class ExtValReq final : public bt2c::JsonObjValReq
 {
 public:
-    explicit ExtValReq(const bt2c::Logger& parentLogger) :
-        bt2c::JsonObjValReq {{}, true, parentLogger}
+    explicit ExtValReq(const bt2c::Logger& parentLogger)
+        : bt2c::JsonObjValReq {{}, true, parentLogger}
     {
     }
 
@@ -336,10 +337,9 @@ public:
      * validates that a given JSON array value only contains the roles
      * `validRoles`.
      */
-    explicit RolesValReq(bt2c::JsonStrValInSetReq::Set validRoles,
-                         const bt2c::Logger& parentLogger) :
-        bt2c::JsonArrayValReq {
-            bt2c::JsonStrValInSetReq::shared(std::move(validRoles), parentLogger), parentLogger}
+    explicit RolesValReq(bt2c::JsonStrValInSetReq::Set validRoles, const bt2c::Logger& parentLogger)
+        : bt2c::JsonArrayValReq {
+              bt2c::JsonStrValInSetReq::shared(std::move(validRoles), parentLogger), parentLogger}
     {
     }
 
@@ -416,17 +416,18 @@ protected:
      * adding `propReqs` to the base JSON object value property
      * requirements.
      */
-    explicit FcValReq(std::string&& type, PropReqs&& propReqs, const bt2c::Logger& parentLogger) :
-        bt2c::JsonObjValReq {
-            this->_buildPropReqs(std::move(type), std::move(propReqs), parentLogger), parentLogger}
+    explicit FcValReq(std::string&& type, PropReqs&& propReqs, const bt2c::Logger& parentLogger)
+        : bt2c::JsonObjValReq {
+              this->_buildPropReqs(std::move(type), std::move(propReqs), parentLogger),
+              parentLogger}
     {
     }
 
     /*
      * Builds a CTF 2 JSON field class value requirement of type `type`.
      */
-    explicit FcValReq(std::string&& type, const bt2c::Logger& parentLogger) :
-        FcValReq {std::move(type), {}, parentLogger}
+    explicit FcValReq(std::string&& type, const bt2c::Logger& parentLogger)
+        : FcValReq {std::move(type), {}, parentLogger}
     {
     }
 
@@ -453,9 +454,9 @@ protected:
      * object value property requirements.
      */
     explicit FixedLenBitArrayFcValReq(std::string&& type, PropReqs&& propReqs,
-                                      const bt2c::Logger& parentLogger) :
-        FcValReq {std::move(type), this->_buildPropReqs(std::move(propReqs), parentLogger),
-                  parentLogger}
+                                      const bt2c::Logger& parentLogger)
+        : FcValReq {std::move(type), this->_buildPropReqs(std::move(propReqs), parentLogger),
+                    parentLogger}
     {
     }
 
@@ -463,14 +464,14 @@ protected:
      * Builds a CTF 2 JSON fixed-length bit array field class value
      * requirement of type `type`.
      */
-    explicit FixedLenBitArrayFcValReq(std::string&& type, const bt2c::Logger& parentLogger) :
-        FixedLenBitArrayFcValReq {std::move(type), {}, parentLogger}
+    explicit FixedLenBitArrayFcValReq(std::string&& type, const bt2c::Logger& parentLogger)
+        : FixedLenBitArrayFcValReq {std::move(type), {}, parentLogger}
     {
     }
 
 public:
-    explicit FixedLenBitArrayFcValReq(const bt2c::Logger& parentLogger) :
-        FixedLenBitArrayFcValReq {this->typeStr(), parentLogger}
+    explicit FixedLenBitArrayFcValReq(const bt2c::Logger& parentLogger)
+        : FixedLenBitArrayFcValReq {this->typeStr(), parentLogger}
     {
     }
 
@@ -515,8 +516,9 @@ private:
 class FixedLenBitMapFcFlagsValReq final : public bt2c::JsonObjValReq
 {
 public:
-    explicit FixedLenBitMapFcFlagsValReq(const bt2c::Logger& parentLogger) :
-        bt2c::JsonObjValReq {{}, true, parentLogger}, _mRangeSetReq {parentLogger}
+    explicit FixedLenBitMapFcFlagsValReq(const bt2c::Logger& parentLogger)
+        : bt2c::JsonObjValReq {{}, true, parentLogger},
+          _mRangeSetReq {parentLogger}
     {
     }
 
@@ -561,8 +563,8 @@ private:
 class FixedLenBitMapFcValReq final : public FixedLenBitArrayFcValReq
 {
 public:
-    explicit FixedLenBitMapFcValReq(const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+    explicit FixedLenBitMapFcValReq(const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         FixedLenBitArrayFcValReq {this->typeStr(), {
             {jsonstr::flags, {FixedLenBitMapFcFlagsValReq::shared(parentLogger), true}},
         }, parentLogger}
@@ -617,8 +619,8 @@ private:
 class FixedLenBoolFcValReq final : public FixedLenBitArrayFcValReq
 {
 public:
-    explicit FixedLenBoolFcValReq(const bt2c::Logger& parentLogger) :
-        FixedLenBitArrayFcValReq {this->typeStr(), parentLogger}
+    explicit FixedLenBoolFcValReq(const bt2c::Logger& parentLogger)
+        : FixedLenBitArrayFcValReq {this->typeStr(), parentLogger}
     {
     }
 
@@ -668,9 +670,10 @@ protected:
      * object value property requirements.
      */
     explicit FixedLenIntFcValReq(std::string&& type, PropReqs&& propReqs,
-                                 const bt2c::Logger& parentLogger) :
-        FixedLenBitArrayFcValReq {
-            std::move(type), this->_buildPropReqs(std::move(propReqs), parentLogger), parentLogger}
+                                 const bt2c::Logger& parentLogger)
+        : FixedLenBitArrayFcValReq {std::move(type),
+                                    this->_buildPropReqs(std::move(propReqs), parentLogger),
+                                    parentLogger}
     {
     }
 
@@ -718,8 +721,9 @@ template <typename JsonIntValReqT>
 class IntFcMappingsValReq final : public bt2c::JsonObjValReq
 {
 public:
-    explicit IntFcMappingsValReq(const bt2c::Logger& parentLogger) :
-        bt2c::JsonObjValReq {{}, true, parentLogger}, _mRangeSetReq {parentLogger}
+    explicit IntFcMappingsValReq(const bt2c::Logger& parentLogger)
+        : bt2c::JsonObjValReq {{}, true, parentLogger},
+          _mRangeSetReq {parentLogger}
     {
     }
 
@@ -774,8 +778,8 @@ public:
      * Builds a CTF 2 JSON fixed-length unsigned integer field class
      * value requirement.
      */
-    explicit FixedLenUIntFcValReq(const bt2c::Logger& parentLogger) :
-        FixedLenIntFcValReq {this->typeStr(), this->_buildPropReqs(parentLogger), parentLogger}
+    explicit FixedLenUIntFcValReq(const bt2c::Logger& parentLogger)
+        : FixedLenIntFcValReq {this->typeStr(), this->_buildPropReqs(parentLogger), parentLogger}
     {
     }
 
@@ -821,12 +825,12 @@ public:
      * Builds a CTF 2 JSON fixed-length signed integer field class
      * value requirement.
      */
-    explicit FixedLenSIntFcValReq(const bt2c::Logger& parentLogger) :
-        FixedLenIntFcValReq {this->typeStr(),
-                             {
-                                 intFcMappingsPropReqEntry<bt2c::JsonSIntValReq>(parentLogger),
-                             },
-                             parentLogger}
+    explicit FixedLenSIntFcValReq(const bt2c::Logger& parentLogger)
+        : FixedLenIntFcValReq {this->typeStr(),
+                               {
+                                   intFcMappingsPropReqEntry<bt2c::JsonSIntValReq>(parentLogger),
+                               },
+                               parentLogger}
     {
     }
 
@@ -859,8 +863,8 @@ private:
 class FixedLenFloatFcValReq final : public FixedLenBitArrayFcValReq
 {
 public:
-    explicit FixedLenFloatFcValReq(const bt2c::Logger& parentLogger) :
-        FixedLenBitArrayFcValReq {this->typeStr(), parentLogger}
+    explicit FixedLenFloatFcValReq(const bt2c::Logger& parentLogger)
+        : FixedLenBitArrayFcValReq {this->typeStr(), parentLogger}
     {
     }
 
@@ -900,9 +904,9 @@ protected:
      * object value property requirements.
      */
     explicit VarLenIntFcValReq(std::string&& type, PropReqs&& propReqs,
-                               const bt2c::Logger& parentLogger) :
-        FcValReq {std::move(type), this->_buildPropReqs(std::move(propReqs), parentLogger),
-                  parentLogger}
+                               const bt2c::Logger& parentLogger)
+        : FcValReq {std::move(type), this->_buildPropReqs(std::move(propReqs), parentLogger),
+                    parentLogger}
     {
     }
 
@@ -925,8 +929,8 @@ public:
      * Builds a CTF 2 JSON variable-length unsigned integer field class
      * value requirement.
      */
-    explicit VarLenUIntFcValReq(const bt2c::Logger& parentLogger) :
-        VarLenIntFcValReq {this->typeStr(), this->_buildPropReqs(parentLogger), parentLogger}
+    explicit VarLenUIntFcValReq(const bt2c::Logger& parentLogger)
+        : VarLenIntFcValReq {this->typeStr(), this->_buildPropReqs(parentLogger), parentLogger}
     {
     }
 
@@ -973,12 +977,12 @@ public:
      * Builds a CTF 2 JSON variable-length unsigned integer field class
      * value requirement.
      */
-    explicit VarLenSIntFcValReq(const bt2c::Logger& parentLogger) :
-        VarLenIntFcValReq {this->typeStr(),
-                           {
-                               intFcMappingsPropReqEntry<bt2c::JsonSIntValReq>(parentLogger),
-                           },
-                           parentLogger}
+    explicit VarLenSIntFcValReq(const bt2c::Logger& parentLogger)
+        : VarLenIntFcValReq {this->typeStr(),
+                             {
+                                 intFcMappingsPropReqEntry<bt2c::JsonSIntValReq>(parentLogger),
+                             },
+                             parentLogger}
     {
     }
 
@@ -1011,15 +1015,15 @@ private:
 class StrEncodingValReq final : public bt2c::JsonStrValInSetReq
 {
 public:
-    explicit StrEncodingValReq(const bt2c::Logger& parentLogger) :
-        bt2c::JsonStrValInSetReq {bt2c::JsonStrValInSetReq::Set {
-                                      jsonstr::utf8,
-                                      jsonstr::utf16Be,
-                                      jsonstr::utf16Le,
-                                      jsonstr::utf32Be,
-                                      jsonstr::utf32Le,
-                                  },
-                                  parentLogger}
+    explicit StrEncodingValReq(const bt2c::Logger& parentLogger)
+        : bt2c::JsonStrValInSetReq {bt2c::JsonStrValInSetReq::Set {
+                                        jsonstr::utf8,
+                                        jsonstr::utf16Be,
+                                        jsonstr::utf16Le,
+                                        jsonstr::utf32Be,
+                                        jsonstr::utf32Le,
+                                    },
+                                    parentLogger}
     {
     }
 
@@ -1046,10 +1050,9 @@ private:
 class StrFcValReq : public FcValReq
 {
 protected:
-    explicit StrFcValReq(std::string&& type, PropReqs&& propReqs,
-                         const bt2c::Logger& parentLogger) :
-        FcValReq {std::move(type), this->_buildPropReqs(std::move(propReqs), parentLogger),
-                  parentLogger}
+    explicit StrFcValReq(std::string&& type, PropReqs&& propReqs, const bt2c::Logger& parentLogger)
+        : FcValReq {std::move(type), this->_buildPropReqs(std::move(propReqs), parentLogger),
+                    parentLogger}
     {
     }
 
@@ -1077,8 +1080,8 @@ private:
 class NullTerminatedStrFcValReq final : public StrFcValReq
 {
 public:
-    explicit NullTerminatedStrFcValReq(const bt2c::Logger& parentLogger) :
-        StrFcValReq {this->typeStr(), {}, parentLogger}
+    explicit NullTerminatedStrFcValReq(const bt2c::Logger& parentLogger)
+        : StrFcValReq {this->typeStr(), {}, parentLogger}
     {
     }
 
@@ -1132,8 +1135,8 @@ bt2c::JsonObjValReq::PropReqsEntry dynLenFcLenFieldLocPropReqEntry(const bt2c::L
 class StaticLenStrFcValReq final : public StrFcValReq
 {
 public:
-    explicit StaticLenStrFcValReq(const bt2c::Logger& parentLogger) :
-        StrFcValReq {this->typeStr(), {staticLenFcLenPropReqEntry(parentLogger)}, parentLogger}
+    explicit StaticLenStrFcValReq(const bt2c::Logger& parentLogger)
+        : StrFcValReq {this->typeStr(), {staticLenFcLenPropReqEntry(parentLogger)}, parentLogger}
     {
     }
 
@@ -1165,8 +1168,10 @@ private:
 class DynLenStrFcValReq final : public StrFcValReq
 {
 public:
-    explicit DynLenStrFcValReq(const bt2c::Logger& parentLogger) :
-        StrFcValReq {this->typeStr(), {dynLenFcLenFieldLocPropReqEntry(parentLogger)}, parentLogger}
+    explicit DynLenStrFcValReq(const bt2c::Logger& parentLogger)
+        : StrFcValReq {this->typeStr(),
+                       {dynLenFcLenFieldLocPropReqEntry(parentLogger)},
+                       parentLogger}
     {
     }
 
@@ -1203,10 +1208,9 @@ protected:
      * `type`, adding `propReqs` to the base JSON object value property
      * requirements.
      */
-    explicit BlobFcValReq(std::string&& type, PropReqs&& propReqs,
-                          const bt2c::Logger& parentLogger) :
-        FcValReq {std::move(type), this->_buildPropReqs(std::move(propReqs), parentLogger),
-                  parentLogger}
+    explicit BlobFcValReq(std::string&& type, PropReqs&& propReqs, const bt2c::Logger& parentLogger)
+        : FcValReq {std::move(type), this->_buildPropReqs(std::move(propReqs), parentLogger),
+                    parentLogger}
     {
     }
 
@@ -1214,8 +1218,8 @@ protected:
      * Builds a CTF 2 JSON BLOB field class value requirement of type
      * `type`.
      */
-    explicit BlobFcValReq(std::string&& type, const bt2c::Logger& parentLogger) :
-        BlobFcValReq {std::move(type), {}, parentLogger}
+    explicit BlobFcValReq(std::string&& type, const bt2c::Logger& parentLogger)
+        : BlobFcValReq {std::move(type), {}, parentLogger}
     {
     }
 
@@ -1234,8 +1238,8 @@ private:
 class StaticLenBlobFcValReq final : public BlobFcValReq
 {
 public:
-    explicit StaticLenBlobFcValReq(const bt2c::Logger& parentLogger) :
-        BlobFcValReq {this->typeStr(), this->_buildPropReqs(parentLogger), parentLogger}
+    explicit StaticLenBlobFcValReq(const bt2c::Logger& parentLogger)
+        : BlobFcValReq {this->typeStr(), this->_buildPropReqs(parentLogger), parentLogger}
     {
     }
 
@@ -1288,10 +1292,10 @@ private:
 class DynLenBlobFcValReq final : public BlobFcValReq
 {
 public:
-    explicit DynLenBlobFcValReq(const bt2c::Logger& parentLogger) :
-        BlobFcValReq {this->typeStr(),
-                      {dynLenFcLenFieldLocPropReqEntry(parentLogger)},
-                      parentLogger}
+    explicit DynLenBlobFcValReq(const bt2c::Logger& parentLogger)
+        : BlobFcValReq {this->typeStr(),
+                        {dynLenFcLenFieldLocPropReqEntry(parentLogger)},
+                        parentLogger}
     {
     }
 
@@ -1340,8 +1344,9 @@ class AnyFcValReqWrapper final : public bt2c::JsonValReq
 {
 public:
     explicit AnyFcValReqWrapper(const AnyFullBlownFcValReq& anyFcValReq,
-                                const bt2c::Logger& parentLogger) :
-        bt2c::JsonValReq {parentLogger}, _mAnyFullBlownFcValReq {&anyFcValReq}
+                                const bt2c::Logger& parentLogger)
+        : bt2c::JsonValReq {parentLogger},
+          _mAnyFullBlownFcValReq {&anyFcValReq}
     {
     }
 
@@ -1399,8 +1404,8 @@ class StructFieldMemberClsValReq final : public bt2c::JsonObjValReq
 {
 public:
     explicit StructFieldMemberClsValReq(const AnyFullBlownFcValReq& anyFullBlownFcValReq,
-                                        const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+                                        const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         bt2c::JsonObjValReq {{
             namePropReqEntry(true, parentLogger),
             anyFcPropReqEntry(jsonstr::fc, anyFullBlownFcValReq, parentLogger),
@@ -1442,7 +1447,8 @@ bt2c::JsonObjValReq::PropReqsEntry minAlignPropReqEntry(const bt2c::Logger& pare
 class UniqueEntryNamesValidator final
 {
 public:
-    explicit UniqueEntryNamesValidator(const bt2c::Logger& parentLogger) : _mLogger {parentLogger}
+    explicit UniqueEntryNamesValidator(const bt2c::Logger& parentLogger)
+        : _mLogger {parentLogger}
     {
     }
 
@@ -1501,8 +1507,8 @@ class StructFcValReq final : public FcValReq
 {
 public:
     explicit StructFcValReq(const AnyFullBlownFcValReq& anyFullBlownFcValReq,
-                            const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+                            const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         FcValReq {this->typeStr(), {
             {jsonstr::memberClasses, {
                 bt2c::JsonArrayValReq::shared(
@@ -1558,10 +1564,10 @@ protected:
      * requirements.
      */
     explicit ArrayFcValReq(std::string&& type, const AnyFullBlownFcValReq& anyFullBlownFcValReq,
-                           PropReqs&& propReqs, const bt2c::Logger& parentLogger) :
-        FcValReq {std::move(type),
-                  this->_buildPropReqs(anyFullBlownFcValReq, std::move(propReqs), parentLogger),
-                  parentLogger}
+                           PropReqs&& propReqs, const bt2c::Logger& parentLogger)
+        : FcValReq {std::move(type),
+                    this->_buildPropReqs(anyFullBlownFcValReq, std::move(propReqs), parentLogger),
+                    parentLogger}
     {
     }
 
@@ -1570,8 +1576,8 @@ protected:
      * `type`.
      */
     explicit ArrayFcValReq(std::string&& type, const AnyFullBlownFcValReq& anyFullBlownFcValReq,
-                           const bt2c::Logger& parentLogger) :
-        ArrayFcValReq {std::move(type), anyFullBlownFcValReq, {}, parentLogger}
+                           const bt2c::Logger& parentLogger)
+        : ArrayFcValReq {std::move(type), anyFullBlownFcValReq, {}, parentLogger}
     {
     }
 
@@ -1592,8 +1598,8 @@ class StaticLenArrayFcValReq final : public ArrayFcValReq
 {
 public:
     explicit StaticLenArrayFcValReq(const AnyFullBlownFcValReq& anyFullBlownFcValReq,
-                                    const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+                                    const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         ArrayFcValReq {this->typeStr(), anyFullBlownFcValReq, {
             staticLenFcLenPropReqEntry(parentLogger)
         }, parentLogger}
@@ -1631,8 +1637,8 @@ class DynLenArrayFcValReq final : public ArrayFcValReq
 {
 public:
     explicit DynLenArrayFcValReq(const AnyFullBlownFcValReq& anyFullBlownFcValReq,
-                                 const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+                                 const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         ArrayFcValReq {this->typeStr(), anyFullBlownFcValReq, {
             dynLenFcLenFieldLocPropReqEntry(parentLogger)
         }, parentLogger}
@@ -1692,8 +1698,8 @@ class OptionalFcValReq final : public FcValReq
 {
 public:
     explicit OptionalFcValReq(const AnyFullBlownFcValReq& anyFullBlownFcValReq,
-                              const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+                              const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         FcValReq {this->typeStr(), {
             anyFcPropReqEntry(jsonstr::fc, anyFullBlownFcValReq, parentLogger),
             selFieldLocPropReqEntry(parentLogger),
@@ -1733,8 +1739,8 @@ class VariantFcOptValReq final : public bt2c::JsonObjValReq
 {
 public:
     explicit VariantFcOptValReq(const AnyFullBlownFcValReq& anyFullBlownFcValReq,
-                                const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+                                const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         bt2c::JsonObjValReq {{
             namePropReqEntry(false, parentLogger),
             anyFcPropReqEntry(jsonstr::fc, anyFullBlownFcValReq, parentLogger),
@@ -1779,8 +1785,8 @@ class VariantFcValReq final : public FcValReq
 {
 public:
     explicit VariantFcValReq(const AnyFullBlownFcValReq& anyFullBlownFcValReq,
-                             const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+                             const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         FcValReq {this->typeStr(), {
             {jsonstr::opts, {
                 bt2c::JsonArrayValReq::shared(1, std::nullopt,
@@ -1830,8 +1836,8 @@ private:
 class AnyFullBlownFcValReq final : public bt2c::JsonObjValReq
 {
 public:
-    explicit AnyFullBlownFcValReq(const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+    explicit AnyFullBlownFcValReq(const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         bt2c::JsonObjValReq {{
             {
                 jsonstr::type,
@@ -1984,17 +1990,18 @@ protected:
      * requirements.
      */
     explicit FragmentValReq(std::string&& type, PropReqs&& propReqs,
-                            const bt2c::Logger& parentLogger) :
-        bt2c::JsonObjValReq {
-            this->_buildPropReqs(std::move(type), std::move(propReqs), parentLogger), parentLogger}
+                            const bt2c::Logger& parentLogger)
+        : bt2c::JsonObjValReq {
+              this->_buildPropReqs(std::move(type), std::move(propReqs), parentLogger),
+              parentLogger}
     {
     }
 
     /*
      * Builds a CTF 2 JSON fragment value requirement of type `type`.
      */
-    explicit FragmentValReq(std::string&& type, const bt2c::Logger& parentLogger) :
-        FragmentValReq {std::move(type), {}, parentLogger}
+    explicit FragmentValReq(std::string&& type, const bt2c::Logger& parentLogger)
+        : FragmentValReq {std::move(type), {}, parentLogger}
     {
     }
 
@@ -2015,8 +2022,8 @@ private:
 class PreambleFragmentValReq final : public FragmentValReq
 {
 public:
-    explicit PreambleFragmentValReq(const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+    explicit PreambleFragmentValReq(const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         FragmentValReq {this->typeStr(), {
             {jsonstr::version, {bt2c::JsonUIntValInSetReq::shared(2, parentLogger), true}},
             {jsonstr::uuid, {UuidValReq::shared(parentLogger)}},
@@ -2053,8 +2060,8 @@ private:
 class FcAliasFragmentValReq final : public FragmentValReq
 {
 public:
-    explicit FcAliasFragmentValReq(const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+    explicit FcAliasFragmentValReq(const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         FragmentValReq {this->typeStr(), {
             namePropReqEntry(true, parentLogger),
             anyFcPropReqEntry(jsonstr::fc, _mAnyFullBlownFcValReq, true, parentLogger),
@@ -2095,8 +2102,8 @@ private:
 class ClkOffsetValReq final : public bt2c::JsonObjValReq
 {
 public:
-    explicit ClkOffsetValReq(const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+    explicit ClkOffsetValReq(const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         bt2c::JsonObjValReq {{
             {jsonstr::seconds, {bt2c::JsonAnyIntValReq::shared(parentLogger)}},
             {jsonstr::cycles, {bt2c::JsonValHasTypeReq::shared(bt2c::ValType::UInt, parentLogger)}},
@@ -2150,8 +2157,8 @@ bt2c::JsonObjValReq::PropReqsEntry uidPropReqEntry(const bool isRequired,
 class ClkOriginObjValReq final : public bt2c::JsonObjValReq
 {
 public:
-    explicit ClkOriginObjValReq(const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+    explicit ClkOriginObjValReq(const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         bt2c::JsonObjValReq {{
             nsPropReqEntry(parentLogger),
             namePropReqEntry(true, parentLogger),
@@ -2173,8 +2180,9 @@ public:
 class ClkClsOriginValReq final : public bt2c::JsonValReq
 {
 public:
-    explicit ClkClsOriginValReq(const bt2c::Logger& parentLogger) :
-        bt2c::JsonValReq {parentLogger}, _mObjReq {parentLogger}
+    explicit ClkClsOriginValReq(const bt2c::Logger& parentLogger)
+        : bt2c::JsonValReq {parentLogger},
+          _mObjReq {parentLogger}
     {
     }
 
@@ -2222,8 +2230,8 @@ private:
 class ClkClsFragmentValReq final : public FragmentValReq
 {
 public:
-    explicit ClkClsFragmentValReq(const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+    explicit ClkClsFragmentValReq(const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         FragmentValReq {this->typeStr(), {
             {jsonstr::id, {bt2c::JsonValHasTypeReq::shared(bt2c::ValType::Str, parentLogger), true}},
             nsPropReqEntry(parentLogger),
@@ -2291,8 +2299,8 @@ class TraceClsFragmentValReq final : public FragmentValReq
 {
 public:
     explicit TraceClsFragmentValReq(const AnyFullBlownFcValReq& anyFullBlownFcValReq,
-                                    const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+                                    const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         FragmentValReq {this->typeStr(), {
             nsPropReqEntry(parentLogger),
             namePropReqEntry(false, parentLogger),
@@ -2344,8 +2352,8 @@ class DataStreamClsFragmentValReq final : public FragmentValReq
 {
 public:
     explicit DataStreamClsFragmentValReq(const AnyFullBlownFcValReq& anyFullBlownFcValReq,
-                                         const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+                                         const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         FragmentValReq {this->typeStr(), {
             idPropReqEntry(parentLogger),
             nsPropReqEntry(parentLogger),
@@ -2390,8 +2398,8 @@ class EventRecordClsFragmentValReq final : public FragmentValReq
 {
 public:
     explicit EventRecordClsFragmentValReq(const AnyFullBlownFcValReq& anyFullBlownFcValReq,
-                                          const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+                                          const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         FragmentValReq {this->typeStr(), {
             idPropReqEntry(parentLogger),
             nsPropReqEntry(parentLogger),
@@ -2438,8 +2446,8 @@ namespace internal {
 class Ctf2JsonAnyFragmentValReqImpl final : public bt2c::JsonObjValReq
 {
 public:
-    explicit Ctf2JsonAnyFragmentValReqImpl(const bt2c::Logger& parentLogger) :
-        /* clang-format off */
+    explicit Ctf2JsonAnyFragmentValReqImpl(const bt2c::Logger& parentLogger)
+        : /* clang-format off */
         bt2c::JsonObjValReq {{
             {
                 jsonstr::type, {
@@ -2527,9 +2535,9 @@ private:
 
 } /* namespace internal */
 
-Ctf2JsonAnyFragmentValReq::Ctf2JsonAnyFragmentValReq(const bt2c::Logger& parentLogger) :
-    bt2c::JsonValReq {parentLogger},
-    _mImpl {new internal::Ctf2JsonAnyFragmentValReqImpl {parentLogger}}
+Ctf2JsonAnyFragmentValReq::Ctf2JsonAnyFragmentValReq(const bt2c::Logger& parentLogger)
+    : bt2c::JsonValReq {parentLogger},
+      _mImpl {new internal::Ctf2JsonAnyFragmentValReqImpl {parentLogger}}
 {
 }
 

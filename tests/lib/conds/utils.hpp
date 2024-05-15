@@ -116,15 +116,16 @@ class RunInCondTrigger : public CondTrigger
 public:
     explicit RunInCondTrigger(RunInT runIn, const Type type, const std::string& condId,
                               const std::uint64_t graphMipVersion,
-                              const bt2c::CStringView nameSuffix = {}) :
-        CondTrigger {type, condId, nameSuffix}, _mRunIn {std::move(runIn)},
-        _mGraphMipVersion {graphMipVersion}
+                              const bt2c::CStringView nameSuffix = {})
+        : CondTrigger {type, condId, nameSuffix},
+          _mRunIn {std::move(runIn)},
+          _mGraphMipVersion {graphMipVersion}
     {
     }
 
     explicit RunInCondTrigger(const Type type, const std::string& condId,
-                              const bt2c::CStringView nameSuffix = {}) :
-        RunInCondTrigger {RunInT {}, type, condId, nameSuffix}
+                              const bt2c::CStringView nameSuffix = {})
+        : RunInCondTrigger {RunInT {}, type, condId, nameSuffix}
     {
     }
 
@@ -161,8 +162,8 @@ public:
     }
 
 private:
-    explicit RunInCompInitDelegator(OnCompInitFunc onCompInitFunc) :
-        _mOnCompInitFunc {std::move(onCompInitFunc)}
+    explicit RunInCompInitDelegator(OnCompInitFunc onCompInitFunc)
+        : _mOnCompInitFunc {std::move(onCompInitFunc)}
     {
     }
 

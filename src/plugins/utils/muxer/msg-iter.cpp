@@ -21,9 +21,9 @@
 namespace bt2mux {
 
 MsgIter::MsgIter(const bt2::SelfMessageIterator selfMsgIter,
-                 const bt2::SelfMessageIteratorConfiguration cfg, bt2::SelfComponentOutputPort) :
-    bt2::UserMessageIterator<MsgIter, Comp> {selfMsgIter, "MSG-ITER"},
-    _mHeap {_HeapComparator {_mLogger, selfMsgIter.component().graphMipVersion()}}
+                 const bt2::SelfMessageIteratorConfiguration cfg, bt2::SelfComponentOutputPort)
+    : bt2::UserMessageIterator<MsgIter, Comp> {selfMsgIter, "MSG-ITER"},
+      _mHeap {_HeapComparator {_mLogger, selfMsgIter.component().graphMipVersion()}}
 {
     /*
      * Create one upstream message iterator for each connected
@@ -435,8 +435,9 @@ void MsgIter::_validateMsgClkCls(const bt2::ConstMessage msg)
 }
 
 MsgIter::_HeapComparator::_HeapComparator(const bt2c::Logger& logger,
-                                          const std::uint64_t graphMipVersion) :
-    _mLogger {logger}, _mMsgComparator {graphMipVersion}
+                                          const std::uint64_t graphMipVersion)
+    : _mLogger {logger},
+      _mMsgComparator {graphMipVersion}
 {
 }
 

@@ -17,8 +17,8 @@ class SelfMessageIteratorConfiguration final :
     public BorrowedObject<bt_self_message_iterator_configuration>
 {
 public:
-    explicit SelfMessageIteratorConfiguration(const LibObjPtr libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit SelfMessageIteratorConfiguration(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 

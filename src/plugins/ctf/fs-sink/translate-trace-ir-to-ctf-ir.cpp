@@ -38,9 +38,9 @@ namespace sink {
 
 struct TraceIrToCtfIrCtx
 {
-    explicit TraceIrToCtfIrCtx(struct fs_sink_comp *fs_sink) :
-        logger {fs_sink->logger, "PLUGIN/SINK.CTF.FS/TRANSLATE-TRACE-IR-TO-CTF-IR"},
-        ctf_version {fs_sink->ctf_version}
+    explicit TraceIrToCtfIrCtx(struct fs_sink_comp *fs_sink)
+        : logger {fs_sink->logger, "PLUGIN/SINK.CTF.FS/TRANSLATE-TRACE-IR-TO-CTF-IR"},
+          ctf_version {fs_sink->ctf_version}
     {
     }
 

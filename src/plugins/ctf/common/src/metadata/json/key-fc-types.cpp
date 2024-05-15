@@ -49,11 +49,12 @@ public:
                               const Fc * const commonEventRecordCtxFc,
                               const Fc * const specEventRecordCtxFc,
                               const Fc * const eventRecordPayloadFc,
-                              const bt2c::Logger& parentLogger) :
-        _mLogger {parentLogger, "PLUGIN/CTF/CTF-2-FC-DEP-TYPES"}, _mScope {scope},
-        _mCtx {pktHeaderFc,          pktCtxFc,
-               eventRecordHeaderFc,  commonEventRecordCtxFc,
-               specEventRecordCtxFc, eventRecordPayloadFc}
+                              const bt2c::Logger& parentLogger)
+        : _mLogger {parentLogger, "PLUGIN/CTF/CTF-2-FC-DEP-TYPES"},
+          _mScope {scope},
+          _mCtx {pktHeaderFc,          pktCtxFc,
+                 eventRecordHeaderFc,  commonEventRecordCtxFc,
+                 specEventRecordCtxFc, eventRecordPayloadFc}
     {
     }
 

@@ -2342,7 +2342,8 @@ class VariantFieldWithIntSelBeginItem : public VariantFieldBeginItem
     friend class ItemSeqIter;
 
 protected:
-    explicit VariantFieldWithIntSelBeginItem() noexcept : VariantFieldBeginItem {TypeV}
+    explicit VariantFieldWithIntSelBeginItem() noexcept
+        : VariantFieldBeginItem {TypeV}
     {
     }
 
@@ -2382,7 +2383,8 @@ class VariantFieldWithIntSelEndItem : public VariantFieldEndItem
     friend class ItemSeqIter;
 
 protected:
-    explicit VariantFieldWithIntSelEndItem() noexcept : VariantFieldEndItem {TypeV}
+    explicit VariantFieldWithIntSelEndItem() noexcept
+        : VariantFieldEndItem {TypeV}
     {
     }
 
@@ -2592,7 +2594,8 @@ class OptionalFieldWithIntSelBeginItem : public OptionalFieldBeginItem
     friend class ItemSeqIter;
 
 protected:
-    explicit OptionalFieldWithIntSelBeginItem() noexcept : OptionalFieldBeginItem {TypeV}
+    explicit OptionalFieldWithIntSelBeginItem() noexcept
+        : OptionalFieldBeginItem {TypeV}
     {
     }
 
@@ -2623,7 +2626,8 @@ class OptionalFieldWithIntSelEndItem : public OptionalFieldEndItem
     friend class ItemSeqIter;
 
 protected:
-    explicit OptionalFieldWithIntSelEndItem() noexcept : OptionalFieldEndItem {TypeV}
+    explicit OptionalFieldWithIntSelEndItem() noexcept
+        : OptionalFieldEndItem {TypeV}
     {
     }
 

@@ -16,7 +16,8 @@ private:
     using _RawVal = typename ObjT::Value;
 
 public:
-    explicit RawValueProxy(const ObjT obj) : _mObj {obj}
+    explicit RawValueProxy(const ObjT obj)
+        : _mObj {obj}
     {
     }
 

@@ -77,7 +77,8 @@ public:
                                      std::uint64_t, std::int64_t>;
 
 public:
-    explicit ConstIntegerRange(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit ConstIntegerRange(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 

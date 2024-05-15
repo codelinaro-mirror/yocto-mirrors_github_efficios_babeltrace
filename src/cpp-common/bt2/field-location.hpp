@@ -49,8 +49,8 @@ public:
         EventPayload = BT_FIELD_LOCATION_SCOPE_EVENT_PAYLOAD,
     };
 
-    explicit ConstFieldLocation(const LibObjPtr libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit ConstFieldLocation(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 

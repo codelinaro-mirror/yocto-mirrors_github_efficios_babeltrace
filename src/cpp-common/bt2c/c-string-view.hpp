@@ -80,7 +80,8 @@ public:
         Can be \c nullptr.
         @endparblock
     */
-    constexpr CStringView(const char * const str) noexcept : _mStr {str}
+    constexpr CStringView(const char * const str) noexcept
+        : _mStr {str}
     {
     }
 
@@ -96,7 +97,8 @@ public:
     @param[in] str
         String containing the C&nbsp;string to view.
     */
-    CStringView(const std::string& str) noexcept : _mStr {str.c_str()}
+    CStringView(const std::string& str) noexcept
+        : _mStr {str.c_str()}
     {
     }
 
@@ -114,8 +116,8 @@ public:
         If it has a value, \bt_p{*str} is the string containing the
         C&nbsp;string to view.
     */
-    CStringView(const std::optional<std::string>& str) noexcept :
-        _mStr {str ? str->c_str() : nullptr}
+    CStringView(const std::optional<std::string>& str) noexcept
+        : _mStr {str ? str->c_str() : nullptr}
     {
     }
 

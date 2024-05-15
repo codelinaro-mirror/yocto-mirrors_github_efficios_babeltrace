@@ -34,8 +34,8 @@
  */
 struct bt_common_lttng_live_url_parts_deleter
 {
-    explicit bt_common_lttng_live_url_parts_deleter(bt_common_lttng_live_url_parts& obj) noexcept :
-        _mObj {&obj}
+    explicit bt_common_lttng_live_url_parts_deleter(bt_common_lttng_live_url_parts& obj) noexcept
+        : _mObj {&obj}
     {
     }
 
@@ -99,8 +99,8 @@ struct lttng_live_stream_iterator
 {
     using UP = std::unique_ptr<lttng_live_stream_iterator>;
 
-    explicit lttng_live_stream_iterator(const bt2c::Logger& parentLogger) :
-        logger {parentLogger, "PLUGIN/SRC.CTF.LTTNG-LIVE/STREAM-ITER"}
+    explicit lttng_live_stream_iterator(const bt2c::Logger& parentLogger)
+        : logger {parentLogger, "PLUGIN/SRC.CTF.LTTNG-LIVE/STREAM-ITER"}
     {
     }
 
@@ -169,8 +169,9 @@ struct lttng_live_metadata
     using UP = std::unique_ptr<lttng_live_metadata>;
 
     explicit lttng_live_metadata(const bt2::SelfComponent selfComp,
-                                 const bt2c::Logger& parentLogger) :
-        logger {parentLogger, "PLUGIN/SRC.CTF.LTTNG-LIVE/METADATA"}, _mSelfComp {selfComp}
+                                 const bt2c::Logger& parentLogger)
+        : logger {parentLogger, "PLUGIN/SRC.CTF.LTTNG-LIVE/METADATA"},
+          _mSelfComp {selfComp}
 
     {
     }
@@ -240,8 +241,8 @@ struct lttng_live_trace
 {
     using UP = std::unique_ptr<lttng_live_trace>;
 
-    explicit lttng_live_trace(const bt2c::Logger& parentLogger) :
-        logger {parentLogger, "PLUGIN/SRC.CTF.LTTNG-LIVE/TRACE"}
+    explicit lttng_live_trace(const bt2c::Logger& parentLogger)
+        : logger {parentLogger, "PLUGIN/SRC.CTF.LTTNG-LIVE/TRACE"}
     {
     }
 
@@ -270,8 +271,9 @@ struct lttng_live_session
     using UP = std::unique_ptr<lttng_live_session>;
 
     explicit lttng_live_session(const bt2c::Logger& parentLogger,
-                                const bt2::SelfComponent selfCompParam) :
-        logger {parentLogger, "PLUGIN/SRC.CTF.LTTNG-LIVE/SESSION"}, selfComp {selfCompParam}
+                                const bt2::SelfComponent selfCompParam)
+        : logger {parentLogger, "PLUGIN/SRC.CTF.LTTNG-LIVE/SESSION"},
+          selfComp {selfCompParam}
     {
     }
 
@@ -314,8 +316,9 @@ struct lttng_live_component
     using UP = std::unique_ptr<lttng_live_component>;
 
     explicit lttng_live_component(bt2c::Logger loggerParam,
-                                  const bt2::SelfComponent selfCompParam) noexcept :
-        logger {std::move(loggerParam)}, selfComp {selfCompParam}
+                                  const bt2::SelfComponent selfCompParam) noexcept
+        : logger {std::move(loggerParam)},
+          selfComp {selfCompParam}
     {
     }
 
@@ -344,9 +347,11 @@ struct lttng_live_msg_iter
 
     explicit lttng_live_msg_iter(const bt2c::Logger& parentLogger,
                                  const bt2::SelfComponent selfCompParam,
-                                 const bt2::SelfMessageIterator selfMsgIterParam) :
-        logger {parentLogger, "PLUGIN/SRC.CTF.LTTNG-LIVE/MSG-ITER"}, selfComp {selfCompParam},
-        selfMsgIter {selfMsgIterParam}, msgComparator {selfComp.graphMipVersion()}
+                                 const bt2::SelfMessageIterator selfMsgIterParam)
+        : logger {parentLogger, "PLUGIN/SRC.CTF.LTTNG-LIVE/MSG-ITER"},
+          selfComp {selfCompParam},
+          selfMsgIter {selfMsgIterParam},
+          msgComparator {selfComp.graphMipVersion()}
     {
     }
 

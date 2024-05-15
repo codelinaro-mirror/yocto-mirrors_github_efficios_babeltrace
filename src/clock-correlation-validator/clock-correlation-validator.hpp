@@ -46,9 +46,12 @@ public:
     explicit ClockCorrelationError(
         Type type, const bt2::OptionalBorrowedObject<bt2::ConstClockClass> actualClockCls,
         const bt2::OptionalBorrowedObject<bt2::ConstClockClass> refClockCls,
-        const bt2::OptionalBorrowedObject<bt2::ConstStreamClass> streamCls) noexcept :
-        std::runtime_error {"Clock classes are not correlatable"}, _mType {type},
-        _mActualClockCls {actualClockCls}, _mRefClockCls {refClockCls}, _mStreamCls {streamCls}
+        const bt2::OptionalBorrowedObject<bt2::ConstStreamClass> streamCls) noexcept
+        : std::runtime_error {"Clock classes are not correlatable"},
+          _mType {type},
+          _mActualClockCls {actualClockCls},
+          _mRefClockCls {refClockCls},
+          _mStreamCls {streamCls}
 
     {
     }

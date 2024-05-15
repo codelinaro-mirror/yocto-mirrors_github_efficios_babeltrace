@@ -78,7 +78,8 @@ public:
     @param[in] cap
         Initial capacity of the heap.
     */
-    explicit PrioHeap(CompT comp, const std::size_t cap) : _mComp {std::move(comp)}
+    explicit PrioHeap(CompT comp, const std::size_t cap)
+        : _mComp {std::move(comp)}
     {
         _mElems.reserve(cap);
     }
@@ -91,7 +92,8 @@ public:
     @param[in] comp
         Comparator to use to compare elements during a heap rebalance.
     */
-    explicit PrioHeap(CompT comp) : PrioHeap {std::move(comp), 0}
+    explicit PrioHeap(CompT comp)
+        : PrioHeap {std::move(comp), 0}
     {
     }
 
@@ -100,7 +102,8 @@ public:
         Builds a priority heap using a default comparator and with an
         initial capacity of zero.
     */
-    explicit PrioHeap() : PrioHeap {CompT {}, 0}
+    explicit PrioHeap()
+        : PrioHeap {CompT {}, 0}
     {
     }
 

@@ -20,8 +20,8 @@ namespace bt2 {
 class ConstClockSnapshot final : public BorrowedObject<const bt_clock_snapshot>
 {
 public:
-    explicit ConstClockSnapshot(const LibObjPtr libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit ConstClockSnapshot(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 

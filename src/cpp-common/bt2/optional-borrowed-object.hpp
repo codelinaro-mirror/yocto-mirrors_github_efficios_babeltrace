@@ -82,7 +82,8 @@ public:
     @param[in] libObjPtr
         libbabeltrace2 object pointer to wrap.
     */
-    OptionalBorrowedObject(const LibObjPtr libObjPtr) noexcept : _mLibObjPtr {libObjPtr}
+    OptionalBorrowedObject(const LibObjPtr libObjPtr) noexcept
+        : _mLibObjPtr {libObjPtr}
     {
     }
 
@@ -100,7 +101,8 @@ public:
         Other wrapper.
     */
     template <typename OtherObjT>
-    OptionalBorrowedObject(const OtherObjT obj) noexcept : _mLibObjPtr {obj.libObjPtr()}
+    OptionalBorrowedObject(const OtherObjT obj) noexcept
+        : _mLibObjPtr {obj.libObjPtr()}
     {
         static_assert(std::is_constructible_v<ObjT, OtherObjT>,
                       "`ObjT` is constructible with an instance of `OtherObjT`.");
@@ -120,8 +122,8 @@ public:
         Other optional borrowed object.
     */
     template <typename OtherObjT>
-    OptionalBorrowedObject(const OptionalBorrowedObject<OtherObjT> optObj) noexcept :
-        _mLibObjPtr {optObj.libObjPtr()}
+    OptionalBorrowedObject(const OptionalBorrowedObject<OtherObjT> optObj) noexcept
+        : _mLibObjPtr {optObj.libObjPtr()}
     {
         static_assert(std::is_constructible_v<ObjT, OtherObjT>,
                       "`ObjT` is constructible with an instance of `OtherObjT`.");

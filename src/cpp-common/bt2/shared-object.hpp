@@ -92,7 +92,8 @@ private:
     /*
      * Builds a shared object from `obj` without getting a reference.
      */
-    explicit SharedObject(const ObjT& obj) noexcept : _mObj {obj}
+    explicit SharedObject(const ObjT& obj) noexcept
+        : _mObj {obj}
     {
     }
 
@@ -107,8 +108,8 @@ private:
      * parameters when delegating to a constructor template.
      */
     template <typename OtherObjT, typename OtherLibObjT>
-    SharedObject(const SharedObject<OtherObjT, OtherLibObjT, RefFuncsT>& other, int) noexcept :
-        _mObj {other._mObj}
+    SharedObject(const SharedObject<OtherObjT, OtherLibObjT, RefFuncsT>& other, int) noexcept
+        : _mObj {other._mObj}
     {
         this->_getRef();
     }
@@ -119,8 +120,8 @@ private:
      * See the comment of the common generic "copy" constructor above.
      */
     template <typename OtherObjT, typename OtherLibObjT>
-    SharedObject(SharedObject<OtherObjT, OtherLibObjT, RefFuncsT>&& other, int) noexcept :
-        _mObj {other._mObj}
+    SharedObject(SharedObject<OtherObjT, OtherLibObjT, RefFuncsT>&& other, int) noexcept
+        : _mObj {other._mObj}
     {
         /* Reset moved-from object */
         other._reset();
@@ -186,7 +187,8 @@ public:
         Other shared object to copy (keeps its current reference
         count).
     */
-    SharedObject(const SharedObject& other) noexcept : SharedObject {other, 0}
+    SharedObject(const SharedObject& other) noexcept
+        : SharedObject {other, 0}
     {
     }
 
@@ -197,7 +199,8 @@ public:
     @param[in] other
         Other shared object to move.
     */
-    SharedObject(SharedObject&& other) noexcept : SharedObject {std::move(other), 0}
+    SharedObject(SharedObject&& other) noexcept
+        : SharedObject {std::move(other), 0}
     {
     }
 
@@ -240,8 +243,8 @@ public:
      * See the `friend class SharedObject` comment above.
      */
     template <typename OtherObjT, typename OtherLibObjT>
-    SharedObject(const SharedObject<OtherObjT, OtherLibObjT, RefFuncsT>& other) noexcept :
-        SharedObject {other, 0}
+    SharedObject(const SharedObject<OtherObjT, OtherLibObjT, RefFuncsT>& other) noexcept
+        : SharedObject {other, 0}
     {
     }
 
@@ -251,8 +254,8 @@ public:
      * See the `friend class SharedObject` comment above.
      */
     template <typename OtherObjT, typename OtherLibObjT>
-    SharedObject(SharedObject<OtherObjT, OtherLibObjT, RefFuncsT>&& other) noexcept :
-        SharedObject {std::move(other), 0}
+    SharedObject(SharedObject<OtherObjT, OtherLibObjT, RefFuncsT>&& other) noexcept
+        : SharedObject {std::move(other), 0}
     {
     }
 

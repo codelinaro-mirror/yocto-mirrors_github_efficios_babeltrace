@@ -32,8 +32,9 @@ public:
 
 private:
     explicit ConstMessageArrayIterator(const ConstMessageArray& msgArray,
-                                       const uint64_t idx) noexcept :
-        _mMsgArray {&msgArray}, _mIdx {idx}
+                                       const uint64_t idx) noexcept
+        : _mMsgArray {&msgArray},
+          _mIdx {idx}
     {
     }
 
@@ -136,8 +137,10 @@ class ConstMessageArray final
 {
 private:
     explicit ConstMessageArray(const bt_message_array_const libArrayPtr, const std::uint64_t length,
-                               const std::uint64_t capacity) noexcept :
-        _mLibArrayPtr {libArrayPtr}, _mLen {length}, _mCap {capacity}
+                               const std::uint64_t capacity) noexcept
+        : _mLibArrayPtr {libArrayPtr},
+          _mLen {length},
+          _mCap {capacity}
     {
         BT_ASSERT_DBG(length <= capacity);
         BT_ASSERT_DBG(capacity > 0);
@@ -163,8 +166,8 @@ public:
      */
     ConstMessageArray& operator=(const ConstMessageArray&) = delete;
 
-    ConstMessageArray(ConstMessageArray&& other) noexcept :
-        ConstMessageArray {other._mLibArrayPtr, other._mLen, other._mCap}
+    ConstMessageArray(ConstMessageArray&& other) noexcept
+        : ConstMessageArray {other._mLibArrayPtr, other._mLen, other._mCap}
     {
         other._reset();
     }

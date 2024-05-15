@@ -64,7 +64,8 @@ Pass and return by copy.
 class DataLen final
 {
 private:
-    constexpr explicit DataLen(const unsigned long long lenBits) noexcept : _mLenBits {lenBits}
+    constexpr explicit DataLen(const unsigned long long lenBits) noexcept
+        : _mLenBits {lenBits}
     {
     }
 

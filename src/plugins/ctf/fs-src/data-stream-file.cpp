@@ -34,9 +34,10 @@ static bt2c::DataLen getFileSize(const char * const path, const bt2c::Logger& lo
     return bt2c::DataLen::fromBytes(st.st_size);
 }
 
-ctf_fs_ds_file_info::ctf_fs_ds_file_info(std::string path, const bt2c::Logger& parentLogger) :
-    _mLogger {parentLogger, "PLUGIN/SRC.CTF.FS/DS-FILE-INFO"}, _mPath(std::move(path)),
-    _mSize(getFileSize(_mPath.c_str(), _mLogger))
+ctf_fs_ds_file_info::ctf_fs_ds_file_info(std::string path, const bt2c::Logger& parentLogger)
+    : _mLogger {parentLogger, "PLUGIN/SRC.CTF.FS/DS-FILE-INFO"},
+      _mPath(std::move(path)),
+      _mSize(getFileSize(_mPath.c_str(), _mLogger))
 {
 }
 
@@ -424,8 +425,9 @@ namespace ctf {
 namespace src {
 namespace fs {
 
-Medium::Medium(const ctf_fs_ds_index& index, const bt2c::Logger& parentLogger) :
-    _mIndex(index), _mLogger {parentLogger, "PLUGIN/SRC.CTF.FS/DS-MEDIUM"}
+Medium::Medium(const ctf_fs_ds_index& index, const bt2c::Logger& parentLogger)
+    : _mIndex(index),
+      _mLogger {parentLogger, "PLUGIN/SRC.CTF.FS/DS-MEDIUM"}
 {
     BT_ASSERT(!_mIndex.entries.empty());
 }

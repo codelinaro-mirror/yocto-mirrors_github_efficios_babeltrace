@@ -18,8 +18,8 @@ class TestSink final : public bt2::UserSinkComponent<TestSink<LowerV, UpperV, Wi
 public:
     static constexpr const char *name = "test-sink";
 
-    explicit TestSink(const bt2::SelfSinkComponent selfComp, bt2::ConstMapValue, void *) :
-        bt2::UserSinkComponent<TestSink> {selfComp, "TEST-SINK"}
+    explicit TestSink(const bt2::SelfSinkComponent selfComp, bt2::ConstMapValue, void *)
+        : bt2::UserSinkComponent<TestSink> {selfComp, "TEST-SINK"}
     {
     }
 

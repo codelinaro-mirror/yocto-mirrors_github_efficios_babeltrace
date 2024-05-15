@@ -15,8 +15,8 @@
 
 struct fs_sink_comp
 {
-    explicit fs_sink_comp(const bt2::SelfSinkComponent selfSinkComp) :
-        logger {selfSinkComp, "PLUGIN/SINK.CTF.FS/COMP"}
+    explicit fs_sink_comp(const bt2::SelfSinkComponent selfSinkComp)
+        : logger {selfSinkComp, "PLUGIN/SINK.CTF.FS/COMP"}
     {
     }
 

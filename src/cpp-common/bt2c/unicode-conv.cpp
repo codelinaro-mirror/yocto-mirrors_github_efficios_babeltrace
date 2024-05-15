@@ -18,10 +18,12 @@ const auto invalidGIConv = reinterpret_cast<GIConv>(-1);
 
 } /* namespace */
 
-UnicodeConv::UnicodeConv(const bt2c::Logger& parentLogger) :
-    _mLogger {parentLogger, "UNICODE-CONV"}, _mUtf16BeToUtf8IConv {invalidGIConv},
-    _mUtf16LeToUtf8IConv {invalidGIConv}, _mUtf32BeToUtf8IConv {invalidGIConv},
-    _mUtf32LeToUtf8IConv {invalidGIConv}
+UnicodeConv::UnicodeConv(const bt2c::Logger& parentLogger)
+    : _mLogger {parentLogger, "UNICODE-CONV"},
+      _mUtf16BeToUtf8IConv {invalidGIConv},
+      _mUtf16LeToUtf8IConv {invalidGIConv},
+      _mUtf32BeToUtf8IConv {invalidGIConv},
+      _mUtf32LeToUtf8IConv {invalidGIConv}
 {
 }
 

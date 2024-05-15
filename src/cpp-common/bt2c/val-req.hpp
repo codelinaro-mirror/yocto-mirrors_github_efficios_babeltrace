@@ -377,7 +377,8 @@ protected:
     @param[in] parentLogger
         Parent of the logger to create.
     */
-    explicit ValReq(const Logger& parentLogger) noexcept : _mLogger {parentLogger, "VAL-REQ"}
+    explicit ValReq(const Logger& parentLogger) noexcept
+        : _mLogger {parentLogger, "VAL-REQ"}
     {
     }
 
@@ -501,8 +502,9 @@ public:
     @param[in] parentLogger
         Parent of the logger to create.
     */
-    explicit ValHasTypeReq(const ValType type, const Logger& parentLogger) noexcept :
-        ValReq<ValT, ValOpsT> {parentLogger}, _mType {type}
+    explicit ValHasTypeReq(const ValType type, const Logger& parentLogger) noexcept
+        : ValReq<ValT, ValOpsT> {parentLogger},
+          _mType {type}
     {
     }
 
@@ -557,8 +559,8 @@ public:
     @param[in] parentLogger
         Parent of the logger to create.
     */
-    explicit AnyIntValReq(const Logger& parentLogger) noexcept :
-        ValReq<ValT, ValOpsT> {parentLogger}
+    explicit AnyIntValReq(const Logger& parentLogger) noexcept
+        : ValReq<ValT, ValOpsT> {parentLogger}
     {
     }
 
@@ -606,8 +608,8 @@ public:
     @param[in] parentLogger
         Parent of the logger to create.
     */
-    explicit UIntValReq(const Logger& parentLogger) noexcept :
-        ValHasTypeReq<ValT, ValOpsT> {ValType::UInt, parentLogger}
+    explicit UIntValReq(const Logger& parentLogger) noexcept
+        : ValHasTypeReq<ValT, ValOpsT> {ValType::UInt, parentLogger}
     {
     }
 
@@ -647,8 +649,8 @@ public:
     @param[in] parentLogger
         Parent of the logger to create.
     */
-    explicit SIntValReq(const Logger& parentLogger) noexcept :
-        AnyIntValReq<ValT, ValOpsT> {parentLogger}
+    explicit SIntValReq(const Logger& parentLogger) noexcept
+        : AnyIntValReq<ValT, ValOpsT> {parentLogger}
     {
     }
 
@@ -741,10 +743,10 @@ public:
     */
     explicit IntValInRangeReq(const std::optional<_RawVal>& minVal,
                               const std::optional<_RawVal>& maxVal,
-                              const Logger& parentLogger) noexcept :
-        ValHasTypeReq<ValT, ValOpsT> {TypeV, parentLogger},
-        _mMinVal {minVal ? *minVal : std::numeric_limits<_RawVal>::min()},
-        _mMaxVal {maxVal ? *maxVal : std::numeric_limits<_RawVal>::max()}
+                              const Logger& parentLogger) noexcept
+        : ValHasTypeReq<ValT, ValOpsT> {TypeV, parentLogger},
+          _mMinVal {minVal ? *minVal : std::numeric_limits<_RawVal>::min()},
+          _mMaxVal {maxVal ? *maxVal : std::numeric_limits<_RawVal>::max()}
     {
     }
 
@@ -759,8 +761,8 @@ public:
     @param[in] parentLogger
         Parent of the logger to create.
     */
-    explicit IntValInRangeReq(const _RawVal exactVal, const Logger& parentLogger) noexcept :
-        IntValInRangeReq {exactVal, exactVal, parentLogger}
+    explicit IntValInRangeReq(const _RawVal exactVal, const Logger& parentLogger) noexcept
+        : IntValInRangeReq {exactVal, exactVal, parentLogger}
     {
     }
 
@@ -902,8 +904,9 @@ public:
     @param[in] parentLogger
         Parent of the logger to create.
     */
-    explicit ScalarValInSetReq(Set set, const Logger& parentLogger) :
-        ValHasTypeReq<ValT, ValOpsT> {TypeV, parentLogger}, _mSet {std::move(set)}
+    explicit ScalarValInSetReq(Set set, const Logger& parentLogger)
+        : ValHasTypeReq<ValT, ValOpsT> {TypeV, parentLogger},
+          _mSet {std::move(set)}
     {
     }
 
@@ -920,8 +923,8 @@ public:
     @param[in] parentLogger
         Parent of the logger to create.
     */
-    explicit ScalarValInSetReq(_RawVal rawVal, const Logger& parentLogger) :
-        ScalarValInSetReq {Set {std::move(rawVal)}, parentLogger}
+    explicit ScalarValInSetReq(_RawVal rawVal, const Logger& parentLogger)
+        : ScalarValInSetReq {Set {std::move(rawVal)}, parentLogger}
     {
     }
 
@@ -1069,11 +1072,11 @@ public:
     */
     explicit ArrayValReq(const std::optional<std::size_t>& minSize,
                          const std::optional<std::size_t>& maxSize, SP elemValReq,
-                         const Logger& parentLogger) :
-        ValHasTypeReq<ValT, ValOpsT> {ValType::Array, parentLogger},
-        _mMinSize {minSize ? *minSize : std::numeric_limits<std::size_t>::min()},
-        _mMaxSize {maxSize ? *maxSize : std::numeric_limits<std::size_t>::max()},
-        _mElemValReq {std::move(elemValReq)}
+                         const Logger& parentLogger)
+        : ValHasTypeReq<ValT, ValOpsT> {ValType::Array, parentLogger},
+          _mMinSize {minSize ? *minSize : std::numeric_limits<std::size_t>::min()},
+          _mMaxSize {maxSize ? *maxSize : std::numeric_limits<std::size_t>::max()},
+          _mElemValReq {std::move(elemValReq)}
     {
     }
 
@@ -1106,8 +1109,8 @@ public:
         \bt_p{*minSize}&nbsp;&le;&nbsp;\bt_p{*maxSize}.
     */
     explicit ArrayValReq(const std::optional<std::size_t>& minSize,
-                         const std::optional<std::size_t>& maxSize, const Logger& parentLogger) :
-        ArrayValReq {minSize, maxSize, nullptr, parentLogger}
+                         const std::optional<std::size_t>& maxSize, const Logger& parentLogger)
+        : ArrayValReq {minSize, maxSize, nullptr, parentLogger}
     {
     }
 
@@ -1132,8 +1135,8 @@ public:
     @param[in] parentLogger
         Parent of the logger to create.
     */
-    explicit ArrayValReq(const std::size_t exactSize, SP elemValReq, const Logger& parentLogger) :
-        ArrayValReq {exactSize, exactSize, std::move(elemValReq), parentLogger}
+    explicit ArrayValReq(const std::size_t exactSize, SP elemValReq, const Logger& parentLogger)
+        : ArrayValReq {exactSize, exactSize, std::move(elemValReq), parentLogger}
     {
     }
 
@@ -1147,8 +1150,8 @@ public:
     @param[in] parentLogger
         Parent of the logger to create.
     */
-    explicit ArrayValReq(const std::size_t exactSize, const Logger& parentLogger) :
-        ArrayValReq {exactSize, exactSize, nullptr, parentLogger}
+    explicit ArrayValReq(const std::size_t exactSize, const Logger& parentLogger)
+        : ArrayValReq {exactSize, exactSize, nullptr, parentLogger}
     {
     }
 
@@ -1164,8 +1167,8 @@ public:
     @param[in] parentLogger
         Parent of the logger to create.
     */
-    explicit ArrayValReq(SP elemValReq, const Logger& parentLogger) :
-        ArrayValReq {std::nullopt, std::nullopt, std::move(elemValReq), parentLogger}
+    explicit ArrayValReq(SP elemValReq, const Logger& parentLogger)
+        : ArrayValReq {std::nullopt, std::nullopt, std::move(elemValReq), parentLogger}
     {
     }
 
@@ -1177,8 +1180,8 @@ public:
     @param[in] parentLogger
         Parent of the logger to create.
     */
-    explicit ArrayValReq(const Logger& parentLogger) :
-        ArrayValReq {std::nullopt, std::nullopt, parentLogger}
+    explicit ArrayValReq(const Logger& parentLogger)
+        : ArrayValReq {std::nullopt, std::nullopt, parentLogger}
     {
     }
 
@@ -1382,8 +1385,9 @@ public:
         \c true if this property is required.
     */
     ObjValPropReq(typename ValReq<ValT, ValOpsT>::SP valReq = nullptr,
-                  const bool isRequired = false) :
-        _mIsRequired {isRequired}, _mValReq {std::move(valReq)}
+                  const bool isRequired = false)
+        : _mIsRequired {isRequired},
+          _mValReq {std::move(valReq)}
     {
     }
 
@@ -1474,10 +1478,10 @@ public:
     @param[in] parentLogger
         Parent of the logger to create.
     */
-    explicit ObjValReq(PropReqs propReqs, const bool allowUnknownProps,
-                       const Logger& parentLogger) :
-        ValHasTypeReq<ValT, ValOpsT> {ValType::Obj, parentLogger}, _mPropReqs {std::move(propReqs)},
-        _mAllowUnknownProps {allowUnknownProps}
+    explicit ObjValReq(PropReqs propReqs, const bool allowUnknownProps, const Logger& parentLogger)
+        : ValHasTypeReq<ValT, ValOpsT> {ValType::Obj, parentLogger},
+          _mPropReqs {std::move(propReqs)},
+          _mAllowUnknownProps {allowUnknownProps}
     {
     }
 
@@ -1508,8 +1512,8 @@ public:
     @param[in] parentLogger
         Parent of the logger to create.
     */
-    explicit ObjValReq(PropReqs propReqs, const Logger& parentLogger) :
-        ObjValReq {std::move(propReqs), false, parentLogger}
+    explicit ObjValReq(PropReqs propReqs, const Logger& parentLogger)
+        : ObjValReq {std::move(propReqs), false, parentLogger}
     {
     }
 

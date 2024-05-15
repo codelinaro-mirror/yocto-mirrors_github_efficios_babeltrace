@@ -42,7 +42,8 @@ public:
     using Shared =
         SharedObject<MessageIterator, bt_message_iterator, internal::MessageIteratorRefFuncs>;
 
-    explicit MessageIterator(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit MessageIterator(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 

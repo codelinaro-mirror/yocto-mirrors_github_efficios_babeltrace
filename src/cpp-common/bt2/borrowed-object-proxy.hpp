@@ -40,7 +40,8 @@ public:
 
     @bt_pre_not_null{libObjPtr}
     */
-    explicit BorrowedObjectProxy(typename ObjT::LibObjPtr libObjPtr) noexcept : _mObj {libObjPtr}
+    explicit BorrowedObjectProxy(typename ObjT::LibObjPtr libObjPtr) noexcept
+        : _mObj {libObjPtr}
     {
     }
 

@@ -42,7 +42,8 @@ class Graph final : public BorrowedObject<bt_graph>
 public:
     using Shared = SharedObject<Graph, bt_graph, internal::GraphRefFuncs>;
 
-    explicit Graph(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit Graph(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 

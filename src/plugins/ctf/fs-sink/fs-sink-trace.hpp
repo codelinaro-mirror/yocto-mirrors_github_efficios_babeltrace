@@ -18,8 +18,8 @@ struct fs_sink_ctf_trace;
 
 struct fs_sink_trace
 {
-    explicit fs_sink_trace(const bt2c::Logger& parentLogger) :
-        logger {parentLogger, "PLUGIN/SINK.CTF.FS/TRACE"}
+    explicit fs_sink_trace(const bt2c::Logger& parentLogger)
+        : logger {parentLogger, "PLUGIN/SINK.CTF.FS/TRACE"}
     {
     }
 

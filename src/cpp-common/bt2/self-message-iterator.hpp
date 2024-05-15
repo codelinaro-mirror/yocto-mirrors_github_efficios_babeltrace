@@ -20,8 +20,8 @@ namespace bt2 {
 class SelfMessageIterator final : public BorrowedObject<bt_self_message_iterator>
 {
 public:
-    explicit SelfMessageIterator(const LibObjPtr libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit SelfMessageIterator(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 

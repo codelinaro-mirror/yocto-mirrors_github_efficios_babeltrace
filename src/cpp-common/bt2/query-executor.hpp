@@ -44,14 +44,14 @@ public:
     using typename _ThisBorrowedObject::LibObjPtr;
     using Shared = SharedObject<CommonQueryExecutor, LibObjT, internal::QueryExecutorRefFuncs>;
 
-    explicit CommonQueryExecutor(const LibObjPtr libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit CommonQueryExecutor(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonQueryExecutor(const CommonQueryExecutor<OtherLibObjT> queryExec) noexcept :
-        _ThisBorrowedObject {queryExec}
+    CommonQueryExecutor(const CommonQueryExecutor<OtherLibObjT> queryExec) noexcept
+        : _ThisBorrowedObject {queryExec}
     {
     }
 

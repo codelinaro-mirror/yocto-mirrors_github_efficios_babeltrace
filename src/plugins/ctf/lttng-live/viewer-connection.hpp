@@ -54,8 +54,8 @@ struct live_viewer_connection
 {
     using UP = std::unique_ptr<live_viewer_connection>;
 
-    explicit live_viewer_connection(const bt2c::Logger& parentLogger) :
-        logger {parentLogger, "PLUGIN/SRC.CTF.LTTNG-LIVE/VIEWER"}
+    explicit live_viewer_connection(const bt2c::Logger& parentLogger)
+        : logger {parentLogger, "PLUGIN/SRC.CTF.LTTNG-LIVE/VIEWER"}
     {
     }
 

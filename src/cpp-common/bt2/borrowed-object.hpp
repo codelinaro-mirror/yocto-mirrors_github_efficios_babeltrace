@@ -102,7 +102,8 @@ protected:
 
     @bt_pre_not_null{libObjPtr}
     */
-    explicit BorrowedObject(const LibObjPtr libObjPtr) noexcept : _mLibObjPtr {libObjPtr}
+    explicit BorrowedObject(const LibObjPtr libObjPtr) noexcept
+        : _mLibObjPtr {libObjPtr}
     {
         BT_ASSERT_DBG(libObjPtr);
     }
@@ -130,8 +131,8 @@ protected:
         Other wrapper to copy.
     */
     template <typename OtherLibObjT>
-    BorrowedObject(const BorrowedObject<OtherLibObjT>& other) noexcept :
-        BorrowedObject {other._mLibObjPtr}
+    BorrowedObject(const BorrowedObject<OtherLibObjT>& other) noexcept
+        : BorrowedObject {other._mLibObjPtr}
     {
         static_assert(_assignableFromConst<OtherLibObjT>,
                       "Don't assign a non-const wrapper from a const wrapper.");

@@ -37,8 +37,8 @@ struct field_class_stack_frame
  */
 struct resolve_context
 {
-    explicit resolve_context(const bt2c::Logger& parentLogger) :
-        logger {parentLogger, "PLUGIN/CTF/META/RESOLVE"}
+    explicit resolve_context(const bt2c::Logger& parentLogger)
+        : logger {parentLogger, "PLUGIN/CTF/META/RESOLVE"}
     {
     }
 

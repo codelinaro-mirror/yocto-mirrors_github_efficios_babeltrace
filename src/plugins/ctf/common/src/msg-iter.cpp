@@ -28,11 +28,15 @@ using namespace bt2c::literals::datalen;
 
 MsgIter::MsgIter(const bt2::SelfMessageIterator selfMsgIter, const ctf::src::TraceCls& traceCls,
                  std::optional<bt2c::Uuid> expectedMetadataStreamUuid, const bt2::Stream stream,
-                 Medium::UP medium, const MsgIterQuirks& quirks, const bt2c::Logger& parentLogger) :
-    _mLogger {parentLogger, "PLUGIN/CTF/MSG-ITER"}, _mSelfMsgIter {selfMsgIter}, _mStream {stream},
-    _mExpectedMetadataStreamUuid {std::move(expectedMetadataStreamUuid)}, _mQuirks {quirks},
-    _mItemSeqIter {std::move(medium), traceCls, _mLogger}, _mUnicodeConv {_mLogger},
-    _mLoggingVisitor {"Handling item", _mLogger}
+                 Medium::UP medium, const MsgIterQuirks& quirks, const bt2c::Logger& parentLogger)
+    : _mLogger {parentLogger, "PLUGIN/CTF/MSG-ITER"},
+      _mSelfMsgIter {selfMsgIter},
+      _mStream {stream},
+      _mExpectedMetadataStreamUuid {std::move(expectedMetadataStreamUuid)},
+      _mQuirks {quirks},
+      _mItemSeqIter {std::move(medium), traceCls, _mLogger},
+      _mUnicodeConv {_mLogger},
+      _mLoggingVisitor {"Handling item", _mLogger}
 {
     BT_CPPLOGD("Created CTF plugin message iterator: "
                "addr={}, trace-cls-addr={}, log-level={}",

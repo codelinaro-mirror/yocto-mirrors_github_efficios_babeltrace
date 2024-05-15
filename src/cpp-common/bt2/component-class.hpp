@@ -58,14 +58,14 @@ public:
     using typename _ThisBorrowedObject::LibObjPtr;
     using Shared = SharedObject<CommonComponentClass, LibObjT, internal::ComponentClassRefFuncs>;
 
-    explicit CommonComponentClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit CommonComponentClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonComponentClass(const CommonComponentClass<OtherLibObjT> compCls) noexcept :
-        _ThisBorrowedObject {compCls}
+    CommonComponentClass(const CommonComponentClass<OtherLibObjT> compCls) noexcept
+        : _ThisBorrowedObject {compCls}
     {
     }
 
@@ -164,13 +164,14 @@ public:
     using Shared =
         SharedObject<CommonSourceComponentClass, LibObjT, internal::SourceComponentClassRefFuncs>;
 
-    CommonSourceComponentClass(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    CommonSourceComponentClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonSourceComponentClass(const CommonSourceComponentClass<OtherLibObjT> compCls) noexcept :
-        _ThisBorrowedObject {compCls}
+    CommonSourceComponentClass(const CommonSourceComponentClass<OtherLibObjT> compCls) noexcept
+        : _ThisBorrowedObject {compCls}
     {
     }
 
@@ -212,15 +213,15 @@ private:
 
 template <typename LibObjT>
 CommonComponentClass<LibObjT>::CommonComponentClass(
-    const CommonSourceComponentClass<const bt_component_class_source> other) noexcept :
-    _ThisBorrowedObject {bt_component_class_source_as_component_class_const(other.libObjPtr())}
+    const CommonSourceComponentClass<const bt_component_class_source> other) noexcept
+    : _ThisBorrowedObject {bt_component_class_source_as_component_class_const(other.libObjPtr())}
 {
 }
 
 template <typename LibObjT>
 CommonComponentClass<LibObjT>::CommonComponentClass(
-    const CommonSourceComponentClass<bt_component_class_source> other) noexcept :
-    _ThisBorrowedObject {bt_component_class_source_as_component_class(other.libObjPtr())}
+    const CommonSourceComponentClass<bt_component_class_source> other) noexcept
+    : _ThisBorrowedObject {bt_component_class_source_as_component_class(other.libObjPtr())}
 {
 }
 
@@ -273,13 +274,14 @@ public:
     using Shared =
         SharedObject<CommonFilterComponentClass, LibObjT, internal::FilterComponentClassRefFuncs>;
 
-    CommonFilterComponentClass(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    CommonFilterComponentClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonFilterComponentClass(const CommonFilterComponentClass<OtherLibObjT> compCls) noexcept :
-        _ThisBorrowedObject {compCls}
+    CommonFilterComponentClass(const CommonFilterComponentClass<OtherLibObjT> compCls) noexcept
+        : _ThisBorrowedObject {compCls}
     {
     }
 
@@ -321,15 +323,15 @@ private:
 
 template <typename LibObjT>
 CommonComponentClass<LibObjT>::CommonComponentClass(
-    const CommonFilterComponentClass<const bt_component_class_filter> other) noexcept :
-    _ThisBorrowedObject {bt_component_class_filter_as_component_class_const(other.libObjPtr())}
+    const CommonFilterComponentClass<const bt_component_class_filter> other) noexcept
+    : _ThisBorrowedObject {bt_component_class_filter_as_component_class_const(other.libObjPtr())}
 {
 }
 
 template <typename LibObjT>
 CommonComponentClass<LibObjT>::CommonComponentClass(
-    const CommonFilterComponentClass<bt_component_class_filter> other) noexcept :
-    _ThisBorrowedObject {bt_component_class_filter_as_component_class(other.libObjPtr())}
+    const CommonFilterComponentClass<bt_component_class_filter> other) noexcept
+    : _ThisBorrowedObject {bt_component_class_filter_as_component_class(other.libObjPtr())}
 {
 }
 
@@ -382,13 +384,14 @@ public:
     using Shared =
         SharedObject<CommonSinkComponentClass, LibObjT, internal::SinkComponentClassRefFuncs>;
 
-    CommonSinkComponentClass(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    CommonSinkComponentClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonSinkComponentClass(const CommonSinkComponentClass<OtherLibObjT> compCls) noexcept :
-        _ThisBorrowedObject {compCls}
+    CommonSinkComponentClass(const CommonSinkComponentClass<OtherLibObjT> compCls) noexcept
+        : _ThisBorrowedObject {compCls}
     {
     }
 
@@ -430,15 +433,15 @@ private:
 
 template <typename LibObjT>
 CommonComponentClass<LibObjT>::CommonComponentClass(
-    const CommonSinkComponentClass<const bt_component_class_sink> other) noexcept :
-    _ThisBorrowedObject {bt_component_class_sink_as_component_class_const(other.libObjPtr())}
+    const CommonSinkComponentClass<const bt_component_class_sink> other) noexcept
+    : _ThisBorrowedObject {bt_component_class_sink_as_component_class_const(other.libObjPtr())}
 {
 }
 
 template <typename LibObjT>
 CommonComponentClass<LibObjT>::CommonComponentClass(
-    const CommonSinkComponentClass<bt_component_class_sink> other) noexcept :
-    _ThisBorrowedObject {bt_component_class_sink_as_component_class(other.libObjPtr())}
+    const CommonSinkComponentClass<bt_component_class_sink> other) noexcept
+    : _ThisBorrowedObject {bt_component_class_sink_as_component_class(other.libObjPtr())}
 {
 }
 

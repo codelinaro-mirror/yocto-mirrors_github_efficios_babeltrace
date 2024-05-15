@@ -24,11 +24,17 @@ MetadataStreamDecoder::_PktHeader::_PktHeader(
     const bt2c::DataLen contentLenParam, const bt2c::DataLen totalLenParam,
     const std::uint8_t compressionSchemeParam, const std::uint8_t encryptionSchemeParam,
     const std::uint8_t checksumSchemeParam, const std::uint8_t majorVersionParam,
-    const std::uint8_t minorVersionParam) :
-    magic {magicParam}, uuid {uuidParam}, checksum {checksumParam}, contentLen {contentLenParam},
-    totalLen {totalLenParam}, compressionScheme {compressionSchemeParam},
-    encryptionScheme {encryptionSchemeParam}, checksumScheme {checksumSchemeParam},
-    majorVersion {majorVersionParam}, minorVersion {minorVersionParam}
+    const std::uint8_t minorVersionParam)
+    : magic {magicParam},
+      uuid {uuidParam},
+      checksum {checksumParam},
+      contentLen {contentLenParam},
+      totalLen {totalLenParam},
+      compressionScheme {compressionSchemeParam},
+      encryptionScheme {encryptionSchemeParam},
+      checksumScheme {checksumSchemeParam},
+      majorVersion {majorVersionParam},
+      minorVersion {minorVersionParam}
 {
 }
 
@@ -130,8 +136,9 @@ namespace {
 class PktHeaderReader final
 {
 public:
-    explicit PktHeaderReader(const ByteOrder byteOrder, const std::uint8_t * const buf) :
-        _mByteOrder {byteOrder}, _mBuf {buf}
+    explicit PktHeaderReader(const ByteOrder byteOrder, const std::uint8_t * const buf)
+        : _mByteOrder {byteOrder},
+          _mBuf {buf}
     {
     }
 
@@ -220,8 +227,8 @@ MetadataStreamDecoder::_readPktHeader(const std::uint8_t * const buf, const Byte
     return header;
 }
 
-MetadataStreamDecoder::MetadataStreamDecoder(const bt2c::Logger& parentLogger) noexcept :
-    _mLogger {parentLogger, "PLUGIN/CTF/META/DECODER"}
+MetadataStreamDecoder::MetadataStreamDecoder(const bt2c::Logger& parentLogger) noexcept
+    : _mLogger {parentLogger, "PLUGIN/CTF/META/DECODER"}
 {
     BT_CPPLOGD("Creating TSDL metadata stream decoder.");
 }

@@ -20,8 +20,8 @@ struct fs_sink_ctf_stream_class;
 
 struct fs_sink_stream
 {
-    explicit fs_sink_stream(const bt2c::Logger& parentLogger) :
-        logger {parentLogger, "PLUGIN/SINK.CTF.FS/STREAM"}
+    explicit fs_sink_stream(const bt2c::Logger& parentLogger)
+        : logger {parentLogger, "PLUGIN/SINK.CTF.FS/STREAM"}
     {
     }
 

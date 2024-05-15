@@ -45,7 +45,8 @@ public:
      * Builds an integer range set containing the integer ranges
      * `ranges`.
      */
-    explicit IntRangeSet(Set ranges) : _mRanges {std::move(ranges)}
+    explicit IntRangeSet(Set ranges)
+        : _mRanges {std::move(ranges)}
     {
     }
 

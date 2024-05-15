@@ -70,9 +70,10 @@ class Validator final : public ConstFcVisitor
 {
 public:
     explicit Validator(const UIntFieldRoles& allowedRoles, const bool allowMetadataStreamUuidRole,
-                       const bt2c::Logger& parentLogger) :
-        _mLogger {parentLogger, "PLUGIN/CTF/CTF-2-VALIDATE-SCOPE-FC-ROLES"},
-        _mAllowedRoles {&allowedRoles}, _mAllowMetadataStreamUuidRole {allowMetadataStreamUuidRole}
+                       const bt2c::Logger& parentLogger)
+        : _mLogger {parentLogger, "PLUGIN/CTF/CTF-2-VALIDATE-SCOPE-FC-ROLES"},
+          _mAllowedRoles {&allowedRoles},
+          _mAllowMetadataStreamUuidRole {allowMetadataStreamUuidRole}
     {
     }
 

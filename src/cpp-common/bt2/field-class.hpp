@@ -188,12 +188,14 @@ public:
     using Shared = SharedFieldClass<CommonFieldClass<LibObjT>, LibObjT>;
     using UserAttributes = internal::DepUserAttrs<LibObjT>;
 
-    explicit CommonFieldClass(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit CommonFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonFieldClass(const CommonFieldClass<OtherLibObjT> fc) noexcept : _ThisBorrowedObject {fc}
+    CommonFieldClass(const CommonFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisBorrowedObject {fc}
     {
     }
 
@@ -502,8 +504,8 @@ class ConstBitArrayFieldClassFlag final : public BorrowedObject<const bt_field_c
 public:
     using RangeSet = ConstUnsignedIntegerRangeSet;
 
-    explicit ConstBitArrayFieldClassFlag(const LibObjPtr libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit ConstBitArrayFieldClassFlag(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
@@ -530,15 +532,15 @@ public:
     using Shared = SharedFieldClass<CommonBitArrayFieldClass<LibObjT>, LibObjT>;
     using Iterator = BorrowedObjectIterator<CommonBitArrayFieldClass>;
 
-    explicit CommonBitArrayFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonFieldClass {libObjPtr}
+    explicit CommonBitArrayFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isBitArray());
     }
 
     template <typename OtherLibObjT>
-    CommonBitArrayFieldClass(const CommonBitArrayFieldClass<OtherLibObjT> fc) noexcept :
-        _ThisCommonFieldClass {fc}
+    CommonBitArrayFieldClass(const CommonBitArrayFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisCommonFieldClass {fc}
     {
     }
 
@@ -656,15 +658,15 @@ public:
         SmallFieldValueHint = BT_FIELD_CLASS_INTEGER_FIELD_VALUE_HINT_SMALL,
     };
 
-    explicit CommonIntegerFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonFieldClass {libObjPtr}
+    explicit CommonIntegerFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isInteger());
     }
 
     template <typename OtherLibObjT>
-    CommonIntegerFieldClass(const CommonIntegerFieldClass<OtherLibObjT> fc) noexcept :
-        _ThisCommonFieldClass {fc}
+    CommonIntegerFieldClass(const CommonIntegerFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisCommonFieldClass {fc}
     {
     }
 
@@ -812,13 +814,13 @@ public:
         std::is_same_v<LibObjT, const bt_field_class_enumeration_unsigned_mapping>,
         ConstUnsignedIntegerRangeSet, ConstSignedIntegerRangeSet>;
 
-    explicit ConstEnumerationFieldClassMapping(const LibObjPtr libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit ConstEnumerationFieldClassMapping(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
-    ConstEnumerationFieldClassMapping(const ConstEnumerationFieldClassMapping& mapping) noexcept :
-        _ThisBorrowedObject {mapping}
+    ConstEnumerationFieldClassMapping(const ConstEnumerationFieldClassMapping& mapping) noexcept
+        : _ThisBorrowedObject {mapping}
     {
     }
 
@@ -915,8 +917,8 @@ public:
     using typename CommonFieldClass<LibObjT>::LibObjPtr;
     using Shared = SharedFieldClass<_ThisCommonBaseEnumerationFieldClass, LibObjT>;
 
-    explicit CommonBaseEnumerationFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonIntegerFieldClass {libObjPtr}
+    explicit CommonBaseEnumerationFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonIntegerFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isEnumeration());
     }
@@ -963,16 +965,16 @@ public:
     using Iterator = BorrowedObjectIterator<CommonEnumerationFieldClass>;
     using Mapping = MappingT;
 
-    explicit CommonEnumerationFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonBaseEnumerationFieldClass {libObjPtr}
+    explicit CommonEnumerationFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonBaseEnumerationFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isEnumeration());
     }
 
     template <typename OtherLibObjT>
     CommonEnumerationFieldClass(
-        const CommonEnumerationFieldClass<OtherLibObjT, MappingT> fc) noexcept :
-        CommonEnumerationFieldClass {fc}
+        const CommonEnumerationFieldClass<OtherLibObjT, MappingT> fc) noexcept
+        : CommonEnumerationFieldClass {fc}
     {
     }
 
@@ -1125,8 +1127,8 @@ public:
     using typename BorrowedObject<LibObjT>::LibObjPtr;
     using UserAttributes = internal::DepUserAttrs<LibObjT>;
 
-    explicit CommonStructureFieldClassMember(const LibObjPtr libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit CommonStructureFieldClassMember(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
@@ -1256,15 +1258,15 @@ public:
     using Member =
         internal::DepType<LibObjT, StructureFieldClassMember, ConstStructureFieldClassMember>;
 
-    explicit CommonStructureFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonFieldClass {libObjPtr}
+    explicit CommonStructureFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isStructure());
     }
 
     template <typename OtherLibObjT>
-    CommonStructureFieldClass(const CommonStructureFieldClass<OtherLibObjT> fc) noexcept :
-        _ThisCommonFieldClass {fc}
+    CommonStructureFieldClass(const CommonStructureFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisCommonFieldClass {fc}
     {
     }
 
@@ -1388,15 +1390,15 @@ public:
     using typename CommonFieldClass<LibObjT>::LibObjPtr;
     using Shared = SharedFieldClass<CommonArrayFieldClass<LibObjT>, LibObjT>;
 
-    explicit CommonArrayFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonFieldClass {libObjPtr}
+    explicit CommonArrayFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isArray());
     }
 
     template <typename OtherLibObjT>
-    CommonArrayFieldClass(const CommonArrayFieldClass<OtherLibObjT> fc) noexcept :
-        _ThisCommonFieldClass {fc}
+    CommonArrayFieldClass(const CommonArrayFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisCommonFieldClass {fc}
     {
     }
 
@@ -1457,15 +1459,15 @@ public:
     using typename CommonFieldClass<LibObjT>::LibObjPtr;
     using Shared = SharedFieldClass<CommonStaticArrayFieldClass<LibObjT>, LibObjT>;
 
-    explicit CommonStaticArrayFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonArrayFieldClass {libObjPtr}
+    explicit CommonStaticArrayFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonArrayFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isStaticArray());
     }
 
     template <typename OtherLibObjT>
-    CommonStaticArrayFieldClass(const CommonStaticArrayFieldClass<OtherLibObjT> fc) noexcept :
-        _ThisCommonArrayFieldClass {fc}
+    CommonStaticArrayFieldClass(const CommonStaticArrayFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisCommonArrayFieldClass {fc}
     {
     }
 
@@ -1526,16 +1528,16 @@ public:
     using typename CommonFieldClass<LibObjT>::LibObjPtr;
     using Shared = SharedFieldClass<CommonDynamicArrayWithLengthFieldClass<LibObjT>, LibObjT>;
 
-    explicit CommonDynamicArrayWithLengthFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonArrayFieldClass {libObjPtr}
+    explicit CommonDynamicArrayWithLengthFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonArrayFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isDynamicArrayWithLength());
     }
 
     template <typename OtherLibObjT>
     CommonDynamicArrayWithLengthFieldClass(
-        const CommonDynamicArrayWithLengthFieldClass<OtherLibObjT> fc) noexcept :
-        _ThisCommonArrayFieldClass {fc}
+        const CommonDynamicArrayWithLengthFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisCommonArrayFieldClass {fc}
     {
     }
 
@@ -1612,15 +1614,15 @@ public:
     using Shared = SharedFieldClass<CommonBlobFieldClass<LibObjT>, LibObjT>;
     using typename CommonFieldClass<LibObjT>::LibObjPtr;
 
-    explicit CommonBlobFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonFieldClass {libObjPtr}
+    explicit CommonBlobFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isBlob());
     }
 
     template <typename OtherLibObjT>
-    CommonBlobFieldClass(const CommonBlobFieldClass<OtherLibObjT> fc) noexcept :
-        _ThisCommonFieldClass {fc}
+    CommonBlobFieldClass(const CommonBlobFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisCommonFieldClass {fc}
     {
     }
 
@@ -1692,15 +1694,15 @@ public:
     using Shared = SharedFieldClass<CommonStaticBlobFieldClass<LibObjT>, LibObjT>;
     using typename CommonFieldClass<LibObjT>::LibObjPtr;
 
-    explicit CommonStaticBlobFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonBlobFieldClass {libObjPtr}
+    explicit CommonStaticBlobFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonBlobFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isStaticBlob());
     }
 
     template <typename OtherLibObjT>
-    CommonStaticBlobFieldClass(const CommonStaticBlobFieldClass<OtherLibObjT> fc) noexcept :
-        _ThisCommonBlobFieldClass {fc}
+    CommonStaticBlobFieldClass(const CommonStaticBlobFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisCommonBlobFieldClass {fc}
     {
     }
 
@@ -1760,16 +1762,16 @@ public:
     using Shared = SharedFieldClass<CommonDynamicBlobWithLengthFieldClass<LibObjT>, LibObjT>;
     using typename CommonFieldClass<LibObjT>::LibObjPtr;
 
-    explicit CommonDynamicBlobWithLengthFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonBlobFieldClass {libObjPtr}
+    explicit CommonDynamicBlobWithLengthFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonBlobFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isDynamicBlobWithLength());
     }
 
     template <typename OtherLibObjT>
     CommonDynamicBlobWithLengthFieldClass(
-        const CommonDynamicBlobWithLengthFieldClass<OtherLibObjT> fc) noexcept :
-        _ThisCommonBlobFieldClass {fc}
+        const CommonDynamicBlobWithLengthFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisCommonBlobFieldClass {fc}
     {
     }
 
@@ -1862,15 +1864,15 @@ public:
     using typename CommonFieldClass<LibObjT>::LibObjPtr;
     using Shared = SharedFieldClass<CommonOptionFieldClass<LibObjT>, LibObjT>;
 
-    explicit CommonOptionFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonFieldClass {libObjPtr}
+    explicit CommonOptionFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isOption());
     }
 
     template <typename OtherLibObjT>
-    CommonOptionFieldClass(const CommonOptionFieldClass<OtherLibObjT> fc) noexcept :
-        _ThisCommonFieldClass {fc}
+    CommonOptionFieldClass(const CommonOptionFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisCommonFieldClass {fc}
     {
     }
 
@@ -1934,16 +1936,16 @@ public:
     using typename CommonFieldClass<LibObjT>::LibObjPtr;
     using Shared = SharedFieldClass<CommonOptionWithSelectorFieldClass<LibObjT>, LibObjT>;
 
-    explicit CommonOptionWithSelectorFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonOptionFieldClass {libObjPtr}
+    explicit CommonOptionWithSelectorFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonOptionFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isOptionWithSelector());
     }
 
     template <typename OtherLibObjT>
     CommonOptionWithSelectorFieldClass(
-        const CommonOptionWithSelectorFieldClass<OtherLibObjT> fc) noexcept :
-        _ThisCommonOptionFieldClass {fc}
+        const CommonOptionWithSelectorFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisCommonOptionFieldClass {fc}
     {
     }
 
@@ -2014,16 +2016,16 @@ public:
     using typename CommonFieldClass<LibObjT>::LibObjPtr;
     using Shared = SharedFieldClass<CommonOptionWithBoolSelectorFieldClass<LibObjT>, LibObjT>;
 
-    explicit CommonOptionWithBoolSelectorFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonOptionWithSelectorFieldClass {libObjPtr}
+    explicit CommonOptionWithBoolSelectorFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonOptionWithSelectorFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isOptionWithBoolSelector());
     }
 
     template <typename OtherLibObjT>
     CommonOptionWithBoolSelectorFieldClass(
-        const CommonOptionWithBoolSelectorFieldClass<OtherLibObjT> fc) noexcept :
-        _ThisCommonOptionWithSelectorFieldClass {fc}
+        const CommonOptionWithBoolSelectorFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisCommonOptionWithSelectorFieldClass {fc}
     {
     }
 
@@ -2118,16 +2120,16 @@ public:
     using Shared = SharedFieldClass<CommonOptionWithIntegerSelectorFieldClass, LibObjT>;
     using RangeSet = RangeSetT;
 
-    explicit CommonOptionWithIntegerSelectorFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonOptionWithSelectorFieldClass {libObjPtr}
+    explicit CommonOptionWithIntegerSelectorFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonOptionWithSelectorFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isOptionWithIntegerSelector());
     }
 
     template <typename OtherLibObjT>
     CommonOptionWithIntegerSelectorFieldClass(
-        const CommonOptionWithIntegerSelectorFieldClass<OtherLibObjT, RangeSetT> fc) noexcept :
-        _ThisCommonOptionWithSelectorFieldClass {fc}
+        const CommonOptionWithIntegerSelectorFieldClass<OtherLibObjT, RangeSetT> fc) noexcept
+        : _ThisCommonOptionWithSelectorFieldClass {fc}
     {
     }
 
@@ -2249,14 +2251,14 @@ public:
     using typename BorrowedObject<LibObjT>::LibObjPtr;
     using UserAttributes = internal::DepUserAttrs<LibObjT>;
 
-    explicit CommonVariantFieldClassOption(const LibObjPtr libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit CommonVariantFieldClassOption(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonVariantFieldClassOption(const CommonVariantFieldClassOption<OtherLibObjT> fc) noexcept :
-        _ThisBorrowedObject {fc}
+    CommonVariantFieldClassOption(const CommonVariantFieldClassOption<OtherLibObjT> fc) noexcept
+        : _ThisBorrowedObject {fc}
     {
     }
 
@@ -2389,15 +2391,15 @@ public:
                        const bt_field_class_variant_with_selector_field_integer_unsigned_option>,
         ConstUnsignedIntegerRangeSet, ConstSignedIntegerRangeSet>;
 
-    explicit ConstVariantWithIntegerSelectorFieldClassOption(const LibObjPtr libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit ConstVariantWithIntegerSelectorFieldClassOption(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
     ConstVariantWithIntegerSelectorFieldClassOption(
-        const ConstVariantWithIntegerSelectorFieldClassOption<OtherLibObjT> fc) noexcept :
-        _ThisBorrowedObject {fc}
+        const ConstVariantWithIntegerSelectorFieldClassOption<OtherLibObjT> fc) noexcept
+        : _ThisBorrowedObject {fc}
     {
     }
 
@@ -2496,15 +2498,15 @@ public:
     using Option =
         internal::DepType<LibObjT, VariantFieldClassOption, ConstVariantFieldClassOption>;
 
-    explicit CommonVariantFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonFieldClass {libObjPtr}
+    explicit CommonVariantFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isVariant());
     }
 
     template <typename OtherLibObjT>
-    CommonVariantFieldClass(const CommonVariantFieldClass<OtherLibObjT> fc) noexcept :
-        _ThisCommonFieldClass {fc}
+    CommonVariantFieldClass(const CommonVariantFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisCommonFieldClass {fc}
     {
     }
 
@@ -2586,16 +2588,16 @@ public:
     using typename CommonFieldClass<LibObjT>::LibObjPtr;
     using Shared = SharedFieldClass<CommonVariantWithoutSelectorFieldClass<LibObjT>, LibObjT>;
 
-    explicit CommonVariantWithoutSelectorFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonVariantFieldClass {libObjPtr}
+    explicit CommonVariantWithoutSelectorFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonVariantFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isVariantWithoutSelector());
     }
 
     template <typename OtherLibObjT>
     CommonVariantWithoutSelectorFieldClass(
-        const CommonVariantWithoutSelectorFieldClass<OtherLibObjT> fc) noexcept :
-        _ThisCommonVariantFieldClass {fc}
+        const CommonVariantWithoutSelectorFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisCommonVariantFieldClass {fc}
     {
     }
 
@@ -2747,16 +2749,16 @@ public:
     using typename CommonFieldClass<LibObjT>::LibObjPtr;
     using Shared = SharedFieldClass<_ThisCommonVariantWithSelectorFieldClass, LibObjT>;
 
-    explicit CommonVariantWithSelectorFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonVariantFieldClass {libObjPtr}
+    explicit CommonVariantWithSelectorFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonVariantFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isVariantWithSelector());
     }
 
     template <typename OtherLibObjT>
     CommonVariantWithSelectorFieldClass(
-        const CommonVariantWithSelectorFieldClass<OtherLibObjT> fc) noexcept :
-        _ThisCommonVariantFieldClass {fc}
+        const CommonVariantWithSelectorFieldClass<OtherLibObjT> fc) noexcept
+        : _ThisCommonVariantFieldClass {fc}
     {
     }
 
@@ -2815,16 +2817,16 @@ public:
     using Iterator =
         BorrowedObjectIterator<CommonVariantWithIntegerSelectorFieldClass<LibObjT, Option>>;
 
-    explicit CommonVariantWithIntegerSelectorFieldClass(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonVariantWithSelectorFieldClass {libObjPtr}
+    explicit CommonVariantWithIntegerSelectorFieldClass(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonVariantWithSelectorFieldClass {libObjPtr}
     {
         BT_ASSERT_DBG(this->isVariantWithIntegerSelector());
     }
 
     template <typename OtherLibObjT>
     CommonVariantWithIntegerSelectorFieldClass(
-        const CommonVariantWithIntegerSelectorFieldClass<OtherLibObjT, OptionT> fc) noexcept :
-        _ThisCommonVariantWithSelectorFieldClass {fc}
+        const CommonVariantWithIntegerSelectorFieldClass<OtherLibObjT, OptionT> fc) noexcept
+        : _ThisCommonVariantWithSelectorFieldClass {fc}
     {
     }
 

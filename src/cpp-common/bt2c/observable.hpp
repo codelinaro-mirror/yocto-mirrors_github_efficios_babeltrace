@@ -84,8 +84,9 @@ public:
         friend class Observable;
 
     private:
-        explicit Token(_ThisObservable& observable, const _TokenId tokenId) noexcept :
-            _mObservable {&observable}, _mTokenId(tokenId)
+        explicit Token(_ThisObservable& observable, const _TokenId tokenId) noexcept
+            : _mObservable {&observable},
+              _mTokenId(tokenId)
         {
         }
 
@@ -99,8 +100,9 @@ public:
 
         Token(const Token&) = delete;
 
-        Token(Token&& other) noexcept :
-            _mObservable {other._mObservable}, _mTokenId {other._mTokenId}
+        Token(Token&& other) noexcept
+            : _mObservable {other._mObservable},
+              _mTokenId {other._mTokenId}
         {
             other._mTokenId = _invalidTokenId;
         }
@@ -176,8 +178,9 @@ private:
     /* Element type of `_mObservers` */
     struct _Observer
     {
-        _Observer(const _TokenId tokenIdParam, _ObserverFunc funcParam) :
-            tokenId {tokenIdParam}, func {std::move(funcParam)}
+        _Observer(const _TokenId tokenIdParam, _ObserverFunc funcParam)
+            : tokenId {tokenIdParam},
+              func {std::move(funcParam)}
         {
         }
 

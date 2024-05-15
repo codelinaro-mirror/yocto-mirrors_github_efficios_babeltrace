@@ -89,7 +89,8 @@ template <typename ValueObjT>
 class CommonValueRawValueProxy final
 {
 public:
-    explicit CommonValueRawValueProxy(const ValueObjT obj) : _mObj {obj}
+    explicit CommonValueRawValueProxy(const ValueObjT obj)
+        : _mObj {obj}
     {
     }
 
@@ -122,12 +123,14 @@ public:
     using typename BorrowedObject<LibObjT>::LibObjPtr;
     using Shared = SharedValue<CommonValue<LibObjT>, LibObjT>;
 
-    explicit CommonValue(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit CommonValue(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonValue(const CommonValue<OtherLibObjT> val) noexcept : _ThisBorrowedObject {val}
+    CommonValue(const CommonValue<OtherLibObjT> val) noexcept
+        : _ThisBorrowedObject {val}
     {
     }
 
@@ -413,12 +416,14 @@ private:
 public:
     using Shared = SharedValue<CommonNullValue<LibObjT>, LibObjT>;
 
-    CommonNullValue() noexcept : _ThisCommonValue {bt_value_null}
+    CommonNullValue() noexcept
+        : _ThisCommonValue {bt_value_null}
     {
     }
 
     template <typename OtherLibObjT>
-    CommonNullValue(const CommonNullValue<OtherLibObjT> val) noexcept : _ThisCommonValue {val}
+    CommonNullValue(const CommonNullValue<OtherLibObjT> val) noexcept
+        : _ThisCommonValue {val}
     {
     }
 
@@ -474,13 +479,15 @@ public:
     using Shared = SharedValue<CommonBoolValue<LibObjT>, LibObjT>;
     using Value = bool;
 
-    explicit CommonBoolValue(const LibObjPtr libObjPtr) noexcept : _ThisCommonValue {libObjPtr}
+    explicit CommonBoolValue(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonValue {libObjPtr}
     {
         BT_ASSERT_DBG(this->isBool());
     }
 
     template <typename OtherLibObjT>
-    CommonBoolValue(const CommonBoolValue<OtherLibObjT> val) noexcept : _ThisCommonValue {val}
+    CommonBoolValue(const CommonBoolValue<OtherLibObjT> val) noexcept
+        : _ThisCommonValue {val}
     {
     }
 
@@ -562,8 +569,8 @@ public:
     using Shared = SharedValue<CommonUnsignedIntegerValue<LibObjT>, LibObjT>;
     using Value = std::uint64_t;
 
-    explicit CommonUnsignedIntegerValue(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonValue {libObjPtr}
+    explicit CommonUnsignedIntegerValue(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonValue {libObjPtr}
     {
         BT_ASSERT_DBG(this->isUnsignedInteger());
     }
@@ -577,8 +584,8 @@ public:
     }
 
     template <typename OtherLibObjT>
-    CommonUnsignedIntegerValue(const CommonUnsignedIntegerValue<OtherLibObjT> val) noexcept :
-        _ThisCommonValue {val}
+    CommonUnsignedIntegerValue(const CommonUnsignedIntegerValue<OtherLibObjT> val) noexcept
+        : _ThisCommonValue {val}
     {
     }
 
@@ -654,8 +661,8 @@ public:
     using Shared = SharedValue<CommonSignedIntegerValue<LibObjT>, LibObjT>;
     using Value = std::int64_t;
 
-    explicit CommonSignedIntegerValue(const LibObjPtr libObjPtr) noexcept :
-        _ThisCommonValue {libObjPtr}
+    explicit CommonSignedIntegerValue(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonValue {libObjPtr}
     {
         BT_ASSERT_DBG(this->isSignedInteger());
     }
@@ -669,8 +676,8 @@ public:
     }
 
     template <typename OtherLibObjT>
-    CommonSignedIntegerValue(const CommonSignedIntegerValue<OtherLibObjT> val) noexcept :
-        _ThisCommonValue {val}
+    CommonSignedIntegerValue(const CommonSignedIntegerValue<OtherLibObjT> val) noexcept
+        : _ThisCommonValue {val}
     {
     }
 
@@ -746,7 +753,8 @@ public:
     using Shared = SharedValue<CommonRealValue<LibObjT>, LibObjT>;
     using Value = double;
 
-    explicit CommonRealValue(const LibObjPtr libObjPtr) noexcept : _ThisCommonValue {libObjPtr}
+    explicit CommonRealValue(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonValue {libObjPtr}
     {
         BT_ASSERT_DBG(this->isReal());
     }
@@ -760,7 +768,8 @@ public:
     }
 
     template <typename OtherLibObjT>
-    CommonRealValue(const CommonRealValue<OtherLibObjT> val) noexcept : _ThisCommonValue {val}
+    CommonRealValue(const CommonRealValue<OtherLibObjT> val) noexcept
+        : _ThisCommonValue {val}
     {
     }
 
@@ -834,7 +843,8 @@ public:
     using Shared = SharedValue<CommonStringValue<LibObjT>, LibObjT>;
     using Value = bt2c::CStringView;
 
-    explicit CommonStringValue(const LibObjPtr libObjPtr) noexcept : _ThisCommonValue {libObjPtr}
+    explicit CommonStringValue(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonValue {libObjPtr}
     {
         BT_ASSERT_DBG(this->isString());
     }
@@ -848,7 +858,8 @@ public:
     }
 
     template <typename OtherLibObjT>
-    CommonStringValue(const CommonStringValue<OtherLibObjT> val) noexcept : _ThisCommonValue {val}
+    CommonStringValue(const CommonStringValue<OtherLibObjT> val) noexcept
+        : _ThisCommonValue {val}
     {
     }
 
@@ -950,7 +961,8 @@ public:
     using Shared = SharedValue<CommonArrayValue<LibObjT>, LibObjT>;
     using Iterator = BorrowedObjectIterator<CommonArrayValue<LibObjT>>;
 
-    explicit CommonArrayValue(const LibObjPtr libObjPtr) noexcept : _ThisCommonValue {libObjPtr}
+    explicit CommonArrayValue(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonValue {libObjPtr}
     {
         BT_ASSERT_DBG(this->isArray());
     }
@@ -964,7 +976,8 @@ public:
     }
 
     template <typename OtherLibObjT>
-    CommonArrayValue(const CommonArrayValue<OtherLibObjT> val) noexcept : _ThisCommonValue {val}
+    CommonArrayValue(const CommonArrayValue<OtherLibObjT> val) noexcept
+        : _ThisCommonValue {val}
     {
     }
 
@@ -1259,7 +1272,8 @@ public:
     using typename CommonValue<LibObjT>::LibObjPtr;
     using Shared = SharedValue<CommonMapValue<LibObjT>, LibObjT>;
 
-    explicit CommonMapValue(const LibObjPtr libObjPtr) noexcept : _ThisCommonValue {libObjPtr}
+    explicit CommonMapValue(const LibObjPtr libObjPtr) noexcept
+        : _ThisCommonValue {libObjPtr}
     {
         BT_ASSERT_DBG(this->isMap());
     }
@@ -1273,7 +1287,8 @@ public:
     }
 
     template <typename OtherLibObjT>
-    CommonMapValue(const CommonMapValue<OtherLibObjT> val) noexcept : _ThisCommonValue {val}
+    CommonMapValue(const CommonMapValue<OtherLibObjT> val) noexcept
+        : _ThisCommonValue {val}
     {
     }
 

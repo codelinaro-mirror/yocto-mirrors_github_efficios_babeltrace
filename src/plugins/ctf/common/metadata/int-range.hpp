@@ -27,8 +27,9 @@ private:
      * Builds an integer range [`lower`, `upper`], validating the
      * lower/upper precondition if `validate` is true.
      */
-    explicit IntRange(const ValT lower, const ValT upper, const bool validate) :
-        _mLower {lower}, _mUpper {upper}
+    explicit IntRange(const ValT lower, const ValT upper, const bool validate)
+        : _mLower {lower},
+          _mUpper {upper}
     {
         if (validate) {
             BT_ASSERT_DBG(lower <= upper);
@@ -41,7 +42,8 @@ public:
      *
      * `upper` must be greater than or equal to `lower`.
      */
-    explicit IntRange(const ValT lower, const ValT upper) : IntRange {lower, upper, true}
+    explicit IntRange(const ValT lower, const ValT upper)
+        : IntRange {lower, upper, true}
     {
     }
 

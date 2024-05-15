@@ -93,7 +93,8 @@ public:
     @pre
         \bt_p{uuid} has at least 16&nbsp;bytes available.
     */
-    explicit UuidView(const Val * const uuid) noexcept : _mUuid {uuid}
+    explicit UuidView(const Val * const uuid) noexcept
+        : _mUuid {uuid}
     {
         BT_ASSERT_DBG(uuid);
     }
@@ -369,7 +370,8 @@ public:
     @param[in] view
         View of the 16 UUID bytes to copy.
     */
-    explicit Uuid(const UuidView& view) noexcept : Uuid {view.data()}
+    explicit Uuid(const UuidView& view) noexcept
+        : Uuid {view.data()}
     {
     }
 
@@ -606,7 +608,8 @@ private:
     std::array<Val, UuidView::size()> _mUuid = {};
 };
 
-inline UuidView::UuidView(const Uuid& uuid) noexcept : _mUuid {uuid.data()}
+inline UuidView::UuidView(const Uuid& uuid) noexcept
+    : _mUuid {uuid.data()}
 {
 }
 

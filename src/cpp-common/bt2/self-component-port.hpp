@@ -29,22 +29,23 @@ class SelfSinkComponent;
 class SelfComponent final : public BorrowedObject<bt_self_component>
 {
 public:
-    explicit SelfComponent(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}
+    explicit SelfComponent(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
-    explicit SelfComponent(bt_self_component_source * const libObjPtr) noexcept :
-        _ThisBorrowedObject {bt_self_component_source_as_self_component(libObjPtr)}
+    explicit SelfComponent(bt_self_component_source * const libObjPtr) noexcept
+        : _ThisBorrowedObject {bt_self_component_source_as_self_component(libObjPtr)}
     {
     }
 
-    explicit SelfComponent(bt_self_component_filter * const libObjPtr) noexcept :
-        _ThisBorrowedObject {bt_self_component_filter_as_self_component(libObjPtr)}
+    explicit SelfComponent(bt_self_component_filter * const libObjPtr) noexcept
+        : _ThisBorrowedObject {bt_self_component_filter_as_self_component(libObjPtr)}
     {
     }
 
-    explicit SelfComponent(bt_self_component_sink * const libObjPtr) noexcept :
-        _ThisBorrowedObject {bt_self_component_sink_as_self_component(libObjPtr)}
+    explicit SelfComponent(bt_self_component_sink * const libObjPtr) noexcept
+        : _ThisBorrowedObject {bt_self_component_sink_as_self_component(libObjPtr)}
     {
     }
 
@@ -141,8 +142,8 @@ public:
     using typename BorrowedObject<LibObjT>::LibObjPtr;
 
 protected:
-    explicit SelfSpecificComponent(const LibObjPtr libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit SelfSpecificComponent(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
@@ -304,8 +305,8 @@ public:
     using Port = SelfComponentPort<LibSelfCompPortT, LibPortT>;
     using Iterator = BorrowedObjectIterator<SelfComponentPorts>;
 
-    explicit SelfComponentPorts(const LibObjPtr libObjPtr) noexcept :
-        _ThisBorrowedObject {libObjPtr}
+    explicit SelfComponentPorts(const LibObjPtr libObjPtr) noexcept
+        : _ThisBorrowedObject {libObjPtr}
     {
     }
 
@@ -330,8 +331,8 @@ public:
     using OutputPorts = SelfComponentPorts<bt_self_component_source, bt_self_component_port_output,
                                            const bt_port_output>;
 
-    explicit SelfSourceComponent(bt_self_component_source * const libObjPtr) noexcept :
-        SelfSpecificComponent {libObjPtr}
+    explicit SelfSourceComponent(bt_self_component_source * const libObjPtr) noexcept
+        : SelfSpecificComponent {libObjPtr}
     {
     }
 
@@ -372,8 +373,8 @@ public:
     using OutputPorts = SelfComponentPorts<bt_self_component_filter, bt_self_component_port_output,
                                            const bt_port_output>;
 
-    explicit SelfFilterComponent(bt_self_component_filter * const libObjPtr) noexcept :
-        SelfSpecificComponent {libObjPtr}
+    explicit SelfFilterComponent(bt_self_component_filter * const libObjPtr) noexcept
+        : SelfSpecificComponent {libObjPtr}
     {
     }
 
@@ -422,8 +423,8 @@ public:
     using InputPorts = SelfComponentPorts<bt_self_component_sink, bt_self_component_port_input,
                                           const bt_port_input>;
 
-    explicit SelfSinkComponent(bt_self_component_sink * const libObjPtr) noexcept :
-        SelfSpecificComponent {libObjPtr}
+    explicit SelfSinkComponent(bt_self_component_sink * const libObjPtr) noexcept
+        : SelfSpecificComponent {libObjPtr}
     {
     }
 
@@ -460,18 +461,18 @@ private:
     InputPorts::Port _addInputPort(const char *name, DataT *dataParam) const;
 };
 
-inline SelfComponent::SelfComponent(const SelfSourceComponent other) noexcept :
-    SelfComponent {other.libObjPtr()}
+inline SelfComponent::SelfComponent(const SelfSourceComponent other) noexcept
+    : SelfComponent {other.libObjPtr()}
 {
 }
 
-inline SelfComponent::SelfComponent(const SelfFilterComponent other) noexcept :
-    SelfComponent {other.libObjPtr()}
+inline SelfComponent::SelfComponent(const SelfFilterComponent other) noexcept
+    : SelfComponent {other.libObjPtr()}
 {
 }
 
-inline SelfComponent::SelfComponent(const SelfSinkComponent other) noexcept :
-    SelfComponent {other.libObjPtr()}
+inline SelfComponent::SelfComponent(const SelfSinkComponent other) noexcept
+    : SelfComponent {other.libObjPtr()}
 {
 }
 
@@ -540,8 +541,8 @@ class SelfComponentPort final : public BorrowedObject<LibSelfCompPortT>
 public:
     using typename BorrowedObject<LibSelfCompPortT>::LibObjPtr;
 
-    explicit SelfComponentPort(const LibObjPtr libObjPtr) noexcept :
-        BorrowedObject<LibSelfCompPortT> {libObjPtr}
+    explicit SelfComponentPort(const LibObjPtr libObjPtr) noexcept
+        : BorrowedObject<LibSelfCompPortT> {libObjPtr}
     {
     }
 

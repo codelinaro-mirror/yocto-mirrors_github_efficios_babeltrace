@@ -20,13 +20,14 @@
 namespace ctf {
 namespace src {
 
-LoggingItemVisitor::LoggingItemVisitor(const bt2c::Logger& parentLogger) :
-    LoggingItemVisitor {"Processing item", parentLogger}
+LoggingItemVisitor::LoggingItemVisitor(const bt2c::Logger& parentLogger)
+    : LoggingItemVisitor {"Processing item", parentLogger}
 {
 }
 
-LoggingItemVisitor::LoggingItemVisitor(std::string intro, const bt2c::Logger& parentLogger) :
-    _mIntro {std::move(intro)}, _mLogger {parentLogger, "PLUGIN/CTF/LOGGING-ITEM-VISITOR"}
+LoggingItemVisitor::LoggingItemVisitor(std::string intro, const bt2c::Logger& parentLogger)
+    : _mIntro {std::move(intro)},
+      _mLogger {parentLogger, "PLUGIN/CTF/LOGGING-ITEM-VISITOR"}
 {
 }
 

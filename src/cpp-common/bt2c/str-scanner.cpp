@@ -26,14 +26,17 @@ const bt2c::Regex StrScanner::_realRegex {
 /* clang-format on */
 
 StrScanner::StrScanner(const std::string_view str, const std::size_t baseOffset,
-                       const Logger& logger) :
-    _mStr {str}, _mAt {str.begin()}, _mLineBegin {str.begin()}, _mBaseOffset {baseOffset},
-    _mLogger {logger, "STR-SCANNER"}
+                       const Logger& logger)
+    : _mStr {str},
+      _mAt {str.begin()},
+      _mLineBegin {str.begin()},
+      _mBaseOffset {baseOffset},
+      _mLogger {logger, "STR-SCANNER"}
 {
 }
 
-StrScanner::StrScanner(const std::string_view str, const Logger& logger) :
-    StrScanner {str, 0, logger}
+StrScanner::StrScanner(const std::string_view str, const Logger& logger)
+    : StrScanner {str, 0, logger}
 {
 }
 

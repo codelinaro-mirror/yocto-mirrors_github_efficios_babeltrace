@@ -603,7 +603,8 @@ private:
 class WithAttrsMixin
 {
 protected:
-    explicit WithAttrsMixin(OptAttrs attrs) : _mAttrs {std::move(attrs)}
+    explicit WithAttrsMixin(OptAttrs attrs)
+        : _mAttrs {std::move(attrs)}
     {
     }
 
@@ -652,9 +653,11 @@ public:
 
 protected:
     explicit Fc(const FcType type, typename UserMixinsT::Fc mixin, const unsigned int align,
-                OptAttrs&& attrs) :
-        internal::WithAttrsMixin {std::move(attrs)}, UserMixinsT::Fc {std::move(mixin)},
-        _mType {type}, _mAlign {align}
+                OptAttrs&& attrs)
+        : internal::WithAttrsMixin {std::move(attrs)},
+          UserMixinsT::Fc {std::move(mixin)},
+          _mType {type},
+          _mAlign {align}
     {
     }
 
@@ -991,12 +994,14 @@ protected:
                                 typename UserMixinsT::FixedLenBitArrayFc mixin,
                                 const unsigned int align, const bt2c::DataLen len,
                                 const ByteOrder byteOrder, const std::optional<BitOrder>& bitOrder,
-                                OptAttrs&& attrs) :
-        Fc<UserMixinsT> {type, std::move(fcMixin), align, std::move(attrs)},
-        UserMixinsT::FixedLenBitArrayFc(std::move(mixin)), _mLen {len}, _mByteOrder {byteOrder},
-        _mBitOrder {bitOrder ? *bitOrder :
-                               (byteOrder == ByteOrder::Big ? BitOrder::LastToFirst :
-                                                              BitOrder::FirstToLast)}
+                                OptAttrs&& attrs)
+        : Fc<UserMixinsT> {type, std::move(fcMixin), align, std::move(attrs)},
+          UserMixinsT::FixedLenBitArrayFc(std::move(mixin)),
+          _mLen {len},
+          _mByteOrder {byteOrder},
+          _mBitOrder {bitOrder ? *bitOrder :
+                                 (byteOrder == ByteOrder::Big ? BitOrder::LastToFirst :
+                                                                BitOrder::FirstToLast)}
     {
         using namespace bt2c::literals::datalen;
 
@@ -1010,15 +1015,15 @@ public:
                                 const unsigned int align, const bt2c::DataLen len,
                                 const ByteOrder byteOrder,
                                 const std::optional<BitOrder>& bitOrder = std::nullopt,
-                                OptAttrs attrs = OptAttrs {}) :
-        FixedLenBitArrayFc {FcType::FixedLenBitArray,
-                            std::move(fcMixin),
-                            std::move(mixin),
-                            align,
-                            len,
-                            byteOrder,
-                            bitOrder,
-                            std::move(attrs)}
+                                OptAttrs attrs = OptAttrs {})
+        : FixedLenBitArrayFc {FcType::FixedLenBitArray,
+                              std::move(fcMixin),
+                              std::move(mixin),
+                              align,
+                              len,
+                              byteOrder,
+                              bitOrder,
+                              std::move(attrs)}
     {
     }
 
@@ -1118,16 +1123,17 @@ public:
                               const unsigned int align, const bt2c::DataLen len,
                               const ByteOrder byteOrder, Flags flags,
                               const std::optional<BitOrder>& bitOrder = std::nullopt,
-                              OptAttrs attrs = OptAttrs {}) :
-        FixedLenBitArrayFc<UserMixinsT> {FcType::FixedLenBitMap,
-                                         std::move(fcMixin),
-                                         std::move(fixedLenBitArrayFcMixin),
-                                         align,
-                                         len,
-                                         byteOrder,
-                                         bitOrder,
-                                         std::move(attrs)},
-        UserMixinsT::FixedLenBitMapFc(std::move(mixin)), _mFlags {std::move(flags)}
+                              OptAttrs attrs = OptAttrs {})
+        : FixedLenBitArrayFc<UserMixinsT> {FcType::FixedLenBitMap,
+                                           std::move(fcMixin),
+                                           std::move(fixedLenBitArrayFcMixin),
+                                           align,
+                                           len,
+                                           byteOrder,
+                                           bitOrder,
+                                           std::move(attrs)},
+          UserMixinsT::FixedLenBitMapFc(std::move(mixin)),
+          _mFlags {std::move(flags)}
     {
         BT_ASSERT(!_mFlags.empty());
     }
@@ -1175,16 +1181,16 @@ public:
                             typename UserMixinsT::FixedLenBoolFc mixin, const unsigned int align,
                             const bt2c::DataLen len, const ByteOrder byteOrder,
                             const std::optional<BitOrder>& bitOrder = std::nullopt,
-                            OptAttrs attrs = OptAttrs {}) :
-        FixedLenBitArrayFc<UserMixinsT> {FcType::FixedLenBool,
-                                         std::move(fcMixin),
-                                         std::move(fixedLenBitArrayFcMixin),
-                                         align,
-                                         len,
-                                         byteOrder,
-                                         bitOrder,
-                                         std::move(attrs)},
-        UserMixinsT::FixedLenBoolFc {std::move(mixin)}
+                            OptAttrs attrs = OptAttrs {})
+        : FixedLenBitArrayFc<UserMixinsT> {FcType::FixedLenBool,
+                                           std::move(fcMixin),
+                                           std::move(fixedLenBitArrayFcMixin),
+                                           align,
+                                           len,
+                                           byteOrder,
+                                           bitOrder,
+                                           std::move(attrs)},
+          UserMixinsT::FixedLenBoolFc {std::move(mixin)}
     {
     }
 
@@ -1217,15 +1223,15 @@ public:
                              const unsigned int align, const bt2c::DataLen len,
                              const ByteOrder byteOrder,
                              const std::optional<BitOrder>& bitOrder = std::nullopt,
-                             OptAttrs attrs = OptAttrs {}) :
-        FixedLenBitArrayFc<UserMixinsT> {FcType::FixedLenFloat,
-                                         std::move(fcMixin),
-                                         std::move(fixedLenBitArrayFcMixin),
-                                         align,
-                                         len,
-                                         byteOrder,
-                                         bitOrder,
-                                         std::move(attrs)}
+                             OptAttrs attrs = OptAttrs {})
+        : FixedLenBitArrayFc<UserMixinsT> {FcType::FixedLenFloat,
+                                           std::move(fcMixin),
+                                           std::move(fixedLenBitArrayFcMixin),
+                                           align,
+                                           len,
+                                           byteOrder,
+                                           bitOrder,
+                                           std::move(attrs)}
     {
         using namespace bt2c::literals::datalen;
 
@@ -1280,7 +1286,8 @@ namespace internal {
 class WithPrefDispBaseMixin
 {
 protected:
-    explicit WithPrefDispBaseMixin(const DispBase prefDispBase) : _mPrefDispBase {prefDispBase}
+    explicit WithPrefDispBaseMixin(const DispBase prefDispBase)
+        : _mPrefDispBase {prefDispBase}
     {
     }
 
@@ -1309,7 +1316,8 @@ public:
     using Val = typename MappingRangeSetT::Val;
 
 protected:
-    explicit WithMappingsMixin(Mappings&& mappings) : _mMappings {std::move(mappings)}
+    explicit WithMappingsMixin(Mappings&& mappings)
+        : _mMappings {std::move(mappings)}
     {
     }
 
@@ -1348,12 +1356,17 @@ protected:
                            typename UserMixinsT::FixedLenIntFc mixin, const unsigned int align,
                            const bt2c::DataLen len, const ByteOrder byteOrder,
                            const std::optional<BitOrder>& bitOrder, const DispBase prefDispBase,
-                           OptAttrs&& attrs) :
-        FixedLenBitArrayFc<UserMixinsT> {
-            type,     std::move(fcMixin), std::move(fixedLenBitArrayFcMixin), align, len, byteOrder,
-            bitOrder, std::move(attrs)},
-        internal::WithPrefDispBaseMixin {prefDispBase},
-        UserMixinsT::FixedLenIntFc {std::move(mixin)}
+                           OptAttrs&& attrs)
+        : FixedLenBitArrayFc<UserMixinsT> {type,
+                                           std::move(fcMixin),
+                                           std::move(fixedLenBitArrayFcMixin),
+                                           align,
+                                           len,
+                                           byteOrder,
+                                           bitOrder,
+                                           std::move(attrs)},
+          internal::WithPrefDispBaseMixin {prefDispBase},
+          UserMixinsT::FixedLenIntFc {std::move(mixin)}
     {
     }
 };
@@ -1410,7 +1423,8 @@ namespace internal {
 class UIntFcMixin
 {
 protected:
-    explicit UIntFcMixin(UIntFieldRoles roles) : _mRoles {std::move(roles)}
+    explicit UIntFcMixin(UIntFieldRoles roles)
+        : _mRoles {std::move(roles)}
     {
     }
 
@@ -1464,19 +1478,20 @@ public:
                             const bt2c::DataLen len, const ByteOrder byteOrder,
                             const std::optional<BitOrder>& bitOrder = std::nullopt,
                             const DispBase prefDispBase = DispBase::Dec, Mappings mappings = {},
-                            UIntFieldRoles roles = {}, OptAttrs attrs = OptAttrs {}) :
-        FixedLenIntFc<UserMixinsT> {FcType::FixedLenUInt,
-                                    std::move(fcMixin),
-                                    std::move(fixedLenBitArrayFcMixin),
-                                    std::move(fixedLenIntFcMixin),
-                                    align,
-                                    len,
-                                    byteOrder,
-                                    bitOrder,
-                                    prefDispBase,
-                                    std::move(attrs)},
-        internal::WithMappingsMixin<UIntRangeSet> {std::move(mappings)},
-        internal::UIntFcMixin {std::move(roles)}, UserMixinsT::FixedLenUIntFc(std::move(mixin))
+                            UIntFieldRoles roles = {}, OptAttrs attrs = OptAttrs {})
+        : FixedLenIntFc<UserMixinsT> {FcType::FixedLenUInt,
+                                      std::move(fcMixin),
+                                      std::move(fixedLenBitArrayFcMixin),
+                                      std::move(fixedLenIntFcMixin),
+                                      align,
+                                      len,
+                                      byteOrder,
+                                      bitOrder,
+                                      prefDispBase,
+                                      std::move(attrs)},
+          internal::WithMappingsMixin<UIntRangeSet> {std::move(mappings)},
+          internal::UIntFcMixin {std::move(roles)},
+          UserMixinsT::FixedLenUIntFc(std::move(mixin))
     {
     }
 
@@ -1520,18 +1535,18 @@ public:
                             const ByteOrder byteOrder,
                             const std::optional<BitOrder>& bitOrder = std::nullopt,
                             const DispBase prefDispBase = DispBase::Dec, Mappings mappings = {},
-                            OptAttrs attrs = OptAttrs {}) :
-        FixedLenIntFc<UserMixinsT> {FcType::FixedLenSInt,
-                                    std::move(fcMixin),
-                                    std::move(fixedLenBitArrayFcMixin),
-                                    std::move(fixedLenIntFcMixin),
-                                    align,
-                                    len,
-                                    byteOrder,
-                                    bitOrder,
-                                    prefDispBase,
-                                    std::move(attrs)},
-        internal::WithMappingsMixin<SIntRangeSet> {std::move(mappings)}
+                            OptAttrs attrs = OptAttrs {})
+        : FixedLenIntFc<UserMixinsT> {FcType::FixedLenSInt,
+                                      std::move(fcMixin),
+                                      std::move(fixedLenBitArrayFcMixin),
+                                      std::move(fixedLenIntFcMixin),
+                                      align,
+                                      len,
+                                      byteOrder,
+                                      bitOrder,
+                                      prefDispBase,
+                                      std::move(attrs)},
+          internal::WithMappingsMixin<SIntRangeSet> {std::move(mappings)}
     {
     }
 
@@ -1565,9 +1580,10 @@ class VarLenIntFc :
 protected:
     explicit VarLenIntFc(const FcType type, typename UserMixinsT::Fc fcMixin,
                          typename UserMixinsT::VarLenIntFc mixin, const DispBase prefDispBase,
-                         OptAttrs&& attrs) :
-        Fc<UserMixinsT> {type, std::move(fcMixin), 8, std::move(attrs)},
-        internal::WithPrefDispBaseMixin {prefDispBase}, UserMixinsT::VarLenIntFc {std::move(mixin)}
+                         OptAttrs&& attrs)
+        : Fc<UserMixinsT> {type, std::move(fcMixin), 8, std::move(attrs)},
+          internal::WithPrefDispBaseMixin {prefDispBase},
+          UserMixinsT::VarLenIntFc {std::move(mixin)}
     {
     }
 };
@@ -1594,11 +1610,12 @@ public:
                           typename UserMixinsT::VarLenIntFc varLenIntFcMixin,
                           typename UserMixinsT::VarLenUIntFc mixin, const DispBase prefDispBase,
                           Mappings mappings = {}, UIntFieldRoles roles = {},
-                          OptAttrs attrs = OptAttrs {}) :
-        VarLenIntFc<UserMixinsT> {FcType::VarLenUInt, std::move(fcMixin),
-                                  std::move(varLenIntFcMixin), prefDispBase, std::move(attrs)},
-        internal::WithMappingsMixin<UIntRangeSet> {std::move(mappings)},
-        internal::UIntFcMixin {std::move(roles)}, UserMixinsT::VarLenUIntFc(std::move(mixin))
+                          OptAttrs attrs = OptAttrs {})
+        : VarLenIntFc<UserMixinsT> {FcType::VarLenUInt, std::move(fcMixin),
+                                    std::move(varLenIntFcMixin), prefDispBase, std::move(attrs)},
+          internal::WithMappingsMixin<UIntRangeSet> {std::move(mappings)},
+          internal::UIntFcMixin {std::move(roles)},
+          UserMixinsT::VarLenUIntFc(std::move(mixin))
     {
     }
 
@@ -1637,10 +1654,10 @@ public:
     explicit VarLenSIntFc(typename UserMixinsT::Fc fcMixin,
                           typename UserMixinsT::VarLenIntFc varLenIntFcMixin,
                           const DispBase prefDispBase, Mappings mappings = {},
-                          OptAttrs attrs = OptAttrs {}) :
-        VarLenIntFc<UserMixinsT> {FcType::VarLenSInt, std::move(fcMixin),
-                                  std::move(varLenIntFcMixin), prefDispBase, std::move(attrs)},
-        internal::WithMappingsMixin<SIntRangeSet> {std::move(mappings)}
+                          OptAttrs attrs = OptAttrs {})
+        : VarLenIntFc<UserMixinsT> {FcType::VarLenSInt, std::move(fcMixin),
+                                    std::move(varLenIntFcMixin), prefDispBase, std::move(attrs)},
+          internal::WithMappingsMixin<SIntRangeSet> {std::move(mappings)}
     {
     }
 
@@ -1697,8 +1714,9 @@ class StrFc : public Fc<UserMixinsT>
 {
 protected:
     explicit StrFc(const FcType type, typename UserMixinsT::Fc fcMixin, const StrEncoding encoding,
-                   OptAttrs&& attrs) :
-        Fc<UserMixinsT> {type, std::move(fcMixin), 8, std::move(attrs)}, _mEncoding {encoding}
+                   OptAttrs&& attrs)
+        : Fc<UserMixinsT> {type, std::move(fcMixin), 8, std::move(attrs)},
+          _mEncoding {encoding}
     {
     }
 
@@ -1725,9 +1743,9 @@ class NullTerminatedStrFc final : public StrFc<UserMixinsT>
 public:
     explicit NullTerminatedStrFc(typename UserMixinsT::Fc fcMixin,
                                  const StrEncoding encoding = StrEncoding::Utf8,
-                                 OptAttrs attrs = OptAttrs {}) :
-        StrFc<UserMixinsT> {FcType::NullTerminatedStr, std::move(fcMixin), encoding,
-                            std::move(attrs)}
+                                 OptAttrs attrs = OptAttrs {})
+        : StrFc<UserMixinsT> {FcType::NullTerminatedStr, std::move(fcMixin), encoding,
+                              std::move(attrs)}
     {
     }
 
@@ -1795,9 +1813,10 @@ public:
     using Items = std::vector<std::optional<std::string>>;
 
     explicit FieldLoc(typename UserMixinsT::FieldLoc mixin, std::optional<Scope> origin,
-                      Items items) :
-        UserMixinsT::FieldLoc {std::move(mixin)}, _mOrigin {std::move(origin)},
-        _mItems {std::move(items)}
+                      Items items)
+        : UserMixinsT::FieldLoc {std::move(mixin)},
+          _mOrigin {std::move(origin)},
+          _mItems {std::move(items)}
     {
     }
 
@@ -1854,7 +1873,8 @@ namespace internal {
 class StaticLenFcMixin
 {
 protected:
-    explicit StaticLenFcMixin(const std::size_t len) : _mLen {len}
+    explicit StaticLenFcMixin(const std::size_t len)
+        : _mLen {len}
     {
     }
 
@@ -1879,8 +1899,8 @@ template <typename UserMixinsT>
 class DynLenFcMixin
 {
 protected:
-    explicit DynLenFcMixin(FieldLoc<UserMixinsT> lenFieldLoc) :
-        _mLenFieldLoc {std::move(lenFieldLoc)}
+    explicit DynLenFcMixin(FieldLoc<UserMixinsT> lenFieldLoc)
+        : _mLenFieldLoc {std::move(lenFieldLoc)}
     {
     }
 
@@ -1917,8 +1937,8 @@ class NonNullTerminatedStrFc : public StrFc<UserMixinsT>
 {
 protected:
     explicit NonNullTerminatedStrFc(const FcType type, typename UserMixinsT::Fc fcMixin,
-                                    const StrEncoding strEncoding, OptAttrs&& attrs) :
-        StrFc<UserMixinsT> {type, std::move(fcMixin), strEncoding, std::move(attrs)}
+                                    const StrEncoding strEncoding, OptAttrs&& attrs)
+        : StrFc<UserMixinsT> {type, std::move(fcMixin), strEncoding, std::move(attrs)}
     {
     }
 };
@@ -1940,10 +1960,11 @@ public:
     explicit StaticLenStrFc(typename UserMixinsT::Fc fcMixin,
                             typename UserMixinsT::StaticLenStrFc mixin, const std::size_t len,
                             const StrEncoding encoding = StrEncoding::Utf8,
-                            OptAttrs attrs = OptAttrs {}) :
-        NonNullTerminatedStrFc<UserMixinsT> {FcType::StaticLenStr, std::move(fcMixin), encoding,
-                                             std::move(attrs)},
-        internal::StaticLenFcMixin {len}, UserMixinsT::StaticLenStrFc(std::move(mixin))
+                            OptAttrs attrs = OptAttrs {})
+        : NonNullTerminatedStrFc<UserMixinsT> {FcType::StaticLenStr, std::move(fcMixin), encoding,
+                                               std::move(attrs)},
+          internal::StaticLenFcMixin {len},
+          UserMixinsT::StaticLenStrFc(std::move(mixin))
     {
     }
 
@@ -1981,11 +2002,11 @@ public:
     explicit DynLenStrFc(typename UserMixinsT::Fc fcMixin, typename UserMixinsT::DynLenStrFc mixin,
                          FieldLoc<UserMixinsT> lenFieldLoc,
                          const StrEncoding encoding = StrEncoding::Utf8,
-                         OptAttrs attrs = OptAttrs {}) :
-        NonNullTerminatedStrFc<UserMixinsT> {FcType::DynLenStr, std::move(fcMixin), encoding,
-                                             std::move(attrs)},
-        internal::DynLenFcMixin<UserMixinsT> {std::move(lenFieldLoc)},
-        UserMixinsT::DynLenStrFc {std::move(mixin)}
+                         OptAttrs attrs = OptAttrs {})
+        : NonNullTerminatedStrFc<UserMixinsT> {FcType::DynLenStr, std::move(fcMixin), encoding,
+                                               std::move(attrs)},
+          internal::DynLenFcMixin<UserMixinsT> {std::move(lenFieldLoc)},
+          UserMixinsT::DynLenStrFc {std::move(mixin)}
     {
     }
 
@@ -2020,9 +2041,9 @@ class BlobFc : public Fc<UserMixinsT>
 {
 protected:
     explicit BlobFc(const FcType type, typename UserMixinsT::Fc fcMixin, std::string&& mediaType,
-                    OptAttrs&& attrs) :
-        Fc<UserMixinsT> {type, std::move(fcMixin), 8, std::move(attrs)},
-        _mMediaType {std::move(mediaType)}
+                    OptAttrs&& attrs)
+        : Fc<UserMixinsT> {type, std::move(fcMixin), 8, std::move(attrs)},
+          _mMediaType {std::move(mediaType)}
     {
     }
 
@@ -2060,11 +2081,12 @@ public:
                              typename UserMixinsT::StaticLenBlobFc mixin, const std::size_t len,
                              std::string mediaType = defaultBlobMediaType,
                              const bool hasMetadataStreamUuidRole = false,
-                             OptAttrs attrs = OptAttrs {}) :
-        BlobFc<UserMixinsT> {FcType::StaticLenBlob, std::move(fcMixin), std::move(mediaType),
-                             std::move(attrs)},
-        internal::StaticLenFcMixin {len}, UserMixinsT::StaticLenBlobFc(std::move(mixin)),
-        _mHasMetadataStreamUuidRole {hasMetadataStreamUuidRole}
+                             OptAttrs attrs = OptAttrs {})
+        : BlobFc<UserMixinsT> {FcType::StaticLenBlob, std::move(fcMixin), std::move(mediaType),
+                               std::move(attrs)},
+          internal::StaticLenFcMixin {len},
+          UserMixinsT::StaticLenBlobFc(std::move(mixin)),
+          _mHasMetadataStreamUuidRole {hasMetadataStreamUuidRole}
     {
     }
 
@@ -2111,11 +2133,11 @@ public:
                           typename UserMixinsT::DynLenBlobFc mixin,
                           FieldLoc<UserMixinsT> lenFieldLoc,
                           std::string mediaType = defaultBlobMediaType,
-                          OptAttrs attrs = OptAttrs {}) :
-        BlobFc<UserMixinsT> {FcType::DynLenBlob, std::move(fcMixin), std::move(mediaType),
-                             std::move(attrs)},
-        internal::DynLenFcMixin<UserMixinsT> {std::move(lenFieldLoc)},
-        UserMixinsT::DynLenBlobFc {std::move(mixin)}
+                          OptAttrs attrs = OptAttrs {})
+        : BlobFc<UserMixinsT> {FcType::DynLenBlob, std::move(fcMixin), std::move(mediaType),
+                               std::move(attrs)},
+          internal::DynLenFcMixin<UserMixinsT> {std::move(lenFieldLoc)},
+          UserMixinsT::DynLenBlobFc {std::move(mixin)}
     {
     }
 
@@ -2150,10 +2172,11 @@ class ArrayFc : public Fc<UserMixinsT>
 protected:
     explicit ArrayFc(const FcType type, typename UserMixinsT::Fc fcMixin,
                      typename Fc<UserMixinsT>::UP&& elemFc, const unsigned int minAlign,
-                     OptAttrs&& attrs) :
-        Fc<UserMixinsT> {type, std::move(fcMixin), ArrayFc::_effectiveAlign(*elemFc, minAlign),
-                         std::move(attrs)},
-        _mElemFc {std::move(elemFc)}, _mMinAlign {minAlign}
+                     OptAttrs&& attrs)
+        : Fc<UserMixinsT> {type, std::move(fcMixin), ArrayFc::_effectiveAlign(*elemFc, minAlign),
+                           std::move(attrs)},
+          _mElemFc {std::move(elemFc)},
+          _mMinAlign {minAlign}
     {
         BT_ASSERT(_mElemFc);
     }
@@ -2238,10 +2261,11 @@ public:
     explicit StaticLenArrayFc(typename UserMixinsT::Fc fcMixin,
                               typename UserMixinsT::StaticLenArrayFc mixin, const std::size_t len,
                               typename Fc<UserMixinsT>::UP elemFc, const unsigned int minAlign = 1,
-                              OptAttrs attrs = OptAttrs {}) :
-        ArrayFc<UserMixinsT> {FcType::StaticLenArray, std::move(fcMixin), std::move(elemFc),
-                              minAlign, std::move(attrs)},
-        internal::StaticLenFcMixin {len}, UserMixinsT::StaticLenArrayFc(std::move(mixin))
+                              OptAttrs attrs = OptAttrs {})
+        : ArrayFc<UserMixinsT> {FcType::StaticLenArray, std::move(fcMixin), std::move(elemFc),
+                                minAlign, std::move(attrs)},
+          internal::StaticLenFcMixin {len},
+          UserMixinsT::StaticLenArrayFc(std::move(mixin))
     {
     }
 
@@ -2279,11 +2303,11 @@ public:
     explicit DynLenArrayFc(typename UserMixinsT::Fc fcMixin,
                            typename UserMixinsT::DynLenArrayFc mixin,
                            FieldLoc<UserMixinsT> lenFieldLoc, typename Fc<UserMixinsT>::UP elemFc,
-                           const unsigned int minAlign = 1, OptAttrs attrs = OptAttrs {}) :
-        ArrayFc<UserMixinsT> {FcType::DynLenArray, std::move(fcMixin), std::move(elemFc), minAlign,
-                              std::move(attrs)},
-        internal::DynLenFcMixin<UserMixinsT> {std::move(lenFieldLoc)},
-        UserMixinsT::DynLenArrayFc {std::move(mixin)}
+                           const unsigned int minAlign = 1, OptAttrs attrs = OptAttrs {})
+        : ArrayFc<UserMixinsT> {FcType::DynLenArray, std::move(fcMixin), std::move(elemFc),
+                                minAlign, std::move(attrs)},
+          internal::DynLenFcMixin<UserMixinsT> {std::move(lenFieldLoc)},
+          UserMixinsT::DynLenArrayFc {std::move(mixin)}
     {
     }
 
@@ -2316,10 +2340,11 @@ class StructFieldMemberCls final :
 public:
     explicit StructFieldMemberCls(typename UserMixinsT::StructFieldMemberCls mixin,
                                   std::string name, typename Fc<UserMixinsT>::UP fc,
-                                  OptAttrs attrs = OptAttrs {}) :
-        internal::WithAttrsMixin {std::move(attrs)},
-        UserMixinsT::StructFieldMemberCls(std::move(mixin)), _mName {std::move(name)},
-        _mFc {std::move(fc)}
+                                  OptAttrs attrs = OptAttrs {})
+        : internal::WithAttrsMixin {std::move(attrs)},
+          UserMixinsT::StructFieldMemberCls(std::move(mixin)),
+          _mName {std::move(name)},
+          _mFc {std::move(fc)}
     {
         BT_ASSERT(_mFc);
     }
@@ -2327,9 +2352,11 @@ public:
     /*
      * Builds a member class from `other`, cloning its field class.
      */
-    StructFieldMemberCls(const StructFieldMemberCls& other) :
-        internal::WithAttrsMixin {other.attrs()}, UserMixinsT::StructFieldMemberCls(other),
-        _mName {other.name()}, _mFc {other.fc().clone()}
+    StructFieldMemberCls(const StructFieldMemberCls& other)
+        : internal::WithAttrsMixin {other.attrs()},
+          UserMixinsT::StructFieldMemberCls(other),
+          _mName {other.name()},
+          _mFc {other.fc().clone()}
     {
     }
 
@@ -2394,11 +2421,12 @@ public:
 
     explicit StructFc(typename UserMixinsT::Fc fcMixin, typename UserMixinsT::StructFc mixin,
                       MemberClasses memberClasses = {}, const unsigned int minAlign = 1,
-                      OptAttrs attrs = OptAttrs {}) :
-        Fc<UserMixinsT> {FcType::Struct, std::move(fcMixin),
-                         StructFc::_effectiveAlign(memberClasses, minAlign), std::move(attrs)},
-        UserMixinsT::StructFc(std::move(mixin)), _mMemberClasses {std::move(memberClasses)},
-        _mMinAlign {minAlign}
+                      OptAttrs attrs = OptAttrs {})
+        : Fc<UserMixinsT> {FcType::Struct, std::move(fcMixin),
+                           StructFc::_effectiveAlign(memberClasses, minAlign), std::move(attrs)},
+          UserMixinsT::StructFc(std::move(mixin)),
+          _mMemberClasses {std::move(memberClasses)},
+          _mMinAlign {minAlign}
     {
     }
 
@@ -2557,10 +2585,11 @@ class OptionalFc : public Fc<UserMixinsT>, public UserMixinsT::OptionalFc
 protected:
     explicit OptionalFc(const FcType type, typename UserMixinsT::Fc fcMixin,
                         typename UserMixinsT::OptionalFc mixin, typename Fc<UserMixinsT>::UP&& fc,
-                        FieldLoc<UserMixinsT>&& selFieldLoc, OptAttrs&& attrs) :
-        Fc<UserMixinsT> {type, std::move(fcMixin), 1, std::move(attrs)},
-        UserMixinsT::OptionalFc {std::move(mixin)}, _mSelFieldLoc {std::move(selFieldLoc)},
-        _mFc {std::move(fc)}
+                        FieldLoc<UserMixinsT>&& selFieldLoc, OptAttrs&& attrs)
+        : Fc<UserMixinsT> {type, std::move(fcMixin), 1, std::move(attrs)},
+          UserMixinsT::OptionalFc {std::move(mixin)},
+          _mSelFieldLoc {std::move(selFieldLoc)},
+          _mFc {std::move(fc)}
     {
     }
 
@@ -2649,12 +2678,11 @@ public:
                                    typename UserMixinsT::OptionalFc optionalFcMixin,
                                    typename UserMixinsT::OptionalWithBoolSelFc mixin,
                                    typename Fc<UserMixinsT>::UP fc,
-                                   FieldLoc<UserMixinsT> selFieldLoc,
-                                   OptAttrs attrs = OptAttrs {}) :
-        OptionalFc<UserMixinsT> {FcType::OptionalWithBoolSel, std::move(fcMixin),
-                                 std::move(optionalFcMixin),  std::move(fc),
-                                 std::move(selFieldLoc),      std::move(attrs)},
-        UserMixinsT::OptionalWithBoolSelFc(std::move(mixin))
+                                   FieldLoc<UserMixinsT> selFieldLoc, OptAttrs attrs = OptAttrs {})
+        : OptionalFc<UserMixinsT> {FcType::OptionalWithBoolSel, std::move(fcMixin),
+                                   std::move(optionalFcMixin),  std::move(fc),
+                                   std::move(selFieldLoc),      std::move(attrs)},
+          UserMixinsT::OptionalWithBoolSelFc(std::move(mixin))
     {
     }
 
@@ -2711,11 +2739,15 @@ protected:
                                   typename UserMixinsT::OptionalWithIntSelFc mixin,
                                   typename Fc<UserMixinsT>::UP&& fc,
                                   FieldLoc<UserMixinsT>&& selFieldLoc,
-                                  IntRangeSetT&& selFieldRanges, OptAttrs&& attrs) :
-        OptionalFc<UserMixinsT> {type,          std::move(fcMixin),     std::move(optionalFcMixin),
-                                 std::move(fc), std::move(selFieldLoc), std::move(attrs)},
-        UserMixinsT::OptionalWithIntSelFc(std::move(mixin)),
-        _mSelFieldRanges {std::move(selFieldRanges)}
+                                  IntRangeSetT&& selFieldRanges, OptAttrs&& attrs)
+        : OptionalFc<UserMixinsT> {type,
+                                   std::move(fcMixin),
+                                   std::move(optionalFcMixin),
+                                   std::move(fc),
+                                   std::move(selFieldLoc),
+                                   std::move(attrs)},
+          UserMixinsT::OptionalWithIntSelFc(std::move(mixin)),
+          _mSelFieldRanges {std::move(selFieldRanges)}
     {
     }
 
@@ -2757,16 +2789,16 @@ public:
         typename UserMixinsT::OptionalWithIntSelFc optionalWithIntSelFcMixin,
         typename UserMixinsT::OptionalWithUIntSelFc mixin, typename Fc<UserMixinsT>::UP fc,
         FieldLoc<UserMixinsT> selFieldLoc, UIntRangeSet selFieldRanges,
-        OptAttrs attrs = OptAttrs {}) :
-        OptionalWithIntSelFc<UserMixinsT, UIntRangeSet> {FcType::OptionalWithUIntSel,
-                                                         std::move(fcMixin),
-                                                         std::move(optionalFcMixin),
-                                                         std::move(optionalWithIntSelFcMixin),
-                                                         std::move(fc),
-                                                         std::move(selFieldLoc),
-                                                         std::move(selFieldRanges),
-                                                         std::move(attrs)},
-        UserMixinsT::OptionalWithUIntSelFc(std::move(mixin))
+        OptAttrs attrs = OptAttrs {})
+        : OptionalWithIntSelFc<UserMixinsT, UIntRangeSet> {FcType::OptionalWithUIntSel,
+                                                           std::move(fcMixin),
+                                                           std::move(optionalFcMixin),
+                                                           std::move(optionalWithIntSelFcMixin),
+                                                           std::move(fc),
+                                                           std::move(selFieldLoc),
+                                                           std::move(selFieldRanges),
+                                                           std::move(attrs)},
+          UserMixinsT::OptionalWithUIntSelFc(std::move(mixin))
     {
     }
 
@@ -2802,16 +2834,16 @@ public:
         typename UserMixinsT::OptionalWithIntSelFc optionalWithIntSelFcMixin,
         typename UserMixinsT::OptionalWithSIntSelFc mixin, typename Fc<UserMixinsT>::UP fc,
         FieldLoc<UserMixinsT> selFieldLoc, SIntRangeSet selFieldRanges,
-        OptAttrs attrs = OptAttrs {}) :
-        OptionalWithIntSelFc<UserMixinsT, SIntRangeSet> {FcType::OptionalWithSIntSel,
-                                                         std::move(fcMixin),
-                                                         std::move(optionalFcMixin),
-                                                         std::move(optionalWithIntSelFcMixin),
-                                                         std::move(fc),
-                                                         std::move(selFieldLoc),
-                                                         std::move(selFieldRanges),
-                                                         std::move(attrs)},
-        UserMixinsT::OptionalWithSIntSelFc(std::move(mixin))
+        OptAttrs attrs = OptAttrs {})
+        : OptionalWithIntSelFc<UserMixinsT, SIntRangeSet> {FcType::OptionalWithSIntSel,
+                                                           std::move(fcMixin),
+                                                           std::move(optionalFcMixin),
+                                                           std::move(optionalWithIntSelFcMixin),
+                                                           std::move(fc),
+                                                           std::move(selFieldLoc),
+                                                           std::move(selFieldRanges),
+                                                           std::move(attrs)},
+          UserMixinsT::OptionalWithSIntSelFc(std::move(mixin))
     {
     }
 
@@ -2850,9 +2882,12 @@ public:
 
     explicit VariantFcOpt(typename UserMixinsT::VariantFcOpt mixin, typename Fc<UserMixinsT>::UP fc,
                           IntRangeSetT selFieldRanges, std::optional<std::string> name,
-                          OptAttrs attrs = OptAttrs {}) :
-        internal::WithAttrsMixin {std::move(attrs)}, UserMixinsT::VariantFcOpt(std::move(mixin)),
-        _mName {std::move(name)}, _mFc {std::move(fc)}, _mSelFieldRanges {std::move(selFieldRanges)}
+                          OptAttrs attrs = OptAttrs {})
+        : internal::WithAttrsMixin {std::move(attrs)},
+          UserMixinsT::VariantFcOpt(std::move(mixin)),
+          _mName {std::move(name)},
+          _mFc {std::move(fc)},
+          _mSelFieldRanges {std::move(selFieldRanges)}
     {
         BT_ASSERT(_mFc);
     }
@@ -2861,9 +2896,12 @@ public:
      * Builds a variant field class option from `other`, cloning its
      * field class.
      */
-    VariantFcOpt(const VariantFcOpt& other) :
-        internal::WithAttrsMixin {other.attrs()}, UserMixinsT::VariantFcOpt(other),
-        _mName {other.name()}, _mFc {other.fc().clone()}, _mSelFieldRanges {other.selFieldRanges()}
+    VariantFcOpt(const VariantFcOpt& other)
+        : internal::WithAttrsMixin {other.attrs()},
+          UserMixinsT::VariantFcOpt(other),
+          _mName {other.name()},
+          _mFc {other.fc().clone()},
+          _mSelFieldRanges {other.selFieldRanges()}
     {
     }
 
@@ -2969,10 +3007,11 @@ public:
 protected:
     explicit VariantFc(const FcType type, typename UserMixinsT::Fc fcMixin,
                        typename UserMixinsT::VariantFc mixin, Opts&& opts,
-                       FieldLoc<UserMixinsT>&& selFieldLoc, OptAttrs&& attrs) :
-        Fc<UserMixinsT> {type, std::move(fcMixin), 1, std::move(attrs)},
-        UserMixinsT::VariantFc {std::move(mixin)}, _mOpts {std::move(opts)},
-        _mSelFieldLoc {std::move(selFieldLoc)}
+                       FieldLoc<UserMixinsT>&& selFieldLoc, OptAttrs&& attrs)
+        : Fc<UserMixinsT> {type, std::move(fcMixin), 1, std::move(attrs)},
+          UserMixinsT::VariantFc {std::move(mixin)},
+          _mOpts {std::move(opts)},
+          _mSelFieldLoc {std::move(selFieldLoc)}
     {
     }
 
@@ -3108,11 +3147,11 @@ public:
                                   typename UserMixinsT::VariantFc variantFcMixin,
                                   typename UserMixinsT::VariantWithUIntSelFc mixin,
                                   typename VariantFc<UserMixinsT, UIntRangeSet>::Opts opts,
-                                  FieldLoc<UserMixinsT> selFieldLoc, OptAttrs attrs = OptAttrs {}) :
-        VariantFc<UserMixinsT, UIntRangeSet> {FcType::VariantWithUIntSel, std::move(fcMixin),
-                                              std::move(variantFcMixin),  std::move(opts),
-                                              std::move(selFieldLoc),     std::move(attrs)},
-        UserMixinsT::VariantWithUIntSelFc(std::move(mixin))
+                                  FieldLoc<UserMixinsT> selFieldLoc, OptAttrs attrs = OptAttrs {})
+        : VariantFc<UserMixinsT, UIntRangeSet> {FcType::VariantWithUIntSel, std::move(fcMixin),
+                                                std::move(variantFcMixin),  std::move(opts),
+                                                std::move(selFieldLoc),     std::move(attrs)},
+          UserMixinsT::VariantWithUIntSelFc(std::move(mixin))
     {
     }
 
@@ -3146,11 +3185,11 @@ public:
                                   typename UserMixinsT::VariantFc variantFcMixin,
                                   typename UserMixinsT::VariantWithSIntSelFc mixin,
                                   typename VariantFc<UserMixinsT, SIntRangeSet>::Opts opts,
-                                  FieldLoc<UserMixinsT> selFieldLoc, OptAttrs attrs = OptAttrs {}) :
-        VariantFc<UserMixinsT, SIntRangeSet> {FcType::VariantWithSIntSel, std::move(fcMixin),
-                                              std::move(variantFcMixin),  std::move(opts),
-                                              std::move(selFieldLoc),     std::move(attrs)},
-        UserMixinsT::VariantWithSIntSelFc(std::move(mixin))
+                                  FieldLoc<UserMixinsT> selFieldLoc, OptAttrs attrs = OptAttrs {})
+        : VariantFc<UserMixinsT, SIntRangeSet> {FcType::VariantWithSIntSel, std::move(fcMixin),
+                                                std::move(variantFcMixin),  std::move(opts),
+                                                std::move(selFieldLoc),     std::move(attrs)},
+          UserMixinsT::VariantWithSIntSelFc(std::move(mixin))
     {
     }
 
@@ -3569,8 +3608,9 @@ const VariantWithSIntSelFc<UserMixinsT>& Fc<UserMixinsT>::asVariantWithSIntSel()
 class ClkOffset final
 {
 public:
-    explicit ClkOffset(const long long seconds = 0, const unsigned long long cycles = 0) noexcept :
-        _mSeconds {seconds}, _mCycles {cycles}
+    explicit ClkOffset(const long long seconds = 0, const unsigned long long cycles = 0) noexcept
+        : _mSeconds {seconds},
+          _mCycles {cycles}
     {
     }
 
@@ -3608,15 +3648,18 @@ public:
      * Builds a clock origin having the (optional) namespace `ns`, the
      * name `name`, and the unique ID `uid`.
      */
-    explicit ClkOrigin(std::optional<std::string> ns, std::string name, std::string uid) :
-        _mNs {std::move(ns)}, _mName {std::move(name)}, _mUid {std::move(uid)}
+    explicit ClkOrigin(std::optional<std::string> ns, std::string name, std::string uid)
+        : _mNs {std::move(ns)},
+          _mName {std::move(name)},
+          _mUid {std::move(uid)}
     {
     }
 
     /*
      * Builds a Unix epoch clock origin.
      */
-    explicit ClkOrigin() : ClkOrigin {_unixEpochNs, _unixEpochName, _unixEpochUid}
+    explicit ClkOrigin()
+        : ClkOrigin {_unixEpochNs, _unixEpochName, _unixEpochUid}
     {
     }
 
@@ -3690,12 +3733,19 @@ public:
                     std::optional<std::string> descr = std::nullopt,
                     std::optional<unsigned long long> precision = std::nullopt,
                     std::optional<unsigned long long> accuracy = std::nullopt,
-                    OptAttrs attrs = OptAttrs {}) :
-        internal::WithAttrsMixin {std::move(attrs)}, UserMixinsT::ClkCls {std::move(mixin)},
-        _mId {std::move(id)}, _mNs {std::move(ns)}, _mName {std::move(name)},
-        _mUid {std::move(uid)}, _mFreq {freq}, _mOffsetFromOrigin {offsetFromOrigin},
-        _mOrigin {std::move(origin)}, _mDescr {std::move(descr)},
-        _mPrecision {std::move(precision)}, _mAccuracy {std::move(accuracy)}
+                    OptAttrs attrs = OptAttrs {})
+        : internal::WithAttrsMixin {std::move(attrs)},
+          UserMixinsT::ClkCls {std::move(mixin)},
+          _mId {std::move(id)},
+          _mNs {std::move(ns)},
+          _mName {std::move(name)},
+          _mUid {std::move(uid)},
+          _mFreq {freq},
+          _mOffsetFromOrigin {offsetFromOrigin},
+          _mOrigin {std::move(origin)},
+          _mDescr {std::move(descr)},
+          _mPrecision {std::move(precision)},
+          _mAccuracy {std::move(accuracy)}
     {
         BT_ASSERT(_mFreq > 0);
         BT_ASSERT(_mOffsetFromOrigin.cycles() < _mFreq);
@@ -3848,10 +3898,15 @@ public:
                             std::optional<std::string> uid = std::nullopt,
                             typename StructFc<UserMixinsT>::UP specCtxFc = nullptr,
                             typename StructFc<UserMixinsT>::UP payloadFc = nullptr,
-                            OptAttrs attrs = OptAttrs {}) :
-        internal::WithAttrsMixin {std::move(attrs)}, UserMixinsT::EventRecordCls(std::move(mixin)),
-        _mId {id}, _mNs {std::move(ns)}, _mName {std::move(name)}, _mUid {std::move(uid)},
-        _mSpecCtxFc {std::move(specCtxFc)}, _mPayloadFc {std::move(payloadFc)}
+                            OptAttrs attrs = OptAttrs {})
+        : internal::WithAttrsMixin {std::move(attrs)},
+          UserMixinsT::EventRecordCls(std::move(mixin)),
+          _mId {id},
+          _mNs {std::move(ns)},
+          _mName {std::move(name)},
+          _mUid {std::move(uid)},
+          _mSpecCtxFc {std::move(specCtxFc)},
+          _mPayloadFc {std::move(payloadFc)}
     {
     }
 
@@ -3991,12 +4046,17 @@ public:
                            typename StructFc<UserMixinsT>::UP eventRecordHeaderFc = nullptr,
                            typename StructFc<UserMixinsT>::UP commonEventRecordCtxFc = nullptr,
                            typename ClkCls<UserMixinsT>::SP defClkCls = nullptr,
-                           OptAttrs attrs = OptAttrs {}) :
-        internal::WithAttrsMixin {std::move(attrs)}, UserMixinsT::DataStreamCls(std::move(mixin)),
-        _mId {id}, _mNs {std::move(ns)}, _mName {std::move(name)}, _mUid {std::move(uid)},
-        _mPktCtxFc {std::move(pktCtxFc)}, _mEventRecordHeaderFc {std::move(eventRecordHeaderFc)},
-        _mCommonEventRecordCtxFc {std::move(commonEventRecordCtxFc)},
-        _mDefClkCls {std::move(defClkCls)}
+                           OptAttrs attrs = OptAttrs {})
+        : internal::WithAttrsMixin {std::move(attrs)},
+          UserMixinsT::DataStreamCls(std::move(mixin)),
+          _mId {id},
+          _mNs {std::move(ns)},
+          _mName {std::move(name)},
+          _mUid {std::move(uid)},
+          _mPktCtxFc {std::move(pktCtxFc)},
+          _mEventRecordHeaderFc {std::move(eventRecordHeaderFc)},
+          _mCommonEventRecordCtxFc {std::move(commonEventRecordCtxFc)},
+          _mDefClkCls {std::move(defClkCls)}
     {
     }
 
@@ -4238,10 +4298,14 @@ public:
                       std::optional<std::string> uid = std::nullopt,
                       bt2::ConstMapValue::Shared env = bt2::ConstMapValue::Shared {},
                       typename Fc<UserMixinsT>::UP pktHeaderFc = nullptr,
-                      OptAttrs attrs = OptAttrs {}) :
-        internal::WithAttrsMixin {std::move(attrs)}, UserMixinsT::TraceCls {std::move(mixin)},
-        _mNs {std::move(ns)}, _mName {std::move(name)}, _mUid {std::move(uid)},
-        _mEnv {std::move(env)}, _mPktHeaderFc {std::move(pktHeaderFc)}
+                      OptAttrs attrs = OptAttrs {})
+        : internal::WithAttrsMixin {std::move(attrs)},
+          UserMixinsT::TraceCls {std::move(mixin)},
+          _mNs {std::move(ns)},
+          _mName {std::move(name)},
+          _mUid {std::move(uid)},
+          _mEnv {std::move(env)},
+          _mPktHeaderFc {std::move(pktHeaderFc)}
     {
         BT_ASSERT(!_mPktHeaderFc || _mPktHeaderFc->isStruct());
     }
