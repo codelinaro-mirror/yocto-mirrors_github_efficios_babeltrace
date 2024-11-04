@@ -165,7 +165,7 @@ typedef enum bt_self_component_add_port_status {
     and sets \bt_p{*self_component_port} to the resulting port.
 
 @attention
-    You can only call this function from within the
+    You may only call this function from within the
     \ref api-comp-cls-dev-meth-init "initialization",
     \link api-comp-cls-dev-meth-iport-connected "input port connected"\endlink,
     and
@@ -209,7 +209,7 @@ bt_self_component_source_add_output_port(
     and sets \bt_p{*self_component_port} to the resulting port.
 
 @attention
-    You can only call this function from within the
+    You may only call this function from within the
     \ref api-comp-cls-dev-meth-init "initialization",
     \link api-comp-cls-dev-meth-iport-connected "input port connected"\endlink,
     and
@@ -253,7 +253,7 @@ bt_self_component_filter_add_input_port(
     and sets \bt_p{*self_component_port} to the resulting port.
 
 @attention
-    You can only call this function from within the
+    You may only call this function from within the
     \ref api-comp-cls-dev-meth-init "initialization",
     \link api-comp-cls-dev-meth-iport-connected "input port connected"\endlink,
     and
@@ -297,7 +297,7 @@ bt_self_component_filter_add_output_port(
     and sets \bt_p{*self_component_port} to the resulting port.
 
 @attention
-    You can only call this function from within the
+    You may only call this function from within the
     \ref api-comp-cls-dev-meth-init "initialization",
     \link api-comp-cls-dev-meth-iport-connected "input port connected"\endlink,
     and
