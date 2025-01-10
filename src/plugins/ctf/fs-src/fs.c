@@ -686,7 +686,7 @@ void ds_index_insert_ds_index_entry_sorted(
 	for (i = 0; i < index->entries->len; i++) {
 		other_entry = g_ptr_array_index(index->entries, i);
 
-		if (entry->timestamp_begin_ns <= other_entry->timestamp_begin_ns) {
+		if (entry->timestamp_begin <= other_entry->timestamp_begin) {
 			break;
 		}
 	}

@@ -1,0 +1,62 @@
+--- metadata
+/* CTF 1.8 */
+typealias integer { size = 8; align = 8; signed = false; byte_order = le; } := uint8_t;
+
+trace {
+    major = 1;
+    minor = 8;
+    uuid = "eb0de524-0651-4014-b6ae-7c971e4bdc8d";
+    byte_order = le;
+    packet.header := struct {
+        uint8_t stream_id;
+        uint8_t stream_instance_id;
+    };
+};
+
+clock {
+    name = my_clock;
+    freq = 1000000000;
+    offset = 100000000000;
+};
+
+typealias integer {
+	size = 8; align = 8; signed = false;
+	map = clock.my_clock.value;
+} := uint8_timestamp_t;
+
+stream {
+    id = 0;
+    event.header := struct {
+        uint8_t id;
+        uint8_timestamp_t timestamp;
+    };
+    packet.context := struct {
+        uint8_timestamp_t timestamp_begin;
+        uint8_timestamp_t timestamp_end;
+        uint8_t content_size;
+        uint8_t packet_size;
+    };
+};
+
+event {
+    name = "the-event";
+    id = 0;
+    stream_id = 0;
+    fields := struct {
+        uint8_t the_field;
+    };
+};
+
+--- data
+<packet_begin>
+$00 # stream id
+$00 # stream instance id
+$10 # timestamp_begin
+$20 # timestamp_end
+[ 8 * (packet_end - packet_begin) : 8 ] # content_size
+[ 8 * (packet_end - packet_begin) : 8 ] # packet_size
+
+$00 # event id
+$12 # timestamp
+$55 # payload
+<packet_end>
