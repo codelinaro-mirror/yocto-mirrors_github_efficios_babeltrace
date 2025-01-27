@@ -1616,6 +1616,7 @@ struct ctf_clock_class *ctf_clock_class_create(void)
 	BT_ASSERT(cc->name);
 	cc->description = g_string_new(NULL);
 	BT_ASSERT(cc->description);
+	cc->frequency = 1000000000;
 	return cc;
 }
 
