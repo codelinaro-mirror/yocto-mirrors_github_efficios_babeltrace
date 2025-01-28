@@ -72,7 +72,6 @@ void destroy_trace(struct bt_object *obj)
 	struct bt_trace *trace = (void *) obj;
 
 	BT_LIB_LOGD("Destroying trace object: %!+t", trace);
-	BT_OBJECT_PUT_REF_AND_RESET(trace->user_attributes);
 
 	/*
 	 * Call destruction listener functions so that everything else
@@ -140,6 +139,8 @@ void destroy_trace(struct bt_object *obj)
 		g_ptr_array_free(trace->streams, TRUE);
 		trace->streams = NULL;
 	}
+
+	BT_OBJECT_PUT_REF_AND_RESET(trace->user_attributes);
 
 	if (trace->stream_classes_stream_count) {
 		g_hash_table_destroy(trace->stream_classes_stream_count);
