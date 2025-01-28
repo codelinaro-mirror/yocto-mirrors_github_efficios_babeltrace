@@ -73,19 +73,27 @@ trace_10353_3 = os.path.join(
 
 
 class QuerySupportInfoTestCase(unittest.TestCase):
+    def setUp(self):
+        ctf = bt2.find_plugin("ctf")
+        assert ctf
+        self._fs = ctf.source_component_classes["fs"]
+
+    def test_non_map_params(self):
+        with self.assertRaisesRegex(bt2._Error, "cannot query component class"):
+            bt2.QueryExecutor(self._fs, 'babeltrace.support-info').query()
+
     def test_support_info_with_uuid(self):
         # Test that the right group is reported for each trace.
 
         def do_one_query(input, expected_group):
             qe = bt2.QueryExecutor(
-                fs, 'babeltrace.support-info', {'input': input, 'type': 'directory'}
+                self._fs,
+                'babeltrace.support-info',
+                {'input': input, 'type': 'directory'},
             )
 
             result = qe.query()
             self.assertEqual(result['group'], expected_group)
-
-        ctf = bt2.find_plugin('ctf')
-        fs = ctf.source_component_classes['fs']
 
         do_one_query(trace_10352_1, '21cdfa5e-9a64-490a-832c-53aca6c101ba')
         do_one_query(trace_10352_2, '21cdfa5e-9a64-490a-832c-53aca6c101ba')

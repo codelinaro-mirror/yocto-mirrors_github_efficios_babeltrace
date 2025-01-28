@@ -1989,6 +1989,12 @@ bt_component_class_query_method_status lttng_live_query(
 		bt_private_query_executor_as_query_executor_const(
 			priv_query_exec));
 
+	if (bt_value_get_type(params) != BT_VALUE_TYPE_MAP) {
+		BT_COMP_LOGE("Parameters aren't a map value");
+		status = BT_COMPONENT_CLASS_QUERY_METHOD_STATUS_ERROR;
+		goto end;
+	}
+
 	if (strcmp(object, "sessions") == 0) {
 		status = lttng_live_query_list_sessions(params, result,
 			self_comp_class, log_level);

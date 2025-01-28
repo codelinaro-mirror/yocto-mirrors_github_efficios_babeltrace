@@ -125,6 +125,10 @@ class QueryTraceInfoClockOffsetTestCase(unittest.TestCase):
                 {'inputs': self._inputs, 'clock-class-offset-ns': None},
             ).query()
 
+    def test_non_map_params(self):
+        with self.assertRaisesRegex(bt2._Error, "cannot query component class"):
+            bt2.QueryExecutor(self._fs, 'babeltrace.trace-infos').query()
+
 
 class QueryTraceInfoPortNameTestCase(unittest.TestCase):
     def setUp(self):

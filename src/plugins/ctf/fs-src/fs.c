@@ -2468,6 +2468,12 @@ bt_component_class_query_method_status ctf_fs_query(
 		bt_private_query_executor_as_query_executor_const(
 			priv_query_exec));
 
+	if (bt_value_get_type(params) != BT_VALUE_TYPE_MAP) {
+		BT_LOGE("Parameters aren't a map value");
+		status = BT_COMPONENT_CLASS_QUERY_METHOD_STATUS_ERROR;
+		goto end;
+	}
+
 	if (strcmp(object, "metadata-info") == 0) {
 		status = metadata_info_query(comp_class, params, log_level,
 			result);
