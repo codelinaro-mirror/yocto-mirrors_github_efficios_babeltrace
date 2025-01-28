@@ -180,7 +180,7 @@ struct bt_fd_cache_handle *bt_fd_cache_get_handle(struct bt_fd_cache *fdc,
 		}
 
 		file_key = g_new0(struct file_key, 1);
-		if (!fd_internal) {
+		if (!file_key) {
 			BT_LOGE_STR("Failed to allocate file key.");
 			goto error;
 		}
