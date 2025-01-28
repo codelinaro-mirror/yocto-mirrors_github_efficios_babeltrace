@@ -215,7 +215,7 @@ class _Trace(_TraceConst):
     def _name(self, name):
         utils._check_str(name)
         status = native_bt.trace_set_name(self._ptr, name)
-        utils._handle_func_status(status, "cannot set trace class object's name")
+        utils._handle_func_status(status, "cannot set trace object's name")
 
     _name = property(fset=_name)
 
