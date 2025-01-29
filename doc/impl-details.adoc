@@ -1,0 +1,247 @@
+// SPDX-FileCopyrightText: 2017-2024 EfficiOS Inc.
+// SPDX-License-Identifier: CC-BY-SA-4.0
+
+// Render with Asciidoctor
+
+// Show ToC at a specific location for a GitHub rendering
+ifdef::env-github[]
+:toc: macro
+endif::env-github[]
+
+ifndef::env-github[]
+:toc: left
+endif::env-github[]
+
+// This is to mimic what GitHub does so that anchors work in an offline
+// rendering too.
+:idprefix:
+:idseparator: -
+
+= Babeltrace{nbsp}2: implementation details
+Jérémie Galarneau
+23 October 2024
+:toclevels: 3
+:icons: font
+:nofooter:
+:bt2: Babeltrace{nbsp}2
+
+This document explains some implementation details of the {bt2}
+project.
+
+ifdef::env-github[]
+// ToC location for a GitHub rendering
+toc::[]
+endif::env-github[]
+
+== {bt2} library
+
+=== Object reference counting and lifetime
+
+This section covers the rationale behind the design of {bt2}'s
+object lifetime management. This applies to the {bt2} library, as
+well as to the CTF writer library (although the public reference
+counting functions are not named the same way).
+
+Starting from Babeltrace{nbsp}2.0, all publicly exposed objects inherit
+a common base: `bt_object`. This base provides a number of facilities to
+all objects, chief amongst which are lifetime management functions.
+
+The lifetime of some public objects is managed by reference counting. In
+this case, the API offers the `+bt_*_get_ref()+` and `+bt_*_put_ref()+`
+functions which respectively increment and decrement an object's
+reference count.
+
+As far as lifetime management in concerned, {bt2} makes a clear
+distinction between regular objects, which have a single parent, and
+root objects, which don't.
+
+==== The problem
+
+Let us consider a problematic case to illustrate the need for this
+distinction.
+
+A user of the {bt2} library creates a trace class, which _has_ a
+stream class (the class of a stream) and that stream class, in turn,
+_has_ an event class (the class of an event).
+
+Nothing prevents this user from releasing his reference on any one of
+these objects in any order. However, all objects in the
+__trace--stream class--event class__ hierarchy can be retrieved
+from any other.
+
+For instance, the user could discard his reference on both the event
+class and the stream class, only keeping a reference on the trace class.
+From this trace class reference, stream classes can be enumerated,
+providing the user with a new reference to the stream class he discarded
+earlier. Event classes can also be enumerated from stream classes,
+providing the user with references to the individual event classes.
+
+Conversely, the user could also hold a reference to an event class and
+retrieve its parent stream class. The trace class, in turn, can then be
+retrieved from the stream class.
+
+This example illustrates what could be interpreted as a circular
+reference dependency existing between these objects. Of course, if the
+objects in such a scenario were to hold references to each other (in
+both directions), we would be in presence of a circular ownership
+resulting in a leak of both objects as their reference counts would
+never reach zero.
+
+Nonetheless, the API must offer the guarantee that holding a node to any
+node of the graph keeps all other reachable nodes alive.
+
+==== The solution
+
+The scheme employed in {bt2} to break this cycle consists in the
+"children" holding _reverse component references_ to their parents. That
+is, in the context of the trace IR, that event classes hold a reference
+to their parent stream class and stream classes hold a reference to
+their parent trace class.
+
+On the other hand, parents hold _claiming aggregation references_ to
+their children. A claiming aggregation reference means that the object
+being referenced should not be deleted as long as the reference still
+exists. In this respect, it can be said that parents truly hold the
+ownership of their children, since they control their lifetime.
+Conversely, the reference counting mechanism is leveraged by children to
+notify parents that no other child indirectly exposes the parent.
+
+When a parented object's reference count reaches zero, it invokes
+`+bt_*_put_ref()+` on its parent and does _not_ free itself. However,
+from that point, the object depends on its parent to signal the moment
+when it can be safely reclaimed.
+
+The invocation of `+bt_*_put_ref()+` by the last children holding a
+reference to its parent might trigger a cascade of `+bt_*_put_ref()+`
+from child to parent. Eventually, a **root** object is reached. At that
+point, if this orphaned object's reference count reaches zero, the
+object invokes the destructor method defined by everyone of its children
+as part of their base `struct bt_object`. The key point here is that the
+cascade of destructor will necessarily originate from the root and
+propagate in preorder to the children. These children will propagate the
+destruction to their own children before reclaiming their own memory.
+This ensures that a node's pointer to its parent is _always_ valid since
+the parent has the responsibility of tearing-down their children before
+cleaning themselves up.
+
+Assuming a reference to an object is _acquired_ by calling
+`+bt_*_get_ref()+` while its reference count is zero, the object
+acquires, in turn, a reference on its parent using `+bt_*_get_ref()+`.
+At that point, the child can be thought of as having converted its weak
+reference to its parent into a regular reference. That is why this
+reference is referred to as a _claiming_ aggregation reference.
+
+==== Caveats
+
+This scheme imposes a number of strict rules defining the relation
+between objects:
+
+* Objects may only have one parent.
+* Objects, beside the root, are only retrievable from their direct
+  parent or children.
+
+==== Example
+
+The initial situation is rather simple: **User{nbsp}A** is holding a
+reference to a trace class, **TC1**. As per the rules previously
+enounced, stream classes **SC1** and **SC2** don't hold a reference to
+**TC1** since their own reference counts are zero. The same holds true
+for **EC1**, **EC2** and **EC3** with respect to **SC1** and **SC2**.
+
+image::impl-details-images/bt-ref01.png[]
+
+In this second step, we can see that **User{nbsp}A** has acquired a
+reference on **SC2** through the trace class, **TC1**.
+
+The stream class's reference count transitions from zero to one,
+triggering the acquisition of a strong reference on **TC1** from
+**SC2**.
+
+Hence, at this point, the trace class's ownership is shared by
+**User{nbsp}A** and **SC2**.
+
+image::impl-details-images/bt-ref02.png[]
+
+Next, **User{nbsp}A** acquires a reference on the **EC3** event class
+through its parent stream class, **SC2**. Again, the transition of an
+object's reference count from 0 to 1 triggers the acquisition of a
+reference on its parent.
+
+Note that SC2's reference count was incremented to 2. The trace class's
+reference count remains unchanged.
+
+image::impl-details-images/bt-ref03.png[]
+
+**User{nbsp}A** decides to drop its reference on **SC2**. **SC2**'s
+reference count returns back to 1, everything else remaining unchanged.
+
+image::impl-details-images/bt-ref04.png[]
+
+**User{nbsp}A** can then decide to drop its reference on the trace
+class. This results in a reversal of the initial situation:
+**User{nbsp}A** now owns an event, **EC3**, which is keeping everything
+else alive and reachable.
+
+image::impl-details-images/bt-ref05.png[]
+
+If another object, **User{nbsp}B**, enters the picture and acquires a
+reference on the **SC1** stream class, we see that **SC1**'s reference
+count transitioned from 0 to 1, triggering the acquisition of a
+reference on **TC1**.
+
+image::impl-details-images/bt-ref06.png[]
+
+**User{nbsp}B** hands off a reference to **EC1**, acquired through
+**SC1**, to another object, **User{nbsp}C**. The acquisition of a
+reference on **EC1**, which transitions from 0 to 1, triggers the
+acquisition of a reference on its parent, **SC1**.
+
+image::impl-details-images/bt-ref07.png[]
+
+At some point, **User{nbsp}A** releases its reference on **EC3**. Since
+**EC3**'s reference count transitions to zero, it releases its reference
+on **SC2**. **SC2**'s reference count, in turn, reaches zero and it
+releases its reference to **TC1**.
+
+**TC1**'s reference count is now 1 and no further action is taken.
+
+image::impl-details-images/bt-ref08.png[]
+
+**User{nbsp}B** releases its reference on **SC1**. **User{nbsp}C**
+becomes the sole owner of the whole hierarchy through his ownership of
+**EC1**.
+
+image::impl-details-images/bt-ref09.png[]
+
+Finally, **User{nbsp}C** releases his ownership of **EC1**, triggering
+the release of the whole hierarchy. Let's walk through the reclamation
+of the whole graph.
+
+Mirroring what happened when **User{nbsp}A** released its last reference
+on **EC3**, the release of **EC1** by **User{nbsp}C** causes its
+reference count to fall to zero.
+
+This transition to zero causes **EC1** to release its reference on
+**SC1**. **SC1**'s reference count reaching zero causes it to release
+its reference on **TC1**.
+
+image::impl-details-images/bt-ref10.png[]
+
+Since the reference count of **TC1**, a root object, has reached zero,
+it invokes the destructor method on its children. This method is
+recursive and causes the stream classes to call the destructor method on
+their event classes.
+
+The event classes are reached and, having no children of their own, are
+reclaimed.
+
+image::impl-details-images/bt-ref11.png[]
+
+The stream classes having destroyed their children, are then reclaimed
+by the trace class.
+
+image::impl-details-images/bt-ref12.png[]
+
+Finally, the stream classes having been reclaimed, **TC1** is reclaimed.
+
+image::impl-details-images/bt-ref13.png[]

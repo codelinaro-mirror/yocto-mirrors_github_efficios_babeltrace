@@ -13,16 +13,17 @@ SUBDIRS += bindings/python
 endif
 
 EXTRA_DIST = \
-	contributing-images/bt-ref01.png \
-	contributing-images/bt-ref02.png \
-	contributing-images/bt-ref03.png \
-	contributing-images/bt-ref04.png \
-	contributing-images/bt-ref05.png \
-	contributing-images/bt-ref06.png \
-	contributing-images/bt-ref07.png \
-	contributing-images/bt-ref08.png \
-	contributing-images/bt-ref09.png \
-	contributing-images/bt-ref10.png \
-	contributing-images/bt-ref11.png \
-	contributing-images/bt-ref12.png \
-	contributing-images/bt-ref13.png
+	impl-details.adoc \
+	impl-details-images/bt-ref01.png \
+	impl-details-images/bt-ref02.png \
+	impl-details-images/bt-ref03.png \
+	impl-details-images/bt-ref04.png \
+	impl-details-images/bt-ref05.png \
+	impl-details-images/bt-ref06.png \
+	impl-details-images/bt-ref07.png \
+	impl-details-images/bt-ref08.png \
+	impl-details-images/bt-ref09.png \
+	impl-details-images/bt-ref10.png \
+	impl-details-images/bt-ref11.png \
+	impl-details-images/bt-ref12.png \
+	impl-details-images/bt-ref13.png
