@@ -431,6 +431,11 @@ AE_FEATURE([debug-info],[disable the debug info support (default on macOS, Solar
 AE_FEATURE_DEFAULT_DISABLE
 AE_FEATURE([api-doc],[build the HTML API documentation])
 
+# Internal documentation
+# Disabled by default
+AE_FEATURE_DEFAULT_DISABLE
+AE_FEATURE([internal-doc],[build the HTML internal documentation])
+
 # Built-in plugins
 # Disabled by default
 AE_FEATURE_DEFAULT_DISABLE
@@ -501,6 +506,7 @@ AM_CONDITIONAL([ENABLE_PYTHON_BINDINGS_DOC], AE_IS_FEATURE_ENABLED([python-bindi
 AM_CONDITIONAL([ENABLE_PYTHON_PLUGINS], AE_IS_FEATURE_ENABLED([python-plugins]))
 AM_CONDITIONAL([ENABLE_DEBUG_INFO], AE_IS_FEATURE_ENABLED([debug-info]))
 AM_CONDITIONAL([ENABLE_API_DOC], AE_IS_FEATURE_ENABLED([api-doc]))
+AM_CONDITIONAL([ENABLE_INTERNAL_DOC], AE_IS_FEATURE_ENABLED([internal-doc]))
 AM_CONDITIONAL([ENABLE_BUILT_IN_PLUGINS], AE_IS_FEATURE_ENABLED([built-in-plugins]))
 AM_CONDITIONAL([ENABLE_BUILT_IN_PYTHON_PLUGIN_SUPPORT], AE_IS_FEATURE_ENABLED([built-in-python-plugin-support]))
 AM_CONDITIONAL([ENABLE_MAN_PAGES], AE_IS_FEATURE_ENABLED([man-pages]))
@@ -603,8 +609,11 @@ AE_IF_FEATURE_ENABLED([debug-info], [
 ])
 AC_SUBST([ELFUTILS_LIBS])
 
-AE_IF_FEATURE_ENABLED([api-doc],
-  [
+need_doxygen=no
+AE_IF_FEATURE_ENABLED([api-doc], [need_doxygen=yes])
+AE_IF_FEATURE_ENABLED([internal-doc], [need_doxygen=yes])
+
+AS_IF([test x$need_doxygen = xyes], [
     DX_DOXYGEN_FEATURE(ON)
     DX_DOT_FEATURE(OFF)
     DX_HTML_FEATURE(ON)
@@ -617,7 +626,7 @@ AE_IF_FEATURE_ENABLED([api-doc],
     DX_PS_FEATURE(OFF)
     DX_INIT_DOXYGEN([babeltrace2], [$(builddir)/Doxyfile], [output])
     AS_IF([test -z "$DX_DOXYGEN"],
-      [AC_MSG_ERROR([You need doxygen to enable the API documentation])]
+      [AC_MSG_ERROR([You need doxygen to enable the API or internal documentation])]
     )
   ]
 )
@@ -824,6 +833,8 @@ AC_SUBST(program_transform_name)
 AC_CONFIG_FILES([
   doc/api/libbabeltrace2/Doxyfile
   doc/api/libbabeltrace2/Makefile
+  doc/internal/Doxyfile
+  doc/internal/Makefile
   doc/bindings/python/Makefile
   doc/Makefile
   doc/man/asciidoc-attrs.conf
@@ -966,7 +977,9 @@ AE_IF_FEATURE_ENABLED([man-pages], [
 m4_popdef([build_man_pages_msg])
 
 test "x$enable_api_doc" = "xyes" && value=1 || value=0
-AE_PPRINT_PROP_BOOL_CUSTOM([HTML API documentation], $value, [To build documentation, use ‘--enable-api-doc’])
+AE_PPRINT_PROP_BOOL_CUSTOM([HTML API documentation], $value, [To build API documentation, use ‘--enable-api-doc’])
+test "x$enable_internal_doc" = "xyes" && value=1 || value=0
+AE_PPRINT_PROP_BOOL_CUSTOM([HTML internal documentation], $value, [To build internal documentation, use ‘--enable-internal-doc’])
 test "x$enable_python_bindings_doc" = "xyes" && value=1 || value=0
 AE_PPRINT_PROP_BOOL_CUSTOM([Python bindings documentation], $value, [To build the Python bindings documentation, use ‘--enable-python-bindings-doc’])
 

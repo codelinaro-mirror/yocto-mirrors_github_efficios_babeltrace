@@ -8,6 +8,10 @@ if ENABLE_API_DOC
 SUBDIRS += api/libbabeltrace2
 endif
 
+if ENABLE_INTERNAL_DOC
+SUBDIRS += internal
+endif
+
 if ENABLE_PYTHON_BINDINGS_DOC
 SUBDIRS += bindings/python
 endif

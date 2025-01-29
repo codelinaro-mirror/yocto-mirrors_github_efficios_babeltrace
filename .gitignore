@@ -35,6 +35,8 @@ stamp-h1
 # Generated documentation files
 /doc/api/libbabeltrace2/Doxyfile
 /doc/api/libbabeltrace2/output
+/doc/internal/Doxyfile
+/doc/internal/output
 /doc/bindings/python/build/
 /doc/man/*.1
 /doc/man/*.7

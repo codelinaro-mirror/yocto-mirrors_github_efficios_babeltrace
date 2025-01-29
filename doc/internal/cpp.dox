@@ -1,0 +1,555 @@
+/*!
+@page cpp C++ usage
+
+A significant part and, in general, all the new code of \bt_name is
+written in C++.
+
+This section shows what's important to know about C++ to contribute
+to \bt_name.
+
+@remark
+    @parblock
+    \bt_name only has C++ sources for \em internal code.
+
+    In other words, libbabeltrace2 \em must expose a pure C99 API to
+    preserve ABI compatibility over time.
+    @endparblock
+
+@section cpp-std Standard
+
+The \bt_name project is configured to use the C++11 standard.
+
+C++11 makes it possible to build \bt_name with a broad range of
+compilers, from GCC&nbsp;4.8 and Clang&nbsp;3.3.
+
+@section cpp-automake-libtool Automake/Libtool requirements
+
+To add a C++ source file to a part of the project, use the
+<code>.cpp</code> extension and add it to the list of source files in
+\c Makefile.am as usual.
+
+If a program or a shared library has a direct C++ source file, then
+Libtool uses the C++ linker to create the result, dynamically linking
+important runtime libraries such as libstdc++ and libgcc_s.
+
+Because a Libtool <em>convenience library</em> is just an archive
+(<code>.a</code>), it's \em not dynamically linked to runtime libraries,
+even if one of its direct sources is a C++ file. This means that for
+each program or shared library named \c my_target in
+\c Makefile.am which is linked to a convenience library having
+C++ sources (recursively), you \em must do one of:
+
+- Have at least one direct C++ source file in the
+  <code>*_my_target_SOURCES</code> list.
+
+- Add:
+
+  @code{.undefined}
+  nodist_EXTRA_my_target_SOURCES = dummy.cpp
+  @endcode
+
+  See
+  <a href="https://www.gnu.org/software/automake/manual/automake.html#Libtool-Convenience-Libraries">Libtool
+  Convenience Libraries</a> to learn more.
+
+For a given program or library, you \em cannot have a C&nbsp;file and a
+C++&nbsp;file having the same name, for example \c list.c and
+\c list.cpp.
+
+@section cpp-coding-style Coding style
+
+This section shows the \bt_name C++ coding style.
+
+@subsection cpp-coding-style-ws Whitespaces, indentation, and line breaks
+
+All the C++ files of the project follow the
+<a href="https://clang.llvm.org/docs/ClangFormat.html">ClangFormat</a>
+<a href="https://clang.llvm.org/docs/ClangFormatStyleOptions.html">style</a> of the
+<code>.clang-format</code> file for whitespaces, indentation,
+and line breaks.
+
+You \em must format modified and new C++ files with ClangFormat before
+you create a contribution patch.
+
+You need ClangFormat&nbsp;16 to use the project
+<code>.clang-format</code> file.
+
+To automatically format all the C++ files of the project, run:
+
+@code{.undefined}
+$ ./tools/format-cpp.sh
+@endcode
+
+To only format the C++ files of a given directory:
+
+@code{.undefined}
+$ ./tools/format-cpp.sh ./src/cli
+@endcode
+
+Use the \c FORMATTER environment variable to override the default
+formatter (<code>clang-format&nbsp;-i</code>):
+
+@code{.undefined}
+$ FORMATTER='my-clang-format-16 -i' ./tools/format-cpp.sh
+@endcode
+
+@subsection cpp-coding-style-naming Naming
+
+<table>
+  <tr>
+    <th>What
+    <th>Style
+    <th>Examples
+  <tr>
+    <td>Variable name
+    <td>Camel case with a lowercase first letter.
+    <td>
+      - \c size
+      - \c objSize
+  <tr>
+    <td>Public function/method name
+    <td>Camel case with a lowercase first letter.
+    <td>
+      - \c size()
+      - \c formatAndPrint()
+  <tr>
+    <td>Private/protected function/method name
+    <td>
+      <code>_</code> followed by camel case with a lowercase
+      first letter.
+    <td>
+      - \c _len()
+      - \c _tryConnect()
+  <tr>
+    <td>Private/protected data member name
+    <td>
+      <code>_m</code> followed by camel case with an uppercase
+      first letter.
+
+      This is to avoid name clashes with private/protected
+      getters/setters.
+    <td>
+      - \c _mLogger
+      - \c _mSize
+      - \c _mFieldClass
+  <tr>
+    <td>Type
+    <td>Camel case with a uppercase first letter
+    <td>
+      - \c Pistachio
+      - \c NutManager
+  <tr>
+    <td>Private/protected type
+    <td>
+      <code>_</code> followed by camel case with a
+      uppercase first letter.
+    <td>
+      - \c _NodeType
+      - \c _Map
+  <tr>
+    <td>Template parameter
+    <td>
+      - Camel case with a uppercase first letter followed by:
+        - \c T suffix for type template parameters.
+        - \c V suffix for non-type template parameter.
+    <td>
+      @code{.cpp}
+      template <typename NameT,
+                typename ItemT,
+                unsigned int SizeV = 0>
+      @endcode
+  <tr>
+    <td>Template parameter pack
+    <td>\c ArgTs
+    <td>
+      @code{.cpp}
+      template <typename NameT,
+                typename... ArgTs>
+      @endcode
+  <tr>
+    <td>Enumerator
+    <td>Camel case with a uppercase first letter.
+    <td>
+      - \c Type::SignedInt
+      - \c Scope::Function
+  <tr>
+    <td>Definition/macro name
+    <td>Snake case with uppercase letters.
+    <td>
+      - \c MARK_AS_UNUSED()
+      - \c SOME_FEATURE_EXISTS
+  <tr>
+    <td>Namespace
+    <td>Only lowercase letters and digits.
+    <td>
+      - \c mylib
+      - \c %bt2c
+</table>
+
+Also:
+
+- Name setters and getters like the property name, without the
+  \c set and \c get prefixes.
+
+- Use the \c is or \c has prefix, if possible, to
+  name the functions which return \c bool.
+
+  However, try to keep the name readable. For example, prefer
+  \c colorIsBlue() over \c isColorBlue().
+
+@section cpp-coding-conv Coding convention
+
+In general, the project contributors make an effort to follow, for C++11
+code:
+
+- The
+  <a href="https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md">C++ Core Guidelines</a>.
+
+- Scott Meyers's
+  &quot;<a href="https://www.oreilly.com/library/view/effective-modern-c/9781491908419/">Effective Modern C++</a>&quot;.
+
+Here are a few important reminders:
+
+- Namespace your code.
+
+- Create one header/source file pair per class when possible.
+
+  For a class named \c MyClass, name the corresponding files
+  \c my-class.hpp and \c my-class.cpp.
+
+- Use the \c inline keyword, not <code>static inline</code>, for
+  header-only functions that are not templates.
+
+- When defining a class, use this order:
+
+  -# Friends (without any preceding access specifier).
+
+  -# Public types and type aliases.
+
+  Private/protected types may be here too if they can't be lower.
+
+  -# Constructors, whatever their access.
+
+  -# Destructor (always public).
+
+  -# Copy-assignment and move-assignment operators.
+
+  -# Public methods.
+
+  -# Protected types and type aliases.
+
+  -# Protected methods.
+
+  -# Private types and type aliases.
+
+  -# Private methods.
+
+  -# Protected data members.
+
+  -# Private data members.
+
+- Declare variables as close to where they're used as possible.
+
+- In general, try to avoid variables if it doesn't lead to more lines.
+
+  For example, given:
+
+  @code{.cpp}
+  const auto size = getSize(myObj, 23);
+  auto& obj = this->_objForSize(size);
+
+  abc::sendObj(obj, SendOpts::WAIT);
+  @endcode
+
+  Prefer this:
+
+  @code{.cpp}
+  abc::sendObj(this->_objForSize(getSize(myObj, 23)), SendOpts::WAIT);
+  @endcode
+
+- If you really need variables, then scope them to avoid
+  "leaking" them:
+
+  @code{.cpp}
+  doSomeStuff(123, &obj);
+
+  {
+      const auto status = tryChange(obj);
+
+      BT_CPPLOGD("New status: {}.", status);
+      BT_ASSERT(status == Status::CONTINUE);
+  }
+
+  doMoreStuff(&obj);
+  @endcode
+
+  This also means to either use a dedicated, named method/function or to
+  use bt2c::call() with an immediately invoked function
+  expression (lambda) to perform complex initialization of an ideally
+  \c const variable:
+
+  @code{.cpp}
+  const auto size = bt2c::call([this] {
+      auto& sender = this->_curSender();
+
+      if (sender.strategy() == Strategy::ACK) {
+          return sender.strategySize();
+      } else if (sender.strategy() == Strategy::NACK) {
+          return 0;
+      }
+
+      return _mDefSize;
+  });
+  @endcode
+
+- Always use bt2c::call() to call an immediately invoked
+  function expression (see the previous point).
+
+- If possible, initialize object members without a default value with
+  the initializer list of a constructor, not in the constructor body.
+
+  If the initialization is complex, either use a dedicated, named
+  method/function or bt2c::call() with an immediately
+  invoked function expression (lambda):
+
+  @code{.cpp}
+  MyObj::MyObj(const std::size_t size) :
+      _mSize {size},
+      _mOtherObj {bt2c::call([size] {
+          /* Complex initialization here */
+      })}
+  {
+  }
+  @endcode
+
+- Use \c auto when possible.
+
+  Use <code>auto&</code> instead of <code>const auto&</code> when you
+  know that the type is \c const anyway.
+
+  Don't use <code>auto *</code>.
+
+- Use \c const as much as possible, even for pointers
+  (<code>const char * const</code>) and numeric values
+  (<code>const unsigned int</code>) which never need to change.
+
+- Prefer the <code>pass:[MyObj myObj {...}]</code> initialization form
+  over <code>pass:[auto myObj = MyObj {...}]</code>.
+
+- Implement simple setters, getters, and one-liners in header files and
+  everything else that's not a template in source files, including
+  constructors.
+
+- Make methods <code>const noexcept</code> or \c const
+  as much as possible.
+
+- Make constructors \c explicit unless you really need an implicit
+  constructor (which is rare), including default constructors:
+
+  @code{.cpp}
+  explicit Meow();
+  @endcode
+
+- Use \c std::unique_ptr to manage memory when possible.
+
+  However, use references (<code>*my_unique_ptr</code>) and raw
+  pointers (<code>my_unique_ptr.get()</code>) when not transferring
+  ownership.
+
+- Use \c nullptr, not \c NULL nor 0.
+
+- Return by value (rvalue) instead of by output parameter (non-const
+  lvalue reference), even complex objects, unless you can prove that the
+  performance is improved when returning by parameter.
+
+- For a function parameter or a return value of which the type needs to
+  be a reference or pointer, use:
+
+  <dl>
+    <dt>If the value is mandatory
+    <dd>A reference.
+
+    <dt>If the value is optional
+    <dd>A raw pointer.
+  </dl>
+
+- Don't use \c std::move() when you already have an rvalue,
+  which means:
+
+  - Don't write <code>return std::move(...);</code> as this can
+    interfere with RVO.
+
+  - Don't use <code>std::move()</code> with a function call
+    (<code>std::move(func())</code>).
+
+- For each possible move/copy constructor or assignment operator, do one
+  of:
+
+  - Write a custom one.
+  - Mark it as defaulted (\c default)
+  - Mark it as deleted (\c delete).
+
+- Use scoped enumerations (<code>enum class</code>).
+
+- Mark classes known to be final with the \c final keyword.
+
+- Use type aliases (\c using), not type definitions
+  (\c typedef).
+
+- When some entity is file-private, use:
+
+  <dl>
+    <dt><code>.cpp</code> file
+    <dd>An anonymous namespace instead of \c static or \c inline.
+
+    <dt><code>.hpp</code> file
+    <dd>
+      The \c internal namespace (with \c inline if it's
+      not a template).
+  </dl>
+
+- Prefer a function in an anonymous namespace in a <code>.cpp</code>
+  file over a private static method if it doesn't need private access to
+  an object.
+
+- Don't pollute the global namespace:
+
+  - Don't use <code>using namespace xyz</code> anywhere.
+
+  - Use only namespace aliases in source files (<code>.cpp</code>),
+    trying to use them in the smallest possible scope (function, or even
+    smaller).
+
+- Return a structure with named members instead of a generic container
+  such as \c std::pair or \c std::tuple.
+
+- When a class inherits a base class with virtual methods, use the
+  \c override keyword to mark overridden virtual methods, and do not use
+  the \c virtual keyword again.
+
+- Define overloaded operators only if their meaning is obvious,
+  unsurprising, and consistent with the corresponding built-in
+  operators.
+
+  For example, use <code>|</code> as a bitwise- or logical-or, not as
+  a shell-style pipe.
+
+- Use RAII wrappers when managing system resources or interacting with
+  C&nbsp;libraries.
+
+  In other words, don't rely on <code>goto</code>s and error labels to
+  clean up as you would do in&nbsp;C.
+
+  Use the RAII, Luke.
+
+- Throw an exception when there's an unexpected, exceptional condition,
+  <a href="https://isocpp.org/wiki/faq/exceptions#ctors-can-throw">including from
+  a constructor</a>, instead of returning a status code.
+
+- Accept a by-value parameter and move it (when it's moveable) when you
+  intend to copy it anyway.
+
+  You can do this with most STL containers.
+
+  Example:
+
+  @code{.cpp}
+  void Obj::doSomething(std::string str)
+  {
+      _mName = std::move(str);
+      /* ... */
+  }
+  @endcode
+
+@subsection cpp-coding-conv-ex Example
+
+This example shows a C++ header which follows the \bt_name C++ coding
+convention.
+
+@code{.cpp}
+/*
+ * SPDX-FileCopyrightText: 2020 Harry Burnett <hburnett@reese.choco>
+ * SPDX-License-Identifier: MIT
+ */
+
+#ifndef BABELTRACE_BABY_HPP
+#define BABELTRACE_BABY_HPP
+
+#include <string>
+#include <unordered_set>
+#include <utility>
+
+namespace life {
+
+class Toy;
+
+/*
+ * A baby is a little human.
+ */
+class Baby : public Human
+{
+    friend class Parent;
+
+public:
+    using Toys = std::unordered_set<Toy>;
+
+    enum class Gender
+    {
+        Male,
+        Female,
+        Other,
+    };
+
+    explicit Baby() = default;
+    explicit Baby(const Toys& toys);
+    Baby(const Baby&) = delete;
+    Baby(Baby&&) = delete;
+
+protected:
+    explicit Baby(Gender initialGender = Gender::OTHER);
+
+public:
+    ~Baby();
+    Baby& operator=(const Baby&) = delete;
+    Baby& operator=(Baby&&) = delete;
+
+    /*
+     * Eats </code>weight<code> grams of food.
+     */
+    void eat(unsigned long weight);
+
+    /*
+     * Sleeps for </code>duration<code> seconds.
+     */
+    void sleep(double duration);
+
+    /*
+     * Sets this baby's name to </code>name`.
+     */
+    void name(std::string name)
+    {
+        _mName = std::move(name);
+    }
+
+    /*
+     * This baby's name.
+     */
+    const std::string& name() const noexcept
+    {
+        return _mName;
+    }
+
+protected:
+    void _addTeeth(unsigned long index);
+    void _grow(double size) override;
+
+private:
+    std::string _mName {"Paul"};
+    Toys _mToys;
+};
+
+} /* namespace life */
+
+#endif /* BABELTRACE_BABY_HPP */
+@endcode
+*/

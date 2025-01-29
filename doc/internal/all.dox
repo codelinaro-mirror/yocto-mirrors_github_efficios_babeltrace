@@ -1,0 +1,191 @@
+// SPDX-FileCopyrightText: 2017-2025 Philippe Proulx <pproulx@efficios.com>
+// SPDX-License-Identifier: CC-BY-SA-4.0
+
+/*!
+@mainpage Yo!
+
+@note
+This documentation (text and illustrations) is licensed under a
+<a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode">Creative
+Commons Attribution-ShareAlike 4.0 International</a> license.
+
+Welcome to the \b internal \bt_name documentation!
+
+This documentation covers everything you need to improve and fix the
+\bt_name project.
+
+@note
+    If you're looking for the public libbabeltrace2 C&nbsp;API, see
+    <code>doc/api/libbabeltrace2</code> and the
+    <code>\--enable-api-doc</code> option of the \c configure script.
+
+This project doesn't currently contain internal Python bindings
+and testing documentation.
+
+@section tree Source tree structure
+
+All the source files of \bt_name are within the \c src directory. In
+this documentation, all the paths, unless otherwise specified, are
+relative to the \c src directory.
+
+Within the \c src directory:
+
+<table>
+  <tr>
+    <th>Path
+    <th>Description
+    <th>Related documentation
+  <tr>
+    <td><code>argpar</code>
+    <td>A copy of argpar, a command-line argument parser for C/C++.
+    <td>See <a href="https://github.com/efficios/argpar"><code>efficios/argpar</code></a>.
+  <tr>
+    <td><code>autodisc</code>
+    <td>
+      Automatic source component discovery.
+
+      Both the \bt_man{babeltrace2,1} CLI and the Python bindings (the
+      <code>bt2.TraceCollectionMessageIterator</code> class) use
+      this code to leverage the
+      \bt_man{babeltrace2-query-babeltrace.support-info,7} query to
+      find component classes from input.
+    <td>\b TBD
+  <tr>
+    <td><code>bindings</code>
+    <td>Python bindings (\c bt2 package).
+    <td>No internal documentation available.
+  <tr>
+    <td><code>cli</code>
+    <td>\c babeltrace2 command-line interface.
+    <td>\b TBD
+  <tr>
+    <td><code>clock-correlation-validator</code>
+    <td>Clock correlation validator.
+    <td>\b TBD
+  <tr>
+    <td><code>common</code>
+    <td>Common utilities for C.
+    <td>\b TBD
+  <tr>
+    <td><code>compat</code>
+    <td>Compatibility layer.
+    <td>\b TBD
+  <tr>
+    <td><code>cpp-common/bt2</code>
+    <td>libbabeltrace2 C++ bindings.
+    <td>\b TBD
+  <tr>
+    <td><code>cpp-common/bt2c</code>
+    <td>Common utilities for C++.
+    <td>\b TBD
+  <tr>
+    <td><code>cpp-common/bt2s</code>
+    <td>Portable \c std interfaces for C++11.
+    <td>\b TBD
+  <tr>
+    <td><code>cpp-common/vendor</code>
+    <td>Copies of useful external projects.
+    <td>\b TBD
+  <tr>
+    <td><code>ctfser</code>
+    <td>Raw CTF serialization functions.
+    <td>\b TBD
+  <tr>
+    <td><code>ctf-writer</code>
+    <td>CTF writer implementation.
+    <td>\b TBD
+  <tr>
+    <td><code>fd-cache</code>
+    <td>File descriptor cache.
+    <td>\b TBD
+  <tr>
+    <td><code>lib</code>
+    <td>libbabeltrace2 implementation.
+    <td>\b TBD
+  <tr>
+    <td><code>logging</code>
+    <td>Core logging.
+    <td>\b TBD
+  <tr>
+    <td><code>param-parse</code>
+    <td>Common command-line component parameter parsing.
+    <td>\b TBD
+  <tr>
+    <td><code>plugins</code>
+    <td>Implementation of official plugins.
+    <td>\b TBD
+  <tr>
+    <td><code>plugins/common/muxing</code>
+    <td>
+      Common muxing code.
+
+      Both the \bt_man{babeltrace2-source.ctf.lttng-live,7} and
+      \bt_man{babeltrace2-filter.utils.muxer,7} component classes
+      use this code to sort messages by time.
+    <td>\b TBD
+  <tr>
+    <td><code>plugins/common/param-validation</code>
+    <td>Common component parameter validation system.
+    <td>\b TBD
+  <tr>
+    <td><code>py-common</code>
+    <td>Common CPython utilities.
+    <td>\b TBD
+  <tr>
+    <td><code>python-plugin-provider</code>
+    <td>Provider of Python plugins for libbabeltrace2.
+    <td>\b TBD
+  <tr>
+    <td><code>string-format</code>
+    <td>Common string formatting.
+    <td>\b TBD
+</table>
+
+@section coding-style Coding style and convention
+
+We started the \bt_name exclusively in&nbsp;C in 2010, but it's moving
+towards C++11 since 2020.
+
+Whereas the C coding style is based on the Linux kernel coding style,
+we use
+<a href="https://clang.llvm.org/docs/ClangFormat.html">ClangFormat</a> for all our C++ code.
+
+See \ref cpp for C++.
+
+@subsection coding-style-c C coding style
+
+The \bt_name follows the
+<a href="https://www.kernel.org/doc/html/v4.14/process/coding-style.html">Linux kernel coding style</a>
+for the&nbsp;C language,
+except that you should use curly brackets
+(<code>{</code> and <code>}</code>)
+even for single-line <code>if</code>/<code>else</code> statements,
+for example:
+
+@code{.c}
+if (something) {
+    /* ... */
+}
+@endcode
+
+@subsection coding-style-include-guard Include guards
+
+For some header file <code>src/some-path/to/my-file.hpp</code>, the
+include guard format must be
+<code>BABELTRACE_SOME_PATH_TO_MY_FILE_HPP</code>.
+
+The top of a header should look like this:
+
+@code{.cpp}
+/*
+ * SPDX-FileCopyrightText: 2023 Philippe Proulx <pproulx@efficios.com>
+ * SPDX-License-Identifier: MIT
+ */
+
+#ifndef BABELTRACE_CPP_COMMON_BT2C_CALL_HPP
+#define BABELTRACE_CPP_COMMON_BT2C_CALL_HPP
+@endcode
+
+Check all the include guards of the project with
+<code>tools/check-include-guards.sh</code>. This tool can also fix them.
+*/
