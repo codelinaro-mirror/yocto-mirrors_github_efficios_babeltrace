@@ -13,7 +13,6 @@
 #include <babeltrace2-ctf-writer/utils.h>
 #include <babeltrace2-ctf-writer/object.h>
 #include "compat/compiler.h"
-#include "compat/string.h"
 #include <stdbool.h>
 #include <inttypes.h>
 #include "common/assert.h"

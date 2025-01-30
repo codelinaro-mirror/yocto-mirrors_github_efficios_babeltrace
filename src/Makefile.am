@@ -118,7 +118,6 @@ compat_libcompat_la_SOURCES = \
 	compat/socket.hpp \
 	compat/stdio.h \
 	compat/stdlib.h \
-	compat/string.h \
 	compat/time.h \
 	compat/unistd.h \
 	compat/utc.h

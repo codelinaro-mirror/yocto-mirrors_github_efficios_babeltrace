@@ -14,7 +14,6 @@
 
 #include "common/assert.h"
 #include "common/macros.h"
-#include "compat/string.h"
 #include <babeltrace2-ctf-writer/object.h>
 #include <inttypes.h>
 
