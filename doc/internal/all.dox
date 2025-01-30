@@ -69,7 +69,7 @@ Within the \c src directory:
   <tr>
     <td><code>compat</code>
     <td>Compatibility layer.
-    <td>\b TBD
+    <td>\ref compat
   <tr>
     <td><code>cpp-common/bt2</code>
     <td>libbabeltrace2 C++ bindings.
@@ -188,4 +188,15 @@ The top of a header should look like this:
 
 Check all the include guards of the project with
 <code>tools/check-include-guards.sh</code>. This tool can also fix them.
+
+@defgroup compat Compatibility layer
+@brief
+    Compatibility layer.
+
+Most of the APIs of this section exist to provide a common interface
+for features which don't exist on all the supported systems.
+
+The key point is: if a known function/macro has its equivalent
+here, use the \bt_name version. For example, use
+bt_posix_fallocate() instead of <code>posix_fallocate()</code>.
 */

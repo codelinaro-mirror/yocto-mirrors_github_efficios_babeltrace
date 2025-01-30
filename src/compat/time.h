@@ -8,6 +8,21 @@
 #ifndef BABELTRACE_COMPAT_TIME_H
 #define BABELTRACE_COMPAT_TIME_H
 
+/*!
+@file
+
+@brief
+    Wrappers of <code>&lt;%time.h&gt;</code> (POSIX).
+
+@ingroup compat
+
+@code{.c}
+#include "compat/time.h"
+@endcode
+
+See \bt_ext_man{time.h,0,0p}.
+*/
+
 #include <time.h>
 #include <stdlib.h>
 
@@ -65,12 +80,40 @@ error:
 
 #else /* __MINGW32__ */
 
+/*!
+@brief
+    Wrapper of <code>gmtime_r()</code>.
+
+See \bt_ext_man{ctime,3,3}.
+
+@param[in] timep
+    See \bt_ext_man{ctime,3,3}.
+@param[out] result
+    See \bt_ext_man{ctime,3,3}.
+
+@returns
+    See \bt_ext_man{ctime,3,3}.
+*/
 static inline
 struct tm *bt_gmtime_r(const time_t *timep, struct tm *result)
 {
 	return gmtime_r(timep, result);
 }
 
+/*!
+@brief
+    Wrapper of <code>localtime_r()</code>.
+
+See \bt_ext_man{ctime,3,3}.
+
+@param[in] timep
+    See \bt_ext_man{ctime,3,3}.
+@param[out] result
+    See \bt_ext_man{ctime,3,3}.
+
+@returns
+    See \bt_ext_man{ctime,3,3}.
+*/
 static inline
 struct tm *bt_localtime_r(const time_t *timep, struct tm *result)
 {

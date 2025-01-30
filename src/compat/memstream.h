@@ -9,6 +9,19 @@
 #ifndef BABELTRACE_COMPAT_MEMSTREAM_H
 #define BABELTRACE_COMPAT_MEMSTREAM_H
 
+/*!
+@file
+
+@brief
+    Memory stream functions (compatibility layer).
+
+@ingroup compat
+
+@code{.c}
+#include "compat/memstream.h"
+@endcode
+*/
+
 #ifdef BABELTRACE_HAVE_FMEMOPEN
 #include <stdio.h>
 
@@ -94,10 +107,22 @@ error_free:
 
 #else /* __MINGW32__ */
 
-/*
- * Fallback for systems which don't have fmemopen. Copy buffer to a
- * temporary file, and use that file as FILE * input.
- */
+/*!
+@brief
+    Wrapper of <code>fmemopen()</code>.
+
+See \bt_ext_man{fmemopen,3,3}.
+
+@param[in] buf
+    See \bt_ext_man{fmemopen,3,3}.
+@param[in] size
+    See \bt_ext_man{fmemopen,3,3}.
+@param[in] mode
+    See \bt_ext_man{fmemopen,3,3}.
+
+@returns
+    See \bt_ext_man{fmemopen,3,3}.
+*/
 static inline
 FILE *bt_fmemopen(void *buf, size_t size, const char *mode)
 {

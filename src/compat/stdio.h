@@ -7,6 +7,19 @@
 #ifndef BABELTRACE_COMPAT_STDIO_H
 #define BABELTRACE_COMPAT_STDIO_H
 
+/*!
+@file
+
+@brief
+    Some standard I/O functions (compatibility layer).
+
+@ingroup compat
+
+@code{.c}
+#include "compat/stdio.h"
+@endcode
+*/
+
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
@@ -46,17 +59,26 @@ char * _bt_getline_bufalloc(char **lineptr, size_t *n, size_t linelen)
 	return buf;
 }
 
-/*
- * Returns line length (including possible final \n, excluding final
- * \0). On end of file, returns -1 with nonzero feof(stream) and errno
- * set to 0. On error, returns -1 with errno set.
- *
- * This interface is similar to the getline(3) man page part of the
- * Linux man-pages project, release 3.74. One major difference from the
- * Open Group POSIX specification is that this implementation does not
- * necessarily set the ferror() flag on error (because it is internal to
- * libc).
- */
+/*!
+@brief
+    Wrapper of <code>getline()</code>.
+
+See \bt_ext_man{getline,3,3}.
+
+@note
+    This implementation doesn't necessarily set the error indicator
+    of \bt_p{stream} because it's internal to the standard library.
+
+@param[in] lineptr
+    See \bt_ext_man{getline,3,3}.
+@param[in,out] n
+    See \bt_ext_man{getline,3,3}.
+@param[in] stream
+    See \bt_ext_man{getline,3,3}.
+
+@returns
+    See \bt_ext_man{getline,3,3}.
+*/
 static inline
 ssize_t bt_getline(char **lineptr, size_t *n, FILE *stream)
 {

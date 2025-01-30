@@ -9,6 +9,43 @@
 #ifndef BABELTRACE_COMPAT_ENDIAN_H
 #define BABELTRACE_COMPAT_ENDIAN_H
 
+/*!
+@file
+
+@brief
+    Wrappers of <code>&lt;%endian.h&gt;</code> (on Linux).
+
+@ingroup compat
+
+@code{.c}
+#include "compat/endian.h"
+@endcode
+
+@deprecated
+    For new C++ code, use cpp-common/bt2c/endian.hpp.
+
+Defined are:
+
+- <code>BIG_ENDIAN</code>
+- <code>BYTE_ORDER</code>
+- <code>FLOAT_WORD_ORDER</code>
+- <code>LITTLE_ENDIAN</code>
+- <code>be16toh(x)</code>
+- <code>be32toh(x)</code>
+- <code>be64toh(x)</code>
+- <code>betoh16(x)</code>
+- <code>betoh32(x)</code>
+- <code>betoh64(x)</code>
+- <code>htobe16(x)</code>
+- <code>htobe32(x)</code>
+- <code>htobe64(x)</code>
+- <code>letoh16(x)</code>
+- <code>letoh32(x)</code>
+- <code>letoh64(x)</code>
+
+See \bt_ext_man{endian,3,3}.
+*/
+
 #ifdef __FreeBSD__
 #include <sys/endian.h>
 

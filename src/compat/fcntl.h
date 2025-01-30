@@ -9,6 +9,21 @@
 #ifndef BABELTRACE_COMPAT_FCNTL_H
 #define BABELTRACE_COMPAT_FCNTL_H
 
+/*!
+@file
+
+@brief
+    Wrappers of <code>&lt;%fcntl.h&gt;</code> (POSIX).
+
+@ingroup compat
+
+@code{.c}
+#include "compat/fcntl.h"
+@endcode
+
+See \bt_ext_man{fcntl.h,0,0p}.
+*/
+
 #include "common/common.h"
 
 #ifdef BABELTRACE_HAVE_POSIX_FALLOCATE
@@ -128,6 +143,22 @@ end:
 	((type) (a) < (type) (b) ? (type) (a) : (type) (b))
 #endif
 
+/*!
+@brief
+    Wrapper of <code>posix_fallocate()</code>.
+
+See \bt_ext_man{posix_fallocate,3,3}.
+
+@param[in] fd
+    See \bt_ext_man{posix_fallocate,3,3}.
+@param[in] offset
+    See \bt_ext_man{posix_fallocate,3,3}.
+@param[in] len
+    See \bt_ext_man{posix_fallocate,3,3}.
+
+@returns
+    See \bt_ext_man{posix_fallocate,3,3}.
+*/
 static inline
 int bt_posix_fallocate(int fd, off_t offset, off_t len)
 {

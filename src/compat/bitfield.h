@@ -7,6 +7,25 @@
 #ifndef BABELTRACE_COMPAT_BITFIELD_H
 #define BABELTRACE_COMPAT_BITFIELD_H
 
+/*!
+@file
+
+@brief
+    Bit field I/O macros (compatibility layer).
+
+@ingroup compat
+
+@code{.c}
+#include "compat/bitfield.h"
+@endcode
+
+The bit field I/O macros exist to read and write unsigned and
+signed integers from&nbsp;1 to&nbsp;64 bits at any location within
+a bit sequence and with any endianness.
+
+@sa cpp-common/read-fixed-len-int.hpp
+*/
+
 #include <stdint.h>	/* C99 5.2.4.2 Numerical limits */
 #include <stdbool.h>	/* C99 7.16 bool type */
 #include "compat/limits.h"	/* C99 5.2.4.2 Numerical limits */
@@ -310,14 +329,58 @@ do {									\
  * bt_bitfield_write_be - write integer to a bitfield in big endian
  */
 
-#if (BYTE_ORDER == LITTLE_ENDIAN)
+#if (BYTE_ORDER == LITTLE_ENDIAN || defined(BT_DOXY))
 
+/*!
+@brief
+    Writes the value \bt_p{v} of \bt_p{length} bits at the position
+    \bt_p{start} bits from \bt_p{*ptr} using the native byte order.
+
+\bt_p{type} is the backing integer type for the writing loop:
+\c uint8_t is always safe.
+
+Example:
+
+@code{.c}
+bt_bitfield_write(my_data, uint8_t, 7, 35, 33847);
+@endcode
+*/
 #define bt_bitfield_write(ptr, type, start, length, v)			\
 	_bt_bitfield_write_le(ptr, type, start, length, v)
 
+/*!
+@brief
+    Writes the value \bt_p{v} of \bt_p{length} bits at the position
+    \bt_p{start} bits from \bt_p{*ptr} using the little-endian byte
+    order.
+
+\bt_p{type} is the backing integer type for the writing loop:
+\c uint8_t is always safe.
+
+Example:
+
+@code{.c}
+bt_bitfield_write_le(my_data, uint8_t, 7, 35, 33847);
+@endcode
+*/
 #define bt_bitfield_write_le(ptr, type, start, length, v)		\
 	_bt_bitfield_write_le(ptr, type, start, length, v)
 
+/*!
+@brief
+    Writes the value \bt_p{v} of \bt_p{length} bits at the position
+    \bt_p{start} bits from \bt_p{*ptr} using the big-endian byte
+    order.
+
+\bt_p{type} is the backing integer type for the writing loop:
+\c uint8_t is always safe.
+
+Example:
+
+@code{.c}
+bt_bitfield_write_be(my_data, uint8_t, 7, 35, 33847);
+@endcode
+*/
 #define bt_bitfield_write_be(ptr, type, start, length, v)		\
 	_bt_bitfield_write_be(ptr, unsigned char, start, length, v)
 
@@ -478,14 +541,74 @@ do {									\
  * bt_bitfield_read_be - read integer from a bitfield in big endian
  */
 
-#if (BYTE_ORDER == LITTLE_ENDIAN)
+#if (BYTE_ORDER == LITTLE_ENDIAN || defined(BT_DOXY))
 
+/*!
+@brief
+    Reads a value of length \bt_p{length} bits at the position
+    \bt_p{start} bits from \bt_p{*ptr} into \bt_p{*vptr} using the
+    native byte order.
+
+\bt_p{type} is the backing integer type for the reading loop:
+\c uint8_t is always safe.
+
+Example:
+
+@code{.c}
+uint32_t val;
+
+bt_bitfield_read(my_data, uint8_t, 7, 27, &val);
+@endcode
+
+@pre
+    <code>sizeof(*vptr)</code>&nbsp;×&nbsp;8&nbsp;&ge;&nbsp;\bt_p{length}
+*/
 #define bt_bitfield_read(ptr, type, start, length, vptr)		\
 	_bt_bitfield_read_le(ptr, type, start, length, vptr)
 
+/*!
+@brief
+    Reads a value of length \bt_p{length} bits at the position
+    \bt_p{start} bits from \bt_p{*ptr} into \bt_p{*vptr} using the
+    little-endian byte order.
+
+\bt_p{type} is the backing integer type for the reading loop:
+\c uint8_t is always safe.
+
+Example:
+
+@code{.c}
+uint32_t val;
+
+bt_bitfield_read_le(my_data, uint8_t, 7, 27, &val);
+@endcode
+
+@pre
+    <code>sizeof(*vptr)</code>&nbsp;×&nbsp;8&nbsp;&ge;&nbsp;\bt_p{length}
+*/
 #define bt_bitfield_read_le(ptr, type, start, length, vptr)		\
 	_bt_bitfield_read_le(ptr, type, start, length, vptr)
 
+/*!
+@brief
+    Reads a value of length \bt_p{length} bits at the position
+    \bt_p{start} bits from \bt_p{*ptr} into \bt_p{*vptr} using the
+    big-endian byte order.
+
+\bt_p{type} is the backing integer type for the reading loop:
+\c uint8_t is always safe.
+
+Example:
+
+@code{.c}
+int32_t val;
+
+bt_bitfield_read_be(my_data, uint8_t, 7, 27, &val);
+@endcode
+
+@pre
+    <code>sizeof(*vptr)</code>&nbsp;×&nbsp;8&nbsp;&ge;&nbsp;\bt_p{length}
+*/
 #define bt_bitfield_read_be(ptr, type, start, length, vptr)		\
 	_bt_bitfield_read_be(ptr, unsigned char, start, length, vptr)
 

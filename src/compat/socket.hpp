@@ -8,6 +8,31 @@
 #ifndef BABELTRACE_COMPAT_SOCKET_HPP
 #define BABELTRACE_COMPAT_SOCKET_HPP
 
+/*!
+@file
+
+@brief
+    Sockets (compatibility layer).
+
+@ingroup compat
+
+@code{.c}
+#include "compat/socket.hpp"
+@endcode
+
+This file offers a portable
+<a href="https://en.wikipedia.org/wiki/Network_socket">socket</a>
+API.
+
+Before using any function of this API, call bt_socket_init(). When
+you're done, call bt_socket_fini().
+
+There's no <code>bt_socket_open()</code> function: use
+\bt_ext_man{socket,3,3},
+<a href="https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-socket">even on Windows</a>,
+but close it with bt_socket_close().
+*/
+
 #include <stdbool.h>
 
 #include "cpp-common/bt2c/logging.hpp"
@@ -260,36 +285,124 @@ static inline const char *bt_socket_errormsg(void)
 #    define BT_SOCKET_ERROR   -1
 #    define BT_SOCKET         int
 
-static inline int bt_socket_init(const bt2c::Logger&)
+/*!
+@brief
+    Initializes the portable socket API.
+
+@param[in] logger
+    Logger to use.
+
+@returns
+    0 on success, or a negative value on error.
+*/
+static inline int bt_socket_init(const bt2c::Logger& logger __attribute__((unused)))
 {
     return 0;
 }
 
+/*!
+@brief
+    Finalizes the portable socket API.
+
+@returns
+    0 on success, or a negative value on error.
+ */
 static inline int bt_socket_fini(void)
 {
     return 0;
 }
 
+/*!
+@brief
+    Wrapper of <code>send()</code>.
+
+See \bt_ext_man{send,3,3p}.
+
+@param[in] sockfd
+    See \bt_ext_man{send,3,3p}.
+@param[in] buf
+    See \bt_ext_man{send,3,3p}.
+@param[in] len
+    See \bt_ext_man{send,3,3p}.
+@param[in] flags
+    See \bt_ext_man{send,3,3p}.
+
+@returns
+    See \bt_ext_man{send,3,3p}.
+*/
 static inline int bt_socket_send(int sockfd, const void *buf, size_t len, int flags)
 {
     return send(sockfd, buf, len, flags);
 }
 
+/*!
+@brief
+    Wrapper of <code>recv()</code>.
+
+See \bt_ext_man{recv,3,3p}.
+
+@param[in] sockfd
+    See \bt_ext_man{recv,3,3p}.
+@param[in] buf
+    See \bt_ext_man{recv,3,3p}.
+@param[in] len
+    See \bt_ext_man{recv,3,3p}.
+@param[in] flags
+    See \bt_ext_man{recv,3,3p}.
+
+@returns
+    See \bt_ext_man{recv,3,3p}.
+*/
 static inline int bt_socket_recv(int sockfd, void *buf, size_t len, int flags)
 {
     return recv(sockfd, buf, len, flags);
 }
 
+/*!
+@brief
+    Wrapper of <code>close()</code>.
+
+@param[in] fd
+    See \bt_ext_man{close,3,3p}.
+
+@returns
+    See \bt_ext_man{close,3,3p}.
+*/
 static inline int bt_socket_close(int fd)
 {
     return close(fd);
 }
 
+/*!
+@brief
+    Returns whether or not the last socket operation was interrupted.
+
+@retval false
+    The last socket operation wasn't interrupted.
+@retval true
+    The last socket operation was interrupted.
+
+@pre
+    The last system operation was a socket operation using this API.
+*/
 static inline bool bt_socket_interrupted(void)
 {
     return (errno == EINTR);
 }
 
+/*!
+@brief
+    Returns the corresponding string of the last socket operation
+    error.
+
+@returns
+    Corresponding string of the last socket operation error.
+
+@pre
+    - The last system operation was a socket operation using
+      this API.
+    - The last socket operation failed.
+*/
 static inline const char *bt_socket_errormsg(void)
 {
     return g_strerror(errno);
@@ -318,6 +431,29 @@ static inline ssize_t bt_socket_send_nosigpipe(int fd, const void *buffer, size_
 
 #    include <signal.h>
 
+/*!
+@brief
+    bt_socket_send() with the \c MSG_NOSIGNAL flag.
+
+From \bt_ext_man{send,3,3p}:
+
+<blockquote>
+<code>MSG_NOSIGNAL</code>: Requests not to send the \c SIGPIPE signal
+if an attempt to send is made on a stream-oriented socket that is no
+longer connected. The <code>[EPIPE]</code> error shall still be
+returned.
+</blockquote>
+
+@param[in] fd
+    See bt_socket_send().
+@param[in] buffer
+    See bt_socket_send().
+@param[in] size
+    See bt_socket_send().
+
+@returns
+    See bt_socket_send().
+*/
 static inline ssize_t bt_socket_send_nosigpipe(int fd, const void *buffer, size_t size)
 {
     ssize_t sent;

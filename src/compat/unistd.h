@@ -7,6 +7,21 @@
 #ifndef BABELTRACE_COMPAT_UNISTD_H
 #define BABELTRACE_COMPAT_UNISTD_H
 
+/*!
+@file
+
+@brief
+    Wrappers of <code>&lt;%unistd.h&gt;</code> (POSIX).
+
+@ingroup compat
+
+@code{.c}
+#include "compat/unistd.h"
+@endcode
+
+See \bt_ext_man{unistd.h,0,0p}.
+*/
+
 #include <unistd.h>
 
 #ifdef __MINGW32__
@@ -32,6 +47,18 @@ long bt_sysconf(int name)
 
 #else
 
+/*!
+@brief
+    Wrapper of <code>sysconf()</code>.
+
+See \bt_ext_man{sysconf,3,3}.
+
+@param[in] name
+    See \bt_ext_man{sysconf,3,3}.
+
+@returns
+    See \bt_ext_man{sysconf,3,3}.
+*/
 static inline
 long bt_sysconf(int name)
 {

@@ -7,6 +7,22 @@
 #ifndef BABELTRACE_COMPAT_LIMITS_H
 #define BABELTRACE_COMPAT_LIMITS_H
 
+/*!
+@file
+
+@brief
+    Common limits (compatibility layer).
+
+@ingroup compat
+
+@code{.c}
+#include "compat/limits.h"
+@endcode
+
+This file also defines \c PATH_MAX to a sane default on systems missing
+this definition.
+*/
+
 #include <limits.h>
 
 #ifdef __linux__
@@ -25,6 +41,10 @@
 
 #else
 
+/*!
+@brief
+    Maximum length of a host name.
+*/
 #define BABELTRACE_HOST_NAME_MAX 256
 
 #endif /* __linux__, __FreeBSD__, _POSIX_HOST_NAME_MAX */
