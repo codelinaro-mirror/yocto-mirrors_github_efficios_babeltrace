@@ -158,7 +158,7 @@ void run_test_bt_uuid_generate(void)
 	 * Section 4.1.3.
 	 */
 	ret = uuid1[6] >> 4;
-	ok(ret == BT_UUID_VER, "bt_uuid_generate - Generated UUID version check");
+	ok(ret == 4, "bt_uuid_generate - Generated UUID version check");
 }
 
 static

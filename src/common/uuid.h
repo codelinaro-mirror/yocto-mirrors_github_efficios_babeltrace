@@ -17,7 +17,6 @@ extern "C" {
 
 #define BT_UUID_STR_LEN 36 /* Excludes final \0 */
 #define BT_UUID_LEN 16
-#define BT_UUID_VER 4
 
 #define BT_UUID_FMT \
 	"%02" SCNx8 "%02" SCNx8 "%02" SCNx8 "%02" SCNx8 "-%02" SCNx8 \
@@ -30,10 +29,6 @@ extern "C" {
 	(uuid)[6], (uuid)[7], (uuid)[8], (uuid)[9], (uuid)[10], (uuid)[11], \
 	(uuid)[12], (uuid)[13], (uuid)[14], (uuid)[15]
 
-#define BT_UUID_SCAN_VALUES(uuid) \
-	&(uuid)[0], &(uuid)[1], &(uuid)[2], &(uuid)[3], &(uuid)[4], &(uuid)[5], \
-	&(uuid)[6], &(uuid)[7], &(uuid)[8], &(uuid)[9], &(uuid)[10], &(uuid)[11], \
-	&(uuid)[12], &(uuid)[13], &(uuid)[14], &(uuid)[15]
 
 typedef uint8_t bt_uuid_t[BT_UUID_LEN];
 
