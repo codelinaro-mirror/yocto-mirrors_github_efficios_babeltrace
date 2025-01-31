@@ -9,6 +9,27 @@
 #ifndef BABELTRACE_COMMON_LIST_H
 #define BABELTRACE_COMMON_LIST_H
 
+/*!
+@file
+
+@brief
+    Linked list API.
+
+@ingroup common-c
+
+@code{.c}
+#include "common/list.h"
+@endcode
+
+@deprecated
+    For new C++ code, use
+    <a href="https://en.cppreference.com/w/cpp/container/list"><code>std::list</code></a>.
+
+@todo
+    Document this file officially (low priority because it's fairly
+    large and deprecated).
+*/
+
 /* The definitions of this file are adopted from those which can be
    found in the Linux kernel headers to enable people familiar with
    the latter find their way in these sources as well.  */

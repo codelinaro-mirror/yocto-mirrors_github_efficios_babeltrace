@@ -118,7 +118,15 @@ INPUT                   = "@srcdir@/all.dox" \
                           "@abs_top_srcdir@/src/compat/stdlib.h" \
                           "@abs_top_srcdir@/src/compat/time.h" \
                           "@abs_top_srcdir@/src/compat/unistd.h" \
-                          "@abs_top_srcdir@/src/compat/utc.h"
+                          "@abs_top_srcdir@/src/compat/utc.h" \
+                          "@abs_top_srcdir@/src/common/align.h" \
+                          "@abs_top_srcdir@/src/common/assert.h" \
+                          "@abs_top_srcdir@/src/common/common.h" \
+                          "@abs_top_srcdir@/src/common/list.h" \
+                          "@abs_top_srcdir@/src/common/macros.h" \
+                          "@abs_top_srcdir@/src/common/mmap-align.h" \
+                          "@abs_top_srcdir@/src/common/safe.h" \
+                          "@abs_top_srcdir@/src/common/uuid.h"
 INPUT_ENCODING          = UTF-8
 FILE_PATTERNS           = *.h *.hh *.hpp *.dox
 RECURSIVE               = NO

@@ -7,6 +7,22 @@
 #ifndef BABELTRACE_COMMON_SAFE_H
 #define BABELTRACE_COMMON_SAFE_H
 
+/*!
+@file
+
+@brief
+    Safe operations (C).
+
+@ingroup common-c
+
+@code{.c}
+#include "common/safe.h"
+@endcode
+
+@deprecated
+    For new C++ code, use cpp-common/bt2c/safe-ops.hpp.
+*/
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -14,6 +30,20 @@
 extern "C" {
 #endif
 
+/*!
+@brief
+    Returns whether or not \bt_p{a}&nbsp;×&nbsp;\bt_p{b} overflows.
+
+@param[in] a
+    First term.
+@param[in] b
+    Second term.
+
+@retval false
+    \bt_p{a}&nbsp;×&nbsp;\bt_p{b} overflows.
+@retval true
+    \bt_p{a}&nbsp;×&nbsp;\bt_p{b} doesn't overflow.
+*/
 static inline
 bool bt_safe_to_mul_int64(int64_t a, int64_t b)
 {
@@ -24,6 +54,20 @@ bool bt_safe_to_mul_int64(int64_t a, int64_t b)
 	return a < INT64_MAX / b;
 }
 
+/*!
+@brief
+    Returns whether or not \bt_p{a}&nbsp;×&nbsp;\bt_p{b} overflows.
+
+@param[in] a
+    First term.
+@param[in] b
+    Second term.
+
+@retval false
+    \bt_p{a}&nbsp;×&nbsp;\bt_p{b} overflows.
+@retval true
+    \bt_p{a}&nbsp;×&nbsp;\bt_p{b} doesn't overflow.
+*/
 static inline
 bool bt_safe_to_mul_uint64(uint64_t a, uint64_t b)
 {
@@ -34,12 +78,40 @@ bool bt_safe_to_mul_uint64(uint64_t a, uint64_t b)
 	return a < UINT64_MAX / b;
 }
 
+/*!
+@brief
+    Returns whether or not \bt_p{a}&nbsp;+&nbsp;\bt_p{b} overflows.
+
+@param[in] a
+    First term.
+@param[in] b
+    Second term.
+
+@retval false
+    \bt_p{a}&nbsp;+&nbsp;\bt_p{b} overflows.
+@retval true
+    \bt_p{a}&nbsp;+&nbsp;\bt_p{b} doesn't overflow.
+*/
 static inline
 bool bt_safe_to_add_int64(int64_t a, int64_t b)
 {
 	return a <= INT64_MAX - b;
 }
 
+/*!
+@brief
+    Returns whether or not \bt_p{a}&nbsp;+&nbsp;\bt_p{b} overflows.
+
+@param[in] a
+    First term.
+@param[in] b
+    Second term.
+
+@retval false
+    Adding \bt_p{a}&nbsp;+&nbsp;\bt_p{b} overflows.
+@retval true
+    Adding \bt_p{a}&nbsp;+&nbsp;\bt_p{b} doesn't overflow.
+*/
 static inline
 bool bt_safe_to_add_uint64(uint64_t a, uint64_t b)
 {

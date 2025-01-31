@@ -22,7 +22,15 @@ $(DX_DOCDIR)/$(PACKAGE).tag: \
 	@top_srcdir@/src/compat/stdlib.h \
 	@top_srcdir@/src/compat/time.h \
 	@top_srcdir@/src/compat/unistd.h \
-	@top_srcdir@/src/compat/utc.h
+	@top_srcdir@/src/compat/utc.h \
+	@top_srcdir@/src/common/align.h \
+	@top_srcdir@/src/common/assert.h \
+	@top_srcdir@/src/common/common.h \
+	@top_srcdir@/src/common/list.h \
+	@top_srcdir@/src/common/macros.h \
+	@top_srcdir@/src/common/mmap-align.h \
+	@top_srcdir@/src/common/safe.h \
+	@top_srcdir@/src/common/uuid.h
 
 MOSTLYCLEANFILES = $(DX_CLEANFILES)
 EXTRA_DIST = \

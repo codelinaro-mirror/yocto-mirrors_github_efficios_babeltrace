@@ -65,7 +65,7 @@ Within the \c src directory:
   <tr>
     <td><code>common</code>
     <td>Common utilities for C.
-    <td>\b TBD
+    <td>\ref common-c
   <tr>
     <td><code>compat</code>
     <td>Compatibility layer.
@@ -199,4 +199,92 @@ for features which don't exist on all the supported systems.
 The key point is: if a known function/macro has its equivalent
 here, use the \bt_name version. For example, use
 bt_posix_fallocate() instead of <code>posix_fallocate()</code>.
+
+@defgroup common-c Common C utilities
+@brief
+    Common utilities for C.
+
+Some utilities here are deprecated since the official direction of the
+\bt_name project is now to write new code in C++11.
+
+If you're writing C++ code:
+
+<table>
+  <tr>
+    <th>Instead of...
+    <th>Use...
+  <tr>
+    <td>common/align.h
+    <td>bt2c::align()
+  <tr>
+    <td>common/list.h
+    <td><a href="https://en.cppreference.com/w/cpp/container/list"><code>std::list</code></a>
+  <tr>
+    <td>common/safe.h
+    <td>\ref cpp-common/bt2c/safe-ops.hpp
+  <tr>
+    <td>common/uuid.h
+    <td>\ref cpp-common/bt2c/uuid.hpp
+</table>
+
+@defgroup common-c-term Terminal utilities
+@brief
+    Terminal size and text formatting.
+
+@ingroup common-c
+
+@code{.c}
+#include "common/common.h"
+@endcode
+
+This API, provided by common/common.h, offers definitions and functions
+to deal with terminal text formatting and properties.
+
+Get the current size of the connected terminal, if any, with
+bt_common_get_term_size().
+
+See bt_common_color_get_codes() to use terminal formatting. You
+may also call one of the <code>bt_common_color_*()</code> functions to
+retrieve ANSI escape codes. Those functions return an empty string when
+the connected terminal, if any, doesn't support text formatting.
+
+@defgroup common-c-lttng-live LTTng live utilities
+@brief
+    LTTng live URL parsing.
+
+@ingroup common-c
+
+@code{.c}
+#include "common/common.h"
+@endcode
+
+@defgroup common-c-path Path utilities
+@brief
+    Path functions.
+
+@ingroup common-c
+
+@code{.c}
+#include "common/common.h"
+@endcode
+
+@defgroup common-c-str String utilities
+@brief
+    String functions.
+
+@ingroup common-c
+
+@code{.c}
+#include "common/common.h"
+@endcode
+
+@defgroup common-c-enum-str Enumerator string utilities
+@brief
+    Enumerator string functions.
+
+@ingroup common-c
+
+@code{.c}
+#include "common/common.h"
+@endcode
 */
