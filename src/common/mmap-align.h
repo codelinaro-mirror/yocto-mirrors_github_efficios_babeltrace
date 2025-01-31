@@ -86,13 +86,4 @@ void *mmap_align_addr(struct mmap_align_data *mma)
 	return mma->addr;
 }
 
-/*
- * Helper for special-cases, normally unused.
- */
-static inline
-void mmap_align_set_addr(struct mmap_align_data *mma, void *addr)
-{
-	mma->addr = addr;
-}
-
 #endif /* BABELTRACE_COMMON_MMAP_ALIGN_H */
