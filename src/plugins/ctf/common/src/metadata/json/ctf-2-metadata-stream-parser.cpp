@@ -399,12 +399,13 @@ void Ctf2MetadataStreamParser::_handleClkClsFragment(const bt2c::JsonObjVal& jso
                     auto& jsonOriginObjVal = jsonOriginVal->asObj();
 
                     /* Create clock origin */
-                    auto nsNameUid = nsNameUidOfObj(jsonOriginObjVal);
+                    auto clkOriginNsNameUid = nsNameUidOfObj(jsonOriginObjVal);
 
-                    BT_ASSERT(nsNameUid.name);
-                    BT_ASSERT(nsNameUid.uid);
-                    return ClkOrigin {std::move(nsNameUid.ns), std::move(*nsNameUid.name),
-                                      std::move(*nsNameUid.uid)};
+                    BT_ASSERT(clkOriginNsNameUid.name);
+                    BT_ASSERT(clkOriginNsNameUid.uid);
+                    return ClkOrigin {std::move(clkOriginNsNameUid.ns),
+                                      std::move(*clkOriginNsNameUid.name),
+                                      std::move(*clkOriginNsNameUid.uid)};
                 }
             }
 
@@ -664,8 +665,8 @@ void Ctf2MetadataStreamParser::_handleEventRecordClsFragment(const bt2c::JsonObj
         const auto dataStreamClsId =
             jsonDataStreamClsIdVal ? *jsonDataStreamClsIdVal->asUInt() : 0ULL;
 
-        if (auto dataStreamCls = (*_mTraceCls)[dataStreamClsId]) {
-            return dataStreamCls;
+        if (auto theDataStreamCls = (*_mTraceCls)[dataStreamClsId]) {
+            return theDataStreamCls;
         }
 
         BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW(
@@ -677,16 +678,16 @@ void Ctf2MetadataStreamParser::_handleEventRecordClsFragment(const bt2c::JsonObj
     /* ID */
     const auto id = bt2c::call([this, &jsonFragment, &dataStreamCls] {
         const auto jsonIdVal = jsonFragment[jsonstr::id];
-        const auto id = jsonIdVal ? *jsonIdVal->asUInt() : 0ULL;
+        const auto theId = jsonIdVal ? *jsonIdVal->asUInt() : 0ULL;
 
-        if ((*dataStreamCls)[id]) {
+        if ((*dataStreamCls)[theId]) {
             BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW(
                 bt2c::Error, jsonIdVal ? jsonIdVal->loc() : jsonFragment.loc(),
                 "Duplicate event record class fragment with numeric ID {} within data stream class fragment {}.",
-                id, fullClsIdStr(*dataStreamCls));
+                theId, fullClsIdStr(*dataStreamCls));
         }
 
-        return id;
+        return theId;
     });
 
     /* Create event record class */

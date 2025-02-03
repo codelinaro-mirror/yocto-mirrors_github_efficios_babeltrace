@@ -69,6 +69,10 @@ class CommonDiscardedPacketsMessage;
 template <typename LibObjT>
 class CommonMessageIteratorInactivityMessage;
 
+/* Avoid `-Wshadow` error on GCC, conflicting with `bt2::Event` */
+BT_DIAG_PUSH
+BT_DIAG_IGNORE_SHADOW
+
 /* clang-format off */
 
 WISE_ENUM_CLASS(MessageType,
@@ -82,6 +86,8 @@ WISE_ENUM_CLASS(MessageType,
     (MessageIteratorInactivity, BT_MESSAGE_TYPE_MESSAGE_ITERATOR_INACTIVITY));
 
 /* clang-format on */
+
+BT_DIAG_POP
 
 template <typename LibObjT>
 class CommonMessage : public BorrowedObject<LibObjT>

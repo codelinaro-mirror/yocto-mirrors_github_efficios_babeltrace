@@ -480,22 +480,24 @@ int MessageComparator::compare(const bt2::ConstMessage left,
 
                 /* Compare trace UUIDs or identities. */
                 if (_mGraphMipVersion == 0) {
-                    if (const auto ret = _compareOptUuids(leftTrace.uuid(), rightTrace.uuid())) {
-                        return ret;
+                    if (const auto compRet =
+                            _compareOptUuids(leftTrace.uuid(), rightTrace.uuid())) {
+                        return compRet;
                     }
-                } else if (const auto ret =
+                } else if (const auto compRet =
                                _compareIdentities(leftTrace.identity(), rightTrace.identity())) {
-                    return ret;
+                    return compRet;
                 }
 
                 /* Compare trace names. */
-                if (const auto ret = _compareStrings(leftTrace.name(), rightTrace.name())) {
-                    return ret;
+                if (const auto compRet = _compareStrings(leftTrace.name(), rightTrace.name())) {
+                    return compRet;
                 }
 
                 /* Compare stream class IDs. */
-                if (const auto ret = _compareLt(leftStream.cls().id(), rightStream.cls().id())) {
-                    return ret;
+                if (const auto compRet =
+                        _compareLt(leftStream.cls().id(), rightStream.cls().id())) {
+                    return compRet;
                 }
 
                 /* Compare stream IDs. */

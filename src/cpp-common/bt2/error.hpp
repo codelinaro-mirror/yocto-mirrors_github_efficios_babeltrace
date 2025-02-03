@@ -25,6 +25,10 @@ class ConstComponentClassErrorCause;
 class ConstComponentErrorCause;
 class ConstMessageIteratorErrorCause;
 
+/* Avoid `-Wshadow` error on GCC, conflicting with `bt2::ComponentClass` */
+BT_DIAG_PUSH
+BT_DIAG_IGNORE_SHADOW
+
 enum class ErrorCauseActorType
 {
     Unknown = BT_ERROR_CAUSE_ACTOR_TYPE_UNKNOWN,
@@ -32,6 +36,8 @@ enum class ErrorCauseActorType
     ComponentClass = BT_ERROR_CAUSE_ACTOR_TYPE_COMPONENT_CLASS,
     MessageIterator = BT_ERROR_CAUSE_ACTOR_TYPE_MESSAGE_ITERATOR,
 };
+
+BT_DIAG_POP
 
 class ConstErrorCause : public BorrowedObject<const bt_error_cause>
 {

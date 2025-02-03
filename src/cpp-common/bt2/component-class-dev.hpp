@@ -468,6 +468,10 @@ template <typename UserMessageIteratorT, typename UserComponentT>
 class UserMessageIterator
 {
 private:
+    /* Avoid `-Wshadow` error on GCC, conflicting with `bt2::Error` */
+    BT_DIAG_PUSH
+    BT_DIAG_IGNORE_SHADOW
+
     /* Type of `_mExcToThrowType` */
     enum class _ExcToThrowType
     {
@@ -475,6 +479,8 @@ private:
         Error,
         MemError,
     };
+
+    BT_DIAG_POP
 
 protected:
     explicit UserMessageIterator(const SelfMessageIterator selfMsgIter,
