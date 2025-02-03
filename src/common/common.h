@@ -1229,21 +1229,93 @@ void bt_common_custom_vsnprintf(char *buf, size_t buf_size,
 		bt_common_handle_custom_specifier_func handle_specifier,
 		void *priv_data, const char *fmt, va_list *args);
 
-/*
- * Appends the textual content of `fp` to `str`, starting from its
- * current position to the end of the file.
- *
- * This function does NOT rewind `fp` once it's done or on error.
- */
+/*!
+@brief
+    Appends the whole remaining contents of the file \bt_p{fp} (at its
+    current reading position) to the string \bt_p{str}.
+
+@ingroup glib-c
+
+This function does \em not rewind \bt_p{fp} once it's done or on error.
+
+@code{.c}
+#include "common/common.h"
+@endcode
+
+@param[in] str
+    String to which to append the contents of \bt_p{fp}.
+@param[in] fp
+    File of which to append the whole remaining contents, at its current
+    reading position, to \bt_p{str}.
+
+@retval 0
+    Success.
+@retval -1
+    Failure.
+
+@pre
+    - \bt_p{str} is \em not \c NULL.
+    - \bt_p{fp} is \em not \c NULL.
+    - \bt_p{fp} is open without any error flag.
+*/
 int bt_common_append_file_content_to_g_string(GString *str, FILE *fp);
 
-/*
- * bt_g_string_append_printf cannot be inlined because it expects a
- * variadic argument list.
- */
+/*!
+@brief
+    A more efficient version of <code>g_string_append_printf()</code>.
+
+@ingroup glib-c
+
+<a href="https://docs.gtk.org/glib/method.String.append_printf.html">g_string_append_printf()</a>
+internally allocates a temporary buffer through
+<code>vasnprintf()</code> for each call. When we did \bt_name profiling,
+this clearly appeared at the top of the report.
+
+This function is our own efficient version of
+<code>g_string_append_printf()</code> which operates directly on the
+\c GString buffer.
+
+@code{.c}
+#include "common/common.h"
+@endcode
+
+@param[in] str
+    See
+    <a href="https://docs.gtk.org/glib/method.String.append_printf.html"><code>GLib.String.append_printf</code></a>.
+@param[in] fmt
+    See
+    <a href="https://docs.gtk.org/glib/method.String.append_printf.html"><code>GLib.String.append_printf</code></a>.
+@param[in] ...
+    See
+    <a href="https://docs.gtk.org/glib/method.String.append_printf.html"><code>GLib.String.append_printf</code></a>.
+
+@returns
+    See
+    <a href="https://docs.gtk.org/glib/method.String.append_printf.html"><code>GLib.String.append_printf</code></a>.
+*/
 __BT_ATTR_FORMAT_PRINTF(2, 3)
 int bt_common_g_string_append_printf(GString *str, const char *fmt, ...);
 
+/*!
+@brief
+    An inline, more efficient version of <code>g_string_append()</code>.
+
+@ingroup glib-c
+
+See
+<a href="https://docs.gtk.org/glib/method.String.append.html"><code>GLib.String.append</code></a>.
+
+@code{.c}
+#include "common/common.h"
+@endcode
+
+@param[in] str
+    See
+    <a href="https://docs.gtk.org/glib/method.String.append.html"><code>GLib.String.append</code></a>.
+@param[in] s
+    See
+    <a href="https://docs.gtk.org/glib/method.String.append.html"><code>GLib.String.append</code></a>.
+*/
 static inline
 void bt_common_g_string_append(GString *str, const char *s)
 {
@@ -1263,6 +1335,26 @@ void bt_common_g_string_append(GString *str, const char *s)
 	memcpy(str->str + len, s, s_len + 1);
 }
 
+/*!
+@brief
+    An inline, more efficient version of <code>g_string_append_c()</code>.
+
+@ingroup glib-c
+
+See
+<a href="https://docs.gtk.org/glib/method.String.append_c.html"><code>GLib.String.append_c</code></a>.
+
+@code{.c}
+#include "common/common.h"
+@endcode
+
+@param[in] str
+    See
+    <a href="https://docs.gtk.org/glib/method.String.append_c.html"><code>GLib.String.append_c</code></a>.
+@param[in] c
+    See
+    <a href="https://docs.gtk.org/glib/method.String.append_c.html"><code>GLib.String.append_c</code></a>.
+*/
 static inline
 void bt_common_g_string_append_c(GString *str, char c)
 {

@@ -110,6 +110,7 @@ INPUT                   = "@srcdir@/all.dox" \
                           "@abs_top_srcdir@/src/compat/compiler.h" \
                           "@abs_top_srcdir@/src/compat/endian.h" \
                           "@abs_top_srcdir@/src/compat/fcntl.h" \
+                          "@abs_top_srcdir@/src/compat/glib.h" \
                           "@abs_top_srcdir@/src/compat/limits.h" \
                           "@abs_top_srcdir@/src/compat/memstream.h" \
                           "@abs_top_srcdir@/src/compat/mman.h" \

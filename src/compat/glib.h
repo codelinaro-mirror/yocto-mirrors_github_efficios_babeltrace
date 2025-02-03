@@ -19,6 +19,30 @@ bt_g_hash_table_contains(GHashTable *hash_table, gconstpointer key)
 
 #else
 
+/*!
+@brief
+    Wrapper of <code>g_hash_table_contains()</code>.
+
+@ingroup glib-c
+
+See
+<a href="https://docs.gtk.org/glib/type_func.HashTable.contains.html"><code>GLib.HashTable.contains</code></a>.
+
+@code{.c}
+#include "compat/glib.h"
+@endcode
+
+@param[in] hash_table
+    See
+    <a href="https://docs.gtk.org/glib/type_func.HashTable.contains.html"><code>GLib.HashTable.contains</code></a>.
+@param[in] key
+    See
+    <a href="https://docs.gtk.org/glib/type_func.HashTable.contains.html"><code>GLib.HashTable.contains</code></a>.
+
+@returns
+    See
+    <a href="https://docs.gtk.org/glib/type_func.HashTable.contains.html"><code>GLib.HashTable.contains</code></a>.
+*/
 static inline gboolean
 bt_g_hash_table_contains(GHashTable *hash_table, gconstpointer key)
 {
@@ -43,6 +67,30 @@ bt_g_ptr_array_new_full(guint reserved_size,
 
 #else
 
+/*!
+@brief
+    Wrapper of <code>g_ptr_array_new_full()</code>.
+
+@ingroup glib-c
+
+See
+<a href="https://docs.gtk.org/glib/type_func.PtrArray.new_full.html"><code>GLib.PtrArray.new_full</code></a>.
+
+@code{.c}
+#include "compat/glib.h"
+@endcode
+
+@param[in] reserved_size
+    See
+    <a href="https://docs.gtk.org/glib/type_func.PtrArray.new_full.html"><code>GLib.PtrArray.new_full</code></a>.
+@param[in] element_free_func
+    See
+    <a href="https://docs.gtk.org/glib/type_func.PtrArray.new_full.html"><code>GLib.PtrArray.new_full</code></a>.
+
+@returns
+    See
+    <a href="https://docs.gtk.org/glib/type_func.PtrArray.new_full.html"><code>GLib.PtrArray.new_full</code></a>.
+*/
 static inline GPtrArray *
 bt_g_ptr_array_new_full(guint reserved_size,
 		GDestroyNotify element_free_func)

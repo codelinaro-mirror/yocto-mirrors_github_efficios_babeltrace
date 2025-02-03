@@ -14,6 +14,7 @@ $(DX_DOCDIR)/$(PACKAGE).tag: \
 	@top_srcdir@/src/compat/compiler.h \
 	@top_srcdir@/src/compat/endian.h \
 	@top_srcdir@/src/compat/fcntl.h \
+	@top_srcdir@/src/compat/glib.h \
 	@top_srcdir@/src/compat/limits.h \
 	@top_srcdir@/src/compat/memstream.h \
 	@top_srcdir@/src/compat/mman.h \
