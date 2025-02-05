@@ -7,6 +7,19 @@
 #ifndef BABELTRACE_CPP_COMMON_BT2C_EXC_HPP
 #define BABELTRACE_CPP_COMMON_BT2C_EXC_HPP
 
+/*!
+@file
+
+@brief
+    Common exception classes.
+
+@ingroup common-cpp-bt2c
+
+@code{.cpp}
+#include "cpp-common/bt2c/exc.hpp"
+@endcode
+*/
+
 #include <exception>
 #include <new>
 #include <stdexcept>
@@ -14,9 +27,7 @@
 
 namespace bt2c {
 
-/*
- * End of iteration.
- */
+/*! @brief %End of iteration. */
 class End : public std::exception
 {
 public:
@@ -25,9 +36,7 @@ public:
     }
 };
 
-/*
- * General error.
- */
+/*! @brief General error. */
 class Error : public std::runtime_error
 {
 public:
@@ -36,9 +45,7 @@ public:
     }
 };
 
-/*
- * Overflow error.
- */
+/*! @brief Overflow error. */
 class OverflowError : public Error
 {
 public:
@@ -47,9 +54,7 @@ public:
     }
 };
 
-/*
- * Memory error.
- */
+/*! @brief Memory error. */
 class MemoryError : public std::bad_alloc
 {
 public:
@@ -58,9 +63,7 @@ public:
     }
 };
 
-/*
- * Not available right now: try again later.
- */
+/*! @brief Not available right now: try again later. */
 class TryAgain : public std::exception
 {
 public:
@@ -69,9 +72,7 @@ public:
     }
 };
 
-/*
- * No such file or directory.
- */
+/*! @brief No such file or directory. */
 class NoSuchFileOrDirectoryError : public Error
 {
 public:

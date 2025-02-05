@@ -7,19 +7,35 @@
 #ifndef BABELTRACE_CPP_COMMON_BT2C_TYPE_TRAITS_HPP
 #define BABELTRACE_CPP_COMMON_BT2C_TYPE_TRAITS_HPP
 
+/*!
+@file
+
+@brief
+    General purpose C++ type traits.
+
+@ingroup common-cpp-bt2c
+
+@code{.cpp}
+#include "cpp-common/bt2c/type-traits.hpp"
+@endcode
+*/
+
 #include <type_traits>
 
 namespace bt2c {
 
-/*
- * Provides the member constant `value` equal to:
- *
- * `T` is in the list of types `Ts`:
- *     `true`
- *
- * Otherwise:
- *     `false`
- */
+/*!
+@brief
+    Provides the member constant \c value equal to:
+
+<dl>
+  <dt>\bt_p{T} is in the list of types \bt_p{Ts}
+  <dd>\c true
+
+  <dt>Otherwise
+  <dd>\c false
+</dl>
+*/
 template <typename T, typename... Ts>
 struct IsOneOf : std::false_type
 {

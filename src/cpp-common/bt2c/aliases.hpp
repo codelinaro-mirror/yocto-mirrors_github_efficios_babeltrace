@@ -13,6 +13,16 @@
 
 namespace bt2c {
 
+/*!
+@brief
+    A span of constant bytes.
+
+@ingroup common-cpp-bt2c
+
+@code{.cpp}
+#include "cpp-common/bt2c/aliases.hpp"
+@endcode
+*/
 using ConstBytes = bt2s::span<const std::uint8_t>;
 
 } /* namespace bt2c */

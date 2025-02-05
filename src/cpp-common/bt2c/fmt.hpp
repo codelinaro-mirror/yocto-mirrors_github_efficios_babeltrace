@@ -7,6 +7,24 @@
 #ifndef BABELTRACE_CPP_COMMON_BT2C_FMT_HPP
 #define BABELTRACE_CPP_COMMON_BT2C_FMT_HPP
 
+/*!
+@file
+
+@brief
+    Custom {fmt} formatting.
+
+@ingroup common-cpp-bt2c
+
+@code{.cpp}
+#include "cpp-common/bt2c/fmt.hpp"
+@endcode
+
+When you include this file, you get custom {fmt} formatting of:
+
+- Any wise_enum enumerator within the \c bt2c or \c bt2 namespace.
+- A bt2c::UuidView instance.
+*/
+
 #include "cpp-common/bt2/value.hpp"
 #include "cpp-common/vendor/fmt/format.h" /* IWYU pragma: keep */
 #include "cpp-common/vendor/wise-enum/wise_enum.h"

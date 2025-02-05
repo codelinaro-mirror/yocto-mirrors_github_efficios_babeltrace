@@ -13,12 +13,29 @@
 
 namespace bt2c {
 
-/*
- * Moves the last entry of `vec` to the index `idx`, then removes the last entry.
- *
- * Meant to be a direct replacement for g_ptr_array_remove_index_fast(), but for
- * `std::vector`.
- */
+/*!
+@brief
+    Moves the last element of \bt_p{vec} to the index \bt_p{idx}, and
+    then removes the last element.
+
+@ingroup common-cpp-bt2c
+
+This is like
+<a href="https://docs.gtk.org/glib/type_func.PtrArray.remove_index_fast.html"><code>GLib.PtrArray.remove_index_fast</code></a>,
+but for \c std::vector.
+
+@code{.cpp}
+#include "cpp-common/bt2c/vector.hpp"
+@endcode
+
+@param[in] vec
+    Vector of which to remove the last element.
+@param[in] idx
+    Index of the element to remove.
+
+@pre
+    \bt_p{idx}&nbsp;&lt;&nbsp;<code>vec.size()</code>.
+*/
 template <typename T, typename AllocatorT>
 void vectorFastRemove(std::vector<T, AllocatorT>& vec,
                       const typename std::vector<T, AllocatorT>::size_type idx)

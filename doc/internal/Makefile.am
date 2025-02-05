@@ -31,7 +31,41 @@ $(DX_DOCDIR)/$(PACKAGE).tag: \
 	@top_srcdir@/src/common/macros.h \
 	@top_srcdir@/src/common/mmap-align.h \
 	@top_srcdir@/src/common/safe.h \
-	@top_srcdir@/src/common/uuid.h
+	@top_srcdir@/src/common/uuid.h \
+	@top_srcdir@/src/cpp-common/bt2c/aliases.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/align.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/bt2-value-from-json-val.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/c-string-view.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/call.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/contains.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/data-len.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/endian.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/exc.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/file-utils.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/fmt.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/glib-up.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/join.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/json-val-req.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/json-val.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/libc-up.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/make-span.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/observable.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/parse-json-as-val.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/parse-json.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/prio-heap.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/read-fixed-len-int.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/regex.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/reverse-fixed-len-int-bits.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/safe-ops.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/std-int.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/str-scanner.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/text-loc-str.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/text-loc.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/type-traits.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/unicode-conv.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/uuid.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/val-req.hpp \
+	@top_srcdir@/src/cpp-common/bt2c/vector.hpp
 
 MOSTLYCLEANFILES = $(DX_CLEANFILES)
 EXTRA_DIST = \

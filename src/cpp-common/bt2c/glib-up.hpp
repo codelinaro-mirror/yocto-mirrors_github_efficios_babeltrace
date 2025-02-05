@@ -7,6 +7,19 @@
 #ifndef BABELTRACE_CPP_COMMON_BT2C_GLIB_UP_HPP
 #define BABELTRACE_CPP_COMMON_BT2C_GLIB_UP_HPP
 
+/*!
+@file
+
+@brief
+    GLib unique pointer types.
+
+@ingroup common-cpp-bt2c-up
+
+@code{.cpp}
+#include "cpp-common/bt2c/glib-up.hpp"
+@endcode
+*/
+
 #include <memory>
 
 #include <glib.h>
@@ -24,6 +37,14 @@ struct GCharDeleter final
 
 } /* namespace internal */
 
+/*!
+@brief
+    Unique pointer to
+    <a href="https://docs.gtk.org/glib/types.html"><code>gchar</code></a>.
+
+The custom deleter calls
+<a href="https://docs.gtk.org/glib/func.free.html"><code>GLib.free</code></a>.
+*/
 using GCharUP = std::unique_ptr<gchar, internal::GCharDeleter>;
 
 namespace internal {
@@ -38,6 +59,14 @@ struct GStringDeleter final
 
 } /* namespace internal */
 
+/*!
+@brief
+    Unique pointer to
+    <a href="https://docs.gtk.org/glib/struct.String.html"><code>GString</code></a>.
+
+The custom deleter calls
+<a href="https://docs.gtk.org/glib/method.String.free.html"><code>GLib.String.free</code></a>.
+*/
 using GStringUP = std::unique_ptr<GString, internal::GStringDeleter>;
 
 namespace internal {
@@ -52,6 +81,14 @@ struct GDirDeleter final
 
 } /* namespace internal */
 
+/*!
+@brief
+    Unique pointer to
+    <a href="https://docs.gtk.org/glib/struct.Dir.html"><code>GDir</code></a>.
+
+The custom deleter calls
+<a href="https://docs.gtk.org/glib/method.Dir.close.html"><code>GLib.Dir.close</code></a>.
+*/
 using GDirUP = std::unique_ptr<GDir, internal::GDirDeleter>;
 
 namespace internal {
@@ -66,6 +103,14 @@ struct GMappedFileDeleter final
 
 } /* namespace internal */
 
+/*!
+@brief
+    Unique pointer to
+    <a href="https://docs.gtk.org/glib/struct.MappedFile.html"><code>GMappedFile</code></a>.
+
+The custom deleter calls
+<a href="https://docs.gtk.org/glib/method.MappedFile.unref.html"><code>GLib.MappedFile.unref</code></a>.
+*/
 using GMappedFileUP = std::unique_ptr<GMappedFile, internal::GMappedFileDeleter>;
 
 } /* namespace bt2c */

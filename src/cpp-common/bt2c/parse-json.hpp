@@ -21,33 +21,6 @@
 namespace bt2c {
 namespace internal {
 
-/*
- * JSON text parser.
- *
- * This parser parses a single JSON value, calling the methods of a JSON
- * event listener of type `ListenerT` for each JSON event.
- *
- * The requirements of `ListenerT` are the following public methods:
- *
- *     void onNull(const TextLoc&);
- *     void onScalarVal(bool, const TextLoc&);
- *     void onScalarVal(unsigned long long, const TextLoc&);
- *     void onScalarVal(long long, const TextLoc&);
- *     void onScalarVal(double, const TextLoc&);
- *     void onScalarVal(bt2s::string_view, const TextLoc&);
- *     void onArrayBegin(const TextLoc&);
- *     void onArrayEnd(const TextLoc&);
- *     void onObjBegin(const TextLoc&);
- *     void onObjKey(bt2s::string_view, const TextLoc&);
- *     void onObjEnd(const TextLoc&);
- *
- * The received text location always indicate the location of the
- * _beginning_ of the text representing the corresponding JSON value.
- *
- * This parser honours the grammar of <https://www.json.org/>, not
- * parsing special floating-point number tokens (`nan`, `inf`, and the
- * rest) or C-style comments.
- */
 template <typename ListenerT>
 class JsonParser final
 {
@@ -444,15 +417,68 @@ bool JsonParser<ListenerT>::_tryParseObj()
 
 } /* namespace internal */
 
-/*
- * Parses the JSON text `str`, calling the methods of `listener` for
- * each JSON event (see `internal::JsonParser` for the requirements
- * of `ListenerT`).
- *
- * When the function logs or appends a cause to the error of the current
- * thread, it uses `baseOffset` to format the text location part of the
- * message.
- */
+/*!
+@brief
+    Parses the JSON text \bt_p{str} encoding a single JSON value,
+    calling methods of \bt_p{listener} for each JSON "event".
+
+@ingroup common-cpp-bt2c-json
+
+This function is similar to the
+<a href="https://lloyd.github.io/yajl/">yajl</a> approach, but:
+
+- It supports <code>unsigned long long</code> and <code>long long</code>
+  integers instead of the user having to make their own conversion
+  from text.
+
+- It provides the original text location for all JSON events.
+
+  This can help make error reporting much more accurate for the
+  end user.
+
+The requirements of \bt_p{ListenerT} are the following public methods:
+
+@code{.cpp}
+void onNull(const bt2c::TextLoc&);
+void onScalarVal(bool, const bt2c::TextLoc&);
+void onScalarVal(unsigned long long, const bt2c::TextLoc&);
+void onScalarVal(long long, const bt2c::TextLoc&);
+void onScalarVal(double, const bt2c::TextLoc&);
+void onScalarVal(bt2s::string_view, const bt2c::TextLoc&);
+void onArrayBegin(const bt2c::TextLoc&);
+void onArrayEnd(const bt2c::TextLoc&);
+void onObjBegin(const bt2c::TextLoc&);
+void onObjKey(bt2s::string_view, const bt2c::TextLoc&);
+void onObjEnd(const bt2c::TextLoc&);
+@endcode
+
+The received text location always indicate the location of the
+\em beginning of the text representing the corresponding JSON value.
+This function adds \bt_p{baseOffset} to the offset of each
+text location it creates.
+
+This function honours the grammar of
+<a href="https://www.json.org/"><code>json.org</code></a>, \em not
+parsing special floating-point number tokens (\c nan, \c inf, and the
+rest) or C-style comments.
+
+@note
+    You must use this function in libbabeltrace2 context because it
+    appends causes to the error of the current thread and throws
+    bt2c::Error on error.
+
+@param[in] str
+    JSON text to parse, encoding a single JSON value.
+@param[in] listener
+    JSON event listener.
+@param[in] baseOffset
+    Value to add to the offset of any created text location during
+    parsing.
+@param[in] parentLogger
+    Parent logger to use on error.
+
+@sa parseJson(bt2s::string_view, std::size_t, const Logger&)
+*/
 template <typename ListenerT>
 void parseJson(const bt2s::string_view str, ListenerT& listener, const std::size_t baseOffset,
                const Logger& parentLogger)
@@ -460,6 +486,21 @@ void parseJson(const bt2s::string_view str, ListenerT& listener, const std::size
     internal::JsonParser<ListenerT> {str, listener, baseOffset, parentLogger};
 }
 
+/*!
+@brief
+    Overload of
+    parseJson(bt2s::string_view, ListenerT&, std::size_t, const Logger&)
+    with \bt_p{baseOffset} set to&nbsp;0.
+
+@ingroup common-cpp-bt2c-json
+
+@param[in] str
+    See parseJson(bt2s::string_view, ListenerT&, std::size_t, const Logger&).
+@param[in] listener
+    See parseJson(bt2s::string_view, ListenerT&, std::size_t, const Logger&).
+@param[in] parentLogger
+    See parseJson(bt2s::string_view, ListenerT&, std::size_t, const Logger&).
+*/
 template <typename ListenerT>
 void parseJson(const bt2s::string_view str, ListenerT& listener, const Logger& parentLogger)
 {

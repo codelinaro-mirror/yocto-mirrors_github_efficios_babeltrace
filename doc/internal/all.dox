@@ -77,7 +77,7 @@ Within the \c src directory:
   <tr>
     <td><code>cpp-common/bt2c</code>
     <td>Common utilities for C++.
-    <td>\b TBD
+    <td>\ref common-cpp-bt2c
   <tr>
     <td><code>cpp-common/bt2s</code>
     <td>Portable \c std interfaces for C++11.
@@ -303,4 +303,81 @@ with GLib.
 \bt_name currently supports GLib&nbsp;&ge;&nbsp;2.28. This version is
 missing a few useful functions which were introduced in subsequent
 releases.
+
+@defgroup common-cpp-bt2c Common C++ utilities
+@brief
+    Common utilities for C++.
+
+All the common C++ utilities are part of the \c bt2c namespace.
+
+What goes here is anything which \em could be generic enough to be
+used at multiple locations of the project. Therefore, it's possible
+that a \c bt2c class/function has a single reference.
+
+There are some classes and functions which you must use in
+libbabeltrace2 context because they may append causes to the error of
+the current thread with the public error reporting API of
+libbabeltrace2. A note always indicates this.
+
+@defgroup common-cpp-bt2c-json C++ JSON utilities
+@brief
+    <a href="https://www.json.org/">JSON</a>-related classes and functions.
+
+@ingroup common-cpp-bt2c
+
+This API offers:
+
+- The \link bt2c::JsonVal JSON value\endlink object system.
+
+  Those objects contain raw values, but also original text locations
+  to help with error reporting accuracy.
+
+  @code{.cpp}
+  #include "cpp-common/bt2c/json-val.hpp"
+  @endcode
+
+- The event mode
+  parseJson(bt2s::string_view, ListenerT&, std::size_t, const Logger&)
+  function which parses an encoded JSON value, calling methods of a
+  listener object as it decodes.
+
+  This is the footing of any \bt_name JSON parsing. We use this instead
+  of an external library because:
+
+  - It supports <code>unsigned long long</code> and
+    <code>long long</code> raw values instead of the user having to
+    make their own conversion from text.
+
+  - It provides the original text location for all JSON events
+    to help with error reporting accuracy.
+
+  @code{.cpp}
+  #include "cpp-common/bt2c/parse-json.hpp"
+  @endcode
+
+- The value mode
+  parseJson(bt2s::string_view, std::size_t, const Logger&)
+  function which parses an encoded JSON value into as a bt2c::JsonVal
+  object.
+
+  @code{.cpp}
+  #include "cpp-common/bt2c/parse-json-as-val.hpp"
+  @endcode
+
+- The bt2c::bt2ValueFromJsonVal() helper which converts a bt2c::JsonVal
+  instance to an equivalent bt2::Value instance.
+
+  @code{.cpp}
+  #include "cpp-common/bt2c/bt2-value-from-json-val.hpp"
+  @endcode
+
+@defgroup common-cpp-bt2c-up Unique pointer types
+@brief
+    Useful unique pointer types with custom deleters.
+
+@ingroup common-cpp-bt2c
+
+The various <code>%bt2c::*Up</code> types of this API are
+specific \c std::unique_ptr types with custom deleters to manage
+the lifetime of C&nbsp;standard library and GLib objects more easily.
 */

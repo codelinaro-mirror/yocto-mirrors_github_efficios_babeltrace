@@ -13,6 +13,30 @@
 
 namespace bt2c {
 
+/*!
+@brief
+    Returns the \em next multiple of \bt_p{align} from \bt_p{val},
+    (an integer variable), or \bt_p{val} if it's already a multiple
+    of \bt_p{align}.
+
+@ingroup common-cpp-bt2c
+
+@code{.cpp}
+#include "cpp-common/bt2c/align.hpp"
+@endcode
+
+@param[in] val
+    Value to align.
+@param[in] align
+    Alignment.
+
+@returns
+    Aligned value.
+
+@pre
+    - \bt_p{align} is greater than 0.
+    - \bt_p{align} is a power of two.
+*/
 template <typename ValT, typename AlignT>
 ValT align(const ValT val, const AlignT align) noexcept
 {

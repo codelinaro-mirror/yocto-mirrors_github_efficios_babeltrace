@@ -7,16 +7,33 @@
 #ifndef BABELTRACE_CPP_COMMON_BT2C_STD_INT_HPP
 #define BABELTRACE_CPP_COMMON_BT2C_STD_INT_HPP
 
+/*!
+@file
+
+@brief
+    Standard integer types.
+
+@ingroup common-cpp-bt2c
+
+@code{.cpp}
+#include "cpp-common/bt2c/std-int.hpp"
+@endcode
+
+This file offers both the bt2c::Signedness enumerators and
+the bt2c::StdIntT alias template.
+*/
+
 #include <cstdint>
 
 namespace bt2c {
 
-/*
- * Whether or not an integer is signed.
- */
+/*! @brief Integer signedness. */
 enum class Signedness
 {
+    /*! @brief Unsigned. */
     Unsigned,
+
+    /*! @brief Signed. */
     Signed,
 };
 
@@ -75,14 +92,44 @@ struct StdIntTBase<64, Signedness::Unsigned>
 
 } /* namespace internal */
 
-/*
- * Standard fixed-length integer type `Type` of length `LenBitsV` bits
- * and signedness `SignednessV`.
- *
- * `LenBitsV` must be one of 8, 16, 32, or 64.
- *
- * For example, `StdIntT<32, Signedness::Signed>` is `std::int32_t`.
- */
+/*!
+@brief
+    Standard fixed-length integer type of length \bt_p{LenBitsV} and
+    signedness \bt_p{SignednessV} (Signedness::Unsigned or
+    Signedness::Signed).
+
+Equivalence table:
+
+<table>
+  <tr>
+    <th>With bt2c::StdIntT
+    <th>Standard type
+  <tr>
+    <td><code>bt2c::StdIntT&lt;8, bt2c::Signedness::Unsigned&gt;</code>
+    <td>\c std::uint8_t
+  <tr>
+    <td><code>bt2c::StdIntT&lt;16, bt2c::Signedness::Unsigned&gt;</code>
+    <td>\c std::uint16_t
+  <tr>
+    <td><code>bt2c::StdIntT&lt;32, bt2c::Signedness::Unsigned&gt;</code>
+    <td>\c std::uint32_t
+  <tr>
+    <td><code>bt2c::StdIntT&lt;64, bt2c::Signedness::Unsigned&gt;</code>
+    <td>\c std::uint64_t
+  <tr>
+    <td><code>bt2c::StdIntT&lt;8, bt2c::Signedness::Signed&gt;</code>
+    <td>\c std::int8_t
+  <tr>
+    <td><code>bt2c::StdIntT&lt;16, bt2c::Signedness::Signed&gt;</code>
+    <td>\c std::int16_t
+  <tr>
+    <td><code>bt2c::StdIntT&lt;32, bt2c::Signedness::Signed&gt;</code>
+    <td>\c std::int32_t
+  <tr>
+    <td><code>bt2c::StdIntT&lt;64, bt2c::Signedness::Signed&gt;</code>
+    <td>\c std::int64_t
+</table>
+*/
 template <std::size_t LenBitsV, Signedness SignednessV>
 using StdIntT = typename internal::StdIntTBase<LenBitsV, SignednessV>::Type;
 

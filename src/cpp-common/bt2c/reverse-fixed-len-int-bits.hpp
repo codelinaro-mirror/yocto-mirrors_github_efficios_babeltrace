@@ -34,19 +34,40 @@ T swapBits(const T p) noexcept
 
 } /* namespace internal */
 
-/*
- * Based on Knuth's.
- *
- * For example, given an unsigned `val` with the value 0b111011010 and
- * `*len` set to 9, the returned value is 0b010110111.
- *
- * Given a _signed_ `val` with the value 0b01011 and `*len` set to 5,
- * the returned value is
- * 0b1111111111111111111111111111111111111111111111111111111111111010
- * (sign extended).
- *
- * `*len` must be less than or equal to 64.
- */
+/*!
+@brief
+    Returns \bt_p{val} with its bits reversed on a length of \bt_p{len},
+    starting from the least significant bit.
+
+@ingroup common-cpp-bt2c
+
+<a href="https://matthewarcus.wordpress.com/2012/11/18/reversing-a-64-bit-word/">Based on Knuth's</a>.
+
+Examples:
+
+- Given an unsigned \bt_p{val} with the value 0b111011010 and
+  \bt_p{*len} set to&nbsp;9, the returned value is 0b010110111.
+
+- Given a \em signed \bt_p{val} with the value 0b01011 and \bt_p{*len}
+  set to&nbsp;5, the returned value is
+  0b1111111111111111111111111111111111111111111111111111111111111010
+  (sign extended).
+
+@code{.cpp}
+#include "cpp-common/bt2c/reverse-fixed-len-int-bits.hpp"
+@endcode
+
+@param[in] val
+    Value to reverse.
+@param[in] len
+    Number of bits to reverse, starting from the least significant bit.
+
+@returns
+    Reversed \bt_p{val} on \bt_p{len}.
+
+@pre
+    \bt_p{*len}&nbsp;&le;&nbsp;64.
+*/
 template <typename ValT>
 ValT reverseFixedLenIntBits(const ValT val, const DataLen len)
 {

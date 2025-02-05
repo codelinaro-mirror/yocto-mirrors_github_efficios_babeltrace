@@ -9,55 +9,95 @@
 
 namespace bt2c {
 
-/*
- * Location in a multiline text.
- */
+/*!
+@brief
+    Text location.
+
+@ingroup common-cpp-bt2c
+
+A text location is a tuple of offset (bytes), line number, and
+column number within some text.
+
+Format a text location with textLocStr().
+
+@code{.cpp}
+#include "cpp-common/bt2c/text-loc.hpp"
+@endcode
+*/
 class TextLoc final
 {
 public:
-    /*
-     * Builds a text location which targets offset `offset` bytes,
-     * zero-based line number `lineNo`, and zero-based column number
-     * `colNo`.
-     */
+    /*!
+    @brief
+        Builds a text location which targets offset \bt_p{offset} bytes,
+        zero-based line number \bt_p{lineNo}, and zero-based
+        column number \bt_p{colNo}.
+
+    @param[in] offset
+        Offset (bytes).
+    @param[in] lineNo
+        Zero-based line number (bytes).
+    @param[in] colNo
+        Zero-based column number (bytes).
+    */
     explicit TextLoc(unsigned long long offset = 0, unsigned long long lineNo = 0,
                      unsigned long long colNo = 0) noexcept;
 
-    /*
-     * Offset (bytes).
-     */
+    /*!
+    @brief
+        Offset (bytes).
+
+    @returns
+        Offset (bytes).
+    */
     unsigned long long offset() const noexcept
     {
         return _mOffset;
     }
 
-    /*
-     * Line number (zero-based).
-     */
+    /*!
+    @brief
+        Zero-based line number.
+
+    @returns
+        Zero-based line number.
+    */
     unsigned long long lineNo() const noexcept
     {
         return _mLineNo;
     }
 
-    /*
-     * Column number (zero-based).
-     */
+    /*!
+    @brief
+        Zero-based column number.
+
+    @returns
+        Zero-based column number.
+    */
     unsigned long long colNo() const noexcept
     {
         return _mColNo;
     }
 
-    /*
-     * Line number (one-based).
-     */
+    /*!
+    @brief
+        One-based line number.
+
+    @returns
+        One-based line number.
+    */
     unsigned long long naturalLineNo() const noexcept
     {
         return _mLineNo + 1;
     }
 
-    /*
-     * Column number (one-based).
-     */
+    /*!
+    @brief
+        One-based column number.
+
+    @returns
+        One-based column number.
+    */
     unsigned long long naturalColNo() const noexcept
     {
         return _mColNo + 1;

@@ -18,30 +18,45 @@
 
 namespace bt2c {
 
-/*
- * An implementation of the observer pattern.
- *
- * Instantiate an observable with:
- *
- *     Observable<Args> myObservable;
- *
- * where `Args` is the parameter type(s) of the data passed from the
- * entity notifying the observer to the observer callbacks.
- *
- * Attach an observer with the attach() method:
- *
- *     auto token = myObservable.attach([](Args...) {
- *         // Do something
- *     });
- *
- * attach() returns a token (`Token` instance) which identifies this
- * specific observer within the observable. The destructor of the token
- * detaches the observer from the observable.
- *
- * Notify all the observers with the notify() method:
- *
- *    myObservable.notify(args);
- */
+/*!
+@brief
+    <a href="https://en.wikipedia.org/wiki/Observer_pattern">Observer pattern</a>.
+
+@ingroup common-cpp-bt2c
+
+Instantiate an observable with, for example:
+
+@code{.cpp}
+bt2c::Observable<int, const std::string&> myObservable;
+@endcode
+
+The template arguments are the parameter type(s) of the data passed from
+the actor which notifies the observers to the observer callbacks.
+
+Attach an observer with attach():
+
+@code{.cpp}
+auto token = myObservable.attach([](const int i, const std::string& s) {
+    // Do something
+});
+@endcode
+
+attach() returns a token (Observable::Token instance) which identifies
+this specific observer within the observable. The destructor of the
+token detaches the observer from the observable.
+
+Notify all the observers with notify(), for example:
+
+@code{.cpp}
+myObservable.notify(23, "salut");
+@endcode
+
+You can move an observable, but not copy it.
+
+@code{.cpp}
+#include "cpp-common/bt2c/observable.hpp"
+@endcode
+*/
 template <typename... Args>
 class Observable
 {
@@ -53,11 +68,17 @@ private:
     using _ObserverFunc = std::function<void(Args...)>;
 
 public:
-    /*
-     * A token, identified with a unique ID, is an observer handle
-     * within this observable. On destruction, the token detaches the
-     * observer from the observable.
-     */
+    /*!
+    @brief
+        Observer token.
+
+    A token instance is a unique observer handle within a
+    given observable.
+
+    On destruction, the token detaches the observer from the observable.
+
+    You can move a token, but not copy it.
+    */
     class Token
     {
         friend class Observable;
@@ -100,16 +121,28 @@ public:
     };
 
 public:
+    /*!
+    @brief
+        Builds an observable.
+    */
     Observable() = default;
+
     Observable(const Observable&) = delete;
     Observable(Observable&&) = default;
     Observable& operator=(const Observable&) = delete;
     Observable& operator=(Observable&&) = default;
 
-    /*
-     * Attaches an observer using the user callback `func` to this
-     * observable, returning a corresponding token.
-     */
+    /*!
+    @brief
+        Attaches an observer with the callback \bt_p{func}
+        and returns a corresponding token.
+
+    @param[in] func
+        Observer callback.
+
+    @returns
+        Observer token.
+    */
     Token attach(_ObserverFunc func)
     {
         const auto tokenId = _mNextTokenId;
@@ -123,6 +156,15 @@ public:
      * Notifies all the managed observers, passing `args` to their user
      * callback.
      */
+
+    /*!
+    @brief
+        Notifies all the attached observers, passing \bt_p{args} to
+        their callback function.
+
+    @param[in] args
+        Arguments to pass to the observer callbacks.
+    */
     void notify(Args... args)
     {
         for (auto& observer : _mObservers) {

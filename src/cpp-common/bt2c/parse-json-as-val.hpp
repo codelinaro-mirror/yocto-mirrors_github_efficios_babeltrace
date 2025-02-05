@@ -17,17 +17,56 @@
 
 namespace bt2c {
 
-/*
- * Parses the JSON text `str` and returns the resulting JSON value,
- * adding `baseOffset` to the text location offset of all the created
- * JSON values.
- *
- * When this function logs or appends a cause to the error of the
- * current thread, it uses `baseOffset` to format the text location part
- * of the message.
- */
+/*!
+@brief
+    Parses the JSON text \bt_p{str} encoding a single JSON value and
+    returns its corresponding JSON value.
+
+@ingroup common-cpp-bt2c-json
+
+This function uses
+parseJson(bt2s::string_view, ListenerT&, std::size_t, const Logger&)
+behind the scenes, therefore see its documentation to learn more about
+JSON parsing specifics.
+
+@note
+    You must use this function in libbabeltrace2 context because it
+    appends causes to the error of the current thread and throws
+    bt2c::Error on error.
+
+@param[in] str
+    JSON text to parse, encoding a single JSON value.
+@param[in] baseOffset
+    Value to add to the offset of any created text location during
+    parsing.
+@param[in] logger
+    Logger to use on error.
+
+@returns
+    Decoded JSON value.
+
+@sa parseJson(bt2s::string_view, ListenerT&, std::size_t, const Logger&)
+*/
 JsonVal::UP parseJson(bt2s::string_view str, std::size_t baseOffset, const Logger& logger);
 
+/*!
+@brief
+    Overload of
+    parseJson(bt2s::string_view, std::size_t, const Logger&)
+    with \bt_p{baseOffset} set to&nbsp;0.
+
+@ingroup common-cpp-bt2c-json
+
+@param[in] str
+    See parseJson(bt2s::string_view, std::size_t, const Logger&).
+@param[in] logger
+    See parseJson(bt2s::string_view, std::size_t, const Logger&).
+
+@returns
+    See parseJson(bt2s::string_view, std::size_t, const Logger&).
+
+@sa parseJson(bt2s::string_view, ListenerT&, const Logger&)
+*/
 inline JsonVal::UP parseJson(const bt2s::string_view str, const Logger& logger)
 {
     return parseJson(str, 0, logger);

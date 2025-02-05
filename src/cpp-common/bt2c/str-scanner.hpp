@@ -20,69 +20,150 @@
 
 namespace bt2c {
 
-/*
- * String scanner.
- *
- * A string scanner (lexer) wraps an input string view and scans
- * specific characters and sequences of characters, managing a
- * current position.
- *
- * When you call the various tryScan*() methods to try to scan some
- * contents, the methods advance the current position on success. They
- * also automatically skip initial whitespaces.
- */
+/*!
+@brief
+    String scanner.
+
+@ingroup common-cpp-bt2c
+
+A string scanner (lexer) wraps an input string view and scans specific
+characters and sequences of characters, managing a current position.
+
+When you call the various <code>tryScan*()</code> methods to try to scan
+some contents, the methods advance the current position on success. They
+also automatically skip initial whitespaces.
+
+The supported constructs are:
+
+<table>
+  <tr>
+    <th>Construct
+    <th>Scanning method
+  <tr>
+    <td>Double-quoted literal string with custom escape sequences
+    <td>tryScanLitStr()
+  <tr>
+    <td>Constant integer (templated for the signedness)
+    <td>tryScanConstInt()
+  <tr>
+    <td>Constant unsigned decimal integer (up to 18,446,744,073,709,551,615)
+    <td>tryScanConstUInt()
+  <tr>
+    <td>
+      Constant signed decimal integer (-9,223,372,036,854,775,808 to
+      9,223,372,036,854,775,807)
+    <td>tryScanConstSInt()
+  <tr>
+    <td>
+      <a href="https://www.json.org/">JSON</a> number \em with a
+      fraction or exponent part
+    <td>tryScanConstReal()
+  <tr>
+    <td>Exact string
+    <td>tryScanToken()
+  <tr>
+    <td>Whitespaces
+    <td>skipWhitespaces()
+</table>
+
+@note
+    You must use this class in libbabeltrace2 context because it
+    appends causes to the error of the current thread and throws
+    on error.
+
+@code{.cpp}
+#include "cpp-common/bt2c/str-scanner.hpp"
+@endcode
+*/
 class StrScanner final
 {
 public:
+    /*! @brief String view iterator. */
     using Iter = bt2s::string_view::const_iterator;
 
-    /*
-     * Builds a string scanner, wrapping the string `str`.
-     *
-     * When the string scanner logs or appends a cause to the error of
-     * the current thread, it uses `baseOffset` to format the text
-     * location part of the message.
-     */
+    /*!
+    @brief
+        Builds a string scanner, wrapping the string \bt_p{str}.
+
+    When the created string scanner logs or appends a cause to the
+    error of the current thread, it uses \bt_p{baseOffset} to format
+    the \link TextLoc text location\endlink part of the error message.
+
+    The created string scanner remains valid as long as \bt_p{str}
+    isn't modified.
+
+    @param[in] str
+        String to wrap.
+    @param[in] baseOffset
+        Base offset to use to format a text location for an
+        error message.
+    @param[in] logger
+        Logger to use on error.
+    */
     explicit StrScanner(bt2s::string_view str, std::size_t baseOffset, const Logger& logger);
 
-    /*
-     * Alternative constructor setting the `baseOffset` parameter to 0.
-     */
+    /*!
+    @brief
+        Like StrScanner(bt2s::string_view, std::size_t, const Logger&),
+        but with \bt_p{baseOffset} set to&nbsp;0.
+
+    @param[in] str
+        See StrScanner(bt2s::string_view, std::size_t, const Logger&).
+    @param[in] logger
+        See StrScanner(bt2s::string_view, std::size_t, const Logger&).
+    */
     explicit StrScanner(bt2s::string_view str, const Logger& logger);
 
-    /*
-     * Returns the current position.
-     */
+    /*!
+    @brief
+        Current position within the wrapped string.
+
+    @returns
+        Current position within the wrapped string.
+    */
     Iter at() const noexcept
     {
         return _mAt;
     }
 
-    /*
-     * Sets the current position to `at`.
-     *
-     * NOTE: This may corrupt the current text location (loc()) if the
-     * string between at() and `at` includes one or more
-     * newline characters.
-     */
+    /*!
+    @brief
+        Sets the current position within the wrapped string
+        to \bt_p{at}.
+
+    @warning
+        This may corrupt the current text location (loc()) if the
+        string between at() and \bt_p{at} includes one or more
+        newline characters.
+
+    @param[in] at
+        New position.
+    */
     void at(const Iter at) noexcept
     {
         BT_ASSERT_DBG(at >= _mStr.begin() && at <= _mStr.end());
         _mAt = at;
     }
 
-    /*
-     * Returns the viewed string, the one with which this string scanner
-     * was built.
-     */
+    /*!
+    @brief
+        Wrapped string.
+
+    @returns
+        Wrapped string.
+    */
     bt2s::string_view str() const noexcept
     {
         return _mStr;
     }
 
-    /*
-     * Returns the number of characters left until `str().end()`.
-     */
+    /*!
+    @brief
+        Number of characters left until <code>str().end()</code>.
+
+    @returns
+        Number of characters left until <code>str().end()</code>.
+    */
     std::size_t charsLeft() const noexcept
     {
         return _mStr.end() - _mAt;
@@ -91,140 +172,203 @@ public:
     /*
      * Returns the current text location considering `_mBaseOffset`.
      */
+
+    /*!
+    @brief
+        Current text location.
+
+    This method uses the value of the \bt_p{baseOffset} parameter of
+    StrScanner(bt2s::string_view, std::size_t, const Logger&)
+    when you built this string scanner as the base offset of the
+    text location to build.
+
+    @returns
+        Current text location.
+    */
     TextLoc loc() const noexcept
     {
         return TextLoc {_mBaseOffset + static_cast<std::size_t>(_mAt - _mStr.begin()), _mNbLines,
                         static_cast<std::size_t>(_mAt - _mLineBegin)};
     }
 
-    /*
-     * Returns whether or not the end of the string is reached.
-     */
+    /*!
+    @brief
+        Whether or not the end of the wrapped string is reached.
+
+    @returns
+        \c true if the end of the wrapped string is reached.
+    */
     bool isDone() const noexcept
     {
         return _mAt == _mStr.end();
     }
 
-    /*
-     * Resets this string scanner, setting the current position
-     * to `str().begin()`.
-     */
+    /*!
+    @brief
+        Resets this string scanner, setting the current position
+        to <code>str().begin()</code>.
+    */
     void reset();
 
-    /*
-     * Tries to scan a double-quoted literal string, considering the
-     * characters of `escapeSeqStartList`, `\`, and `"` as escape
-     * sequence starting characters, setting the current position to
-     * after the closing double quote on success.
-     *
-     * If `escapeSeqStartList` includes `u`, then a `\u` escape sequence
-     * is interpreted as in JSON: four hexadecimal characters which
-     * represent the value of a single Unicode codepoint.
-     *
-     * Valid examples:
-     *
-     *     "salut!"
-     *     "en circulation\nYves?"
-     *     "\u03c9 often represents angular velocity in physics"
-     *
-     * Returns a view of the escaped string, without beginning/end
-     * double quotes, on success, or an empty view if there's no
-     * double-quoted literal string (or if the method reaches
-     * `str().end()` before a closing `"`).
-     *
-     * Logs and appends a cause to the error of the current thread,
-     * throwing `Error`, if the scanning method finds an invalid escape
-     * sequence or an illegal control character.
-     *
-     * The returned string view remains valid as long as you don't call
-     * any method of this object.
-     */
+    /*!
+    @brief
+        Tries to scan a double-quoted literal string, considering the
+        characters of \bt_p{escapeSeqStartList}, <code>\\</code>,
+        and <code>&quot;</code> as escape sequence starting characters.
+
+    If \bt_p{escapeSeqStartList} includes \c u, then a <code>\\u</code>
+    escape sequence is interpreted as in
+    <a href="https://www.json.org/">JSON</a>: four hexadecimal
+    characters which represent the value of a single Unicode codepoint.
+
+    Valid examples:
+
+    - <code>&quot;salut!&quot;</code>
+    - <code>&quot;en circulation\\nYves?&quot;</code>
+    - <code>&quot;\\u03c9 often represents angular velocity in physics&quot;</code>
+
+    Calls skipWhitespaces() before scanning.
+
+    Sets the current position to \em after the closing double
+    quote on success.
+
+    Logs and appends a cause to the error of the current thread,
+    throwing bt2c::Error, if the scanning method finds an invalid escape
+    sequence or an illegal control character.
+
+    @param[in] escapeSeqStartList
+        List of characters to consider as escape sequence
+        starting characters.
+
+    @returns
+        @parblock
+        View of the escaped string, \em without beginning/end
+        double quotes, on success, or an empty view if there's no
+        double-quoted literal string (or if the method reaches
+        <code>str().end()</code> before a closing <code>&quot;</code>).
+
+        The returned string view remains valid as long as you don't call
+        any method of this string scanner.
+        @endparblock
+
+    @pre
+        \bt_p{escapeSeqStartList} only contains characters amongst
+        \c a, \c b, \c f, \c n, \c r, \c t, \c u, and \c v.
+    */
     bt2s::string_view tryScanLitStr(bt2s::string_view escapeSeqStartList);
 
-    /*
-     * Tries to scan and decode a constant integer string, possibly
-     * negative if `ValT` (either `unsigned long long` or `long long`)
-     * is signed.
-     *
-     * Valid examples:
-     *
-     *     9283
-     *     -42
-     *     0
-     *
-     * Returns `bt2s::nullopt` if the method couldn't scan a
-     * constant integer.
-     *
-     * Sets the current position to after this constant integer string
-     * on success.
-     */
+    /*!
+    @brief
+        Tries to scan and decode a constant integer string, possibly
+        negative if \bt_p{ValT} (either <code>unsigned long long</code>
+        or <code>long long</code>) is signed.
+
+    Valid examples:
+
+    - <code>9283</code>
+    - <code>-42</code>
+    - <code>0</code>
+
+    Calls skipWhitespaces() before scanning.
+
+    Sets the current position to \em after this constant integer string
+    on success.
+
+    @returns
+        Decoded constant integer on success, or bt2s::nullopt
+        if the method couldn't scan a constant integer.
+
+    @sa tryScanConstUInt()
+    @sa tryScanConstSInt()
+    */
     template <typename ValT>
     bt2s::optional<ValT> tryScanConstInt() noexcept;
 
-    /*
-     * Tries to scan and decode a constant unsigned integer string.
-     *
-     * Returns `bt2s::nullopt` if the method couldn't scan a constant
-     * unsigned integer.
-     *
-     * Sets the current position to after this constant unsigned integer
-     * string on success.
-     */
+    /*!
+    @brief
+        Alias of tryScanConstInt() with <code>unsigned long long</code>.
+
+    @returns
+        See tryScanConstInt().
+
+    @sa tryScanConstSInt()
+    */
     bt2s::optional<unsigned long long> tryScanConstUInt() noexcept
     {
         return this->tryScanConstInt<unsigned long long>();
     }
 
-    /*
-     * Tries to scan and decode a constant signed integer string,
-     * possibly negative.
-     *
-     * Returns `bt2s::nullopt` if the method couldn't scan a constant
-     * signed integer.
-     *
-     * Sets the current position to after this constant signed integer
-     * string on success.
-     */
+    /*!
+    @brief
+        Alias of tryScanConstInt() with <code>long long</code>.
+
+    @returns
+        See tryScanConstInt().
+
+    @sa tryScanConstUInt()
+    */
     bt2s::optional<long long> tryScanConstSInt() noexcept
     {
         return this->tryScanConstInt<long long>();
     }
 
-    /*
-     * Tries to scan and decode a constant real number string, returning
-     * `bt2s::nullopt` if not possible.
-     *
-     * The format of the real number string to scan is the JSON
-     * (<https://www.json.org/>) number one, _with_ a fraction or an
-     * exponent part. Without a fraction/exponent part, this method
-     * returns `bt2s::nullopt`: use tryScanConstInt() to try scanning a
-     * constant integer instead.
-     *
-     * Valid examples:
-     *
-     *     17.2
-     *     -42.192
-     *     8e9
-     *     17E12
-     *     9.14e+6
-     *     -13.2777E-4
-     *     0.0
-     *     -0.0
-     *
-     * Sets the current position to after this constant real number
-     * string on success.
-     */
+    /*!
+    @brief
+        Tries to scan and decode a constant real number string,
+        returning bt2s::nullopt if not possible.
+
+    The format of the real number string to scan is the
+    <a href="https://www.json.org/">JSON</a> number one, \em with
+    a fraction or an exponent part. Without a fraction/exponent part,
+    this method returns bt2s::nullopt: use tryScanConstInt() to
+    try scanning a constant integer instead.
+
+    Valid examples:
+
+    - <code>17.2</code>
+    - <code>-42.192</code>
+    - <code>8e9</code>
+    - <code>17E12</code>
+    - <code>9.14e+6</code>
+    - <code>-13.2777E-4</code>
+    - <code>0.0</code>
+    - <code>-0.0</code>
+
+    Calls skipWhitespaces() before scanning.
+
+    Sets the current position to \em after this constant real number
+    string on success.
+
+    @returns
+        Decoded constant real number on success, or bt2s::nullopt
+        if the method couldn't scan a constant real number.
+    */
     bt2s::optional<double> tryScanConstReal() noexcept;
 
-    /*
-     * Tries to scan the specific token `token`, setting the current
-     * position to after this string and returning `true` on success.
-     */
+    /*!
+    @brief
+        Tries to scan the exact string \bt_p{token}.
+
+    Calls skipWhitespaces() before scanning.
+
+    Sets the current position to \em after the token
+    on success.
+
+    @param[in] token
+        Token to scan.
+
+    @retval false
+        Couldn't scan \bt_p{token}.
+    @retval true
+        Scanned \bt_p{token}.
+    */
     bool tryScanToken(bt2s::string_view token) noexcept;
 
-    /*
-     * Skips the next whitespaces, updating the current position.
-     */
+    /*!
+    @brief
+        Skips all the following whitespaces, updating the
+        current position.
+    */
     void skipWhitespaces() noexcept;
 
 private:

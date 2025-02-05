@@ -7,6 +7,22 @@
 #ifndef BABELTRACE_CPP_COMMON_BT2C_JSON_VAL_REQ_HPP
 #define BABELTRACE_CPP_COMMON_BT2C_JSON_VAL_REQ_HPP
 
+/*!
+@file
+
+@brief
+    JSON value requirement classes.
+
+@ingroup common-cpp-bt2c
+
+@code{.cpp}
+#include "cpp-common/bt2c/json-val-req.hpp"
+@endcode
+
+This file offers type aliases of template instantiations of
+cpp-common/bt2c/val-req.hpp classes for bt2c::JsonVal objects.
+*/
+
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -168,35 +184,52 @@ struct JsonValOps final
 
 } /* namespace internal */
 
-/*
- * Value requirement aliases to validate JSON values (`JsonVal`).
- */
+/*! @brief JSON value requirement. */
 using JsonValReq = ValReq<JsonVal, internal::JsonValOps>;
+
+/*! @brief "JSON value has type" requirement. */
 using JsonValHasTypeReq = ValHasTypeReq<JsonVal, internal::JsonValOps>;
+
+/*! @brief Any JSON integer value requirement. */
 using JsonAnyIntValReq = AnyIntValReq<JsonVal, internal::JsonValOps>;
+
+/*! @brief JSON unsigned integer value requirement. */
 using JsonUIntValReq = UIntValReq<JsonVal, internal::JsonValOps>;
+
+/*! @brief JSON signed integer range value requirement. */
 using JsonSIntValReq = SIntValReq<JsonVal, internal::JsonValOps>;
 
+/*! @brief "JSON unsigned integer value in range" requirement. */
 using JsonUIntValInRangeReq =
     IntValInRangeReq<JsonVal, internal::JsonValOps, JsonUIntVal, ValType::UInt>;
 
+/*! @brief "JSON signed integer value in range" requirement. */
 using JsonSIntValInRangeReq =
     IntValInRangeReq<JsonVal, internal::JsonValOps, JsonSIntVal, ValType::SInt>;
 
+/*! @brief "JSON boolean value in set" requirement. */
 using JsonBoolValInSetReq =
     ScalarValInSetReq<JsonVal, internal::JsonValOps, JsonBoolVal, ValType::Bool>;
 
+/*! @brief "JSON unsigned integer value in set" requirement. */
 using JsonUIntValInSetReq =
     ScalarValInSetReq<JsonVal, internal::JsonValOps, JsonUIntVal, ValType::UInt>;
 
+/*! @brief "JSON signed integer value in set" requirement. */
 using JsonSIntValInSetReq =
     ScalarValInSetReq<JsonVal, internal::JsonValOps, JsonSIntVal, ValType::SInt>;
 
+/*! @brief "JSON string value in set" requirement. */
 using JsonStrValInSetReq =
     ScalarValInSetReq<JsonVal, internal::JsonValOps, JsonStrVal, ValType::Str>;
 
+/*! @brief JSON array value requirement. */
 using JsonArrayValReq = ArrayValReq<JsonVal, internal::JsonValOps>;
+
+/*! @brief JSON object value property requirement. */
 using JsonObjValPropReq = ObjValPropReq<JsonVal, internal::JsonValOps>;
+
+/*! @brief JSON object value requirement. */
 using JsonObjValReq = ObjValReq<JsonVal, internal::JsonValOps>;
 
 } /* namespace bt2c */

@@ -13,20 +13,49 @@
 
 namespace bt2c {
 
-/*
- * Text location string format.
- */
+/*!
+@brief
+    Text location string format.
+
+@ingroup common-cpp-bt2c
+
+@code{.cpp}
+#include "cpp-common/bt2c/text-loc-str.hpp"
+@endcode
+
+To be used with textLocStr().
+*/
 enum class TextLocStrFmt
 {
+    /*! Show offset only. */
     Offset,
+
+    /*! Show line/column numbers and offset. */
     LineColNosAndOffset,
+
+    /*! Show line/column numbers only. */
     LineColNos,
 };
 
-/*
- * Formats the text location `loc` as a string following the format
- * `fmt`.
- */
+/*!
+@brief
+    Returns the string of the text location \bt_p{loc}, honouring the
+    format \bt_p{fmt}.
+
+@ingroup common-cpp-bt2c
+
+@code{.c}
+#include "cpp-common/bt2c/text-loc-str.hpp"
+@endcode
+
+@param[in] loc
+    Text location to format.
+@param[in] fmt
+    Format to use.
+
+@returns
+    String of \bt_p{loc}.
+*/
 std::string textLocStr(const TextLoc& loc, TextLocStrFmt fmt);
 
 } /* namespace bt2c */
