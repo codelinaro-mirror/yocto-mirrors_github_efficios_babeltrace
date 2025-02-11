@@ -66,6 +66,16 @@ protected:
         return _mSelfComp.graphMipVersion();
     }
 
+    TraceClass::Shared _createTraceClass() const
+    {
+        return _mSelfComp.createTraceClass();
+    }
+
+    ClockClass::Shared createClockClass() const
+    {
+        return _mSelfComp.createClockClass();
+    }
+
     SelfCompT _selfComp() noexcept
     {
         return _mSelfComp;
