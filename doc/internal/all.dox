@@ -73,7 +73,7 @@ Within the \c src directory:
   <tr>
     <td><code>cpp-common/bt2</code>
     <td>libbabeltrace2 C++ bindings.
-    <td>\b TBD
+    <td>\ref common-cpp-bt2
   <tr>
     <td><code>cpp-common/bt2c</code>
     <td>Common utilities for C++.
@@ -380,4 +380,1013 @@ This API offers:
 The various <code>%bt2c::*Up</code> types of this API are
 specific \c std::unique_ptr types with custom deleters to manage
 the lifetime of C&nbsp;standard library and GLib objects more easily.
+
+@defgroup common-cpp-bt2 libbabeltrace2 C++ bindings
+@brief
+    Internal Babeltrace 2 library C++ bindings.
+
+Everything under the \c bt2 namespace is part of the internal
+libbabeltrace2 C++ bindings.
+
+The bindings are pretty much straightforward, mapping almost directly
+to the libbabeltrace2&nbsp;C API.
+
+The main design goal of those bindings is to achieve
+a zero-overhead abstraction of the libbabeltrace2&nbsp;C API. In other
+words, using the \c bt2 API should be safer, but not costlier than
+its corresponding C&nbsp;API. A few sophisticated techniques along with
+the C++ language itself and inlining all the code make this possible.
+
+The following sections show the usage of the \c bt2 API as well as
+important internal patterns.
+
+@note
+    @parblock
+    The individual types and functions of the \c bt2 headers
+    aren't all documented yet, but
+    many are straightforward to understand if you already know
+    the libbabeltrace2 C&nbsp;API.
+
+    Please see the <code>%src/cpp-common/bt2</code> headers.
+    @endparblock
+
+@section common-cpp-bt2-quickstart Quick start
+
+You don't need to understand the internals to use the \c bt2 API.
+
+The most common ways to use those bindings are:
+
+<dl>
+  <dt>Wrap a libbabeltrace2 object pointer without keeping a reference
+  <dd>
+    -# Include:
+
+       @code{.cpp}
+       #include "cpp-common/bt2/wrap.hpp"
+       @endcode
+
+    -# Use an overloaded <code>%bt2::wrap()</code> function to obtain
+       a wrapper:
+
+       @code{.cpp}
+       // `clkCls` type is `const bt_clock_class *`
+       const auto myClkCls = bt2::wrap(clkCls);
+       @endcode
+
+       <code>%bt2::wrap()</code> doesn't change the reference count:
+       the destructor of the returned wrapper does nothing.
+
+       The returned wrapper is lightweight: it only contains the
+       libbabeltrace2 object pointer. Pass and return by <em>value</em>.
+
+       If the pointer to wrap is \c const, then the name of the
+       wrapper class begins with \c Const. In the example above,
+       bt2::wrap(const bt_clock_class *) returns
+       a bt2::ConstClockClass instance rather than
+       a bt2::ClockClass one. The difference is:
+
+       - You may \em not call a modifying method with a constant
+         object wrapper.
+
+       - Methods of mutable wrappers usually accept/return mutable
+         wrappers while methods of constant wrappers
+         usually accept/return constant wrappers.
+
+       Thanks to templated constructors and assignment operators,
+       you may pass a \c bt2::Taco when a function accepts a
+       \c bt2::ConstTaco parameter, but not the opposite.
+
+       Whilst using <code>%bt2::wrap()</code> is preferred, you may
+       also call the constructor of the wrapper class directly with the
+       libbabeltrace2 object pointer:
+
+       @code{.cpp}
+       // `clkCls` type is `const bt_clock_class *`
+       const bt2::ConstClockClass myClkCls {clkCls};
+       @endcode
+
+    See \ref common-cpp-bt2-borrowed-obj to learn more.
+
+  <dt>Keep a reference of a wrapped libbabeltrace2 object
+  <dd>
+    Once you have a libbabeltrace2 object wrapper (see the
+    previous item), call its \c shared() method to get a shared object:
+
+    @code{.cpp}
+    // `clkCls` type is `const bt_clock_class *`
+    auto myClkCls = bt2::wrap(clkCls).shared();
+    @endcode
+
+    \c shared() returns a bt2::SharedObject instance with the relevant
+    template configuration.
+
+    bt2::SharedObject behaves more or less like
+    <a href="https://en.cppreference.com/w/cpp/memory/shared_ptr"><code>std::shared_ptr</code></a>:
+
+    - Its (private) constructor gets a new reference.
+    - Its destructor puts its reference.
+    - Copying gets a new reference.
+    - Moving doesn't change the reference count.
+    - It can contain nothing: it has bt2::SharedObject::operator bool(),
+      bt2::SharedObject::reset() and bt2::SharedObject::release().
+    - Dereference with bt2::SharedObject::operator*() and
+      bt2::SharedObject::operator->().
+
+    Like with bt2::BorrowedObject, you may pass a
+    <code>%bt2::SharedObject<bt2::Taco, ...></code> when a function
+    accepts a <code>%bt2::SharedObject<bt2::ConstTaco, ...></code>
+    parameter, but not the opposite.
+
+    See \ref common-cpp-bt2-shared-obj to learn more.
+
+  <dt>Create a C++ component class
+  <dd>
+    With those bindings, developing a custom component class means
+    creating a C++&nbsp;class:
+
+    -# Inherit bt2::UserSourceComponent, bt2::UserFilterComponent, or
+       bt2::UserSinkComponent to create your own component class.
+
+       The base class requires that you implement specific members of
+       your derived class. It also provides protected methods which
+       essentially wrap the <code>bt_self_component_*()</code>
+       functions.
+
+    -# Instantiate your component class within a bt2::Graph with
+       the templated \c %bt2::Graph::addComponent() method,
+       for example:
+
+       @code{.cpp}
+       const auto myComp = myGraph.addComponent<MyFilterComp>("meow");
+       @endcode
+
+       To instantiate your component class more than once, prefer
+       creating it with bt2::createComponentClass() and then reusing
+       it with one of the non-templated \c %bt2::Graph::addComponent()
+       methods instead.
+
+    See \ref common-cpp-bt2-comp-cls-dev to learn more.
+
+  <dt>Create a C++ plugin
+  <dd>
+    You can create a complete C++ plugin using the libbabeltrace2
+    <code>BT_PLUGIN_*()</code> macros, but the macros of
+    cpp-common/bt2/plugin-dev.hpp to add component classes.
+
+    The C++ macros are straightforward and only need your
+    C++&nbsp;component class (see the item above) instead of having
+    to set each method individually.
+
+    Example:
+
+    @code{.cpp}
+    BT_CPP_PLUGIN_SOURCE_COMPONENT_CLASS_WITH_ID(meow, auto, "mix", meow::MixSource);
+    @endcode
+</dl>
+
+@section common-cpp-bt2-term Terminology
+
+Within the \c bt2 namespace:
+
+- Anything which starts with \c Lib is a libbabeltrace2 C&nbsp;type.
+
+- Anything which starts with \c lib is a libbabeltrace2 object or
+  libbabeltrace2 object pointer.
+
+@section common-cpp-bt2-borrowed-obj Borrowed object wrapper
+
+Any object which you would borrow with the libbabeltrace2&nbsp;C API,
+that is, of which you don't own a reference, is an instance of something
+which inherits bt2::BorrowedObject.
+
+An instance of bt2::BorrowedObject wraps a simple pointer to a
+libbabeltrace2 object of some given type (template parameter
+\bt_p{LibObjT}) \em without managing any reference counting.
+
+A bt2::BorrowedObject instance user, including methods of a derived
+class, can call bt2::BorrowedObject::libObjPtr() to access the raw
+libbabeltrace2 object pointer.
+
+You may only build a bt2::BorrowedObject with a pointer which isn't
+<code>nullptr</code>: bt2::BorrowedObject::libObjPtr() never returns
+\c nullptr.
+See \ref common-cpp-bt2-opt-borrowed-obj for an optional version.
+
+@section common-cpp-bt2-opt-borrowed-obj Optional borrowed object wrapper
+
+Although you can use something like
+<code>bt2s::optional&lt;bt2::ConstClockClass&gt;</code>,
+it ends up being nonoptimal because a bt2s::optional instance contains
+the optional object as well as another field to know whether or not
+there's a value.
+
+In libbabeltrace2's case, we're always dealing with pointers to objects,
+therefore we can leverage \c nullptr to indicate there's no value.
+
+This is what bt2::OptionalBorrowedObject does: like bt2::BorrowedObject,
+it only contains a libbabeltrace2 pointer, but offers the typical
+bt2s::optional API: natural copy/move operations,
+bt2::OptionalBorrowedObject::operator*(),
+bt2::OptionalBorrowedObject::operator->(),
+and bt2::OptionalBorrowedObject::operator bool(),
+and bt2::OptionalBorrowedObject::reset().
+
+About access to the contained data:
+
+<dl>
+  <dt>bt2::OptionalBorrowedObject::libObjPtr()
+  <dd>
+    Simple access to the contained libbabeltrace2 pointer, which
+    can be \c nullptr.
+
+  <dt>bt2::OptionalBorrowedObject::object()
+  <dt>bt2::OptionalBorrowedObject::operator*()
+  <dd>
+    Builds a configured bt2::BorrowedObject instance wrapping the
+    contained libbabeltrace2 pointer.
+
+    By the own run-time constraints of bt2::BorrowedObject, the contained
+    libbabeltrace2 pointer must \em not be \c nullptr.
+
+  <dt>bt2::OptionalBorrowedObject::operator->()
+  <dd>
+    This must return the address of a bt2::BorrowedObject instance, but
+    we only have a libbabeltrace2 pointer because an bt2::BorrowedObject
+    instance may not wrap \c nullptr.
+
+    Therefore, this operator returns a proxy object
+    (bt2::BorrowedObjectProxy) which holds an internal
+    bt2::BorrowedObject instance and implements operator->() itself.
+
+    In other words, doing <code>myOptObj->dive()</code> is
+    equivalent to calling
+    <code>myOptObj.operator->().operator->()->dive()</code>.
+</dl>
+
+@section common-cpp-bt2-shared-obj Shared object
+
+The \c bt2 API has its own shared object class template which deals with
+libbabeltrace2 reference counting: bt2::SharedObject.
+
+An instance of bt2::SharedObject wraps an optional bt2::BorrowedObject
+instance and manages the reference counting of the underlying
+libbabeltrace2 object.
+
+When you move a shared object, it becomes empty, in that
+bt2::SharedObject::operator*() and bt2::SharedObject::operator->() will
+either fail to assert in debug mode (when you configured the project
+with <code>BABELTRACE_DEBUG_MODE=1</code>) or trigger a segmentation
+fault.
+
+The default constructor builds an empty shared object. You may also call
+the bt2::SharedObject::reset() method to make a shared object empty.
+Check whether or not a shared object is empty with
+bt2::SharedObject::operator bool().
+
+Typically, a concrete borrowed object class offers the \c shared()
+method to create a shared object from the borrowed object, for example:
+
+@code{.cpp}
+// `clkCls` type is `bt2::ConstClockClass`
+auto mySharedClkCls = clkCls.shared();
+@endcode
+
+@subsection common-cpp-bt2-shared-obj-ref-count Reference counting
+
+The bt2::SharedObject class template relies on a structure type parameter,
+\bt_p{RefFuncsT}, which must publicly offer:
+
+- @code{.cpp}
+  static void get(const LibObjT *libObjPtr) noexcept;
+  @endcode
+
+  Increments the reference count of \bt_p{libObjPtr}.
+
+- @code{.cpp}
+  static void put(const LibObjT *libObjPtr) noexcept;
+  @endcode
+
+  Decrements the reference count of \bt_p{libObjPtr}.
+
+Such a structure is typically part of the <code>bt2::internal</code>
+namespace.
+
+Example:
+
+@code{.cpp}
+namespace internal {
+
+struct ClockClassRefFuncs final
+{
+    static void get(const bt_clock_class * const libObjPtr) noexcept
+    {
+        bt_clock_class_get_ref(libObjPtr);
+    }
+
+    static void put(const bt_clock_class * const libObjPtr) noexcept
+    {
+        bt_clock_class_put_ref(libObjPtr);
+    }
+};
+
+} /* namespace internal */
+@endcode
+
+@subsection common-cpp-bt2-shared-obj-create Creation
+
+The constructors of bt2::SharedObject, except
+bt2::SharedObject::SharedObject() which builds an empty shared object,
+are private.
+
+To create a shared object out of a
+\link common-cpp-bt2-borrowed-obj borrowed object\endlink, use:
+
+<dl>
+  <dt>bt2::SharedObject::createWithoutRef()
+  <dd>
+    Create a shared object from a borrowed object without
+    getting a new reference.
+
+  <dt>bt2::SharedObject::createWithRef()
+  <dd>
+    Create a shared object from a borrowed object, immediately
+    getting a new reference.
+
+    This is usually what the \c shared() method of a borrowed object
+    class uses.
+</dl>
+
+@section common-cpp-bt2-wrap Wrapper class pattern
+
+The pattern of a class wrapping a typical reference counted
+libbabeltrace2 type is as such:
+
+- There's an internal reference counting structure:
+
+  @code{.cpp}
+  namespace internal {
+
+  struct TacoRefFuncs final
+  {
+      static void get(const bt_taco * const libObjPtr) noexcept
+      {
+          bt_taco_get_ref(libObjPtr);
+      }
+
+      static void put(const bt_taco * const libObjPtr) noexcept
+      {
+          bt_taco_put_ref(libObjPtr);
+      }
+  };
+
+  } /* namespace internal */
+  @endcode
+
+- There's a common wrapper class template accepting the libbabeltrace2
+  type parameter which inherits bt2::BorrowedObject:
+
+  @code{.cpp}
+  template <typename LibObjT>
+  class CommonTaco final : public BorrowedObject<LibObjT>
+  @endcode
+
+  This is because we use the same class template to wrap both the
+  constant and mutable APIs. Templating also makes it possible for
+  a \c bt2::Taco variable to convert implicitly to
+  \c bt2::ConstTaco.
+
+  In this case, \bt_p{LibObjT} is either \c bt_taco or
+  <code>const bt_taco</code>.
+
+  Because the objects of this zero-overhead API are meant to be passed
+  and returned by value (copy), we cannot rely on C++'s constness.
+  Therefore, the true correspondence table is:
+
+  <table>
+    <tr>
+      <th>C type
+      <th>C++ type
+    <tr>
+      <td><code>bt_taco *</code>
+      <td><code>bt2::Taco</code>
+    <tr>
+      <td><code>bt_taco * const</code>
+      <td><code>const bt2::Taco</code>
+    <tr>
+      <td><code>const bt_taco *</code>
+      <td><code>bt2::ConstTaco</code>
+    <tr>
+      <td><code>const bt_taco * const</code>
+      <td><code>const bt2::ConstTaco</code>
+  </table>
+
+  Knowing this, \em all the methods of some wrapper class are \c const
+  because they don't modify the wrapped libbabeltrace2 pointer.
+
+  In \c CommonTaco, you can rely on \bt_p{LibObjT} to adapt methods
+  for constant and mutable contexts (more about this below).
+
+  Within <code>CommonTaco</code>:
+
+  - A private reuse of
+    <code>BorrowedObject<LibObjT>::_ThisBorrowedObject</code>:
+
+    @code{.cpp}
+    private:
+        using typename BorrowedObject<LibObjT>::_ThisBorrowedObject;
+    @endcode
+
+  - A public reuse of <code>BorrowedObject<LibObjT>::LibObjPtr</code>:
+
+    @code{.cpp}
+    public:
+        using typename BorrowedObject<LibObjT>::LibObjPtr;
+    @endcode
+
+  - A public \c Shared type alias:
+
+    @code{.cpp}
+    public:
+        using Shared = SharedObject<CommonTaco, LibObjT, internal::TacoRefFuncs>;
+    @endcode
+
+  - A libbabeltrace2 pointer constructor:
+
+    @code{.cpp}
+    public:
+        explicit CommonTaco(const LibObjPtr libObjPtr) noexcept :
+            _ThisBorrowedObject {libObjPtr}
+        {
+        }
+    @endcode
+
+  - A generic copy constructor:
+
+    @code{.cpp}
+    public:
+        template <typename OtherLibObjT>
+        CommonTaco(const CommonTaco<OtherLibObjT> otherTaco) noexcept :
+            _ThisBorrowedObject {otherTaco}
+        {
+        }
+    @endcode
+
+    @note
+        Because this doesn't accept
+        <code>const CommonTaco<LibObjT>&</code>,
+        it's not a true copy constructor.
+
+  - A generic assignment operator:
+
+    @code{.cpp}
+    public:
+        template <typename OtherLibObjT>
+        CommonTaco& operator=(const CommonTaco<OtherLibObjT> otherTaco) noexcept
+        {
+            _ThisBorrowedObject::operator=(otherTaco);
+            return *this;
+        }
+    @endcode
+
+    @note
+        Because this doesn't accept
+        <code>const CommonTaco<LibObjT>&</code>,
+        it's not a true assignment operator.
+
+  - An \c asConst() utility method to get a constant wrapper from a
+    constant or mutable wrapper:
+
+    @code{.cpp}
+    public:
+        CommonTaco<const bt_taco> asConst() const noexcept
+        {
+            return CommonTaco<const bt_taco> {*this};
+        }
+    @endcode
+
+  - Public methods.
+
+    Accessor names follow the general \bt_name
+    \link cpp-coding-style-naming C++ naming convention\endlink.
+    For example, what would be
+    \c bt_taco_get_sauce() becomes
+    \c bt2::CommonTaco::sauce().
+
+    Some tips:
+
+    - Access the wrapped libbabeltrace2 pointer with
+      bt2::BorrowedObject::libObjPtr().
+
+    - You can use \bt_p{LibObjT} to make some method return a constant
+      wrapper when \bt_p{LibObjT} is \c const and a mutable one
+      otherwise.
+
+      For example, a common pattern is to use specializations of an
+      internal structure template:
+
+      @code{.cpp}
+      namespace internal {
+
+      template <typename LibObjT>
+      struct CommonTacoSpec;
+
+      /* Functions specific to mutable tacos */
+      template <>
+      struct CommonTacoSpec<bt_taco> final
+      {
+          static bt_value *userAttributes(bt_taco * const libObjPtr) noexcept
+          {
+              return bt_taco_borrow_user_attributes(libObjPtr);
+          }
+      };
+
+      /* Functions specific to constant tacos */
+      template <>
+      struct CommonTacoSpec<const bt_taco> final
+      {
+          static const bt_value *userAttributes(const bt_taco * const libObjPtr) noexcept
+          {
+              return bt_taco_borrow_user_attributes_const(libObjPtr);
+          }
+      };
+
+      } /* namespace internal */
+      @endcode
+
+      And then, this \c bt2::CommonTaco method:
+
+      @code{.cpp}
+      public:
+          using UserAttributes = internal::DepUserAttrs<LibObjT>;
+
+          UserAttributes userAttributes() const noexcept
+          {
+              return UserAttributes {
+                  internal::CommonTacoSpec<LibObjT>::userAttributes(this->libObjPtr())
+              };
+          }
+      @endcode
+
+    - Add this to methods which only apply to the mutable context:
+
+      @code{.cpp}
+      static_assert(!std::is_const<LibObjT>::value,
+                    "Not available with `bt2::ConstTaco`.");
+      @endcode
+
+      This clearly indicates what's happening when trying to modify a
+      libbabeltrace2 object wrapped by \c bt2::ConstTaco.
+
+    - When you create a libbabeltrace2 object, validate the returned
+      raw pointer with bt2::internal::validateCreatedObjPtr().
+
+      This function throws bt2::MemoryError when the pointer is
+      <code>nullptr</code>.
+
+    - Translate any exception status enumerator to throwing a
+      corresponding C++ exception:
+
+      <table>
+        <tr>
+          <th>Status enumerator
+          <th>Exception class
+        <tr>
+          <td><code>*_ERROR</code>
+          <td>bt2::Error
+        <tr>
+          <td><code>*_MEMORY_ERROR</code>
+          <td>bt2::MemoryError
+        <tr>
+          <td><code>*_OVERFLOW_ERROR</code>
+          <td>bt2::OverflowError
+      </table>
+
+  - A \c shared() method to create a shared object:
+
+    @code{.cpp}
+    public:
+        Shared shared() const noexcept
+        {
+            return Shared::createWithRef(*this);
+        }
+    @endcode
+
+  All methods must be \c noexcept.
+
+- There are constant and mutable wrapper type aliases:
+
+  @code{.cpp}
+  using Taco = CommonTaco<bt_taco>;
+  using ConstTaco = CommonTaco<const bt_taco>;
+  @endcode
+
+- There's an internal type descriptor:
+
+  @code{.cpp}
+  namespace internal {
+
+  struct TacoTypeDescr
+  {
+      using Const = ConstTaco;
+      using NonConst = Taco;
+  };
+
+  template <>
+  struct TypeDescr<Taco> : public TacoTypeDescr
+  {
+  };
+
+  template <>
+  struct TypeDescr<ConstTaco> : public TacoTypeDescr
+  {
+  };
+
+  } /* namespace internal */
+  @endcode
+
+  This makes those types work with bt2::AddConst and bt2::RemoveConst.
+
+Also make sure to add a <code>%bt2::wrap()</code> overload in
+cpp-common/bt2/wrap.hpp.
+
+@section common-cpp-bt2-comp-cls-dev Component class development
+
+The cpp-common/bt2/component-class-dev.hpp header provides CRTP-based
+base classes and helper functions to facilitate the development of
+\bt_name component classes as native C++ classes.
+
+The header defines the
+bt2::UserSourceComponent, bt2::UserFilterComponent,
+bt2::UserSinkComponent, and bt2::UserMessageIterator base classes that
+dispatch libbabeltrace2 API callbacks to user-defined methods via
+internal bridging helpers.
+
+With this header, developing a C++ component class is similar to
+developing a Python component class.
+
+@subsection common-cpp-bt2-comp-cls-dev-usage Usage
+
+To create a C++ component class:
+
+-# Include:
+
+   @code{.cpp}
+   #include "cpp-common/bt2/component-class-dev.hpp"
+   @endcode
+
+-# Derive your component class by inheriting the appropriate base class
+   amongst bt2::UserSourceComponent, bt2::UserFilterComponent, or
+   bt2::UserSinkComponent.
+
+   The template parameters when inheriting are:
+
+   <table>
+     <tr>
+       <th>Parameter name
+       <th>Description
+     <tr>
+       <td>\bt_p{UserComponentT}
+       <td>Your C++ component class.
+     <tr>
+       <td>\bt_p{UserMessageIteratorT}
+       <td>
+         <strong>If you're defining a source or filter component
+         class</strong>: your C++ message iterator class, which must
+         inherit bt2::UserMessageIterator.
+     <tr>
+       <td>\bt_p{InitDataT}
+       <td>
+         The type of the initialization data of which your constructor
+         parameter points to.
+
+         In other words, if your custom initialization data type is
+         <code>QuartCuisse</code>, then your constructor must have a
+         <code>QuartCuisse *</code> parameter.
+     <tr>
+       <td>\bt_p{QueryDataT}
+       <td>
+         The type of the query data of which your query method
+         parameter points to.
+
+         In other words, if your custom query method data type is
+         <code>Crémeuse</code>, then your query method must have a
+         <code>Crémeuse *</code> parameter.
+   </table>
+
+   In your C++ component class, define:
+
+   - The static \c name member, of type <code>const char *</code>,
+     to provide the name of your component class.
+
+   - A constructor which must accept, in this order:
+
+     -# Depending on the base class your C++ component class inherits:
+
+        <dl>
+          <dt>bt2::UserSourceComponent
+          <dd>A bt2::SelfSourceComponent parameter, which it needs to
+              forward to the base
+              bt2::UserSourceComponent::UserSourceComponent().
+
+          <dt>bt2::UserFilterComponent
+          <dd>A bt2::SelfFilterComponent parameter, which it needs to
+              forward to the base
+              bt2::UserFilterComponent::UserFilterComponent().
+
+          <dt>bt2::UserSinkComponent
+          <dd>A bt2::SelfSinkComponent parameter, which it needs to
+              forward to the base
+              bt2::UserSinkComponent::UserSinkComponent().
+        </dl>
+
+     -# A bt2::ConstValue parameter (the initialization parameters).
+
+     -# An <code>InitDataT *</code> parameter
+        (the initialization method data).
+
+   - <strong>If you're defining a sink component class</strong>: the
+     message consuming method:
+
+     @code{.cpp}
+     bool _consume();
+     @endcode
+
+     This method returns \c true if the sink component still needs to
+     consume (translated to the
+     <code>BT_COMPONENT_CLASS_SINK_CONSUME_METHOD_STATUS_OK</code>
+     status),
+     or \c false if it's finished (translated to the
+     <code>BT_COMPONENT_CLASS_SINK_CONSUME_METHOD_STATUS_END</code>
+     status).
+
+   - <strong>All optional</strong>:
+
+     - The static \c description member, of type
+       <code>const char *</code>, to provide the description of
+       your component class.
+
+     - The static \c help member, of type
+       <code>const char *</code>, to provide the help text of your
+       component class.
+
+     - A static override of the base <code>_query()</code> method.
+
+       This method returns the query results directly.
+
+       The base implementation throws bt2::UnknownObject (unknown
+       queried object), which you're allowed to throw too
+       (translated to the
+       <code>BT_COMPONENT_CLASS_QUERY_METHOD_STATUS_UNKNOWN_OBJECT</code>
+       status).
+
+     - A static override of the base
+       <code>_getSupportedMipVersions()</code> method.
+
+       The base implementation adds the [0,&nbsp;0] range.
+
+     - <strong>If you're defining a source or filter component
+       class</strong>: an override of the base
+       <code>_outputPortConnected()</code> method.
+
+     - <strong>If you're defining a filter or sink component
+       class</strong>: an override of the base
+       <code>_inputPortConnected()</code> method.
+
+     - <strong>If you're defining a sink component
+       class</strong>: an override of the base
+       <code>_graphIsConfigured()</code> method.
+
+   Within the methods of your component class, you may call protected base
+   methods such as bt2::UserSourceComponent::_addOutputPort() and
+   bt2::UserSinkComponent::_createMessageIterator().
+
+   The wrapped self component pointer is always available with
+   bt2::UserComponent::_selfComp().
+
+   A dedicated logger is available as bt2::UserComponent::_mLogger.
+   Having it named \c _mLogger means you can use the
+   <code>BT_CPPLOG*()</code> macros within your methods, for example:
+
+   @code{.cpp}
+   BT_CPPLOGI("Initializing `{}` component with {} threads.",
+              this->_name(), threadCount);
+   @endcode
+
+   The tag of this logger includes a custom tag received at
+   bt2::UserComponent construction time as well as the component name.
+
+The bt2::UserSourceComponent and bt2::UserFilterComponent base classes
+expect a C++ message iterator class:
+
+-# Include:
+
+   @code{.cpp}
+   #include "cpp-common/bt2/component-class-dev.hpp"
+   @endcode
+
+-# Derive your message iterator class by inheriting
+   bt2::UserMessageIterator.
+
+   The template parameters when inheriting are:
+
+   <table>
+     <tr>
+       <th>Parameter name
+       <th>Description
+     <tr>
+       <td>\bt_p{UserMessageIteratorT}
+       <td>Your C++ message iterator class.
+     <tr>
+       <td>\bt_p{UserComponentT}
+       <td>Your C++ component class.
+   </table>
+
+   In your C++ message iterator class, define:
+
+   - A constructor which must accept
+     a bt2::SelfMessageIterator parameter, which it needs to
+     forward to the base
+     bt2::UserMessageIterator::UserMessageIterator().
+
+   - The “next” method:
+
+     @code{.cpp}
+     void _next(bt2::ConstMessageArray& messages);
+     @endcode
+
+     This method fills \bt_p{messages} with at most
+     <code>messages.capacity()</code> messages.
+
+     Leaving \bt_p{messages} empty means the end of iteration.
+
+     Note that the public <code>next()</code> method (called by the
+     bridge) implements the very common pattern of appending messages
+     into the output array, and, meanwhile:
+
+     <dl>
+       <dt>If it catches a bt2::TryAgain exception
+       <dd>
+         If the message array isn't empty, transform this into a success
+         (don't throw).
+
+         Otherwise rethrow.
+
+       <dt>If it catches an error
+       <dd>
+         If the message array isn't empty, transform this into a
+         success (don't throw), but save the error of the current
+         thread and the type of error to throw the next time the
+         bridge calls <code>next()</code>.
+
+         Otherwise rethrow.
+     </dl>
+
+   - <strong>All optional</strong>:
+
+     - An override of the base
+       <code>_canSeekBeginning()</code> method.
+
+       The base method returns <code>false</code>.
+
+     - An override of the base
+       <code>_seekBeginning()</code> method.
+
+     - An override of the base
+       <code>_canSeekNsFromOrigin()</code> method.
+
+       The base method returns <code>false</code>.
+
+     - An override of the base
+       <code>_seekNsFromOrigin()</code> method.
+
+   Within the methods of your message iterator class, you may call
+   protected base methods such as
+   bt2::UserMessageIterator::_createMessageIterator() and
+   bt2::UserMessageIterator::_createEventMessage().
+
+   A dedicated logger is available as
+   bt2::UserMessageIterator::_mLogger. Having it named \c _mLogger means
+   you can use the <code>BT_CPPLOG*()</code> macros within your
+   methods, for example:
+
+   @code{.cpp}
+   BT_CPPLOGE_APPEND_CAUSE_AND_THROW(bt2::Error,
+                                     "Failed to connect to the database @ `{}`.",
+                                     dbUri);
+   @endcode
+
+   The tag of this logger includes a custom tag received at
+   bt2::UserMessageIterator construction time as well as the tag of the
+   component logger.
+
+Your component or message iterator class methods may throw the following
+exceptions which get translated to corresponding libbabeltrace2 status
+enumerators:
+
+<table>
+  <tr>
+    <th>Exception class
+    <th>Status enumerator
+  <tr>
+    <td>bt2::Error
+    <td><code>*_ERROR</code>
+  <tr>
+    <td>bt2::MemoryError
+    <td><code>*_MEMORY_ERROR</code>
+  <tr>
+    <td>bt2::TryAgain
+    <td><code>*_AGAIN</code>
+  <tr>
+    <td>bt2::UnknownObject
+    <td><code>BT_COMPONENT_CLASS_QUERY_METHOD_STATUS_UNKNOWN_OBJECT</code>
+</table>
+
+Create a public component class object wrapper out of your C++
+component class with bt2::createComponentClass():
+
+@code{.cpp}
+auto compCls = bt2::createComponentClass<MySourceComponent>();
+@endcode
+
+Note that there are bt2::Graph::addComponent() overloads which accept
+your C++ component class directly.
+
+@subsection common-cpp-bt2-comp-cls-dev-internals Internals
+
+The <code>bt2::internal::create*CompCls()</code> function templates
+implement the glue between the C++ CRTP component class and the
+libbabeltrace2 API:
+
+-# A static assertion enforces that the C++ component class inherits
+   the correct CRTP base (bt2::UserSourceComponent,
+   bt2::UserFilterComponent, or bt2::UserSinkComponent), ensuring that
+   the user class provides the required methods.
+
+-# Calls the <code>bt2::internal::createLibMsgIterCls()</code> function
+   template to create a libbabeltrace2 message iterator class with its
+   initialization, finalization, “next”, and other callbacks set to
+   static methods of <code>bt2::internal::MsgIterClsBridge</code>.
+
+   This iterator class is passed to
+   <code>bt_component_class_*_create()</code> and then released.
+
+-# Calls the corresponding libbabeltrace2 API function
+   (<code>bt_component_class_source_create()</code>,
+   <code>bt_component_class_filter_create()</code>,
+   or <code>bt_component_class_sink_create()</code>)
+   with the user-defined name and, for a source/filter component class,
+   the message iterator class.
+
+-# Calls the <code>bt2::internal::setCompClsCommonProps()</code> function
+   template to set the libbabeltrace2 component class description/help
+   (if provided) and the initialization,
+   finalization, query, and
+   “get supported Message Interchange Protocol versions”
+   callbacks to static methods on
+   <code>bt2::internal::CompClsBridge</code> that dispatch to the user
+   CRTP methods.
+
+   Each libbabeltrace2 API call is verified with an assertion (or throws
+   on memory errors for description/help).
+
+-# Sets specific libbabeltrace2 component class callbacks, such as
+   “input port connected”, again to
+   static methods on
+   <code>bt2::internal::CompClsBridge</code>.
+
+All bridging methods (initialization, finalization, query, consume,
+“output port connected”, and the rest) live in the
+<code>bt2::internal::*CompClsBridge</code> class template helpers and
+dispatch to the member implementations of the user, handling errors and
+forwarding the bt2c::Logger context.
+
+@section common-cpp-bt2-plugin-dev Plugin development
+
+To develop a pure C++ plugin:
+
+-# Include:
+
+   @code{.cpp}
+   #include "cpp-common/bt2/plugin-dev.hpp"
+   @endcode
+
+-# See the “Plugin development” topic of the libbabeltrace2 C&nbsp;API
+   documentation to learn about the structure.
+
+   Ignore all the <code>BT_PLUGIN_*_COMPONENT_CLASS*()</code> macros.
+
+-# Use one of the
+   BT_CPP_PLUGIN_SOURCE_COMPONENT_CLASS(),
+   BT_CPP_PLUGIN_FILTER_COMPONENT_CLASS(), or
+   BT_CPP_PLUGIN_SINK_COMPONENT_CLASS() macros, passing your plugin name
+   and your C++ component class, to define your component class.
+
+   If your plugin name isn't a valid C&nbsp;identifier, use one of the
+   BT_CPP_PLUGIN_SOURCE_COMPONENT_CLASS_WITH_ID(),
+   BT_CPP_PLUGIN_FILTER_COMPONENT_CLASS_WITH_ID(), or
+   BT_CPP_PLUGIN_SINK_COMPONENT_CLASS_WITH_ID() macros.
+
+   Internally, those macros expand to public libbabeltrace2 plugin
+   development macros, using internal component and message iterator
+   class bridges to set callbacks which forward to your own methods.
 */

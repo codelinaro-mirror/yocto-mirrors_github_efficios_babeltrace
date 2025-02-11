@@ -65,7 +65,18 @@ $(DX_DOCDIR)/$(PACKAGE).tag: \
 	@top_srcdir@/src/cpp-common/bt2c/unicode-conv.hpp \
 	@top_srcdir@/src/cpp-common/bt2c/uuid.hpp \
 	@top_srcdir@/src/cpp-common/bt2c/val-req.hpp \
-	@top_srcdir@/src/cpp-common/bt2c/vector.hpp
+	@top_srcdir@/src/cpp-common/bt2c/vector.hpp \
+	@top_srcdir@/src/cpp-common/bt2/borrowed-object-iterator.hpp \
+	@top_srcdir@/src/cpp-common/bt2/borrowed-object-proxy.hpp \
+	@top_srcdir@/src/cpp-common/bt2/borrowed-object.hpp \
+	@top_srcdir@/src/cpp-common/bt2/component-class-dev.hpp \
+	@top_srcdir@/src/cpp-common/bt2/error.hpp \
+	@top_srcdir@/src/cpp-common/bt2/exc.hpp \
+	@top_srcdir@/src/cpp-common/bt2/internal/utils.hpp \
+	@top_srcdir@/src/cpp-common/bt2/message-array.hpp \
+	@top_srcdir@/src/cpp-common/bt2/optional-borrowed-object.hpp \
+	@top_srcdir@/src/cpp-common/bt2/shared-object.hpp \
+	@top_srcdir@/src/cpp-common/bt2/wrap.hpp
 
 MOSTLYCLEANFILES = $(DX_CLEANFILES)
 EXTRA_DIST = \

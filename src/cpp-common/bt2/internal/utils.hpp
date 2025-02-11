@@ -29,6 +29,21 @@ class CommonStream;
 
 namespace internal {
 
+/*!
+@brief
+    Throws #MemoryError if \bt_p{libOjbPtr} is <code>nullptr</code>.
+
+@ingroup common-cpp-bt2
+
+@code{.cpp}
+#include "cpp-common/bt2/internal/utils.hpp"
+@endcode
+
+To be used by internal \c bt2 code.
+
+@param[in] libOjbPtr
+    Pointer to check.
+*/
 template <typename LibObjPtrT>
 void validateCreatedObjPtr(const LibObjPtrT libOjbPtr)
 {

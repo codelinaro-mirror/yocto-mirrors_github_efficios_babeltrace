@@ -18,21 +18,38 @@
 
 namespace bt2 {
 
-/*
- * An iterator class to iterate an instance of a borrowed object
- * container of type `ContainerT`.
- *
- * `ContainerT` must implement:
- *
- *     // Returns the borrowed object at index `i`.
- *     SomeObject operator[](std::uint64_t i) const noexcept;
- */
+/*!
+@brief
+    Wrapper container iterator.
+
+@ingroup common-cpp-bt2
+
+@code{.cpp}
+#include "cpp-common/bt2/borrowed-object-iterator.hpp"
+@endcode
+
+An iterator class to iterate an instance of a wrapper
+container of type \bt_p{ContainerT}.
+
+@tparam ContainerT
+    @parblock
+    Type of the container of wrappers.
+
+    Must implement <code>operator[]()</code> to return
+    the borrowed object at the index \bt_p{i}:
+
+    @code{.cpp}
+    SomeObject operator[](std::uint64_t i) const noexcept;
+    @endcode
+    @endparblock
+*/
 template <typename ContainerT>
 class BorrowedObjectIterator final
 {
     friend ContainerT;
 
 public:
+    /// Type of contained wrappers.
     using Object = typename std::remove_reference<
         decltype(std::declval<ContainerT>()[std::declval<std::uint64_t>()])>::type;
 
@@ -43,12 +60,26 @@ private:
     }
 
 public:
+    /*!
+    @brief
+        Advances this iterator.
+
+    @returns
+        This iterator.
+    */
     BorrowedObjectIterator& operator++() noexcept
     {
         ++_mIdx;
         return *this;
     }
 
+    /*!
+    @brief
+        Advances this iterator.
+
+    @returns
+        This iterator.
+    */
     BorrowedObjectIterator operator++(int) noexcept
     {
         const auto tmp = *this;
@@ -57,22 +88,56 @@ public:
         return tmp;
     }
 
+    /*!
+    @brief
+        Equality operator.
+
+    @param[in] other
+        Other iterator to compare to.
+
+    @returns
+        \c true if this iterator is equal to \bt_p{other}.
+    */
     bool operator==(const BorrowedObjectIterator& other) const noexcept
     {
         BT_ASSERT_DBG(_mContainer.isSame(other._mContainer));
         return _mIdx == other._mIdx;
     }
 
+    /*!
+    @brief
+        Inequality operator.
+
+    @param[in] other
+        Other iterator to compare to.
+
+    @returns
+        \c true if this iterator is \em not equal to \bt_p{other}.
+    */
     bool operator!=(const BorrowedObjectIterator& other) const noexcept
     {
         return !(*this == other);
     }
 
+    /*!
+    @brief
+        Current wrapper access.
+
+    @returns
+        Current wrapper.
+    */
     Object operator*() const noexcept
     {
         return _mContainer[_mIdx];
     }
 
+    /*!
+    @brief
+        Current wrapper proxy access.
+
+    @returns
+        Proxy of current wrapper.
+    */
     BorrowedObjectProxy<Object> operator->() const noexcept
     {
         return BorrowedObjectProxy<Object> {(**this).libObjPtr()};

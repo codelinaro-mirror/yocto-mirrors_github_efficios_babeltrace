@@ -9,24 +9,60 @@
 
 namespace bt2 {
 
-/*
- * A proxy containing a valid borrowed object instance of `ObjT` to make
- * Something::operator->() work when only a libbabeltrace2 object
- * pointer is available.
- */
+/*!
+@brief
+    Wrapper proxy.
+
+@ingroup common-cpp-bt2
+
+@code{.cpp}
+#include "cpp-common/bt2/borrowed-object-proxy.hpp"
+@endcode
+
+A proxy containing a valid wrapper instance of \bt_p{ObjT} to
+make <code>Something::operator-&gt;()</code> work when only a
+libbabeltrace2 object pointer is available.
+
+@tparam ObjT
+    Type of contained wrapper.
+*/
 template <typename ObjT>
 class BorrowedObjectProxy final
 {
 public:
+    /*!
+    @brief
+        Builds a wrapper proxy containing a wrapper of \bt_p{libObjPtr}.
+
+    @param[in] libObjPtr
+        Raw libbabeltrace2 object pointer to be wrapped by the
+        contained wrapper.
+
+    @bt_pre_not_null{libObjPtr}
+    */
     explicit BorrowedObjectProxy(typename ObjT::LibObjPtr libObjPtr) noexcept : _mObj {libObjPtr}
     {
     }
 
+    /*!
+    @brief
+        Returns the contained wrapper.
+
+    @returns
+        Contained wrapper.
+    */
     ObjT *operator->() noexcept
     {
         return &_mObj;
     }
 
+    /*!
+    @brief
+        Returns the contained wrapper.
+
+    @returns
+        Contained wrapper.
+    */
     const ObjT *operator->() const noexcept
     {
         return &_mObj;

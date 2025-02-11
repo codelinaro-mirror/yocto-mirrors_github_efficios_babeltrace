@@ -21,17 +21,42 @@
 #include "private-query-executor.hpp"
 #include "self-component-port.hpp"
 
+/*!
+@file
+
+@brief
+    C++ component class development.
+
+@ingroup common-cpp-bt2
+
+@code{.cpp}
+#include "cpp-common/bt2/component-class-dev.hpp"
+@endcode
+
+See \ref common-cpp-bt2-comp-cls-dev.
+*/
+
 namespace bt2 {
 
 template <typename UserMessageIteratorT, typename UserComponentT>
 class UserMessageIterator;
 
-/*
- * Base class of any user component.
- *
- * See the specific `bt2::UserSourceComponent`,
- * `bt2::UserFilterComponent`, and `bt2::UserSinkComponent`.
- */
+/*!
+@brief
+    Base class of any user component class.
+
+See the specific #UserSourceComponent,
+#UserFilterComponent, and #UserSinkComponent.
+
+@tparam SelfCompT
+    Self component wrapper type.
+@tparam InitDataT
+    Type of the initialization data of which your constructor
+    parameter points to.
+@tparam QueryDataT
+    Type of the query data of which your query method
+    parameter points to.
+*/
 template <typename SelfCompT, typename InitDataT, typename QueryDataT>
 class UserComponent
 {
@@ -40,79 +65,157 @@ class UserComponent
     friend class UserMessageIterator;
 
 public:
+    /*!
+    Type of the initialization data of which your constructor
+    parameter points to.
+    */
     using InitData = InitDataT;
+
+    /*!
+    Type of the query data of which your query method
+    parameter points to.
+    */
     using QueryData = QueryDataT;
 
+    /// Default description (overridable).
     static constexpr auto description = nullptr;
+
+    /// Default help text (overridable).
     static constexpr auto help = nullptr;
 
 protected:
+    /*!
+    @brief
+        Base constructor.
+
+    @param[in] selfComp
+        Self component wrapper.
+    @param[in] logTag
+        Tag prefix of the provided logger.
+    */
     explicit UserComponent(const SelfCompT selfComp, const std::string& logTag) :
         _mLogger {selfComp, fmt::format("{}/[{}]", logTag, selfComp.name())}, _mSelfComp {selfComp}
     {
     }
 
+    /*!
+    @brief
+        Name of this component.
+
+    @returns
+        Name of this component.
+    */
     bt2c::CStringView _name() const noexcept
     {
         return _mSelfComp.name();
     }
 
+    /*!
+    @brief
+        Logging level of this component.
+
+    @returns
+        Logging level of this component.
+    */
     LoggingLevel _loggingLevel() const noexcept
     {
         return _mSelfComp.loggingLevel();
     }
 
+    /*!
+    @brief
+        Effective MIP version of the trace processing
+        graph which contains this component.
+
+    @returns
+        Effective MIP version of the trace processing
+        graph which contains this component.
+    */
     std::uint64_t _graphMipVersion() const noexcept
     {
         return _mSelfComp.graphMipVersion();
     }
 
+    /*!
+    @brief
+        Creates a trace class from this component.
+
+    May throw #MemoryError.
+
+    @returns
+        New, default trace class.
+    */
     TraceClass::Shared _createTraceClass() const
     {
         return _mSelfComp.createTraceClass();
     }
 
-    ClockClass::Shared createClockClass() const
+    /*!
+    @brief
+        Creates a clock class from this component.
+
+    May throw #MemoryError.
+
+    @returns
+        New, default clock class.
+    */
+    ClockClass::Shared _createClockClass() const
     {
         return _mSelfComp.createClockClass();
     }
 
+    /*!
+    @brief
+        Corresponding self component wrapper.
+
+    @returns
+        Corresponding self component wrapper.
+    */
     SelfCompT _selfComp() noexcept
     {
         return _mSelfComp;
     }
 
+    /*!
+    @brief
+        Dedicated logger.
+
+    Because it's named <code>%_mLogger</code>,
+    you can use the <code>BT_CPPLOG*()</code> macros within your
+    methods, for example:
+
+    @code{.cpp}
+    BT_CPPLOGI("Initializing `{}` component with {} threads.",
+               this->_name(), threadCount);
+    @endcode
+    */
     bt2c::Logger _mLogger;
 
 private:
     SelfCompT _mSelfComp;
 };
 
-/*
- * Base class of a user source component `UserComponentT` (CRTP).
- *
- * `UserComponentT` must define a static member `name` of type
- * `const char *` to provide the name of the component class.
- *
- * `UserComponentT` may define the static members `description` and/or
- * `help` of type `const char *` to provide the description and/or help
- * of the component class.
- *
- * UserComponentT::UserComponentT() must accept, in this order:
- *
- *  1. A `bt2::SelfSourceComponent` parameter, which it needs to forward
- *     to bt2::UserSourceComponent::UserSourceComponent().
- *
- *  2. A `bt2::ConstValue` parameter (the initialization parameters).
- *
- *  3. An `InitDataT *` parameter (the initialization method data).
- *
- * `UserMessageIteratorT`, the message iterator class to use, must inherit
- * `UserMessageIterator`.
- *
- * UserComponentT::_query() receives a query method data pointer of type
- * `QueryDataT *` as its last parameter.
- */
+/*!
+@brief
+    Base class of a user source component class
+    \bt_p{UserComponentT} (CRTP).
+
+See the
+\ref common-cpp-bt2-comp-cls-dev-usage "C++ component class development usage"
+to learn about the requirements of this base class.
+
+@tparam UserComponentT
+    Your component class (CRTP).
+@tparam UserMessageIteratorT
+    Your message iterator class.
+    which must inherit #UserMessageIterator.
+@tparam InitDataT
+    Type of the initialization data of which your constructor
+    parameter points to.
+@tparam QueryDataT
+    Type of the query data of which your query method
+    parameter points to.
+*/
 template <typename UserComponentT, typename UserMessageIteratorT, typename InitDataT = void,
           typename QueryDataT = void>
 class UserSourceComponent : public UserComponent<SelfSourceComponent, InitDataT, QueryDataT>
@@ -122,17 +225,35 @@ class UserSourceComponent : public UserComponent<SelfSourceComponent, InitDataT,
                   "`UserMessageIteratorT` inherits `UserMessageIterator`");
 
 public:
+    /// Your message iterator class.
     using MessageIterator = UserMessageIteratorT;
 
 protected:
+    /// Output port container type.
     using _OutputPorts = SelfSourceComponent::OutputPorts;
 
+    /*!
+    @brief
+        Protected constructor.
+
+    @param[in] selfComp
+        Self source component wrapper.
+    @param[in] logTag
+        Tag prefix of the provided logger.
+    */
     explicit UserSourceComponent(const SelfSourceComponent selfComp, const std::string& logTag) :
         UserComponent<SelfSourceComponent, InitDataT, QueryDataT> {selfComp, logTag}
     {
     }
 
 public:
+    /*!
+    @brief
+        Type enumerator of this component class.
+
+    @returns
+        Type enumerator of this component class.
+    */
     static constexpr ComponentClassType type() noexcept
     {
         return ComponentClassType::Source;
@@ -160,67 +281,163 @@ public:
     }
 
 protected:
-    /* Overloadable */
-    static Value::Shared _query(SelfComponentClass, PrivateQueryExecutor, bt2c::CStringView,
-                                ConstValue, QueryDataT *)
+    /*!
+    @brief
+        Override to implement the query method of this component class.
+
+    This default version throws #UnknownObject.
+
+    Yours may throw:
+
+    - #Error
+    - #MemoryError
+    - #TryAgain
+    - #UnknownObject
+
+    @param[in] selfCompCls
+        Self component class wrapper.
+    @param[in] privQueryExec
+        Private query executor.
+    @param[in] object
+        Query object.
+    @param[in] params
+        Query parameters.
+    @param[in] queryData
+        Custom query data.
+
+    @returns
+        Query results.
+    */
+    static Value::Shared _query(SelfComponentClass selfCompCls __attribute__((unused)),
+                                PrivateQueryExecutor privQueryExec __attribute__((unused)),
+                                bt2c::CStringView object __attribute__((unused)),
+                                ConstValue params __attribute__((unused)),
+                                QueryDataT *queryData __attribute__((unused)))
     {
         throw UnknownObject {};
     }
 
-    /* Overloadable */
-    static void _getSupportedMipVersions(SelfComponentClass, ConstMapValue, LoggingLevel,
+    /*!
+    @brief
+        Override to implement the
+        “get supported Message Interchange Protocol versions”
+        method of this component class.
+
+    This default version adds the [0,&nbsp;0] range to \bt_p{ranges}.
+
+    Yours may throw:
+
+    - #Error
+    - #MemoryError
+
+    @param[in] selfCompCls
+        Self component class wrapper.
+    @param[in] params
+        Initialization parameters.
+    @param[in] loggingLevel
+        Logging level.
+    @param[in] ranges
+        Supported version ranges.
+    */
+    static void _getSupportedMipVersions(SelfComponentClass selfCompCls __attribute__((unused)),
+                                         ConstMapValue params __attribute__((unused)),
+                                         LoggingLevel loggingLevel __attribute__((unused)),
                                          const UnsignedIntegerRangeSet ranges)
     {
         ranges.addRange(0, 0);
     }
 
-    /* Overloadable */
-    void _outputPortConnected(SelfComponentOutputPort, ConstInputPort)
+    /*!
+    @brief
+        Override to implement the “output port connected”
+        method of this component class.
+
+    Yours may throw:
+
+    - #Error
+    - #MemoryError
+
+    @param[in] outputPort
+        Output port.
+    @param[in] inputPort
+        Input port.
+    */
+    void _outputPortConnected(SelfComponentOutputPort outputPort __attribute__((unused)),
+                              ConstInputPort inputPort __attribute__((unused)))
     {
     }
 
+    /*!
+    @brief
+        Forwards to
+        <code>bt_self_component_source_add_output_port()</code>
+        for this component.
+
+    @param[in] name
+        Output port name.
+    @param[in] data
+        Custom port data.
+
+    @returns
+        Created port.
+    */
     template <typename DataT>
     _OutputPorts::Port _addOutputPort(const bt2c::CStringView name, DataT& data)
     {
         return this->_selfComp().addOutputPort(name, data);
     }
 
+    /*!
+    @brief
+        Forwards to
+        <code>bt_self_component_source_add_output_port()</code>
+        for this component.
+
+    @param[in] name
+        Output port name.
+
+    @returns
+        Created port.
+    */
     _OutputPorts::Port _addOutputPort(const bt2c::CStringView name)
     {
         return this->_selfComp().addOutputPort(name);
     }
 
+    /*!
+    @brief
+        Output ports.
+
+    @returns
+        Output ports.
+    */
     _OutputPorts _outputPorts() noexcept
     {
         return this->_selfComp().outputPorts();
     }
 };
 
-/*
- * Base class of a user filter component `UserComponentT` (CRTP).
- *
- * `UserComponentT` must define a static member `name` of type
- * `const char *` to provide the name of the component class.
- *
- * `UserComponentT` may define the static members `description` and/or
- * `help` of type `const char *` to provide the description and/or help
- * of the component class.
- *
- * UserComponentT::UserComponentT() must accept, in this order:
- *
- *  1. A `bt2::SelfFilterComponent` parameter, which it needs to forward
- *     to bt2::UserFilterComponent::UserFilterComponent().
- *
- *  2. A `bt2::ConstValue` parameter (the initialization parameters).
- *
- *  3. An `InitDataT *` parameter (the initialization method data).
- *
- * `UserMessageIteratorT`, the message iterator class to use, must inherit
- * `UserMessageIterator`.
- *
- * UserComponentT::_query() receives a query method data pointer of type
- * `QueryDataT *` as its last parameter.
- */
+/*!
+@brief
+    Base class of a user filter component class
+    \bt_p{UserComponentT} (CRTP).
+
+See the
+\ref common-cpp-bt2-comp-cls-dev-usage "C++ component class development usage"
+to learn about the requirements of this base class.
+
+@tparam UserComponentT
+    Your component class (CRTP).
+@tparam UserMessageIteratorT
+    Your message iterator class.
+    which must inherit #UserMessageIterator.
+@tparam InitDataT
+    Type of the initialization data of which your constructor
+    parameter points to.
+@tparam QueryDataT
+    Type of the query data of which your query method
+    parameter points to.
+*/
 template <typename UserComponentT, typename UserMessageIteratorT, typename InitDataT = void,
           typename QueryDataT = void>
 class UserFilterComponent : public UserComponent<SelfFilterComponent, InitDataT, QueryDataT>
@@ -230,18 +447,38 @@ class UserFilterComponent : public UserComponent<SelfFilterComponent, InitDataT,
                   "`UserMessageIteratorT` inherits `UserMessageIterator`");
 
 public:
+    /// Your message iterator class.
     using MessageIterator = UserMessageIteratorT;
 
 protected:
+    /// Input port container type.
     using _InputPorts = SelfFilterComponent::InputPorts;
+
+    /// Output port container type.
     using _OutputPorts = SelfFilterComponent::OutputPorts;
 
+    /*!
+    @brief
+        Protected constructor.
+
+    @param[in] selfComp
+        Self filter component wrapper.
+    @param[in] logTag
+        Tag prefix of the provided logger.
+    */
     explicit UserFilterComponent(const SelfFilterComponent selfComp, const std::string& logTag) :
         UserComponent<SelfFilterComponent, InitDataT, QueryDataT> {selfComp, logTag}
     {
     }
 
 public:
+    /*!
+    @brief
+        Type enumerator of this component class.
+
+    @returns
+        Type enumerator of this component class.
+    */
     static constexpr ComponentClassType type() noexcept
     {
         return ComponentClassType::Filter;
@@ -275,105 +512,258 @@ public:
     }
 
 protected:
-    /* Overloadable */
-    static Value::Shared _query(SelfComponentClass, PrivateQueryExecutor, bt2c::CStringView,
-                                ConstValue, QueryDataT *)
+    /*!
+    @brief
+        Override to implement the query method of this component class.
+
+    This default version throws #UnknownObject.
+
+    Yours may throw:
+
+    - #Error
+    - #MemoryError
+    - #TryAgain
+    - #UnknownObject
+
+    @param[in] selfCompCls
+        Self component class wrapper.
+    @param[in] privQueryExec
+        Private query executor.
+    @param[in] object
+        Query object.
+    @param[in] params
+        Query parameters.
+    @param[in] queryData
+        Custom query data.
+
+    @returns
+        Query results.
+    */
+    static Value::Shared _query(SelfComponentClass selfCompCls __attribute__((unused)),
+                                PrivateQueryExecutor privQueryExec __attribute__((unused)),
+                                bt2c::CStringView object __attribute__((unused)),
+                                ConstValue params __attribute__((unused)),
+                                QueryDataT *queryData __attribute__((unused)))
     {
         throw UnknownObject {};
     }
 
-    /* Overloadable */
-    static void _getSupportedMipVersions(SelfComponentClass, ConstMapValue, LoggingLevel,
+    /*!
+    @brief
+        Override to implement the
+        “get supported Message Interchange Protocol versions”
+        method of this component class.
+
+    This default version adds the [0,&nbsp;0] range to \bt_p{ranges}.
+
+    Yours may throw:
+
+    - #Error
+    - #MemoryError
+
+    @param[in] selfCompCls
+        Self component class wrapper.
+    @param[in] params
+        Initialization parameters.
+    @param[in] loggingLevel
+        Logging level.
+    @param[in] ranges
+        Supported version ranges.
+    */
+    static void _getSupportedMipVersions(SelfComponentClass selfCompCls __attribute__((unused)),
+                                         ConstMapValue params __attribute__((unused)),
+                                         LoggingLevel loggingLevel __attribute__((unused)),
                                          const UnsignedIntegerRangeSet ranges)
     {
         ranges.addRange(0, 0);
     }
 
-    /* Overloadable */
-    void _inputPortConnected(SelfComponentInputPort, ConstOutputPort)
+    /*!
+    @brief
+        Override to implement the “input port connected”
+        method of this component class.
+
+    Yours may throw:
+
+    - #Error
+    - #MemoryError
+
+    @param[in] inputPort
+        Input port.
+    @param[in] outputPort
+        Output port.
+    */
+    void _inputPortConnected(SelfComponentInputPort inputPort __attribute__((unused)),
+                             ConstOutputPort outputPort __attribute__((unused)))
     {
     }
 
-    /* Overloadable */
-    void _outputPortConnected(SelfComponentOutputPort, ConstInputPort)
+    /*!
+    @brief
+        Override to implement the “output port connected”
+        method of this component class.
+
+    Yours may throw:
+
+    - #Error
+    - #MemoryError
+
+    @param[in] outputPort
+        Output port.
+    @param[in] inputPort
+        Input port.
+    */
+    void _outputPortConnected(SelfComponentOutputPort outputPort __attribute__((unused)),
+                              ConstInputPort inputPort __attribute__((unused)))
     {
     }
 
+    /*!
+    @brief
+        Forwards to
+        <code>bt_self_component_filter_add_intput_port()</code>
+        for this component.
+
+    @param[in] name
+        Output port name.
+    @param[in] data
+        Custom port data.
+
+    @returns
+        Created port.
+    */
     template <typename DataT>
     _OutputPorts::Port _addInputPort(const bt2c::CStringView name, DataT& data)
     {
         return this->_selfComp().addInputPort(name, data);
     }
 
+    /*!
+    @brief
+        Forwards to
+        <code>bt_self_component_filter_add_intput_port()</code>
+        for this component.
+
+    @param[in] name
+        Output port name.
+
+    @returns
+        Created port.
+    */
     _InputPorts::Port _addInputPort(const bt2c::CStringView name)
     {
         return this->_selfComp().addInputPort(name);
     }
 
+    /*!
+    @brief
+        Input ports.
+
+    @returns
+        Input ports.
+    */
     _InputPorts _inputPorts() noexcept
     {
         return this->_selfComp().inputPorts();
     }
 
+    /*!
+    @brief
+        Forwards to
+        <code>bt_self_component_filter_add_output_port()</code>
+        for this component.
+
+    @param[in] name
+        Output port name.
+    @param[in] data
+        Custom port data.
+
+    @returns
+        Created port.
+    */
     template <typename DataT>
     _OutputPorts::Port _addOutputPort(const bt2c::CStringView name, DataT& data)
     {
         return this->_selfComp().addOutputPort(name, data);
     }
 
+    /*!
+    @brief
+        Forwards to
+        <code>bt_self_component_filter_add_output_port()</code>
+        for this component.
+
+    @param[in] name
+        Output port name.
+
+    @returns
+        Created port.
+    */
     _OutputPorts::Port _addOutputPort(const bt2c::CStringView name)
     {
         return this->_selfComp().addOutputPort(name);
     }
 
+    /*!
+    @brief
+        Output ports.
+
+    @returns
+        Output ports.
+    */
     _OutputPorts _outputPorts() noexcept
     {
         return this->_selfComp().outputPorts();
     }
 };
 
-/*
- * Base class of a user sink component `UserComponentT` (CRTP).
- *
- * `UserComponentT` must define a static member `name` of type
- * `const char *` to provide the name of the component class.
- *
- * `UserComponentT` may define the static members `description` and/or
- * `help` of type `const char *` to provide the description and/or help
- * of the component class.
- *
- * UserComponentT::UserComponentT() must accept, in this order:
- *
- *  1. A `bt2::SelfSinkComponent` parameter, which it needs to forward
- *     to bt2::UserSinkComponent::UserSinkComponent().
- *
- *  2. A `bt2::ConstValue` parameter (the initialization parameters).
- *
- *  3. An `InitDataT *` parameter (the initialization method data).
- *
- * `UserComponentT` must implement:
- *
- *     bool _consume();
- *
- * This method returns `true` if the sink component still needs to
- * consume, or `false` if it's finished.
- *
- * UserComponentT::_query() receives a query method data pointer of type
- * `QueryDataT *` as its last parameter.
+/*!
+@brief
+    Base class of a user sink component class
+    \bt_p{UserComponentT} (CRTP).
 
- */
+See the
+\ref common-cpp-bt2-comp-cls-dev-usage "C++ component class development usage"
+to learn about the requirements of this base class.
+
+@tparam UserComponentT
+    Your component class (CRTP).
+@tparam InitDataT
+    Type of the initialization data of which your constructor
+    parameter points to.
+@tparam QueryDataT
+    Type of the query data of which your query method
+    parameter points to.
+*/
 template <typename UserComponentT, typename InitDataT = void, typename QueryDataT = void>
 class UserSinkComponent : public UserComponent<SelfSinkComponent, InitDataT, QueryDataT>
 {
 protected:
+    /// Input port container type.
     using _InputPorts = SelfSinkComponent::InputPorts;
 
+    /*!
+    @brief
+        Protected constructor.
+
+    @param[in] selfComp
+        Self sink component wrapper.
+    @param[in] logTag
+        Tag prefix of the provided logger.
+    */
     explicit UserSinkComponent(const SelfSinkComponent selfComp, const std::string& logTag) :
         UserComponent<SelfSinkComponent, InitDataT, QueryDataT> {selfComp, logTag}
     {
     }
 
 public:
+    /*!
+    @brief
+        Type enumerator of this component class.
+
+    @returns
+        Type enumerator of this component class.
+    */
     static constexpr ComponentClassType type() noexcept
     {
         return ComponentClassType::Sink;
@@ -411,85 +801,192 @@ public:
     }
 
 protected:
-    /* Overloadable */
-    static Value::Shared _query(SelfComponentClass, PrivateQueryExecutor, bt2c::CStringView,
-                                ConstValue, QueryDataT *)
+    /*!
+    @brief
+        Override to implement the query method of this component class.
+
+    This default version throws #UnknownObject.
+
+    Yours may throw:
+
+    - #Error
+    - #MemoryError
+    - #TryAgain
+    - #UnknownObject
+
+    @param[in] selfCompCls
+        Self component class wrapper.
+    @param[in] privQueryExec
+        Private query executor.
+    @param[in] object
+        Query object.
+    @param[in] params
+        Query parameters.
+    @param[in] queryData
+        Custom query data.
+
+    @returns
+        Query results.
+    */
+    static Value::Shared _query(SelfComponentClass selfCompCls __attribute__((unused)),
+                                PrivateQueryExecutor privQueryExec __attribute__((unused)),
+                                bt2c::CStringView object __attribute__((unused)),
+                                ConstValue params __attribute__((unused)),
+                                QueryDataT *queryData __attribute__((unused)))
     {
         throw UnknownObject {};
     }
 
-    /* Overloadable */
-    static void _getSupportedMipVersions(SelfComponentClass, ConstMapValue, LoggingLevel,
+    /*!
+    @brief
+        Override to implement the
+        “get supported Message Interchange Protocol versions”
+        method of this component class.
+
+    This default version adds the [0,&nbsp;0] range to \bt_p{ranges}.
+
+    Yours may throw:
+
+    - #Error
+    - #MemoryError
+
+    @param[in] selfCompCls
+        Self component class wrapper.
+    @param[in] params
+        Initialization parameters.
+    @param[in] loggingLevel
+        Logging level.
+    @param[in] ranges
+        Supported version ranges.
+    */
+    static void _getSupportedMipVersions(SelfComponentClass selfCompCls __attribute__((unused)),
+                                         ConstMapValue params __attribute__((unused)),
+                                         LoggingLevel loggingLevel __attribute__((unused)),
                                          const UnsignedIntegerRangeSet ranges)
     {
         ranges.addRange(0, 0);
     }
 
-    /* Overloadable */
+    /*!
+    @brief
+        Override to implement the “graph is configured”
+        method of this component class.
+
+    You may now throw anything.
+    */
     void _graphIsConfigured()
     {
     }
 
-    /* Overloadable */
-    void _inputPortConnected(SelfComponentInputPort, ConstOutputPort)
+    /*!
+    @brief
+        Override to implement the “input port connected”
+        method of this component class.
+
+    Yours may throw:
+
+    - #Error
+    - #MemoryError
+
+    @param[in] inputPort
+        Input port.
+    @param[in] outputPort
+        Output port.
+    */
+    void _inputPortConnected(SelfComponentInputPort inputPort __attribute__((unused)),
+                             ConstOutputPort outputPort __attribute__((unused)))
     {
     }
 
+    /*!
+    @brief
+        Creates a message iterator on the input port \bt_p{port}
+        from this component.
+
+    @param[in] port
+        Input port on which to create the message iterator.
+
+    @returns
+        Created message iterator.
+    */
     MessageIterator::Shared _createMessageIterator(const _InputPorts::Port port)
     {
         return this->_selfComp().createMessageIterator(port);
     }
 
+    /*!
+    @brief
+        Forwards to
+        <code>bt_self_component_sink_add_intput_port()</code>
+        for this component.
+
+    @param[in] name
+        Output port name.
+    @param[in] data
+        Custom port data.
+
+    @returns
+        Created port.
+    */
     template <typename DataT>
     _InputPorts::Port _addInputPort(const bt2c::CStringView name, DataT& data)
     {
         return this->_selfComp().addInputPort(name, data);
     }
 
+    /*!
+    @brief
+        Forwards to
+        <code>bt_self_component_filter_add_intput_port()</code>
+        for this component.
+
+    @param[in] name
+        Output port name.
+
+    @returns
+        Created port.
+    */
     _InputPorts::Port _addInputPort(const bt2c::CStringView name)
     {
         return this->_selfComp().addInputPort(name);
     }
 
+    /*!
+    @brief
+        Input ports.
+
+    @returns
+        Input ports.
+    */
     _InputPorts _inputPorts() noexcept
     {
         return this->_selfComp().inputPorts();
     }
 };
 
-/*
- * Base class of a user message iterator `UserMessageIteratorT` (CRTP)
- * of which the parent user component class is `UserComponentT`.
- *
- * `UserMessageIteratorT::UserMessageIteratorT()` must accept a
- * `bt2::SelfMessageIterator` parameter, which it needs to forward to
- * bt2::UserMessageIterator::UserMessageIterator().
- *
- * The public next() method below (called by the bridge) implements the
- * very common pattern of appending messages into the output array, and,
- * meanwhile:
- *
- * If it catches a `bt2::TryAgain` exception:
- *     If the message array isn't empty, transform this into a success
- *     (don't throw).
- *
- *     Otherwise rethrow.
- *
- * If it catches an error:
- *     If the message array isn't empty, transform this into a success
- *     (don't throw), but save the error of the current thread and the
- *     type of error to throw the next time the user calls next().
- *
- *     Otherwise rethrow.
- *
- * `UserMessageIteratorT` must implement:
- *
- *     void _next(bt2::ConstMessageArray& messages);
- *
- * This method fills `messages` with at most `messages.capacity()`
- * messages and may throw `bt2::TryAgain` or a valid error whenever.
- * Leaving an empty `messages` means the end of iteration.
- */
+/*!
+@brief
+    Base class of a user message iterator class
+    \bt_p{UserMessageIteratorT} (CRTP).
+
+See the
+\ref common-cpp-bt2-comp-cls-dev-usage "C++ component class development usage"
+to learn about the requirements of this base class.
+
+@tparam UserMessageIteratorT
+    Your message iterator class (CRTP).
+@tparam UserComponentT
+    Your component class.
+
+@note
+    @parblock
+    The individual <code>_create_*()</code> methods of this class aren't
+    documented yet, but they're straightforward to understand if you
+    already know the libbabeltrace2 C&nbsp;API.
+
+    Please see <code>%src/cpp-common/bt2/component-class-dev.hpp</code>.
+    @endparblock
+*/
 template <typename UserMessageIteratorT, typename UserComponentT>
 class UserMessageIterator
 {
@@ -509,6 +1006,15 @@ private:
     BT_DIAG_POP
 
 protected:
+    /*!
+    @brief
+        Protected constructor.
+
+    @param[in] selfMsgIter
+        Self message iterator wrapper.
+    @param[in] logTagSuffix
+        Tag suffix of the provided logger.
+    */
     explicit UserMessageIterator(const SelfMessageIterator selfMsgIter,
                                  const std::string& logTagSuffix) :
         _mSelfMsgIter {selfMsgIter},
@@ -604,25 +1110,83 @@ public:
     }
 
 protected:
-    /* Overloadable */
+    /*!
+    @brief
+        Override to implement the
+        “can seek beginning?” method of this message iterator class.
+
+    This default version returns <code>false</code>.
+
+    Yours may throw:
+
+    - #Error
+    - #MemoryError
+    - #TryAgain
+
+    @returns
+        \c true if this message iterator can seek its beginning.
+    */
     bool _canSeekBeginning() noexcept
     {
         return false;
     }
 
-    /* Overloadable */
+    /*!
+    @brief
+        Override to implement the
+        “seek beginning” method of this message iterator class.
+
+    You may throw:
+
+    - #Error
+    - #MemoryError
+    - #TryAgain
+    */
     void _seekBeginning() noexcept
     {
     }
 
-    /* Overloadable */
-    bool _canSeekNsFromOrigin(std::int64_t) noexcept
+    /*!
+    @brief
+        Override to implement the
+        “can seek ns from origin?” method of
+        this message iterator class.
+
+    This default version returns <code>false</code>.
+
+    Yours may throw:
+
+    - #Error
+    - #MemoryError
+    - #TryAgain
+
+    @param[in] nsFromOrigin
+        Nanoseconds from clock origin.
+
+    @returns
+        \c true if this message iterator can seek
+        \bt_p{nsFromOrigin}&nbsp;ns from its clock origin.
+    */
+    bool _canSeekNsFromOrigin(std::int64_t nsFromOrigin __attribute__((unused))) noexcept
     {
         return false;
     }
 
-    /* Overloadable */
-    void _seekNsFromOrigin(std::int64_t) noexcept
+    /*!
+    @brief
+        Override to implement the
+        “seek ns from origin” method of this message iterator class.
+
+    You may throw:
+
+    - #Error
+    - #MemoryError
+    - #TryAgain
+
+    @param[in] nsFromOrigin
+        Nanoseconds from clock origin.
+    */
+    void _seekNsFromOrigin(std::int64_t nsFromOrigin __attribute__((unused))) noexcept
     {
     }
 
@@ -725,16 +1289,38 @@ protected:
         return _mSelfMsgIter.createMessageIteratorInactivityMessage(clockClass, clockSnapshotValue);
     }
 
+    /*!
+    @brief
+        Component (an instance of your own C++ component class) of
+        this message iterator.
+
+    @returns
+        Component of this message iterator.
+    */
     UserComponentT& _component() noexcept
     {
         return _mSelfMsgIter.component().template data<UserComponentT>();
     }
 
+    /*!
+    @brief
+        Output port.
+
+    @returns
+        Output port.
+    */
     SelfComponentOutputPort _port() noexcept
     {
         return _mSelfMsgIter.port();
     }
 
+    /*!
+    @brief
+        Whether or not this message iterator is interrupted.
+
+    @returns
+        \c true if this message iterator is interrupted.
+    */
     bool _isInterrupted() const noexcept
     {
         return _mSelfMsgIter.isInterrupted();
@@ -775,6 +1361,20 @@ private:
     std::unique_ptr<const bt_error, LibErrorDeleter> _mSavedLibError;
 
 protected:
+    /*!
+    @brief
+        Dedicated logger.
+
+    Because it's named <code>%_mLogger</code>,
+    you can use the <code>BT_CPPLOG*()</code> macros within your
+    methods, for example:
+
+    @code{.cpp}
+    BT_CPPLOGE_APPEND_CAUSE_AND_THROW(bt2::Error,
+                                      "Failed to connect to the database @ `{}`.",
+                                      dbUri);
+    @endcode
+    */
     bt2c::Logger _mLogger;
 };
 
@@ -990,6 +1590,17 @@ bt_component_class_sink *createSinkCompCls()
 
 } /* namespace internal */
 
+/*!
+@brief
+    Creates a libbabeltrace2 source component class
+    from the C++ source component class \bt_p{UserComponentT}.
+
+@tparam UserComponentT
+    Source component class which inherits bt2::UserSourceComponent.
+
+@returns
+    Source component class wrapper.
+*/
 template <typename UserComponentT>
 typename std::enable_if<UserComponentT::type() == ComponentClassType::Source,
                         SourceComponentClass::Shared>::type
@@ -999,6 +1610,17 @@ createComponentClass()
         internal::createSourceCompCls<UserComponentT>());
 }
 
+/*!
+@brief
+    Creates a libbabeltrace2 filter component class
+    from the C++ filter component class \bt_p{UserComponentT}.
+
+@tparam UserComponentT
+    Filter component class which inherits bt2::UserFilterComponent.
+
+@returns
+    Filter component class wrapper.
+*/
 template <typename UserComponentT>
 typename std::enable_if<UserComponentT::type() == ComponentClassType::Filter,
                         FilterComponentClass::Shared>::type
@@ -1008,6 +1630,17 @@ createComponentClass()
         internal::createFilterCompCls<UserComponentT>());
 }
 
+/*!
+@brief
+    Creates a libbabeltrace2 sink component class
+    from the C++ sink component class \bt_p{UserComponentT}.
+
+@tparam UserComponentT
+    Sink component class which inherits bt2::UserSinkComponent.
+
+@returns
+    Sink component class wrapper.
+*/
 template <typename UserComponentT>
 typename std::enable_if<UserComponentT::type() == ComponentClassType::Sink,
                         SinkComponentClass::Shared>::type

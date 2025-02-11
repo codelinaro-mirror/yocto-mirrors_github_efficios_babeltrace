@@ -161,7 +161,18 @@ INPUT                   = "@srcdir@/all.dox" \
                           "@abs_top_srcdir@/src/cpp-common/bt2c/unicode-conv.hpp" \
                           "@abs_top_srcdir@/src/cpp-common/bt2c/uuid.hpp" \
                           "@abs_top_srcdir@/src/cpp-common/bt2c/val-req.hpp" \
-                          "@abs_top_srcdir@/src/cpp-common/bt2c/vector.hpp"
+                          "@abs_top_srcdir@/src/cpp-common/bt2c/vector.hpp" \
+                          "@abs_top_srcdir@/src/cpp-common/bt2/borrowed-object-iterator.hpp" \
+                          "@abs_top_srcdir@/src/cpp-common/bt2/borrowed-object-proxy.hpp" \
+                          "@abs_top_srcdir@/src/cpp-common/bt2/borrowed-object.hpp" \
+                          "@abs_top_srcdir@/src/cpp-common/bt2/component-class-dev.hpp" \
+                          "@abs_top_srcdir@/src/cpp-common/bt2/error.hpp" \
+                          "@abs_top_srcdir@/src/cpp-common/bt2/exc.hpp" \
+                          "@abs_top_srcdir@/src/cpp-common/bt2/internal/utils.hpp" \
+                          "@abs_top_srcdir@/src/cpp-common/bt2/message-array.hpp" \
+                          "@abs_top_srcdir@/src/cpp-common/bt2/optional-borrowed-object.hpp" \
+                          "@abs_top_srcdir@/src/cpp-common/bt2/shared-object.hpp" \
+                          "@abs_top_srcdir@/src/cpp-common/bt2/wrap.hpp"
 INPUT_ENCODING          = UTF-8
 FILE_PATTERNS           = *.h *.hh *.hpp *.dox
 RECURSIVE               = NO

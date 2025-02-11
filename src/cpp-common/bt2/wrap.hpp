@@ -30,6 +30,40 @@
 #include "trace-ir.hpp"
 #include "value.hpp"
 
+/*!
+@file
+
+@brief
+    libbabeltrace2 C++ wrapping utility function overloads.
+
+@ingroup common-cpp-bt2
+
+@code{.cpp}
+#include "cpp-common/bt2/wrap.hpp"
+@endcode
+
+This file offers overloads of the <code>%bt2::wrap()</code> function
+to obtain a C++ wrapper out of a raw libbabeltrace2 object pointer,
+for example:
+
+@code{.cpp}
+const auto clkCls = bt2::wrap(myLibClkCls);
+@endcode
+
+@code{.cpp}
+std::cout << bt2::wrap(myMsg).asEvent().event().cls().name();
+@endcode
+
+@note
+    @parblock
+    The individual functions of this header aren't documented yet, but
+    they're straightforward to understand if you already know
+    the libbabeltrace2 C&nbsp;API.
+
+    Please see <code>%src/cpp-common/bt2/wrap.hpp</code>.
+    @endparblock
+*/
+
 namespace bt2 {
 
 inline ConstErrorCause wrap(const bt_error_cause * const libObjPtr) noexcept

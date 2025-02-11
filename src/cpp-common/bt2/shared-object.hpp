@@ -13,28 +13,58 @@
 
 namespace bt2 {
 
-/*
- * An instance of this class wraps an optional instance of `ObjT` and
- * manages the reference counting of the underlying libbabeltrace2
- * object.
- *
- * When you move a shared object, it becomes empty, in that operator*()
- * and operator->() will either fail to assert in debug mode or trigger
- * a segmentation fault.
- *
- * The default constructor builds an empty shared object. You may also
- * call the reset() method to make a shared object empty. Check whether
- * or not a shared object is empty with the `bool` operator.
- *
- * `LibObjT` is the direct libbabeltrace2 object type, for example
- * `bt_stream_class` or `const bt_value`.
- *
- * RefFuncsT::get() must accept a `const LibObjT *` value and increment
- * its reference count.
- *
- * RefFuncsT::put() must accept a `const LibObjT *` value and decrement
- * its reference count.
- */
+/*!
+@brief
+    Shared version of wrapper of libbabeltrace2 borrowed object pointer.
+
+@ingroup common-cpp-bt2
+
+@code{.cpp}
+#include "cpp-common/bt2/shared-object.hpp"
+@endcode
+
+An instance of this class wraps an optional instance of \bt_p{ObjT} and
+manages the reference counting of the underlying libbabeltrace2 object.
+
+When you move a shared object, it becomes empty, in that operator*() and
+operator->() will either fail to assert in debug mode or trigger a
+segmentation fault. You may call the reset() method to make a shared
+object empty. Check whether or not a shared object is empty with
+operator bool().
+
+The public ways to build a shared object are:
+
+<dl>
+  <dt>SharedObject()
+  <dd>Builds an empty shared object.
+
+  <dt>createWithoutRef()
+  <dd>Builds a shared object without getting an initial reference.
+
+  <dt>createWithRef()
+  <dd>Builds a shared object, getting an initial reference.
+</dl>
+
+@tparam ObjT
+    Wrapper type.
+@tparam LibObjT
+    libbabeltrace2 object type, for example
+    \c bt_stream_class or <code>const bt_value</code>.
+@tparam RefFuncsT
+    @parblock
+    Reference counting functions.
+
+    This must be a structure with the following static methods:
+
+    <dl>
+      <dt><code>static void get(const LibObjT *libObjPtr) noexcept</code>
+      <dd>Increment the reference count of \bt_p{libObjPtr}.
+
+      <dt><code>static void put(const LibObjT *libObjPtr) noexcept</code>
+      <dd>Decrement the reference count of \bt_p{libObjPtr}.
+    </dl>
+    @endparblock
+*/
 template <typename ObjT, typename LibObjT, typename RefFuncsT>
 class SharedObject final
 {
@@ -50,9 +80,10 @@ class SharedObject final
     friend class SharedObject;
 
 public:
-    /*
-     * Builds an empty shared object.
-     */
+    /*!
+    @brief
+        Builds an empty shared object.
+    */
     explicit SharedObject() noexcept
     {
     }
@@ -96,27 +127,49 @@ private:
     }
 
 public:
-    /*
-     * Builds a shared object from `obj` without getting a reference.
-     */
+    /*!
+    @brief
+        Builds a shared object from \bt_p{obj} \em without
+        getting a reference.
+
+    @param[in] obj
+        Borrowed object to wrap.
+
+    @returns
+        Shared object wrapping \bt_p{obj}.
+    */
     static SharedObject createWithoutRef(const ObjT& obj) noexcept
     {
         return SharedObject {obj};
     }
 
-    /*
-     * Builds a shared object from `libObjPtr` without getting a
-     * reference.
-     */
+    /*!
+    @brief
+        Builds a wrapper with \bt_p{libObjPtr} and calls
+        createWithoutRef(const ObjT&).
+
+    @param[in] libObjPtr
+        libbabeltrace2 raw pointer to wrap.
+
+    @returns
+        Shared object wrapping \bt_p{libObjPtr}.
+    */
     static SharedObject createWithoutRef(LibObjT * const libObjPtr) noexcept
     {
         return SharedObject::createWithoutRef(ObjT {libObjPtr});
     }
 
-    /*
-     * Builds a shared object from `obj`, immediately getting a new
-     * reference.
-     */
+    /*!
+    @brief
+        Builds a shared object from \bt_p{obj}, immediately getting
+        a new reference.
+
+    @param[in] obj
+        Borrowed object to wrap.
+
+    @returns
+        Shared object wrapping \bt_p{obj}.
+    */
     static SharedObject createWithRef(const ObjT& obj) noexcept
     {
         SharedObject sharedObj {obj};
@@ -125,32 +178,56 @@ public:
         return sharedObj;
     }
 
-    /*
-     * Copy constructor.
-     */
+    /*!
+    @brief
+        Copy constructor.
+
+    @param[in] other
+        Other shared object to copy (keeps its current reference
+        count).
+    */
     SharedObject(const SharedObject& other) noexcept : SharedObject {other, 0}
     {
     }
 
-    /*
-     * Move constructor.
-     */
+    /*!
+    @brief
+        Move constructor.
+
+    @param[in] other
+        Other shared object to move.
+    */
     SharedObject(SharedObject&& other) noexcept : SharedObject {std::move(other), 0}
     {
     }
 
-    /*
-     * Copy assignment operator.
-     */
+    /*!
+    @brief
+        Copy assignment operator.
+
+    @param[in] other
+        Other shared object to copy (keeps its current reference
+        count).
+
+    @returns
+        This shared object.
+    */
     SharedObject& operator=(const SharedObject& other) noexcept
     {
         /* Use generic "copy" assignment operator */
         return this->operator=<ObjT, LibObjT>(other);
     }
 
-    /*
-     * Move assignment operator.
-     */
+    /*!
+    @brief
+        Move assignment operator.
+
+    @param[in] other
+        Other shared object to move.
+
+    @returns
+        This shared object.
+    */
     SharedObject& operator=(SharedObject&& other) noexcept
     {
         /* Use generic "move" assignment operator */
@@ -222,37 +299,63 @@ public:
         this->_putRef();
     }
 
+    /*!
+    @brief
+        Wrapped borrowed object access.
+
+    @returns
+        Wrapped borrowed object.
+    */
     ObjT operator*() const noexcept
     {
         return *_mObj;
     }
 
+    /*!
+    @brief
+        Wrapped borrowed object access.
+
+    @returns
+        Proxy of wrapped borrowed object.
+    */
     BorrowedObjectProxy<ObjT> operator->() const noexcept
     {
         return _mObj.operator->();
     }
 
+    /*!
+    @brief
+        Whether or not this shared object is empty.
+
+    @returns
+        \c true if this shared object is \em not empty.
+    */
     explicit operator bool() const noexcept
     {
         return _mObj.hasObject();
     }
 
-    /*
-     * Makes this shared object empty.
-     */
+    /*!
+    @brief
+        Makes this shared object empty.
+    */
     void reset() noexcept
     {
         this->_putRef();
         this->_reset();
     }
 
-    /*
-     * Transfers the reference of the object which this shared object
-     * wrapper manages and returns it, making the caller become an
-     * active owner.
-     *
-     * This method makes this object empty.
-     */
+    /*!
+    @brief
+        Transfers the reference of the object which this shared object
+        wrapper manages and returns it, making the caller become an
+        active owner.
+
+    This method makes this object empty.
+
+    @returns
+        Managed borrowed object.
+    */
     ObjT release() noexcept
     {
         const auto obj = *_mObj;

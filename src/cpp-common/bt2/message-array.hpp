@@ -71,53 +71,68 @@ private:
     uint64_t _mIdx;
 };
 
-/*
- * A wrapper of `bt_message_array_const`, either:
- *
- * Containing existing messages:
- *     Use ConstMessageArray::wrapExisting().
- *
- *     Example:
- *
- *         bt_message_array_const libMsgs;
- *         uint64_t count;
- *
- *         if (bt_message_iterator_next(myIter, &libMsgs, &count) !=
- *                 BT_MESSAGE_ITERATOR_NEXT_STATUS_OK) {
- *             // Handle special status
- *         }
- *
- *         const auto msgs = bt2::ConstMessageArray::wrapExisting(libMsgs,
- *                                                                count);
- *
- *         // At this point `msgs` manages `libMsgs`
- *
- * An empty one which you need to fill:
- *     Use ConstMessageArray::wrapEmpty().
- *
- *     Use the release() method to move the ownership of the wrapped
- *     library array to you.
- *
- *     Example:
- *
- *         bt_message_iterator_class_next_method_status myNext(
- *                 bt_self_message_iterator * const libSelfMsgIter,
- *                 const bt_message_array_const libMsgs,
- *                 const uint64_t capacity, uint64_t * const count)
- *         {
- *             auto msgs = bt2::ConstMessageArray::wrapEmpty(libMsgs,
- *                                                           capacity);
- *
- *             // Create messages and append with `msgs.append(...)`
- *
- *             *count = msgs.release();
- *             return BT_MESSAGE_ITERATOR_CLASS_NEXT_METHOD_STATUS_OK;
- *         }
- *
- * In both cases, the returned message array wrapper is always the sole
- * owner of the wrapped library array: it's not a simple passive view.
- * The destructor puts the references of the contained messages.
- */
+/*!
+@brief
+    Wrapper of <code>bt_message_array_const</code>.
+
+@ingroup common-cpp-bt2
+
+@code{.cpp}
+#include "cpp-common/bt2/message-array.hpp"
+@endcode
+
+Depending on the libbabeltrace2 message array to wrap:
+
+<dl>
+  <dt>Contains existing messages
+  <dd>
+    Use wrapExisting().
+
+    Example:
+
+    @code{.cpp}
+
+    bt_message_array_const libMsgs;
+    uint64_t count;
+
+    if (bt_message_iterator_next(myIter, &libMsgs, &count) != BT_MESSAGE_ITERATOR_NEXT_STATUS_OK) {
+        // Handle special status
+    }
+
+    const auto msgs = bt2::ConstMessageArray::wrapExisting(libMsgs, count);
+
+    // At this point `msgs` manages `libMsgs`
+    @endcode
+
+  <dt>Is empty and you need to fill it
+  <dd>
+    Use wrapEmpty().
+
+    Move the ownership of the wrapped libbabeltrace2 array to you
+    with release()
+
+    Example:
+
+    @code{.cpp}
+    bt_message_iterator_class_next_method_status myNext(
+            bt_self_message_iterator * const libSelfMsgIter,
+            const bt_message_array_const libMsgs,
+            const uint64_t capacity, uint64_t * const count)
+    {
+        auto msgs = bt2::ConstMessageArray::wrapEmpty(libMsgs, capacity);
+
+        // Create messages and append with `msgs.append(...)`
+
+        *count = msgs.release();
+        return BT_MESSAGE_ITERATOR_CLASS_NEXT_METHOD_STATUS_OK;
+    }
+    @endcode
+</dl>
+
+In both cases, the returned message array wrapper is always the sole
+owner of the wrapped libbabeltrace2 array: it's not a simple passive view.
+The destructor puts the references of the contained messages.
+*/
 class ConstMessageArray final
 {
 private:
@@ -131,6 +146,7 @@ private:
     }
 
 public:
+    /// Message array iterator.
     using Iterator = ConstMessageArrayIterator;
 
     ~ConstMessageArray()
@@ -171,17 +187,28 @@ public:
         return *this;
     }
 
-    /*
-     * Wraps an existing library array `libArrayPtr`, known to contain
-     * `length` messages.
-     *
-     * CAUTION: The ownership of the existing messages contained in
-     * `libArrayPtr` is _moved_ to the returned `ConstMessageArray`
-     * instance.
-     *
-     * This is similar to what the constructor of `std::shared_ptr`
-     * does. Do NOT wrap the same library array twice.
-     */
+    /*!
+    @brief
+        Wraps an existing libbabeltrace2 array \bt_p{libArrayPtr}, known
+        to contain \bt_p{length} messages.
+
+    @attention
+        The ownership of the existing messages contained in
+        \bt_p{libArrayPtr} is \em moved to the returned
+        ConstMessageArray instance.
+
+    This is similar to what the constructor of
+    <code>std::shared_ptr</code> does. Do \em not wrap the same
+    libbabeltrace2 array twice.
+
+    @param[in] libArrayPtr
+        libbabeltrace2 message array to wrap.
+    @param[in] length
+        Number of existing messages in \bt_p{libArrayPtr}.
+
+    @returns
+        Wrapper of \bt_p{libArrayPtr}.
+    */
     static ConstMessageArray wrapExisting(const bt_message_array_const libArrayPtr,
                                           const std::uint64_t length) noexcept
     {
@@ -192,32 +219,93 @@ public:
      * Wraps an existing library array `libArrayPtr`, known to be empty,
      * with a capacity of `capacity` messages.
      */
+
+    /*!
+    @brief
+        Wraps an existing libbabeltrace2 array \bt_p{libArrayPtr},
+        known to be empty, with a capacity of \bt_p{capacity}
+        messages.
+
+    @attention
+        The ownership of the existing messages contained in
+        \bt_p{libArrayPtr} is \em moved_to the returned
+        ConstMessageArray instance.
+
+    @param[in] libArrayPtr
+        libbabeltrace2 message array to wrap.
+    @param[in] capacity
+        Capacity of \bt_p{libArrayPtr}.
+
+    @returns
+        Wrapper of \bt_p{libArrayPtr}.
+    */
     static ConstMessageArray wrapEmpty(const bt_message_array_const libArrayPtr,
                                        const std::uint64_t capacity) noexcept
     {
         return ConstMessageArray {libArrayPtr, 0, capacity};
     }
 
+    /*!
+    @brief
+        Number of messages in this array.
+
+    @returns
+        Number of messages in this array.
+    */
     std::uint64_t length() const noexcept
     {
         return _mLen;
     }
 
+    /*!
+    @brief
+        Capacity of this array.
+
+    @returns
+        Capacity of this array.
+    */
     std::uint64_t capacity() const noexcept
     {
         return _mCap;
     }
 
+    /*!
+    @brief
+        Whether or not this array is empty.
+
+    @returns
+        \c true if this array is empty.
+    */
     bool isEmpty() const noexcept
     {
         return _mLen == 0;
     }
 
+    /*!
+    @brief
+        Whether or not this array is full.
+
+    @returns
+        \c true if this array is full.
+    */
     bool isFull() const noexcept
     {
         return _mLen == _mCap;
     }
 
+    /*!
+    @brief
+        Appends the message \bt_p{message} to this array.
+
+    @param[in] message
+        Message to append to this array.
+
+    @returns
+        This array.
+
+    @pre
+        This array isn't full (isFull() returns \c false).
+    */
     ConstMessageArray& append(ConstMessage::Shared message) noexcept
     {
         BT_ASSERT_DBG(!this->isFull());
@@ -228,11 +316,15 @@ public:
         return *this;
     }
 
-    /*
-     * Transfers the ownership of the wrapped library array to the
-     * caller, returning the number of contained messages (array
-     * length).
-     */
+    /*!
+    @brief
+        Transfers the ownership of the wrapped libbabeltrace2 array to
+        the caller, returning the number of contained messages (array
+        length).
+
+    @returns
+        Array length.
+    */
     std::uint64_t release() noexcept
     {
         const auto len = _mLen;
@@ -241,17 +333,44 @@ public:
         return len;
     }
 
+    /*!
+    @brief
+        Returns the message at the index \bt_p{index} of this array.
+
+    @param[in] index
+        Index of the message to borrow.
+
+    @returns
+        Borrowed message at the index \bt_p{index}.
+
+    @pre
+        \bt_p{index} is less than what length() returns.
+    */
     ConstMessage operator[](const std::uint64_t index) const noexcept
     {
         BT_ASSERT_DBG(index < _mLen);
         return ConstMessage {_mLibArrayPtr[index]};
     }
 
+    /*!
+    @brief
+        Iterator at the beginning of this array.
+
+    @returns
+        Iterator at the beginning of this array.
+    */
     Iterator begin() const noexcept
     {
         return Iterator {*this, 0};
     }
 
+    /*!
+    @brief
+        Iterator after the end of this array.
+
+    @returns
+        Iterator after the end of this array.
+    */
     Iterator end() const noexcept
     {
         return Iterator {*this, this->length()};
