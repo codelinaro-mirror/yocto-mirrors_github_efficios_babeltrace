@@ -45,9 +45,10 @@ format_cpp() {
 	# excludes files in specific subdirectories.
 	find "$(realpath "$root_dir")" \( -name '*.cpp' -o -name '*.hpp' \) \
 		! -path '*/.git/*' \
+		! -path '*/src/bindings/python/bt2/bt2/native_bt.cpp' \
 		! -path '*/src/cpp-common/vendor/*' \
-		! -path '*/src/plugins/ctf/common/src/metadata/tsdl/parser.*' \
 		! -path '*/src/plugins/ctf/common/src/metadata/tsdl/lexer.*' \
+		! -path '*/src/plugins/ctf/common/src/metadata/tsdl/parser.*' \
 		-print0 | xargs -P"$(nproc)" -n1 -t -0 "${formatter[@]}"
 }
 
