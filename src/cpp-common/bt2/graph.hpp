@@ -12,6 +12,7 @@
 #include <babeltrace2/babeltrace.h>
 
 #include "borrowed-object.hpp"
+#include "component-class-dev.hpp"
 #include "component-class.hpp"
 #include "component-port.hpp"
 #include "exc.hpp"
@@ -117,6 +118,26 @@ public:
         return this->_addComponent<ConstSinkComponent>(
             componentClass, name, params, &initData, loggingLevel,
             bt_graph_add_sink_component_with_initialize_method_data);
+    }
+
+    template <typename UserComponentT>
+    auto addComponent(const bt2c::CStringView name,
+                      const OptionalBorrowedObject<ConstMapValue> params = {},
+                      const LoggingLevel loggingLevel = LoggingLevel::None) const
+        -> decltype(this->addComponent(*createComponentClass<UserComponentT>(), nullptr))
+    {
+        return this->addComponent(*createComponentClass<UserComponentT>(), name, params,
+                                  loggingLevel);
+    }
+
+    template <typename UserComponentT, typename InitDataT>
+    auto addComponent(const bt2c::CStringView name, InitDataT&& initData,
+                      const OptionalBorrowedObject<ConstMapValue> params = {},
+                      const LoggingLevel loggingLevel = LoggingLevel::None) const
+        -> decltype(this->addComponent<UserComponentT>(nullptr))
+    {
+        return this->addComponent(*createComponentClass<UserComponentT>(), name,
+                                  std::forward<InitDataT>(initData), params, loggingLevel);
     }
 
     Graph connectPorts(const ConstOutputPort outputPort, const ConstInputPort inputPort) const
