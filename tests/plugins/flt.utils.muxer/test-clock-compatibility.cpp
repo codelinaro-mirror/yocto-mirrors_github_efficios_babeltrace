@@ -279,7 +279,7 @@ std::string makeSpecTestName(const char * const testName, const MsgType msgType1
 template <typename Derived>
 void TestCase<Derived>::_runOne(const MsgType msgType1, const MsgType msgType2) const noexcept
 {
-    const auto srcCompCls = bt2::SourceComponentClass::create<TestSource>();
+    const auto srcCompCls = bt2::createComponentClass<TestSource>();
     const auto graph = bt2::Graph::create(_mGraphMipVersion);
 
     {

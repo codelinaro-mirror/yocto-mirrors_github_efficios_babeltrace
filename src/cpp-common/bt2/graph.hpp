@@ -13,8 +13,10 @@
 
 #include "borrowed-object.hpp"
 #include "component-class.hpp"
+#include "component-port.hpp"
 #include "exc.hpp"
 #include "shared-object.hpp"
+#include "value.hpp"
 
 namespace bt2 {
 namespace internal {

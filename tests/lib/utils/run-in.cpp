@@ -88,7 +88,7 @@ private:
 
 void runIn(RunIn& runIn, const std::uint64_t graphMipVersion)
 {
-    const auto srcCompCls = bt2::SourceComponentClass::create<RunInSource>();
+    const auto srcCompCls = bt2::createComponentClass<RunInSource>();
 
     /* Execute a query */
     bt2::QueryExecutor::create(*srcCompCls, "object-name", runIn)->query();

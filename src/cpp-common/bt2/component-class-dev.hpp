@@ -15,6 +15,7 @@
 #include "cpp-common/bt2c/logging.hpp"
 #include "cpp-common/vendor/fmt/core.h"
 
+#include "component-class.hpp"
 #include "exc.hpp"
 #include "internal/comp-cls-bridge.hpp"
 #include "private-query-executor.hpp"
@@ -132,6 +133,11 @@ protected:
     }
 
 public:
+    static constexpr ComponentClassType type() noexcept
+    {
+        return ComponentClassType::Source;
+    }
+
     static Value::Shared query(const SelfComponentClass selfCompCls,
                                const PrivateQueryExecutor privQueryExec,
                                const bt2c::CStringView obj, const ConstValue params,
@@ -236,6 +242,11 @@ protected:
     }
 
 public:
+    static constexpr ComponentClassType type() noexcept
+    {
+        return ComponentClassType::Filter;
+    }
+
     static Value::Shared query(const SelfComponentClass selfCompCls,
                                const PrivateQueryExecutor privQueryExec,
                                const bt2c::CStringView obj, const ConstValue params,
@@ -363,6 +374,11 @@ protected:
     }
 
 public:
+    static constexpr ComponentClassType type() noexcept
+    {
+        return ComponentClassType::Sink;
+    }
+
     static Value::Shared query(const SelfComponentClass selfCompCls,
                                const PrivateQueryExecutor privQueryExec,
                                const bt2c::CStringView obj, const ConstValue params,
@@ -973,6 +989,34 @@ bt_component_class_sink *createSinkCompCls()
 }
 
 } /* namespace internal */
+
+template <typename UserComponentT>
+typename std::enable_if<UserComponentT::type() == ComponentClassType::Source,
+                        SourceComponentClass::Shared>::type
+createComponentClass()
+{
+    return SourceComponentClass::Shared::createWithoutRef(
+        internal::createSourceCompCls<UserComponentT>());
+}
+
+template <typename UserComponentT>
+typename std::enable_if<UserComponentT::type() == ComponentClassType::Filter,
+                        FilterComponentClass::Shared>::type
+createComponentClass()
+{
+    return FilterComponentClass::Shared::createWithoutRef(
+        internal::createFilterCompCls<UserComponentT>());
+}
+
+template <typename UserComponentT>
+typename std::enable_if<UserComponentT::type() == ComponentClassType::Sink,
+                        SinkComponentClass::Shared>::type
+createComponentClass()
+{
+    return SinkComponentClass::Shared::createWithoutRef(
+        internal::createSinkCompCls<UserComponentT>());
+}
+
 } /* namespace bt2 */
 
 #endif /* BABELTRACE_CPP_COMMON_BT2_COMPONENT_CLASS_DEV_HPP */
