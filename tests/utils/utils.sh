@@ -364,3 +364,18 @@ run_python_bt2_test() {
 
 	return $ret
 }
+
+# Generates a CTF trace into the directory `$2` from the moultipart
+# document `$1` using `mctf.py`.
+bt_gen_mctf_trace() {
+	local -r input_file=$1
+	local -r base_dir=$2
+	local -r cmd=(
+		"$BT_TESTS_PYTHON_BIN" "$BT_TESTS_SRCDIR/utils/python/mctf.py"
+		--base-dir "$base_dir"
+		"$input_file"
+	)
+
+	echo "Running: \`${cmd[*]}\`" >&2
+	run_python_bt2 "${cmd[@]}"
+}
