@@ -33,7 +33,7 @@ ctf-parser-test
 /src/plugins/ctf/common/metadata/parser.h
 /src/plugins/ctf/common/metadata/parser.output
 /src/cli/babeltrace2
-/src/cli/babeltrace2.bin
+/src/cli/*.bin
 /src/cli/babeltrace2-log
 /src/cli/babeltrace2-log.bin
 /src/common/config.h
@@ -70,3 +70,18 @@ cscope*
 .theia
 compile_commands.json
 /version
+/babeltrace2-*.tar.bz2
+/doc/api/libbabeltrace2/Doxyfile
+/doc/api/libbabeltrace2/output
+/doc/bindings/python/build/
+/doc/man/*.1
+/doc/man/*.7
+/doc/man/asciidoc-attrs.conf
+/src/bindings/python/bt2/setup.py
+/src/bindings/python/bt2/bt2/native_bt.c
+/src/bindings/python/bt2/bt2/native_bt.d
+/src/bindings/python/bt2/bt2/native_bt.py
+/src/bindings/python/bt2/bt2/version.py
+/src/bindings/python/bt2/build/
+/src/bindings/python/bt2/installed_files.txt
+*.egg-info
