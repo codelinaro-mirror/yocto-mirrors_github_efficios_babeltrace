@@ -540,7 +540,6 @@ class UserMessageIteratorSeekBeginningTestCase(unittest.TestCase):
                 can_seek_beginning = self._msg_iter.can_seek_beginning()
 
         def _user_can_seek_beginning(self):
-            nonlocal input_port_iter_can_seek_beginning
             return input_port_iter_can_seek_beginning
 
         graph = _setup_seek_test(
@@ -663,7 +662,6 @@ class UserMessageIteratorSeekBeginningTestCase(unittest.TestCase):
                 self._msg_iter = self._create_message_iterator(self._input_ports['in'])
 
             def _user_consume(self):
-                nonlocal do_seek_beginning
                 nonlocal msg
 
                 if do_seek_beginning:
