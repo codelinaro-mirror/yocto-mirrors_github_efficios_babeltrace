@@ -39,8 +39,8 @@ source "$UTILSSH"
 
 plan_tests 3
 
-temp_input_dir=$(mktemp -t -d test_output_path_ctf_non_lttng_trace_input.XXXXXX)
-temp_output_dir=$(mktemp -t -d test_output_path_ctf_non_lttng_trace_output.XXXXXX)
+temp_input_dir=$(mktemp --tmpdir -d test_output_path_ctf_non_lttng_trace_input.XXXXXX)
+temp_output_dir=$(mktemp --tmpdir -d test_output_path_ctf_non_lttng_trace_output.XXXXXX)
 
 mkdir -p "${temp_input_dir}/a/b/c"
 cp -a "${BT_CTF_TRACES_PATH}/intersection/3eventsintersect" "${temp_input_dir}/a/b/c"
