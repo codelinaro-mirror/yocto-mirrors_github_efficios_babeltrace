@@ -1,3 +1,43 @@
+2025-07-22 Babeltrace 2.0.7 (National Hammock Day)
+	* Fix: set proper size when creating new strings
+	* fix: tests: use a portable invocation of 'sed -i'
+	* doc: fix passing non-event messages in distill examples
+	* configure: use single word for PROJECT-NAME argument of DX_INIT_DOXYGEN
+	* Fix: lib: pass correct argument to BT_ASSERT_PRE_PLUGIN_SET_OUT_NON_NULL
+	* Fix: lib: handle BT_FUNC_STATUS_NOT_FOUND in bt_plugin_so_create_all_from_sections
+	* Fix: bt_value_map_borrow_entry_value(): use `@bt_pre_is_map_val`
+	* doc/api/libbabeltrace2/DoxygenLayout.xml: use `topics` tab
+	* tests: factor out discarded packet regex in test_packet_seq_num
+	* tests: assign to `value` property in test_assign_str/test_assign_vstr
+	* Fix: bt2: "trace class" -> "trace" in error message
+	* Fix: bt2: correctly handle empty result of bt_field_enumeration_unsigned_get_mapping_labels
+	* lib: fix typo in error message
+	* fd-cache: fix copy-pasto
+	* Fix: lib: destroy streams first when destroying trace
+	* doc: libbabeltrace2: field.h: fix "get" 👉 "borrow"
+	* doc: libbabeltrace2: bt_graph_run_once(): add missing preconditions
+	* doc: libbabeltrace2: guides.dox: mention the LLD `-z notext` option
+	* doc: libbabeltrace2: Doxyfile.in: remove deprecated options
+	* doc: libbabeltrace2: fix some Doxygen warnings
+	* doc: libbabeltrace2: "You can only" 👉 "You may only"
+	* Fix: lib: call destruction listeners before changing the object
+	* Fix: bt_plugin_get_version(): set `*extra` to `NULL` when missing
+	* Fix: bt2: delete some exported module names
+	* Fix: ctf: handle non-map value params in queries
+	* Fix: src.ctf.*: the default CTF 1.8 clock class freq. is 1,000,000,000
+	* tests: update to tappy v3.1
+	* .gitignore: add some missing files
+	* test_output_path_ctf_non_lttng_trace: use `--tmpdir`
+	* tests/bindings/python/bt2: fix issues found with Flake8 7.3.0
+	* babeltrace2-source.ctf.fs(7): document the phys. trace merging strat
+	* fix: python: monkey patch the proper sysconfig implementation
+	* python: replace distutils with setuptools
+	* python: Use standalone 'sysconfig' module
+	* bt2: use SWIG_AppendOutput (fix for SWIG 4.3.0)
+	* tests: return the proper TAP exit code
+	* tests: test_dwarf.c: initialize `tag` variable
+	* Update working version to Babeltrace v2.0.7
+
 2024-03-28 Babeltrace 2.0.6 (Respect Your Cat Day)
 	* bt2: disable some warnings for `native_bt.c`
 	* bt2: compile `native_bt.c` with `-Wno-undef`
