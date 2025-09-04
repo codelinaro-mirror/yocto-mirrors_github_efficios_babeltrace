@@ -159,9 +159,8 @@ public:
     explicit TestCase(const CreateClockClass createClockClass1,
                       const CreateClockClass createClockClass2, const std::uint64_t graphMipVersion,
                       const char * const testName) noexcept :
-        _mCreateClockClass1 {createClockClass1},
-        _mCreateClockClass2 {createClockClass2}, _mGraphMipVersion {graphMipVersion},
-        _mTestName {testName}
+        _mCreateClockClass1 {createClockClass1}, _mCreateClockClass2 {createClockClass2},
+        _mGraphMipVersion {graphMipVersion}, _mTestName {testName}
     {
     }
 

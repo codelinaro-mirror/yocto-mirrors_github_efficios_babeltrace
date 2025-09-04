@@ -156,8 +156,7 @@ public:
     public:
         explicit Version(const unsigned int major, const unsigned int minor,
                          const unsigned int patch, const bt2c::CStringView extra) noexcept :
-            _mMajor {major},
-            _mMinor {minor}, _mPatch {patch}, _mExtra {extra}
+            _mMajor {major}, _mMinor {minor}, _mPatch {patch}, _mExtra {extra}
         {
         }
 

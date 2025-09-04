@@ -15,9 +15,7 @@ class IdentityView final
 {
 public:
     explicit IdentityView(const bt2c::CStringView ns, const bt2c::CStringView name,
-                          const bt2c::CStringView uid) :
-        _mNs {ns},
-        _mName {name}, _mUid {uid}
+                          const bt2c::CStringView uid) : _mNs {ns}, _mName {name}, _mUid {uid}
     {
     }
 

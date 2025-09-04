@@ -762,8 +762,8 @@ struct ConstEnumerationFieldClassMappingSpec;
 
 /* Functions specific to unsigned enumeration field class mappings */
 template <>
-struct ConstEnumerationFieldClassMappingSpec<const bt_field_class_enumeration_unsigned_mapping>
-    final
+struct ConstEnumerationFieldClassMappingSpec<
+    const bt_field_class_enumeration_unsigned_mapping> final
 {
     static const bt_integer_range_set_unsigned *
     ranges(const bt_field_class_enumeration_unsigned_mapping * const libObjPtr) noexcept
@@ -923,8 +923,7 @@ public:
 
     template <typename OtherLibObjT>
     CommonBaseEnumerationFieldClass(const CommonBaseEnumerationFieldClass<OtherLibObjT> fc) noexcept
-        :
-        _ThisCommonIntegerFieldClass {fc}
+        : _ThisCommonIntegerFieldClass {fc}
     {
     }
 
@@ -1133,8 +1132,7 @@ public:
 
     template <typename OtherLibObjT>
     CommonStructureFieldClassMember(const CommonStructureFieldClassMember<OtherLibObjT> fc) noexcept
-        :
-        _ThisBorrowedObject {fc}
+        : _ThisBorrowedObject {fc}
     {
     }
 
@@ -2334,8 +2332,7 @@ struct ConstVariantWithIntegerSelectorFieldClassOptionSpec;
 /* Functions specific to variant field class options with unsigned integer selector */
 template <>
 struct ConstVariantWithIntegerSelectorFieldClassOptionSpec<
-    const bt_field_class_variant_with_selector_field_integer_unsigned_option>
-    final
+    const bt_field_class_variant_with_selector_field_integer_unsigned_option> final
 {
     static const bt_integer_range_set_unsigned *
     ranges(const bt_field_class_variant_with_selector_field_integer_unsigned_option
@@ -2357,8 +2354,7 @@ struct ConstVariantWithIntegerSelectorFieldClassOptionSpec<
 /* Functions specific to variant field class options with signed integer selector */
 template <>
 struct ConstVariantWithIntegerSelectorFieldClassOptionSpec<
-    const bt_field_class_variant_with_selector_field_integer_signed_option>
-    final
+    const bt_field_class_variant_with_selector_field_integer_signed_option> final
 {
     static const bt_integer_range_set_signed *
     ranges(const bt_field_class_variant_with_selector_field_integer_signed_option
@@ -2683,8 +2679,7 @@ struct CommonVariantWithIntegerSelectorFieldClassSpec;
 /* Functions specific to variant field classes with unsigned integer selector */
 template <>
 struct CommonVariantWithIntegerSelectorFieldClassSpec<
-    ConstVariantWithUnsignedIntegerSelectorFieldClassOption>
-    final
+    ConstVariantWithUnsignedIntegerSelectorFieldClassOption> final
 {
     static const bt_field_class_variant_with_selector_field_integer_unsigned_option *
     optionByIndex(const bt_field_class * const libObjPtr, const std::uint64_t index) noexcept
@@ -2713,8 +2708,7 @@ struct CommonVariantWithIntegerSelectorFieldClassSpec<
 /* Functions specific to variant field classes with signed integer selector */
 template <>
 struct CommonVariantWithIntegerSelectorFieldClassSpec<
-    ConstVariantWithSignedIntegerSelectorFieldClassOption>
-    final
+    ConstVariantWithSignedIntegerSelectorFieldClassOption> final
 {
     static const bt_field_class_variant_with_selector_field_integer_signed_option *
     optionByIndex(const bt_field_class * const libObjPtr, const std::uint64_t index) noexcept

@@ -23,8 +23,7 @@
 
 CondTrigger::CondTrigger(const Type type, const std::string& condId,
                          const bt2c::CStringView nameSuffix) noexcept :
-    _mType {type},
-    _mCondId {fmt::format("{}:{}", type == Type::Pre ? "pre" : "post", condId)},
+    _mType {type}, _mCondId {fmt::format("{}:{}", type == Type::Pre ? "pre" : "post", condId)},
     _mName {fmt::format("{}{}{}", condId, nameSuffix ? ":" : "", nameSuffix ? nameSuffix : "")}
 {
 }
@@ -32,8 +31,7 @@ CondTrigger::CondTrigger(const Type type, const std::string& condId,
 SimpleCondTrigger::SimpleCondTrigger(std::function<void()> func, const Type type,
                                      const std::string& condId,
                                      const bt2c::CStringView nameSuffix) :
-    CondTrigger {type, condId, nameSuffix},
-    _mFunc {std::move(func)}
+    CondTrigger {type, condId, nameSuffix}, _mFunc {std::move(func)}
 {
 }
 
