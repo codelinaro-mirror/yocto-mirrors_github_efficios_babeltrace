@@ -657,8 +657,7 @@ public:
 
     template <typename OtherLibObjT>
     CommonUnsignedEnumerationField(const CommonUnsignedEnumerationField<OtherLibObjT> val) noexcept
-        :
-        _ThisCommonUnsignedIntegerField {val}
+        : _ThisCommonUnsignedIntegerField {val}
     {
     }
 
@@ -816,8 +815,7 @@ public:
 
     template <typename OtherLibObjT>
     CommonSinglePrecisionRealField(const CommonSinglePrecisionRealField<OtherLibObjT> val) noexcept
-        :
-        _ThisCommonField {val}
+        : _ThisCommonField {val}
     {
     }
 
@@ -895,8 +893,7 @@ public:
 
     template <typename OtherLibObjT>
     CommonDoublePrecisionRealField(const CommonDoublePrecisionRealField<OtherLibObjT> val) noexcept
-        :
-        _ThisCommonField {val}
+        : _ThisCommonField {val}
     {
     }
 

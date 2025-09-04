@@ -30,8 +30,8 @@ public:
 
     explicit ClockClsCompatRunIn(const MsgType msgType1, CreateClockCls createClockCls1,
                                  const MsgType msgType2, CreateClockCls createClockCls2) noexcept :
-        _mMsgType1 {msgType1},
-        _mMsgType2 {msgType2}, _mCreateClockCls1 {std::move(createClockCls1)},
+        _mMsgType1 {msgType1}, _mMsgType2 {msgType2},
+        _mCreateClockCls1 {std::move(createClockCls1)},
         _mCreateClockCls2 {std::move(createClockCls2)}
     {
     }

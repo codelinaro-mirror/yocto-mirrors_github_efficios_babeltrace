@@ -215,7 +215,7 @@ public:
     SharedObject& operator=(const SharedObject& other) noexcept
     {
         /* Use generic "copy" assignment operator */
-        return this->operator=<ObjT, LibObjT>(other);
+        return this->operator= <ObjT, LibObjT>(other);
     }
 
     /*!
@@ -231,7 +231,7 @@ public:
     SharedObject& operator=(SharedObject&& other) noexcept
     {
         /* Use generic "move" assignment operator */
-        return this->operator=<ObjT, LibObjT>(std::move(other));
+        return this->operator= <ObjT, LibObjT>(std::move(other));
     }
 
     /*
