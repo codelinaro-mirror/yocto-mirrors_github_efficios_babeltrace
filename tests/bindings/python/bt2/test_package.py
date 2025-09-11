@@ -303,12 +303,16 @@ _public_names = [
     "UnsignedIntegerValue",
 ]
 
-for name in _public_names:
 
+def make_test_func(name):
     def test_func(self):
         self._assert_in_bt2(name)
 
-    setattr(PackageTestCase, "test_has_" + name, test_func)
+    return test_func
+
+
+for name in _public_names:
+    setattr(PackageTestCase, "test_has_" + name, make_test_func(name))
 
 
 if __name__ == "__main__":
