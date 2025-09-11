@@ -1481,7 +1481,7 @@ class _LttngLiveViewerSession:
         self._viewer_session_id = viewer_session_id
         self._ts_states = (
             {}
-        )  # type:  dict[int, _LttngLiveViewerSessionTracingSessionState]
+        )  # type: dict[int, _LttngLiveViewerSessionTracingSessionState]
         self._stream_states = (
             {}
         )  # type: dict[int, _LttngLiveViewerSessionDataStreamState | _LttngLiveViewerSessionMetadataStreamState]

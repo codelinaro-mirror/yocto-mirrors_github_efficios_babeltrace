@@ -59,7 +59,7 @@ class _UserComponentInputPortMessageIterator(
         return bt2_message._create_from_ptr(msg_ptr)
 
     def can_seek_beginning(self) -> bool:
-        (status, res) = native_bt.message_iterator_can_seek_beginning(self._ptr)
+        status, res = native_bt.message_iterator_can_seek_beginning(self._ptr)
         bt2_utils._handle_func_status(
             status,
             "cannot check whether or not message iterator can seek its beginning",
@@ -76,7 +76,7 @@ class _UserComponentInputPortMessageIterator(
 
     def can_seek_ns_from_origin(self, ns_from_origin) -> bool:
         bt2_utils._check_int64(ns_from_origin)
-        (status, res) = native_bt.message_iterator_can_seek_ns_from_origin(
+        status, res = native_bt.message_iterator_can_seek_ns_from_origin(
             self._ptr, ns_from_origin
         )
         bt2_utils._handle_func_status(
