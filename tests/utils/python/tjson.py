@@ -168,12 +168,10 @@ class ArrayVal(Val, Sequence[Val]):
             yield self.at(i, expected_elem_type)
 
     @overload
-    def __getitem__(self, index: int) -> Val:
-        ...
+    def __getitem__(self, index: int) -> Val: ...
 
     @overload
-    def __getitem__(self, index: slice) -> Sequence[Val]:
-        ...
+    def __getitem__(self, index: slice) -> Sequence[Val]: ...
 
     def __getitem__(self, index: Union[int, slice]) -> Union[Val, Sequence[Val]]:
         if type(index) is slice:

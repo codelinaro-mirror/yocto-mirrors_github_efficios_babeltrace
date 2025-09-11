@@ -78,9 +78,9 @@ class AllFieldsIter(bt2._UserMessageIterator):
 
         # Option with unsigned integer selector field
         payload["option-with-unsigned-integer-selector-field-selector"] = 1
-        payload[
-            "option-with-unsigned-integer-selector-field"
-        ] = "Barbies resto bar grill"
+        payload["option-with-unsigned-integer-selector-field"] = (
+            "Barbies resto bar grill"
+        )
 
         # Option with signed integer selector field
         payload["option-with-signed-integer-selector-field-selector"] = 1
