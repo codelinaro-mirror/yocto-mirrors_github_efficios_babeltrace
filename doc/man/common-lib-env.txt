@@ -14,6 +14,47 @@ include::common-common-env.txt[]
 `LIBBABELTRACE2_DISABLE_PYTHON_PLUGINS`=`1`::
     Disable the loading of any Babeltrace~2 Python plugin.
 
+`LIBBABELTRACE2_FORCE_COMPONENT_LOG_LEVEL`='SPEC'::
+    Force the log level of all or specific components added to any
+    trace processing graph.
++
+'SPEC' is one of:
++
+--
+* A single log level value 'LVL'.
++
+In this case, libbabeltrace2 overrides the log level specified when
+adding _any_ component to any trace processing graph.
+
+* A semicolon-delimited list of __PAT__:__LVL__ specifiers.
++
+__PAT__ is a globbing pattern where only the wildcard
+character, `*`, is special: it matches zero or more characters.
+You must escape the `*`, `?`, `[`, and :bs: characters with :bs:.
++
+__LVL__ is a log level value.
++
+In this case, libbabeltrace2 overrides the log level specified when
+adding a component of which the name matches __PAT__ to any trace
+processing graph.
+--
++
+libbabeltrace2 dynamically checks this environment variable before
+adding a component to a trace processing graph, meaning you can modify
+it at any time with man:setenv(3).
++
+The available values for 'LVL' are:
++
+--
+include::common-log-levels.txt[]
+--
++
+Example:
++
+----
+*ctf*:I;my-sink:D;*:W
+----
+
 `LIBBABELTRACE2_INIT_LOG_LEVEL`='LVL'::
     Force the initial log level of the Babeltrace~2 library to be 'LVL'.
 +

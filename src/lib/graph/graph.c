@@ -977,6 +977,142 @@ end:
 	return exists;
 }
 
+static const char * const force_comp_log_level_env_var_name =
+	"LIBBABELTRACE2_FORCE_COMPONENT_LOG_LEVEL";
+
+/*
+ * Parses `env_val` as a semicolon-delimited list of `PAT:LEVEL` pairs
+ * and returns the log level for the component with the name
+ * `comp_name`, or -1 if no pattern matches or if there's a
+ * syntax error.
+ */
+static
+int parse_glob_log_level_pairs(const char * const env_val,
+		const char * const comp_name, const size_t comp_name_len)
+{
+	int matched_level = -1;
+	gchar ** const pairs = g_strsplit(env_val, ";", 0);
+
+	if (!pairs) {
+		BT_LOGW("Failed to parse `%s`: "
+			"cannot split value: value=\"%s\"",
+			force_comp_log_level_env_var_name, env_val);
+		goto end;
+	}
+
+	for (gchar **pair_ptr = pairs; *pair_ptr; pair_ptr++) {
+		gchar ** const parts = g_strsplit(*pair_ptr, ":", 2);
+
+		if (!parts || !parts[0] || !parts[1] ||
+				parts[0][0] == '\0' || parts[1][0] == '\0') {
+			BT_LOGW("`%s`: expected non-empty `PAT:LEVEL` specifier: "
+				"spec=\"%s\", value=\"%s\"",
+				force_comp_log_level_env_var_name,
+				*pair_ptr, env_val);
+			g_strfreev(parts);
+			continue;
+		}
+
+		const char * const pat = parts[0];
+		const char * const level_str = parts[1];
+
+		/* Parse the log level */
+		{
+			const int int_level = bt_log_get_level_from_string(level_str);
+
+			if (int_level < 0) {
+				BT_LOGW("`%s`: invalid log level: "
+					"level=\"%s\", spec=\"%s\", value=\"%s\"",
+					force_comp_log_level_env_var_name,
+					level_str, *pair_ptr, env_val);
+				g_strfreev(parts);
+				continue;
+			}
+
+			/* Check if the glob matches the component name */
+			if (bt_common_star_glob_match(pat, strlen(pat),
+					comp_name, comp_name_len)) {
+				matched_level = int_level;
+				BT_LOGI("Overriding component log level (pattern match): "
+					"name=\"%s\", pattern=\"%s\", forced-log-level=%s",
+					comp_name, pat,
+					bt_common_logging_level_string(matched_level));
+				g_strfreev(parts);
+				break;
+			}
+		}
+
+		g_strfreev(parts);
+	}
+
+end:
+	g_strfreev(pairs);
+	return matched_level;
+}
+
+/*
+ * Returns the effective log level for a component with the name
+ * `comp_name` and the initial log level `init_log_level`, considering
+ * the value of the `LIBBABELTRACE2_FORCE_COMPONENT_LOG_LEVEL`
+ * environment variable.
+ *
+ * `LIBBABELTRACE2_FORCE_COMPONENT_LOG_LEVEL` can be either:
+ *
+ * 1. A single log level value, which forces all components to use that
+ *    log level.
+ *
+ * 2. A semicolon-delimited list of `PAT:LEVEL` pairs, where `PAT` is
+ *    a globbing pattern to match component names and `LEVEL` is the log
+ *    level to force for matching components.
+ *
+ * If the syntax is invalid, this function logs a warning and
+ * returns `init_log_level`.
+ */
+static
+bt_logging_level get_effective_comp_log_level(const char * const comp_name,
+		const bt_logging_level init_log_level)
+{
+	const char *env_val;
+	bt_logging_level effective_log_level = init_log_level;
+
+	BT_ASSERT(comp_name);
+	env_val = getenv(force_comp_log_level_env_var_name);
+
+	if (!env_val) {
+		goto end;
+	}
+
+	/* Check if `env_val` is a single log level value */
+	{
+		const int int_level = bt_log_get_level_from_string(env_val);
+
+		if (int_level >= 0) {
+			/* Yes it is */
+			effective_log_level = (int) int_level;
+			BT_LOGI("Overriding component log level (single value): "
+				"name=\"%s\", original-log-level=%s, "
+				"forced-log-level=%s",
+				comp_name,
+				bt_common_logging_level_string(init_log_level),
+				bt_common_logging_level_string(effective_log_level));
+			goto end;
+		}
+	}
+
+	/* Parse as semicolon-delimited list of `PAT:LEVEL` pairs */
+	{
+		const int matched_level = parse_glob_log_level_pairs(env_val,
+			comp_name, strlen(comp_name));
+
+		if (matched_level >= 0) {
+			effective_log_level = (int) matched_level;
+		}
+	}
+
+end:
+	return effective_log_level;
+}
+
 static
 int add_component_with_init_method_data(
 		struct bt_graph *graph,
@@ -1013,6 +1149,13 @@ int add_component_with_init_method_data(
 		graph, comp_cls, name,
 		bt_common_logging_level_string(log_level), params,
 		init_method_data);
+
+	/*
+	 * Check if the `LIBBABELTRACE2_FORCE_COMPONENT_LOG_LEVEL`
+	 * environment variable is set and override the log level if it
+	 * contains a valid value.
+	 */
+	log_level = get_effective_comp_log_level(name, log_level);
 
 	if (!params) {
 		new_params = bt_value_map_create();

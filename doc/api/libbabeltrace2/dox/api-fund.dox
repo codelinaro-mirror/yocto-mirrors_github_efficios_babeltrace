@@ -564,6 +564,11 @@ variable, with one of:
 - \c D or \c DEBUG
 - \c T or \c TRACE
 
+To force the logging level of all or specific components added to any
+trace processing graph, set the
+\c LIBBABELTRACE2_FORCE_COMPONENT_LOG_LEVEL environment variable (see
+\bt_man{babeltrace2-run,7}).
+
 By default, the minimal, build-time logging level is \em DEBUG. We
 recommend that you build libbabeltrace2 with the \em TRACE minimal
 logging level for development. See \ref guide-build-bt2-dev.
