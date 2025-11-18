@@ -3,6 +3,7 @@
 # Copyright (c) 2017 Philippe Proulx <pproulx@efficios.com>
 
 import numbers
+import weakref
 import datetime
 import itertools
 from collections import namedtuple
@@ -507,6 +508,24 @@ class TraceCollectionMessageIterator(bt2_message_iterator._MessageIterator):
 
         self._graph.connect_ports(port_to_muxer, self._get_free_muxer_input_port())
 
+    def _add_port_added_listener(self):
+        # This prevents the circular reference between
+        # `TraceCollectionMessageIterator` and `Graph` that would
+        # otherwise prevent garbage collection due to __del__() methods
+        # in the `_SharedObject` inheritance chain.
+        weak_method = weakref.WeakMethod(self._graph_port_added)
+
+        def port_added_listener(component, port):
+            method = weak_method()
+
+            if method is None:
+                # Object was garbage-collected: nothing to do
+                return
+
+            return method(component, port)
+
+        self._graph.add_port_added_listener(port_added_listener)
+
     def _graph_port_added(self, component, port):
         if not self._connect_ports:
             return
@@ -550,7 +569,7 @@ class TraceCollectionMessageIterator(bt2_message_iterator._MessageIterator):
 
     def _build_graph(self):
         self._graph = bt2_graph.Graph(self._get_greatest_operative_mip_version())
-        self._graph.add_port_added_listener(self._graph_port_added)
+        self._add_port_added_listener()
         self._muxer_comp = self._create_muxer()
 
         if self._begin_ns is not None or self._end_ns is not None:
