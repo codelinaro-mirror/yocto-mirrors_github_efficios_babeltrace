@@ -591,7 +591,9 @@ AE_IF_FEATURE_ENABLED([tests], [
   AE_IF_FEATURE_ENABLED([vendor-pytest], [
     # Use in-tree pytest
     AC_MSG_NOTICE([using in-tree pytest])
+    HAVE_VENDOR_PYTEST=1
   ], [
+    HAVE_VENDOR_PYTEST=0
     # Check for pytest >= 6.1.0
     AC_MSG_CHECKING([for pytest >= 6.1.0])
     AS_IF(["$PYTHON" -c "import pytest; assert tuple(map(int, pytest.__version__.split('.'))) >= (6, 1, 0)" 2>/dev/null], [
@@ -613,6 +615,8 @@ AE_IF_FEATURE_ENABLED([tests], [
     AC_MSG_ERROR([Python plugin support is required to build tests. Use ‘--enable-python-plugins’ to build Python plugins or ‘--disable-tests’ to disable building tests.])
   ])
 ])
+
+AC_SUBST([HAVE_VENDOR_PYTEST])
 
 AS_IF([AE_IS_FEATURE_ENABLED([python-bindings]) || AE_IS_FEATURE_ENABLED([python-plugins])], [
   AS_IF([test "x$have_python_dev" = xno], [
@@ -912,9 +916,12 @@ AC_CONFIG_FILES([
   tests/plugins/flt.utils.trimmer/Makefile
   tests/plugins/sink.text.pretty/Makefile
   tests/utils/env.sh
+  tests/utils/pytest-env.sh
   tests/utils/Makefile
   tests/utils/tap/Makefile
 ])
+
+AC_CONFIG_FILES([tests/utils/run-in-pytest-env.sh], [chmod +x tests/utils/run-in-pytest-env.sh])
 
 AC_OUTPUT
 

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# SPDX-License-Identifier: GPL-2.0-only
+#
+# Copyright (C) 2025 Philippe Proulx <pproulx@efficios.com>
+
+# Sources `pytest-env.sh` and executes the passed command and arguments
+# within that environment.
+
+# shellcheck disable=SC1091
+source '@abs_top_builddir@/tests/utils/pytest-env.sh'
+
+# Not using `exec` because we want the `bt-pytest` function from
+# `pytest-env.sh` to be available here.
+"$@"

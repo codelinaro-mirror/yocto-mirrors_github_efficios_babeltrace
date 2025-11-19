@@ -19,7 +19,8 @@ COMMON_TEST_LDADD = \
 
 # Directories added to EXTRA_DIST will be recursively copied to the distribution.
 EXTRA_DIST = $(srcdir)/data \
-	     bindings/python/bt2/.coveragerc
+	     bindings/python/bt2/.coveragerc \
+	     conftest.py
 
 dist_check_SCRIPTS = \
 	bindings/python/bt2/test-python-bt2.sh \
@@ -75,7 +76,8 @@ dist_check_SCRIPTS = \
 	plugins/src.ctf.lttng-live/test_query.py \
 	python-plugin-provider/bt_plugin_test_python_plugin_provider.py \
 	python-plugin-provider/test-python-plugin-provider.sh \
-	python-plugin-provider/test_python_plugin_provider.py
+	python-plugin-provider/test_python_plugin_provider.py \
+	pytest-tests.sh
 
 noinst_PROGRAMS =
 
@@ -216,6 +218,8 @@ LOG_DRIVER = env AM_TAP_AWK='$(AWK)' \
 	     BT_TESTS_BUILDDIR='$(abs_top_builddir)/tests' \
 	     $(SHELL) $(srcdir)/utils/tap-driver.sh
 
+TESTS_PYTEST = pytest-tests.sh
+
 TESTS_NO_BITFIELD = \
 	$(TESTS_BINDINGS) \
 	$(TESTS_CLI) \
@@ -224,7 +228,8 @@ TESTS_NO_BITFIELD = \
 	$(TESTS_LIB) \
 	$(TESTS_PARAM_VALIDATION) \
 	$(TESTS_PLUGINS) \
-	$(TESTS_PYTHON_PLUGIN_PROVIDER)
+	$(TESTS_PYTHON_PLUGIN_PROVIDER) \
+	$(TESTS_PYTEST)
 
 TESTS = $(TESTS_NO_BITFIELD) $(TESTS_BITFIELD)
 
@@ -241,6 +246,7 @@ $(eval $(call check_target,ctf-writer,$(TESTS_CTF_WRITER)))
 $(eval $(call check_target,lib,$(TESTS_LIB)))
 $(eval $(call check_target,plugins,$(TESTS_PLUGINS)))
 $(eval $(call check_target,python-plugin-provider,$(TESTS_PYTHON_PLUGIN_PROVIDER)))
+$(eval $(call check_target,pytest,$(TESTS_PYTEST)))
 
 check-no-bitfield:
 	$(MAKE) $(AM_MAKEFLAGS) TESTS="$(TESTS_NO_BITFIELD)" check
