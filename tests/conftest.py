@@ -1,12 +1,16 @@
 # SPDX-FileCopyrightText: 2025 Philippe Proulx <pproulx@efficios.com>
 # SPDX-License-Identifier: MIT
 
-# pyright: strict, reportMissingTypeStubs=false, reportPrivateUsage=false
+# pyright: strict, reportMissingTypeStubs=false, reportTypeCommentUsage=false, reportPrivateUsage=false
 
 import os
+import re
 import sys
+import typing
 import logging
 import pathlib
+import subprocess
+from typing import Any, List, Optional
 
 import pytest
 
@@ -64,6 +68,7 @@ def _log_env_var(name: str) -> None:
     )
 
 
+# pytest hook.
 def pytest_sessionstart(session: "pytest.Session") -> None:
     _logger.info("pytest_sessionstart():")
     _logger.info("  Root source directory: `{}`".format(_src_root_dir()))
@@ -91,6 +96,7 @@ def pytest_sessionstart(session: "pytest.Session") -> None:
     _logger.info("  `bt2` package version: {}".format(bt2.__version__))
 
 
+# pytest hook.
 def pytest_configure(config: "pytest.Config") -> None:
     _set_config_build_root_tests_dirs(config)
     setattr(config, "src_tests_dir", _src_tests_dir())
@@ -202,3 +208,145 @@ def dummy_comp_cls() -> bt2._SinkComponentClassConst:
 @pytest.fixture(scope="session")
 def os_type() -> btu.OsType:
     return btu.os_type()
+
+
+class _Catch2TestItem(btu.PytestItem):
+    def __init__(
+        self,
+        *,
+        test_binary: pathlib.Path,
+        catch2_test_name: str,
+        build_root_dir: pathlib.Path,
+        **kwargs: Any,
+    ):
+        super().__init__(**kwargs)
+        self._test_binary = test_binary
+        self._catch2_test_name = catch2_test_name
+        self._build_root_dir = build_root_dir
+
+    def runtest(self) -> None:
+        _logger.info(
+            "Running Catch2 test case `{}` in `{}`".format(
+                self._catch2_test_name, self._test_binary
+            )
+        )
+        result = btu.run(
+            self._build_root_dir,
+            self._test_binary,
+            [self._catch2_test_name],
+        )
+
+        if result.returncode != 0:
+            raise _Catch2TestException(self._catch2_test_name, result)
+
+    def reportinfo(self):
+        return self.path, None, self.name
+
+    def repr_failure(
+        self,
+        excinfo: "pytest.ExceptionInfo[BaseException]",
+        style: Any = None,
+    ):
+        if isinstance(excinfo.value, _Catch2TestException):
+            return excinfo.value.format_output()
+
+        return super().repr_failure(excinfo, style)
+
+
+class _Catch2TestException(Exception):
+    def __init__(
+        self, catch2_test_name: str, result: "subprocess.CompletedProcess[str]"
+    ):
+        super().__init__("Catch2 test failed: `{}`".format(catch2_test_name))
+        self._result = result
+
+    def format_output(self) -> str:
+        output = []  # type: List[str]
+
+        if self._result.stdout:
+            output.append("⚠️ Standard output:")
+            output.append(self._result.stdout)
+
+        if self._result.stderr:
+            output.append("\n⚠️ Standard error:")
+            output.append(self._result.stderr)
+
+        return "\n".join(output).strip()
+
+
+class _Catch2TestFile(btu.PytestFile):
+    @staticmethod
+    def _normalize_catch2_test_name(test_name: str) -> str:
+        test_name = test_name.lower()
+        test_name = re.sub(r"[ :-]", "_", test_name)
+        test_name = re.sub(r"_{2,}", "_", test_name)
+        test_name = re.sub(r"\W", "", test_name)
+        return "test_" + test_name
+
+    def collect(self) -> List[_Catch2TestItem]:
+        # Build the test binary path (remove `.cpp` extension)
+        test_binary = btu.exe_path(
+            _config_build_tests_dir(self.config)
+            / self.path.resolve().relative_to(_src_tests_dir()).with_suffix("")
+        )
+
+        # Skip if the binary doesn't exist
+        if not test_binary.exists():
+            pytest.skip("`{}` Catch2 binary doesn't exist".format(test_binary))
+        else:
+            assert os.access(test_binary, os.X_OK)
+
+        # List test names from Catch2.
+        #
+        # With the `--list-test-names-only` option, Catch2 uses the
+        # number of test cases as its exit status. Therefore ignore the
+        # exit status here.
+        _logger.info("Listing Catch2 test case names from `{}`".format(test_binary))
+        build_root_dir = _config_build_root_dir(self.config)
+        result = btu.run(
+            build_root_dir,
+            test_binary,
+            ["--list-test-names-only"],
+        )
+        _logger.debug(result.stdout)
+
+        # Parse test names and create corresponding test items
+        items = []  # type: List[_Catch2TestItem]
+
+        for line in result.stdout.strip().split("\n"):
+            test_name = line.strip()
+
+            if test_name:
+                # Normalize the test name for the pytest node ID
+                _logger.info(
+                    "Adding Catch2 test case `{}` from `{}`".format(
+                        test_name, test_binary
+                    )
+                )
+                items.append(
+                    _Catch2TestItem.from_parent(  # pyright: ignore[reportUnknownMemberType]
+                        name=self._normalize_catch2_test_name(test_name),
+                        parent=self,
+                        test_binary=test_binary,
+                        catch2_test_name=test_name,
+                        build_root_dir=build_root_dir,
+                    )
+                )
+
+        # Return test items
+        return items
+
+
+# pytest hook.
+def _pytest_collect_file(
+    file_path: pathlib.Path, parent: "pytest.Collector"
+) -> Optional[_Catch2TestFile]:
+    if file_path.suffix == ".cpp" and file_path.name.startswith("test-"):
+        return typing.cast(
+            _Catch2TestFile, _Catch2TestFile.from_parent(parent=parent, path=file_path)
+        )
+
+    return
+
+
+btu.install_pytest_collect_file(sys.modules[__name__], _pytest_collect_file)
