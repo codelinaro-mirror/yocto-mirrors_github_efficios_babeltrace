@@ -200,12 +200,6 @@ TESTS_PLUGINS += \
 	plugins/flt.lttng-utils.debug-info/test-succeed.sh
 endif # ENABLE_DEBUG_INFO
 
-# `lib/conds/test-conds.sh` needs the developer mode to enable all
-# condition checks.
-if DEV_MODE
-TESTS_LIB += lib/conds/test-conds.sh
-endif # DEV_MODE
-
 LOG_DRIVER_FLAGS = --merge --comments
 LOG_DRIVER = env AM_TAP_AWK='$(AWK)' \
 	     BT_TESTS_SRCDIR='$(abs_top_srcdir)/tests' \
