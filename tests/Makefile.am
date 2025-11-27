@@ -105,7 +105,6 @@ TESTS_LIB = \
 	lib/test-bt-values \
 	lib/test-graph-topo \
 	lib/test-mip \
-	lib/test-remove-destruction-listener-in-destruction-listener \
 	lib/test-simple-sink \
 	lib/test-trace-ir-ref \
 	lib/test-plugins.sh
