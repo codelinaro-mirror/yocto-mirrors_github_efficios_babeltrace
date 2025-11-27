@@ -66,26 +66,29 @@ test_plugins_LDADD = \
 	$(COMMON_TEST_LDADD) \
 	$(top_builddir)/src/lib/libbabeltrace2.la \
 	$(top_builddir)/src/cpp-common/vendor/fmt/libfmt.la
+test_plugins_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-DPLUGINS_DIR=\"$(abs_builddir)/plugins/.libs\"
 
-noinst_LTLIBRARIES += test-plugins-plugins/plugin-minimal.la
-test_plugins_plugins_plugin_minimal_la_SOURCES = \
-	test-plugins-plugins/minimal.c
-test_plugins_plugins_plugin_minimal_la_LDFLAGS = \
+noinst_LTLIBRARIES += plugins/plugin-minimal.la
+plugins_plugin_minimal_la_SOURCES = \
+	plugins/minimal.c
+plugins_plugin_minimal_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
 	$(LT_NO_UNDEFINED) \
 	-rpath / -avoid-version -module $(LD_NOTEXT)
-test_plugins_plugins_plugin_minimal_la_LIBADD = \
+plugins_plugin_minimal_la_LIBADD = \
 	$(top_builddir)/src/lib/libbabeltrace2.la \
 	$(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/logging/liblogging.la
 
-noinst_LTLIBRARIES += test-plugins-plugins/plugin-sfs.la
-test_plugins_plugins_plugin_sfs_la_SOURCES = test-plugins-plugins/sfs.c
-test_plugins_plugins_plugin_sfs_la_LDFLAGS = \
+noinst_LTLIBRARIES += plugins/plugin-sfs.la
+plugins_plugin_sfs_la_SOURCES = plugins/sfs.c
+plugins_plugin_sfs_la_LDFLAGS = \
 	$(AM_LDFLAGS) \
 	$(LT_NO_UNDEFINED) \
 	-rpath / -avoid-version -module $(LD_NOTEXT)
-test_plugins_plugins_plugin_sfs_la_LIBADD = \
+plugins_plugin_sfs_la_LIBADD = \
 	$(top_builddir)/src/lib/libbabeltrace2.la \
 	$(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/logging/liblogging.la
@@ -115,9 +118,6 @@ noinst_LTLIBRARIES += utils/liblib-utils.la
 utils_liblib_utils_la_SOURCES = \
 	utils/run-in.cpp \
 	utils/run-in.hpp
-
-dist_check_SCRIPTS = \
-	test-plugins.sh
 
 # `conds/test-conds.sh` needs the developer mode to enable all
 # condition checks.
