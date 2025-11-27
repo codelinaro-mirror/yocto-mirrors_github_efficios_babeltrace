@@ -16,10 +16,10 @@
 #include "compat/mman.h"   /* IWYU: pragma keep  */
 #include "cpp-common/bt2c/glib-up.hpp"
 
+#include "../common/lttng-index.hpp"
 #include "../common/src/pkt-props.hpp"
 #include "data-stream-file.hpp"
 #include "file.hpp"
-#include "lttng-index.hpp"
 
 using namespace bt2c::literals::datalen;
 

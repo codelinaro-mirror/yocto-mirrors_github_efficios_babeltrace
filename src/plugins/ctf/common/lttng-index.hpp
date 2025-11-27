@@ -6,8 +6,8 @@
  * Copyright (C) 2013 David Goulet <dgoulet@efficios.com>
  */
 
-#ifndef BABELTRACE_PLUGINS_CTF_FS_SRC_LTTNG_INDEX_HPP
-#define BABELTRACE_PLUGINS_CTF_FS_SRC_LTTNG_INDEX_HPP
+#ifndef BABELTRACE_PLUGINS_CTF_COMMON_LTTNG_INDEX_HPP
+#define BABELTRACE_PLUGINS_CTF_COMMON_LTTNG_INDEX_HPP
 
 #include <cstdint>
 
@@ -49,4 +49,4 @@ struct ctf_packet_index
     uint64_t packet_seq_num;     /* packet sequence number */
 } __attribute__((__packed__));
 
-#endif /* BABELTRACE_PLUGINS_CTF_FS_SRC_LTTNG_INDEX_HPP */
+#endif /* BABELTRACE_PLUGINS_CTF_COMMON_LTTNG_INDEX_HPP */
