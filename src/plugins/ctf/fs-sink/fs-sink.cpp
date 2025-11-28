@@ -7,6 +7,7 @@
 #include <fmt/format.h>
 #include <glib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <babeltrace2/babeltrace.h>
 
@@ -46,6 +47,17 @@ end:
 }
 
 constexpr const char *ctfVersionParamName = "ctf-version";
+constexpr const char *createLttngIndexParamName = "create-lttng-index";
+constexpr const char *createLttngIndexAutoStr = "auto";
+constexpr const char *createLttngIndexAlwaysStr = "always";
+constexpr const char *createLttngIndexNeverStr = "never";
+
+static const char *createLttngIndexChoices[] = {
+    createLttngIndexAutoStr,
+    createLttngIndexAlwaysStr,
+    createLttngIndexNeverStr,
+    nullptr,
+};
 
 static bt_param_validation_map_value_entry_descr fs_sink_params_descr[] = {
     {"path", BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_MANDATORY,
@@ -60,7 +72,23 @@ static bt_param_validation_map_value_entry_descr fs_sink_params_descr[] = {
      bt_param_validation_value_descr::makeBool()},
     {ctfVersionParamName, BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_OPTIONAL,
      bt_param_validation_value_descr::makeString()},
+    {createLttngIndexParamName, BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_OPTIONAL,
+     bt_param_validation_value_descr::makeString(createLttngIndexChoices)},
     BT_PARAM_VALIDATION_MAP_VALUE_ENTRY_END};
+
+static fs_sink_lttng_index_mode parseCreateLttngIndexParam(const bt_value *value)
+{
+    const char *str = bt_value_string_get(value);
+
+    if (strcmp(str, createLttngIndexAutoStr) == 0) {
+        return FS_SINK_LTTNG_INDEX_MODE_AUTO;
+    } else if (strcmp(str, createLttngIndexAlwaysStr) == 0) {
+        return FS_SINK_LTTNG_INDEX_MODE_ALWAYS;
+    } else {
+        BT_ASSERT(strcmp(str, createLttngIndexNeverStr) == 0);
+        return FS_SINK_LTTNG_INDEX_MODE_NEVER;
+    }
+}
 
 static int ctfVersionFromParams(const bt_value *params, const bt2c::Logger& logger)
 {
@@ -134,6 +162,11 @@ configure_component(bt_self_component_sink *self_comp_sink, struct fs_sink_comp 
         }
 
         fs_sink->ctf_version = static_cast<unsigned int>(ctfVersion);
+    }
+
+    value = bt_value_map_borrow_entry_value_const(params, createLttngIndexParamName);
+    if (value) {
+        fs_sink->create_lttng_index = parseCreateLttngIndexParam(value);
     }
 
     {

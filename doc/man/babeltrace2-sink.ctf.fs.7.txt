@@ -4,7 +4,7 @@
 
 = babeltrace2-sink.ctf.fs(7)
 :manpagetype: component class
-:revdate: 16 October 2024
+:revdate: 7 May 2026
 
 == NAME
 
@@ -293,6 +293,28 @@ to the name of the last subdirectory. The suffix starts at{nbsp}0 and
 increments until the path doesn't exist.
 
 
+[[lttng-index]]
+=== LTTng index
+
+An https://lttng.org/[LTTng] index is a set of companion files which
+hold the size and offset of each packet of the corresponding CTF data
+stream files.
+
+Consumers like Babeltrace{nbsp}2 and
+https://eclipse.dev/tracecompass/[Trace Compass] use it to seek
+efficiently within large CTF traces without having to scan the data
+stream files linearly.
+
+Depending on the value of the param:create-lttng-index[] parameter, a
+compcls:sink.ctf.fs[] component can write, for each output data stream
+file, an LTTng index file named like the data stream file with an `.idx`
+suffix into an `index` subdirectory of the output trace directory.
+
+By default, the component automatically writes an LTTng index for any
+trace IR trace whose `tracer_name` environment entry is `lttng-ust` or
+`lttng-modules`.
+
+
 == INITIALIZATION PARAMETERS
 
 param:assume-single-trace[]=_VAL_ vtype:[optional boolean]::
@@ -303,6 +325,23 @@ This parameter affects how the component builds the output trace path
 (see <<output-path>>).
 +
 Default: false.
+
+param:create-lttng-index[]=(`auto` | `always` | `never`) vtype:[optional string]::
+    Control whether to write an LTTng index
+    (see the <<lttng-index>> section above)
+    alongside each output CTF data stream file:
++
+--
+`auto` (default)::
+    Only write LTTng indexes for traces identified as LTTng traces,
+    based on the value of the `tracer_name` trace environment entry.
+
+`always`::
+    Always write LTTng indexes.
+
+`never`::
+    Never write LTTng indexes.
+--
 
 param:ctf-version[]=_VERSION_ vtype:[optional string]::
 +
