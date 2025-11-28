@@ -5,6 +5,7 @@
  */
 
 #include <glib.h>
+#include <glib/gstdio.h>
 #include <stdio.h>
 
 #include <babeltrace2/babeltrace.h>
@@ -18,6 +19,24 @@
 #include "translate-ctf-ir-to-json.hpp"
 #include "translate-ctf-ir-to-tsdl.hpp"
 #include "translate-trace-ir-to-ctf-ir.hpp"
+
+/*
+ * Returns whether `ir_trace` looks like an LTTng trace, based on its
+ * `tracer_name` environment entry.
+ */
+static bool ir_trace_is_lttng(const bt_trace *ir_trace)
+{
+    const bt_value *v =
+        bt_trace_borrow_environment_entry_value_by_name_const(ir_trace, "tracer_name");
+
+    if (!v || !bt_value_is_string(v)) {
+        return false;
+    }
+
+    const char *tracer_name = bt_value_string_get(v);
+
+    return g_str_equal(tracer_name, "lttng-ust") || g_str_equal(tracer_name, "lttng-modules");
+}
 
 /*
  * Sanitizes `path` so as to:
@@ -514,6 +533,10 @@ void fs_sink_trace_destroy(struct fs_sink_trace *trace)
         }
     }
 
+    if (trace->lttng_index_path) {
+        g_string_free(trace->lttng_index_path, TRUE);
+    }
+
     g_string_free(trace->metadata_path, TRUE);
     trace->metadata_path = NULL;
 
@@ -561,6 +584,19 @@ struct fs_sink_trace *fs_sink_trace_create(struct fs_sink_comp *fs_sink, const b
         BT_CPPLOGE_ERRNO_SPEC(trace->logger, "Cannot create directories for trace directory",
                               ": path=\"{}\"", trace->path->str);
         goto error;
+    }
+
+    if (fs_sink->create_lttng_index == FS_SINK_LTTNG_INDEX_MODE_ALWAYS ||
+        (fs_sink->create_lttng_index == FS_SINK_LTTNG_INDEX_MODE_AUTO &&
+         ir_trace_is_lttng(ir_trace))) {
+        trace->lttng_index_path = g_string_new(trace->path->str);
+        g_string_append(trace->lttng_index_path, "/index");
+        ret = g_mkdir(trace->lttng_index_path->str, 0755);
+        if (ret) {
+            BT_CPPLOGE_ERRNO_SPEC(trace->logger, "Failed to create LTTng index directory",
+                                  ": path=\"{}\"", trace->lttng_index_path->str);
+            goto error;
+        }
     }
 
     trace->metadata_path = g_string_new(trace->path->str);

@@ -15,6 +15,7 @@
 #include "compat/endian.h" /* IWYU pragma: keep  */
 #include "ctfser/ctfser.h"
 
+#include "../common/lttng-index.hpp"
 #include "fs-sink-ctf-meta.hpp"
 #include "fs-sink-stream.hpp"
 #include "fs-sink-trace.hpp"
@@ -27,6 +28,19 @@ void fs_sink_stream_destroy(struct fs_sink_stream *stream)
     }
 
     bt_ctfser_fini(&stream->ctfser);
+
+    if (stream->index_fp) {
+        if (fclose(stream->index_fp) != 0) {
+            BT_CPPLOGW_ERRNO_SPEC(stream->logger, "Failed to close LTTng index file",
+                                  ": path=\"{}\"", stream->index_path->str);
+        }
+        stream->index_fp = nullptr;
+    }
+
+    if (stream->index_path) {
+        g_string_free(stream->index_path, TRUE);
+        stream->index_path = nullptr;
+    }
 
     if (stream->file_name) {
         g_string_free(stream->file_name, TRUE);
@@ -116,6 +130,9 @@ static void set_stream_file_name(struct fs_sink_stream *stream)
     stream->file_name = make_unique_stream_file_name(stream->trace, base_name);
 }
 
+static int write_index_header(struct fs_sink_stream *stream);
+static int write_index_packet_entry(struct fs_sink_stream *stream);
+
 struct fs_sink_stream *fs_sink_stream_create(struct fs_sink_trace *trace,
                                              const bt_stream *ir_stream)
 {
@@ -141,6 +158,23 @@ struct fs_sink_stream *fs_sink_stream_create(struct fs_sink_trace *trace,
     ret = bt_ctfser_init(&stream->ctfser, path->str, static_cast<int>(stream->logger.level()));
     if (ret) {
         goto error;
+    }
+
+    if (trace->lttng_index_path) {
+        stream->index_path = g_string_new(trace->lttng_index_path->str);
+        bt_common_g_string_append_printf(stream->index_path, "/%s.idx", stream->file_name->str);
+        stream->index_fp = fopen(stream->index_path->str, "wb");
+        if (!stream->index_fp) {
+            BT_CPPLOGE_ERRNO_SPEC(stream->logger, "Failed to open LTTng index file for writing",
+                                  ": path=\"{}\"", stream->index_path->str);
+            ret = -1;
+            goto error;
+        }
+
+        ret = write_index_header(stream);
+        if (ret) {
+            goto error;
+        }
     }
 
     g_hash_table_insert(trace->streams, (gpointer) ir_stream, stream);
@@ -678,6 +712,13 @@ int fs_sink_stream_close_packet(struct fs_sink_stream *stream, const bt_clock_sn
     /* Close packet */
     bt_ctfser_close_current_packet(&stream->ctfser, stream->packet_state.total_size / 8);
 
+    if (stream->index_fp) {
+        ret = write_index_packet_entry(stream);
+        if (ret) {
+            goto end;
+        }
+    }
+
     /* Partially copy current packet state to previous packet state */
     stream->prev_packet_state.end_cs = stream->packet_state.end_cs;
     stream->prev_packet_state.discarded_events_counter =
@@ -696,4 +737,45 @@ int fs_sink_stream_close_packet(struct fs_sink_stream *stream, const bt_clock_sn
 
 end:
     return ret;
+}
+
+static int write_index_header(struct fs_sink_stream *stream)
+{
+    const struct ctf_packet_index_file_hdr hdr = {.magic = htobe32(CTF_INDEX_MAGIC),
+                                                  .index_major = htobe32(CTF_INDEX_MAJOR),
+                                                  .index_minor = htobe32(CTF_INDEX_MINOR),
+                                                  .packet_index_len =
+                                                      htobe32(sizeof(struct ctf_packet_index))};
+
+    if (fwrite(&hdr, sizeof(hdr), 1, stream->index_fp) != 1) {
+        BT_CPPLOGE_ERRNO_SPEC(stream->logger, "Failed to write LTTng index header", ": path=\"{}\"",
+                              stream->index_path->str);
+        return -1;
+    }
+
+    return 0;
+}
+
+static int write_index_packet_entry(struct fs_sink_stream *stream)
+{
+    const struct ctf_packet_index entry = {
+        .offset = htobe64(stream->next_packet_offset_bytes),
+        .packet_size = htobe64(stream->packet_state.total_size),
+        .content_size = htobe64(stream->packet_state.content_size),
+        .timestamp_begin = htobe64(stream->packet_state.beginning_cs),
+        .timestamp_end = htobe64(stream->packet_state.end_cs),
+        .events_discarded = htobe64(stream->packet_state.discarded_events_counter),
+        .stream_id =
+            htobe64(bt_stream_class_get_id(bt_stream_borrow_class_const(stream->ir_stream))),
+        .stream_instance_id = htobe64(bt_stream_get_id(stream->ir_stream)),
+        .packet_seq_num = htobe64(stream->packet_state.seq_num)};
+
+    if (fwrite(&entry, sizeof(entry), 1, stream->index_fp) != 1) {
+        BT_CPPLOGE_ERRNO_SPEC(stream->logger, "Failed to write LTTng index entry", ": path=\"{}\"",
+                              stream->index_path->str);
+        return -1;
+    }
+
+    stream->next_packet_offset_bytes += stream->packet_state.total_size / 8;
+    return 0;
 }

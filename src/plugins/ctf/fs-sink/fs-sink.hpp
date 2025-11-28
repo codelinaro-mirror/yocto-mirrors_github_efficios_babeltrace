@@ -13,6 +13,13 @@
 
 #include "cpp-common/bt2c/logging.hpp"
 
+enum fs_sink_lttng_index_mode
+{
+    FS_SINK_LTTNG_INDEX_MODE_AUTO,
+    FS_SINK_LTTNG_INDEX_MODE_ALWAYS,
+    FS_SINK_LTTNG_INDEX_MODE_NEVER,
+};
+
 struct fs_sink_comp
 {
     explicit fs_sink_comp(const bt2::SelfSinkComponent selfSinkComp)
@@ -41,6 +48,16 @@ struct fs_sink_comp
 
     /* True to completely ignore discarded packets messages */
     bool ignore_discarded_packets = false;
+
+    /*
+     * When/whether to create the LTTng index.
+     *
+     * With `FS_SINK_LTTNG_INDEX_MODE_AUTO` (the default), the
+     * component only creates the index for traces it identifies
+     * as LTTng traces (based on the `tracer_name` trace
+     * environment entry).
+     */
+    fs_sink_lttng_index_mode create_lttng_index = FS_SINK_LTTNG_INDEX_MODE_AUTO;
 
     /*
      * True to make the component quiet (nothing printed to the

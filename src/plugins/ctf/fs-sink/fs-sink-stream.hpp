@@ -9,6 +9,7 @@
 
 #include <glib.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #include <babeltrace2/babeltrace.h>
 
@@ -31,6 +32,18 @@ struct fs_sink_stream
 
     /* Stream's file name */
     GString *file_name = nullptr;
+
+    /*
+     * LTTng index file (`<file_name>.idx`); `nullptr` when this
+     * stream doesn't write an index.
+     */
+    FILE *index_fp = nullptr;
+
+    /*
+     * Path of the LTTng index file; only used to log meaningful
+     * I/O errors.
+     */
+    GString *index_path = nullptr;
 
     /* Weak */
     const bt_stream *ir_stream = nullptr;
@@ -164,6 +177,14 @@ struct fs_sink_stream
         uint64_t beginning_cs = 0;
         uint64_t end_cs = 0;
     } discarded_packets_state;
+
+    /*
+     * Byte offset within the stream file where the next packet will
+     * start. Used to fill in the `offset` field of the LTTng index
+     * entry of the just-closed packet (read before being advanced by
+     * the size of that packet).
+     */
+    uint64_t next_packet_offset_bytes = 0;
 };
 
 struct fs_sink_stream *fs_sink_stream_create(struct fs_sink_trace *trace,
