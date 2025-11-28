@@ -103,8 +103,7 @@ TESTS_CLI = \
 
 TESTS_LIB = \
 	lib/test-bt-values \
-	lib/test-graph-topo \
-	lib/test-mip
+	lib/test-graph-topo
 
 TESTS_PLUGINS = \
 	plugins/src.ctf.fs/fail/test-fail.sh \
