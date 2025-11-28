@@ -90,7 +90,7 @@ class TestProps:
     def test_version(self, ctf_plugin):
         assert ctf_plugin.version is not None
         assert ctf_plugin.version.major == 2
-        assert ctf_plugin.version.minor == 0
+        assert ctf_plugin.version.minor == 1
         assert ctf_plugin.version.patch == 0
         assert ctf_plugin.version.extra is None
 
