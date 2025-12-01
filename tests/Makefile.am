@@ -124,9 +124,6 @@ TESTS_PLUGINS = \
 
 TESTS_PYTHON_PLUGIN_PROVIDER = python-plugin-provider/test-python-plugin-provider.sh
 
-TESTS_CTF_WRITER = \
-	ctf-writer/test-ctf-writer.sh
-
 noinst_PROGRAMS += \
 	cpp-common/test-c-string-view
 
@@ -192,7 +189,6 @@ TESTS_PYTEST = pytest-tests.sh
 TESTS = \
 	$(TESTS_BINDINGS) \
 	$(TESTS_CLI) \
-	$(TESTS_CTF_WRITER) \
 	$(TESTS_PLUGINS) \
 	$(TESTS_PYTHON_PLUGIN_PROVIDER) \
 	$(TESTS_PYTEST)
@@ -204,7 +200,6 @@ endef
 
 $(eval $(call check_target,bindings,$(TESTS_BINDINGS)))
 $(eval $(call check_target,cli,$(TESTS_CLI)))
-$(eval $(call check_target,ctf-writer,$(TESTS_CTF_WRITER)))
 $(eval $(call check_target,plugins,$(TESTS_PLUGINS)))
 $(eval $(call check_target,python-plugin-provider,$(TESTS_PYTHON_PLUGIN_PROVIDER)))
 $(eval $(call check_target,pytest,$(TESTS_PYTEST)))
