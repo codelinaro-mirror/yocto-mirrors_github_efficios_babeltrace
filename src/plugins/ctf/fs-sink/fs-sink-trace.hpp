@@ -65,4 +65,15 @@ struct fs_sink_trace *fs_sink_trace_create(struct fs_sink_comp *fs_sink, const b
 
 void fs_sink_trace_destroy(struct fs_sink_trace *trace);
 
+/*
+ * Returns whether a `sink.ctf.fs` component configured with `fs_sink`
+ * will write an LTTng index alongside the CTF data stream files
+ * of `ir_trace`.
+ *
+ * This depends on the `create-lttng-index` parameter and, in
+ * `FS_SINK_LTTNG_INDEX_MODE_AUTO` mode, on the `tracer_name`
+ * environment entry of `ir_trace`.
+ */
+bool fs_sink_will_create_lttng_index(const struct fs_sink_comp *fs_sink, const bt_trace *ir_trace);
+
 #endif /* BABELTRACE_PLUGINS_CTF_FS_SINK_FS_SINK_TRACE_HPP */

@@ -38,6 +38,20 @@ static bool ir_trace_is_lttng(const bt_trace *ir_trace)
     return g_str_equal(tracer_name, "lttng-ust") || g_str_equal(tracer_name, "lttng-modules");
 }
 
+bool fs_sink_will_create_lttng_index(const struct fs_sink_comp *fs_sink, const bt_trace *ir_trace)
+{
+    switch (fs_sink->create_lttng_index) {
+    case FS_SINK_LTTNG_INDEX_MODE_ALWAYS:
+        return true;
+    case FS_SINK_LTTNG_INDEX_MODE_NEVER:
+        return false;
+    case FS_SINK_LTTNG_INDEX_MODE_AUTO:
+        return ir_trace_is_lttng(ir_trace);
+    }
+
+    bt_common_abort();
+}
+
 /*
  * Sanitizes `path` so as to:
  *
@@ -586,9 +600,7 @@ struct fs_sink_trace *fs_sink_trace_create(struct fs_sink_comp *fs_sink, const b
         goto error;
     }
 
-    if (fs_sink->create_lttng_index == FS_SINK_LTTNG_INDEX_MODE_ALWAYS ||
-        (fs_sink->create_lttng_index == FS_SINK_LTTNG_INDEX_MODE_AUTO &&
-         ir_trace_is_lttng(ir_trace))) {
+    if (fs_sink_will_create_lttng_index(fs_sink, ir_trace)) {
         trace->lttng_index_path = g_string_new(trace->path->str);
         g_string_append(trace->lttng_index_path, "/index");
         ret = g_mkdir(trace->lttng_index_path->str, 0755);

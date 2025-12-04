@@ -19,6 +19,7 @@
 #include "cpp-common/bt2c/fmt.hpp" /* IWYU pragma: keep */
 
 #include "fs-sink-ctf-meta.hpp"
+#include "fs-sink-trace.hpp"
 #include "fs-sink.hpp"
 #include "translate-trace-ir-to-ctf-ir.hpp"
 
@@ -38,9 +39,10 @@ namespace sink {
 
 struct TraceIrToCtfIrCtx
 {
-    explicit TraceIrToCtfIrCtx(struct fs_sink_comp *fs_sink)
+    explicit TraceIrToCtfIrCtx(struct fs_sink_comp *fs_sink, const bt_trace *ir_trace)
         : logger {fs_sink->logger, "PLUGIN/SINK.CTF.FS/TRANSLATE-TRACE-IR-TO-CTF-IR"},
-          ctf_version {fs_sink->ctf_version}
+          ctf_version {fs_sink->ctf_version},
+          apply_tc_cpu_id_workaround {fs_sink_will_create_lttng_index(fs_sink, ir_trace)}
     {
     }
 
@@ -65,6 +67,20 @@ struct TraceIrToCtfIrCtx
      * CTF 1.8 implies MIP 0 and CTF 2 implies MIP 1.
      */
     unsigned int ctf_version;
+
+    /*
+     * Whether to leave the `cpu_id` packet context field name unescaped
+     * (that is, write it as `cpu_id` instead of `_cpu_id`).
+     *
+     * This works around a known Trace Compass bug: when an LTTng index
+     * is present alongside the CTF trace, Trace Compass fails to read
+     * the trace if the `cpu_id` packet context field name is
+     * TSDL-escaped.
+     *
+     * True when the component will write an LTTng index alongside
+     * the trace's CTF data stream files.
+     */
+    bool apply_tc_cpu_id_workaround;
 };
 
 } /* namespace sink */
@@ -182,7 +198,12 @@ static inline int cur_path_stack_push(ctf::sink::TraceIrToCtfIrCtx *ctx, const c
 
     if (name) {
         if (ctx->ctf_version == 1) {
-            if (force_protect_name) {
+            if (ctx->apply_tc_cpu_id_workaround &&
+                ctx->cur_scope == BT_FIELD_PATH_SCOPE_PACKET_CONTEXT &&
+                strcmp(name, "cpu_id") == 0) {
+                BT_CPPLOGD_SPEC(ctx->logger, "Not escaping the packet context `cpu_id` member name "
+                                             "to work around a known Trace Compass bug.");
+            } else if (force_protect_name) {
                 g_string_assign(field_path_elem->name, "_");
             }
 
@@ -1589,7 +1610,7 @@ static int translate_event_class(struct fs_sink_comp *fs_sink, struct fs_sink_ct
                                  struct fs_sink_ctf_event_class **out_ec)
 {
     int ret = 0;
-    ctf::sink::TraceIrToCtfIrCtx ctx {fs_sink};
+    ctf::sink::TraceIrToCtfIrCtx ctx {fs_sink, sc->trace->ir_trace};
     struct fs_sink_ctf_event_class *ec;
 
     BT_ASSERT(sc);
@@ -1684,7 +1705,7 @@ static int translate_stream_class(struct fs_sink_comp *fs_sink, struct fs_sink_c
                                   struct fs_sink_ctf_stream_class **out_sc)
 {
     int ret = 0;
-    ctf::sink::TraceIrToCtfIrCtx ctx {fs_sink};
+    ctf::sink::TraceIrToCtfIrCtx ctx {fs_sink, trace->ir_trace};
 
     BT_ASSERT(trace);
     BT_ASSERT(ir_sc);
