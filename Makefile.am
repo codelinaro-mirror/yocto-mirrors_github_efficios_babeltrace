@@ -36,4 +36,5 @@ EXTRA_DIST = \
 	LICENSES/MIT.txt \
 	LICENSES/PSF-2.0.txt \
 	std-ext-lib.md \
-	version
+	version \
+	zsh-completion

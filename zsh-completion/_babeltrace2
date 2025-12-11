@@ -1,0 +1,1245 @@
+#compdef babeltrace2
+#
+# SPDX-FileCopyrightText: 2025 Philippe Proulx <eeppeliteloop@gmail.com>
+# SPDX-License-Identifier: MIT
+#
+# This is a Zsh completion function for the babeltrace2(1) command
+# (see <https://babeltrace.org/>).
+
+# Usage:
+#
+#     __bt2_exclude_opts OPT...
+#
+# Excludes one or more options/switches OPT from the possible
+# options/switches.
+#
+# Each OPT must match `--*` (long) or `-*` (short).
+#
+# This function removes description lines from the `long_opts`,
+# `long_switches`, `short_opts`, and `short_switches` variables.
+__bt2_exclude_opts() {
+  local opt
+
+  for opt in "$@"; do
+    if [[ $opt == --* ]]; then
+      long_opts=("${(@)long_opts:#$opt:*}")
+      long_switches=("${(@)long_switches:#$opt:*}")
+    elif [[ $opt == -* ]]; then
+      short_opts=("${(@)short_opts:#$opt:*}")
+      short_switches=("${(@)short_switches:#$opt:*}")
+    fi
+  done
+}
+
+# Usage:
+#
+#     __bt2_add_opts LONGOPT [SHORTOPT] DESCR
+#
+# Adds an option LONGOPT to `long_opts` and optionally short option
+# SHORTOPT to `short_opts` with the description DESCR.
+__bt2_add_opts() {
+  local -r long_opt=$1
+  local short_opt descr
+
+  if [[ $2 == -* ]]; then
+    short_opt=$2
+    descr=$3
+  else
+    descr=$2
+  fi
+
+  long_opts+=("$long_opt:$descr")
+
+  if [[ -n $short_opt ]]; then
+    short_opts+=("$short_opt:$descr")
+  fi
+}
+
+# Usage:
+#
+#     __bt2_add_switches LONGSW [SHORTSW] DESCR
+#
+# Adds a long switch LONGSW to `long_switches` and optionally short
+# switch SHORTSW to `short_switches` with the description DESCR.
+__bt2_add_switches() {
+  local -r long_switch=$1
+  local short_switch descr
+
+  if [[ $2 == -* ]]; then
+    short_switch=$2
+    descr=$3
+  else
+    descr=$2
+  fi
+
+  long_switches+=("$long_switch:$descr")
+
+  if [[ -n $short_switch ]]; then
+    short_switches+=("$short_switch:$descr")
+  fi
+}
+
+# Resets the `long_opts`, `short_opts`, `long_switches`, and
+# `short_switches` arrays.
+#
+# Upon return, `long_switches` and `short_switches` only contain
+# `--help` and `-h`.
+__bt2_reset_opts_and_switches() {
+  long_opts=()
+  short_opts=()
+  long_switches=()
+  short_switches=()
+  __bt2_add_switches --help -h 'show help and quit'
+}
+
+# Completes a log level value.
+__bt2_complete_log_level() {
+  compadd -V log-level -- NONE FATAL ERROR WARN INFO DEBUG TRACE
+}
+
+# Usage:
+#
+#     __bt2_complete_comp_cls_spec_or_plugin WITHPLUGINS
+#
+# Completes known component class specifiers and, if WITHPLUGINS is `1`,
+# known plugin names, running `babeltrace2 list-plugins` to find them.
+__bt2_complete_comp_cls_spec_or_plugin() {
+  local -r with_plugins=$1
+  local line cur_plugin_name
+  local -a match
+  local -a src_comp_cls_specs flt_comp_cls_specs sink_comp_cls_specs plugins
+
+  for line in "${(@f)$($words[1] list-plugins)}"; do
+    if [[ $line =~ '^([[:alnum:]_-]+):$' ]]; then
+      # Current plugin name
+      cur_plugin_name=$match[1]
+    elif [[ $line =~ '^[[:blank:]]+Description:[[:blank:]]+(.*)$' ]]; then
+      # Description of current plugin
+      local descr=${match[1]%.}
+
+      if [[ -z $descr || $descr == '(None)' ]]; then
+        descr='(no description available)'
+      fi
+
+      # Add to plugins
+      plugins+=("$cur_plugin_name:$descr")
+    elif [[ $line =~ '^[[:blank:]]+'"'"'((source|filter|sink)\.[^.]+\.[^.]+)'"'"':[[:blank:]]+(.*)$' ]]; then
+      # Component class specifier
+      local descr=${match[3]%.}
+
+      if [[ -z $descr ]]; then
+        descr='(no description available)'
+      fi
+
+      # Add to component class specifiers
+      local spec=$match[1]
+
+      # Add short aliases
+      if [[ $spec == source.* ]]; then
+        src_comp_cls_specs+=("${spec/source./src.}:$descr")
+      elif [[ $spec == filter.* ]]; then
+        flt_comp_cls_specs+=("${spec/filter./flt.}:$descr")
+      else
+        sink_comp_cls_specs+=("$spec:$descr")
+      fi
+    fi
+  done
+
+  local -ri total_comp_cls_specs=$(($#src_comp_cls_specs + $#flt_comp_cls_specs + $#sink_comp_cls_specs))
+
+  if (((total_comp_cls_specs + $#plugins) == 0)); then
+    # No plugins or component class specifications to suggest: just show
+    # a message.
+    local intro
+
+    if ((with_plugins)); then
+      intro='plugin or '
+    fi
+
+    _message -e descriptions "${intro}component class"
+    return
+  fi
+
+  _describe -t component-class-specs 'component class' \
+    src_comp_cls_specs -o nosort -- \
+    flt_comp_cls_specs -o nosort -- \
+    sink_comp_cls_specs -o nosort
+
+  local -ri describe_comp_cls_ret=$?
+  local -i describe_plugins_ret=0
+
+  if ((with_plugins)); then
+    _describe -t plugins 'plugin' plugins
+    describe_plugins_ret=$?
+  fi
+
+  ((describe_comp_cls_ret == 0 && describe_plugins_ret == 0))
+}
+
+# Usage:
+#
+#     __bt2_complete_live_session BASEURL
+#
+# Completes LTTng live session names for the base LTTng live URL BASEURL
+# (like `net://some-host:8475/host/`).
+__bt2_complete_live_session() {
+  local -r base_url=${1%/host/}
+  local line
+  local -a sessions displays
+
+  # List available sessions
+  for line in "${(@f)$($words[1] -i lttng-live "$base_url" 2>/dev/null)}"; do
+    if [[ $line =~ '^[[:blank:]]*net4?://[^/]+/host/([^[:blank:]]+)[[:blank:]]+\((.+)\)[[:blank:]]*$' ]]; then
+      sessions+=("$match[1]")
+      displays+=("$line")
+    fi
+  done
+
+  if (($#sessions == 0)); then
+    _message "no LTTng live sessions found for \`$base_url\`"
+    return
+  fi
+
+  compadd -al -d displays -V 'LTTng live session' sessions
+}
+
+# Completes the `list-plugins` command.
+__bt2_complete_list_plugins_cmd() {
+  __bt2_reset_opts_and_switches
+  _describe -o option long_switches -- short_switches
+}
+
+# Completes the `help` command.
+__bt2_complete_help_cmd() {
+  __bt2_reset_opts_and_switches
+
+  local -i has_comp_cls_spec_or_plugin=0
+
+  for word_index in {$word_index..$#words}; do
+    if ((word_index == CURRENT)); then
+      break
+    fi
+
+    word=$words[word_index]
+
+    case $word in
+      --help|-h)
+        return 1;;
+      *)
+        has_comp_cls_spec_or_plugin=1
+        ;;
+    esac
+  done
+
+  # Complete options
+  if ((! has_comp_cls_spec_or_plugin)) && [[ $PREFIX != -* ]]; then
+    __bt2_complete_comp_cls_spec_or_plugin 1
+    return
+  fi
+
+  # Offer all possible options/switches
+  _describe -o option long_switches -- short_switches
+}
+
+# Completes the `query` command.
+__bt2_complete_query_cmd() {
+  __bt2_reset_opts_and_switches
+  __bt2_add_opts --params -p 'set the query parameters'
+  in_opt_name=
+
+  local comp_cls_spec
+  local -i has_object=0
+
+  for word_index in {$word_index..$#words}; do
+    if ((word_index == CURRENT)); then
+      break
+    fi
+
+    word=$words[word_index]
+
+    case $word in
+      --params=*)
+        __bt2_exclude_opts --params -p;;
+      --params|-p)
+        in_opt_name=params;;
+      --help|-h)
+        return 1;;
+      *)
+        case $in_opt_name in
+          params)
+            __bt2_exclude_opts --params -p;;
+          *)
+            if [[ -z $comp_cls_spec ]]; then
+              comp_cls_spec=$word
+            elif ((! has_object)); then
+              has_object=1
+            fi
+            ;;
+        esac
+
+        in_opt_name=
+        ;;
+    esac
+  done
+
+  # Complete options, component class specifier, and query object
+  if [[ $in_opt_name == params ]] || compset -P --params=; then
+    _message -e descriptions 'query parameters'
+    return
+  elif [[ -z $in_opt_name && $PREFIX != -* ]]; then
+    if [[ -z $comp_cls_spec ]]; then
+      __bt2_complete_comp_cls_spec_or_plugin 0
+      return
+    elif ((! has_object)); then
+      # Complete query object based on component class specifier
+      local -a objects
+
+      case $comp_cls_spec in
+        (source|src).ctf.lttng-live)
+          objects=(
+            'babeltrace.support-info:whether or not an instance can handle a given input'
+            'sessions:list of available LTTng live sessions'
+          );;
+        (source|src).ctf.fs)
+          objects=(
+            'babeltrace.support-info:whether or not an instance can handle a given input'
+            'babeltrace.trace-infos:time range information about specific traces and their streams'
+            'metadata-info:plain text metadata stream and whether or not it is packetized'
+          );;
+        *)
+          _message -e descriptions 'query object'
+          return
+          ;;
+      esac
+
+      _describe 'query object' objects
+      return
+    fi
+  fi
+
+  # Offer all possible options/switches
+  _describe -o option long_opts -qS= -- short_opts -- long_switches -- short_switches
+}
+
+# Adds common `run`/`convert` command options.
+__bt2_add_common_run_convert_opts() {
+  __bt2_add_opts --retry-duration 'set the duration of a single retry'
+  __bt2_add_opts --allowed-mip-versions -m 'only allow the graph to honour a specific MIP version'
+  __bt2_add_opts --component -c 'create a component and set it as the current component'
+}
+
+# Adds options available when there's a current component for the
+# `run` and `convert` commands.
+__bt2_add_cur_comp_opts() {
+  __bt2_add_opts --params -p 'add init. parameters to the current component'
+  __bt2_add_opts --log-level -l 'set the log level of the current component'
+}
+
+# Usage:
+#
+#     __bt2_try_complete_common_run_convert_opts COMPNAMEREQ
+#
+# Tries to complete common `run`/`convert` options.
+#
+# If COMPNAMEREQ is `1`, then require a component name followed with `:`
+# for the `--component` option (for the `run` command).
+#
+# Uses the `in_opt_name` and `has_cur_comp` variables.
+#
+# Sets `opt_completed` to `1` if an option was recognized and completion
+# attempted, or `0` otherwise.
+#
+# Returns the status of the completion function if one was called.
+__bt2_try_complete_common_run_convert_opts() {
+  local -ri comp_name_required=$1
+
+  opt_completed=1
+
+  if [[ $in_opt_name == retry-duration ]] || compset -P --retry-duration=; then
+    _message -e descriptions 'retry duration (µs)'
+    return
+  elif [[ $in_opt_name == allowed-mip-versions ]] || compset -P --allowed-mip-versions=; then
+    _message -e descriptions 'allowed MIP version'
+    return
+  elif [[ -z $in_opt_name ]] && compset -P '--component=*:'; then
+    __bt2_complete_comp_cls_spec_or_plugin 0
+    return
+  elif [[ $in_opt_name == component ]] && compset -P '*:'; then
+    __bt2_complete_comp_cls_spec_or_plugin 0
+    return
+  elif [[ $in_opt_name == component ]] || compset -P '--component='; then
+    if ((comp_name_required)); then
+      # Name required with `run`
+      if [[ -n $PREFIX ]]; then
+        # Accept what's typed and add `:`
+        compadd -S: -- $PREFIX
+        return
+      else
+        _message -e descriptions 'component name followed with `:`'
+        return
+      fi
+    else
+      # Typical to not set any component name with `convert`
+      __bt2_complete_comp_cls_spec_or_plugin 0
+      return
+    fi
+  elif ((has_cur_comp)); then
+    if [[ $in_opt_name == params ]] || compset -P --params=; then
+      _message -e descriptions 'initialization parameters'
+      return
+    elif [[ $in_opt_name == log-level ]] || compset -P --log-level=; then
+      __bt2_complete_log_level
+      return
+    fi
+  fi
+
+  opt_completed=0
+}
+
+# Completes the `run` command.
+__bt2_complete_run_cmd() {
+  __bt2_reset_opts_and_switches
+  __bt2_add_opts --base-params -b 'set the current base init. parameters'
+  __bt2_add_opts --connect -x 'add a connection rule'
+  __bt2_add_switches --reset-base-params -r 'reset the current base init. parameters'
+  __bt2_add_common_run_convert_opts
+
+  in_opt_name=
+  local -i has_cur_comp=0
+
+  for word_index in {$word_index..$#words}; do
+    if ((word_index == CURRENT)); then
+      break
+    fi
+
+    word=$words[word_index]
+
+    case $word in
+      # Common `convert`/`run` options
+      --retry-duration=*)
+        __bt2_exclude_opts --retry-duration;;
+      --retry-duration)
+        in_opt_name=retry-duration;;
+      --allowed-mip-versions=*)
+        __bt2_exclude_opts --allowed-mip-versions -m;;
+      --allowed-mip-versions|-m)
+        in_opt_name=allowed-mip-versions;;
+      --component=*)
+        has_cur_comp=1;;
+      --component|-c)
+        in_opt_name=component;;
+      --params|-p)
+        in_opt_name=params;;
+      --log-level|-l)
+        in_opt_name=log-level;;
+
+      # `run`-specific options
+      --base-params|-b)
+        in_opt_name=base-params;;
+      --connect|-x)
+        in_opt_name=connect;;
+      --reset-base-params|-r)
+        __bt2_exclude_opts --reset-base-params -r;;
+
+      # Help options
+      --help|-h)
+        return 1;;
+      *)
+        case $in_opt_name in
+          retry-duration)
+            __bt2_exclude_opts --retry-duration;;
+          allowed-mip-versions)
+            __bt2_exclude_opts --allowed-mip-versions -m;;
+          component)
+            has_cur_comp=1;;
+        esac
+
+        in_opt_name=
+        ;;
+    esac
+  done
+
+  # Add current component options when there's a current component
+  if ((has_cur_comp)); then
+    __bt2_add_cur_comp_opts
+  fi
+
+  # Complete `run`-specific options
+  if [[ $in_opt_name == base-params ]] || compset -P --base-params=; then
+    _message -e descriptions 'base initialization parameters'
+    return
+  elif [[ $in_opt_name == connect ]] || compset -P --connect=; then
+    _message -e descriptions 'connection rule'
+    return
+  fi
+
+  # Complete common `run`/`convert` options
+  local -i opt_completed ret
+
+  __bt2_try_complete_common_run_convert_opts 1
+  ret=$?
+
+  if ((opt_completed)); then
+    return $ret
+  fi
+
+  # Offer all possible options/switches (`-O` because no non-option args)
+  _describe -O option long_opts -qS= -- short_opts -- long_switches -- short_switches
+}
+
+# Completes the `convert` command for the
+# `--output-format=ctf-metadata` action.
+__bt2_complete_convert_cmd_print_ctf_metadata() {
+  __bt2_reset_opts_and_switches
+  __bt2_add_opts --output-format -o 'set to `ctf-metadata`'
+  __bt2_add_opts --output -w 'set the output path'
+  in_opt_name=
+
+  local -i has_input_path=0
+
+  for word_index in {$word_index..$#words}; do
+    if ((word_index == CURRENT)); then
+      break
+    fi
+
+    word=$words[word_index]
+
+    case $word in
+      --output-format=*)
+        __bt2_exclude_opts --output-format -o;;
+      --output-format|-o)
+        in_opt_name=output-format;;
+      --output=*)
+        __bt2_exclude_opts --output -w;;
+      --output|-w)
+        in_opt_name=output;;
+      --help|-h)
+        return 1;;
+      *)
+        case $in_opt_name in
+          output-format)
+            __bt2_exclude_opts --output-format -o;;
+          output)
+            __bt2_exclude_opts --output -w;;
+          *)
+            has_input_path=1
+            ;;
+        esac
+
+        in_opt_name=
+        ;;
+    esac
+  done
+
+  # Complete options and CTF trace path
+  if [[ $in_opt_name == output-format ]] || compset -P --output-format=; then
+    compadd -- ctf-metadata
+    return
+  elif [[ $in_opt_name == output ]] || compset -P --output=; then
+    _files
+    return
+  elif ((! has_input_path)) && [[ $PREFIX != -* ]]; then
+    _files -/
+    return
+  fi
+
+  # Offer all possible options/switches
+  _describe -o option long_opts -qS= -- short_opts -- long_switches -- short_switches
+}
+
+# Completes the `convert` command for the LTTng live session
+# listing action.
+__bt2_complete_convert_cmd_list_live_sessions() {
+  __bt2_reset_opts_and_switches
+  __bt2_add_opts --input-format -i 'set to `lttng-live`'
+  __bt2_add_opts --output -w 'set the output path'
+  in_opt_name=
+
+  local -i has_url=0
+
+  for word_index in {$word_index..$#words}; do
+    if ((word_index == CURRENT)); then
+      break
+    fi
+
+    word=$words[word_index]
+
+    case $word in
+      --input-format=*)
+        __bt2_exclude_opts --input-format -i;;
+      --input-format|-i)
+        in_opt_name=input-format;;
+      --output=*)
+        __bt2_exclude_opts --output -w;;
+      --output|-w)
+        in_opt_name=output;;
+      --help|-h)
+        return 1;;
+      *)
+        case $in_opt_name in
+          input-format)
+            __bt2_exclude_opts --input-format -i;;
+          output)
+            __bt2_exclude_opts --output -w;;
+          *)
+            has_url=1
+            ;;
+        esac
+
+        in_opt_name=
+        ;;
+    esac
+  done
+
+  # Complete options and URL
+  if [[ $in_opt_name == input-format ]] || compset -P --input-format=; then
+    compadd -- lttng-live
+    return
+  elif [[ $in_opt_name == output ]] || compset -P --output=; then
+    _files
+    return
+  elif ((! has_url)) && [[ $PREFIX != -* ]]; then
+    _message -e descriptions 'LTTng live URL'
+    return
+  fi
+
+  # Offer all possible options/switches
+  _describe -o option long_opts -qS= -- short_opts -- long_switches -- short_switches
+}
+
+# Completes the `babeltrace2` main command.
+#
+# This handles general options, `convert` command options (default
+# command), and `run` command options (when command is explicit).
+__bt2_complete() {
+  __bt2_reset_opts_and_switches
+
+  # Add general options
+  __bt2_add_opts --plugin-path 'add one or more plugin directories'
+  __bt2_add_opts --log-level -l 'set the log level of all known loggers'
+  __bt2_add_switches --verbose -v 'equivalent to `--log-level=INFO`'
+  __bt2_add_switches --debug -d 'equivalent to `--log-level=TRACE`'
+  __bt2_add_switches --omit-home-plugin-path "do not search plugins in \`$HOME/.local/lib/babeltrace2/plugin\`"
+  __bt2_add_switches --omit-system-plugin-path 'do not search for installed plugins'
+
+  # Add common `run`/`convert` options
+  __bt2_add_common_run_convert_opts
+
+  # Add `convert`-specific options (default command)
+  __bt2_add_opts --input-format -i 'create components from a specific CC for non-option args.'
+  __bt2_add_opts --output-format -o 'create an implicit sink component'
+  __bt2_add_switches --clock-force-correlate 'assume all clock classes have a Unix epoch origin'
+  __bt2_add_opts --clock-offset 'add seconds to the offsets of all clock classes'
+  __bt2_add_opts --clock-offset-ns 'add nanoseconds to the offsets of all clock classes'
+  __bt2_add_opts --begin 'set the trimming beginning time'
+  __bt2_add_opts --end 'set the trimming end time'
+  __bt2_add_opts --timerange 'set the trimming time range'
+  __bt2_add_switches --debug-info 'create a debugging info filter component'
+  __bt2_add_opts --debug-info-dir 'set where to find the debugging info'
+  __bt2_add_switches --debug-info-full-path 'write the full paths to files in debugging info fields'
+  __bt2_add_opts --debug-info-target-prefix 'prepend to the paths to executables recorded in the trace'
+  __bt2_add_switches --clock-cycles 'print the event record time in clock cycles'
+  __bt2_add_switches --clock-date 'print the date and the time of event records'
+  __bt2_add_switches --clock-gmt 'do not apply the local timezone to the printed times'
+  __bt2_add_switches --clock-seconds 'print the event record times in seconds since Unix epoch'
+  __bt2_add_opts --fields 'print specific metadata fields'
+  __bt2_add_opts --names 'print specific structures'
+  __bt2_add_switches --no-delta 'do not print the duration since the last event record on the line'
+  __bt2_add_opts --output -w 'set the output path'
+  __bt2_add_switches --run-args 'print the equivalent `run` arguments, space-separated'
+  __bt2_add_switches --run-args-0 'print the equivalent `run` arguments, null-separated'
+  __bt2_add_switches --stream-intersection 'enable the stream intersection mode'
+
+  # Track state
+  local -i is_convert_cmd=0 has_cur_comp=0 \
+    has_src_ctf_fs_opt=0 has_pretty_opt=0 has_gen_opt_log_level=0 \
+    has_non_output_convert_opt=0
+  local input_format output_format last_non_opt_arg
+  local -ri start_index=word_index
+
+  for word_index in {$word_index..$#words}; do
+    if ((word_index == CURRENT)); then
+      break
+    fi
+
+    word=$words[word_index]
+
+    case $word in
+      # General options
+      --plugin-path=*)
+        __bt2_exclude_opts --plugin-path;;
+      --plugin-path)
+        in_opt_name=plugin-path;;
+      --omit-home-plugin-path)
+        __bt2_exclude_opts --omit-home-plugin-path;;
+      --omit-system-plugin-path)
+        __bt2_exclude_opts --omit-system-plugin-path;;
+      --log-level=*|--verbose|-v|--debug|-d)
+        __bt2_exclude_opts --log-level -l --verbose -v --debug -d
+
+        if ((! is_convert_cmd)); then
+          has_gen_opt_log_level=1
+        fi
+        ;;
+      --log-level|-l)
+        in_opt_name=log-level;;
+      --help|-h|--version|-V)
+        return 1;;
+
+      # Common `convert`/`run` options
+      --retry-duration=*)
+        __bt2_exclude_opts --retry-duration
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --retry-duration)
+        in_opt_name=retry-duration;;
+      --allowed-mip-versions=*)
+        __bt2_exclude_opts --allowed-mip-versions -m
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --allowed-mip-versions|-m)
+        in_opt_name=allowed-mip-versions;;
+      --component=*)
+        has_cur_comp=1
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --component|-c)
+        in_opt_name=component;;
+      --params|-p)
+        in_opt_name=params;;
+
+      # `convert`-specific options
+      --input-format=*)
+        __bt2_exclude_opts --input-format -i
+        input_format=${word#--input-format=}
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --input-format|-i)
+        in_opt_name=input-format;;
+      --output-format=*)
+        __bt2_exclude_opts --output-format -o
+        output_format=${word#--output-format=}
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --output-format|-o)
+        in_opt_name=output-format;;
+      --clock-force-correlate)
+        __bt2_exclude_opts --clock-force-correlate
+        has_src_ctf_fs_opt=1
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --clock-offset=*)
+        __bt2_exclude_opts --clock-offset
+        has_src_ctf_fs_opt=1
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --clock-offset)
+        in_opt_name=clock-offset;;
+      --clock-offset-ns=*)
+        __bt2_exclude_opts --clock-offset-ns
+        has_src_ctf_fs_opt=1
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --clock-offset-ns)
+        in_opt_name=clock-offset-ns;;
+      --begin=*)
+        __bt2_exclude_opts --begin --timerange
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --begin)
+        in_opt_name=begin;;
+      --end=*)
+        __bt2_exclude_opts --end --timerange
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --end)
+        in_opt_name=end;;
+      --timerange=*)
+        __bt2_exclude_opts --timerange --begin --end
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --timerange)
+        in_opt_name=timerange;;
+      --debug-info)
+        __bt2_exclude_opts --debug-info
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --debug-info-dir=*)
+        __bt2_exclude_opts --debug-info-dir --debug-info
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --debug-info-dir)
+        in_opt_name=debug-info-dir;;
+      --debug-info-full-path)
+        __bt2_exclude_opts --debug-info-full-path --debug-info
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --debug-info-target-prefix=*)
+        __bt2_exclude_opts --debug-info-target-prefix --debug-info
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --debug-info-target-prefix)
+        in_opt_name=debug-info-target-prefix;;
+      --clock-cycles)
+        __bt2_exclude_opts --clock-cycles --clock-seconds --clock-date --clock-gmt
+        has_pretty_opt=1
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --clock-seconds)
+        __bt2_exclude_opts --clock-seconds --clock-cycles --clock-date
+        has_pretty_opt=1
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --clock-date)
+        __bt2_exclude_opts --clock-date --clock-cycles --clock-seconds
+        has_pretty_opt=1
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --clock-gmt)
+        __bt2_exclude_opts --clock-gmt --clock-cycles
+        has_pretty_opt=1
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --fields=*)
+        __bt2_exclude_opts --fields
+        has_pretty_opt=1
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --fields)
+        in_opt_name=fields;;
+      --names=*)
+        __bt2_exclude_opts --names
+        has_pretty_opt=1
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --names)
+        in_opt_name=names;;
+      --no-delta)
+        __bt2_exclude_opts --no-delta
+        has_pretty_opt=1
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --output=*)
+        __bt2_exclude_opts --output -w
+        is_convert_cmd=1
+        ;;
+      --output|-w)
+        in_opt_name=output;;
+      --run-args(|-0))
+        __bt2_exclude_opts --run-args --run-args-0 --stream-intersection
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+      --stream-intersection)
+        __bt2_exclude_opts --stream-intersection --run-args --run-args-0
+        is_convert_cmd=1
+        has_non_output_convert_opt=1
+        ;;
+
+      # Non-option or option value
+      *)
+        case $in_opt_name in
+          # General option values
+          plugin-path)
+            __bt2_exclude_opts --plugin-path;;
+          log-level)
+            __bt2_exclude_opts --log-level -l --verbose -v --debug -d
+
+            if ((! is_convert_cmd)); then
+              has_gen_opt_log_level=1
+            fi
+            ;;
+
+          # Common `convert`/`run` option values
+          retry-duration)
+            __bt2_exclude_opts --retry-duration
+            is_convert_cmd=1
+            has_non_output_convert_opt=1
+            ;;
+          allowed-mip-versions)
+            __bt2_exclude_opts --allowed-mip-versions -m
+            is_convert_cmd=1
+            has_non_output_convert_opt=1
+            ;;
+          component)
+            has_cur_comp=1
+            is_convert_cmd=1
+            has_non_output_convert_opt=1
+            ;;
+
+          # `convert`-specific option values
+          input-format)
+            __bt2_exclude_opts --input-format -i
+            input_format=$word
+            is_convert_cmd=1
+            has_non_output_convert_opt=1
+            ;;
+          output-format)
+            __bt2_exclude_opts --output-format -o
+            output_format=$word
+            is_convert_cmd=1
+            has_non_output_convert_opt=1
+            ;;
+          clock-offset)
+            __bt2_exclude_opts --clock-offset
+            has_src_ctf_fs_opt=1
+            is_convert_cmd=1
+            has_non_output_convert_opt=1
+            ;;
+          clock-offset-ns)
+            __bt2_exclude_opts --clock-offset-ns
+            has_src_ctf_fs_opt=1
+            is_convert_cmd=1
+            has_non_output_convert_opt=1
+            ;;
+          begin)
+            __bt2_exclude_opts --begin --timerange
+            is_convert_cmd=1
+            has_non_output_convert_opt=1
+            ;;
+          end)
+            __bt2_exclude_opts --end --timerange
+            is_convert_cmd=1
+            has_non_output_convert_opt=1
+            ;;
+          timerange)
+            __bt2_exclude_opts --timerange --begin --end
+            is_convert_cmd=1
+            has_non_output_convert_opt=1
+            ;;
+          debug-info-dir)
+            __bt2_exclude_opts --debug-info-dir --debug-info
+            is_convert_cmd=1
+            has_non_output_convert_opt=1
+            ;;
+          debug-info-target-prefix)
+            __bt2_exclude_opts --debug-info-target-prefix --debug-info
+            is_convert_cmd=1
+            has_non_output_convert_opt=1
+            ;;
+          fields)
+            __bt2_exclude_opts --fields
+            has_pretty_opt=1
+            is_convert_cmd=1
+            has_non_output_convert_opt=1
+            ;;
+          names)
+            __bt2_exclude_opts --names
+            has_pretty_opt=1
+            is_convert_cmd=1
+            has_non_output_convert_opt=1
+            ;;
+          output)
+            __bt2_exclude_opts --output -w
+            has_pretty_opt=1
+            is_convert_cmd=1
+            ;;
+
+          # Non-option argument
+          *)
+            if ((! is_convert_cmd)) && [[ -z $last_non_opt_arg ]]; then
+              # First non-option argument without any command yet: might
+              # be a command name.
+              case $word in
+                run)
+                  # Dispatch to run
+                  ((word_index++))
+                  __bt2_complete_run_cmd
+                  return
+                  ;;
+                convert)
+                  # Explicit `convert`: just mark as such
+                  is_convert_cmd=1
+                  ;;
+                list-plugins)
+                  # Dispatch to list-plugins
+                  ((word_index++))
+                  __bt2_complete_list_plugins_cmd
+                  return
+                  ;;
+                help)
+                  # Dispatch to help
+                  ((word_index++))
+                  __bt2_complete_help_cmd
+                  return
+                  ;;
+                query)
+                  # Dispatch to query
+                  ((word_index++))
+                  __bt2_complete_query_cmd
+                  return
+                  ;;
+                *)
+                  # Not a command: treat as `convert` non-option arg.
+                  last_non_opt_arg=$word
+                  is_convert_cmd=1
+                  ;;
+              esac
+            else
+              # Subsequent non-option argument
+              last_non_opt_arg=$word
+            fi
+            ;;
+        esac
+
+        in_opt_name=
+        ;;
+    esac
+  done
+
+  # Remove general options if we're in `convert` command
+  if ((is_convert_cmd)); then
+    __bt2_exclude_opts \
+      --plugin-path \
+      --log-level -l \
+      --verbose -v \
+      --debug -d \
+      --omit-home-plugin-path \
+      --omit-system-plugin-path
+
+    # Add back `--debug` and `--verbose` with different descriptions
+    # if no general log level option was specified.
+    if ((is_convert_cmd && ! has_gen_opt_log_level)); then
+      __bt2_add_switches --debug -d 'equivalent to `--log-level=TRACE` (general option)'
+      __bt2_add_switches --verbose -v 'equivalent to `--log-level=INFO` (general option)'
+    fi
+  fi
+
+  # Handle special actions for `convert` command
+  if [[ $output_format == ctf-metadata ]]; then
+    # Print plain text CTF metadata
+    word_index=$start_index
+    __bt2_complete_convert_cmd_print_ctf_metadata
+    return
+  elif [[ $last_non_opt_arg =~ '^net4?://[^/]+$' ]]; then
+    # List LTTng live sessions
+    word_index=$start_index
+    __bt2_complete_convert_cmd_list_live_sessions
+    return
+  fi
+
+  # Configure input/output format choices
+  local input_formats=(
+    'ctf:CTF trace(s)'
+    'lttng-live:LTTng live streaming'
+  )
+  local output_formats=(
+    'text:plain text pretty-print'
+    'ctf:CTF trace(s)'
+    'dummy:discard messages'
+    'ctf-metadata:print the metadata text of a CTF trace'
+  )
+
+  if [[ $last_non_opt_arg == net*://* ]]; then
+    # LTTng live session URL means `--input-format=lttng-live` and
+    # `--output-format=ctf-metadata` is impossible.
+    input_formats=("${(@)input_formats:#ctf:*}")
+    output_formats=("${(@)output_formats:#ctf-metadata:*}")
+  elif [[ -n $last_non_opt_arg ]]; then
+    # Any non-URL non-option argument means
+    # no `--input-format=lttng-live`.
+    input_formats=("${(@)input_formats:#lttng-live:*}")
+  fi
+
+  if ((has_src_ctf_fs_opt)); then
+    # Any `src.ctf.fs` option means `--input-format=ctf`
+    input_formats=("${(@)input_formats:#lttng-live:*}")
+  fi
+
+  if ((has_pretty_opt)); then
+    # Any `sink.text.pretty` option means `--output-format=text` only
+    output_formats=("${(@)output_formats:#dummy:*}")
+    output_formats=("${(@)output_formats:#ctf:*}")
+  fi
+
+  if ((has_non_output_convert_opt)); then
+    # Any other `convert` option than `--output` means
+    # `--output-format=ctf-metadata` is impossible.
+    output_formats=("${(@)output_formats:#ctf-metadata:*}")
+  fi
+
+  if [[ -n $last_non_opt_arg ]]; then
+    # Any non-option argument means there's a current component
+    has_cur_comp=1
+  fi
+
+  if [[ $input_format == lttng-live || $last_non_opt_arg == net*://* ]]; then
+    # Remove `src.ctf.fs` options
+    __bt2_exclude_opts --clock-force-correlate --clock-offset --clock-offset-ns
+  fi
+
+  if [[ -n $output_format && $output_format != text ]]; then
+    # Remove `sink.text.pretty` options
+    __bt2_exclude_opts \
+      --clock-cycles \
+      --clock-date \
+      --clock-gmt \
+      --clock-seconds \
+      --color \
+      --fields \
+      --names \
+      --no-delta
+  fi
+
+  # Add current component options when there's a current component
+  if ((has_cur_comp)); then
+    __bt2_add_cur_comp_opts
+  fi
+
+  # Complete general options
+  if ((! is_convert_cmd)); then
+    if [[ $in_opt_name == plugin-path ]] || compset -P --plugin-path=; then
+      _dir_list
+      return
+    elif [[ $in_opt_name == log-level ]] || compset -P --log-level=; then
+      __bt2_complete_log_level
+      return
+    fi
+  fi
+
+  # Complete `convert`-specific options
+  if [[ $in_opt_name == input-format ]] || compset -P --input-format=; then
+    _describe 'implicit source component type' input_formats
+    return
+  elif [[ $in_opt_name == output-format ]] || compset -P --output-format=; then
+    _describe 'implicit sink component type' output_formats
+    return
+  elif [[ $in_opt_name == clock-offset ]] || compset -P --clock-offset=; then
+    _message -e descriptions 'CTF clock offset (seconds)'
+    return
+  elif [[ $in_opt_name == clock-offset-ns ]] || compset -P --clock-offset-ns=; then
+    _message -e descriptions 'CTF clock offset (nanoseconds)'
+    return
+  elif [[ $in_opt_name == begin ]] || compset -P --begin=; then
+    _message -e descriptions 'trimming beginning time'
+    return
+  elif [[ $in_opt_name == end ]] || compset -P --end=; then
+    _message -e descriptions 'trimming end time'
+    return
+  elif [[ $in_opt_name == timerange ]] || compset -P --timerange=; then
+    _message -e descriptions 'trimming time range (`BEGIN,END` format)'
+    return
+  elif [[ $in_opt_name == debug-info-dir ]] || compset -P --debug-info-dir=; then
+    _files -/
+    return
+  elif [[ $in_opt_name == debug-info-target-prefix ]] || compset -P --debug-info-target-prefix=; then
+    _files -/
+    return
+  elif [[ $in_opt_name == fields ]] || compset -P --fields=; then
+    _values -s, field \
+      'trace[trace name]' \
+      'trace\:hostname[hostname]' \
+      'trace\:domain[tracing domain]' \
+      'trace\:procname[process name]' \
+      'trace\:vpid[virtual process ID]' \
+      'loglevel[logging level]' \
+      'emf[Eclipse Modeling Framework URI]'
+    return
+  elif [[ $in_opt_name == names ]] || compset -P --names=; then
+    _values -s, name \
+      'payload[event payload scopes]' \
+      'context[context scopes]' \
+      'scope[scope]' \
+      'header[header scopes]'
+    return
+  elif [[ $in_opt_name == output ]] || compset -P --output=; then
+    _files
+    return
+  fi
+
+  # Complete common `run`/`convert` options
+  local -i opt_completed ret
+
+  __bt2_try_complete_common_run_convert_opts 0
+  ret=$?
+
+  if ((opt_completed)); then
+    return $ret
+  fi
+
+  # Complete path or URL
+  if [[ -z $in_opt_name && $PREFIX != -* ]]; then
+    # Complete LTTng live URL
+    if [[ $input_format != ctf ]]; then
+      if compset -P 'net*://*/host/'; then
+        # LTTng live session
+        __bt2_complete_live_session $IPREFIX
+        return
+      elif compset -P 'net*://?*/'; then
+        # Needs `host/`
+        compadd -S '' -- host/
+        return
+      elif compset -P 'net*://'; then
+        # Known hostname
+        if _hosts -S ''; then
+          return
+        fi
+
+        # Just a hint
+        _message -e descriptions 'LTTng live URL'
+        return
+      fi
+    fi
+
+    # LTTng live URL prefix
+    if [[ $input_format == lttng-live && -z $last_non_opt_arg && -z $PREFIX ]]; then
+      compadd -S '' -- net://
+      return
+    fi
+
+    # File completion (for `src.ctf.fs` or another automatically
+    # discovered source component).
+    if [[ $input_format != lttng-live ]]; then
+      if _files; then
+        return
+      fi
+    fi
+
+    # Offer command names only if not in `convert` command and no
+    # non-option argument yet.
+    if ((! is_convert_cmd)) && [[ -z $last_non_opt_arg ]]; then
+      compadd -- convert help list-plugins query run
+      return
+    fi
+
+    # Nothing to offer at this point
+    return 1
+  fi
+
+  # Offer all possible options/switches
+  _describe -o option long_opts -qS= -- short_opts -- long_switches -- short_switches
+}
+
+# Ensure predictable Zsh behavior and prevent option leakage
+emulate -L zsh
+setopt extended_glob
+
+# Make some variables local to the whole function
+local curcontext=$curcontext REPLY word in_opt_name expl
+local -i word_index=2
+local -a long_opts long_switches short_opts short_switches
+
+# Complete
+__bt2_complete

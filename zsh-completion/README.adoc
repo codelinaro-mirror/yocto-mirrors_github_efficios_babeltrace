@@ -1,0 +1,51 @@
+// Render with Asciidoctor
+
+= Zsh completion for `babeltrace2`
+Philippe Proulx
+9 December 2025
+
+The `_babeltrace2` file in this directory is a
+https://www.zsh.org/[Z{nbsp}shell] completion function for the
+`babeltrace2` command.
+
+== How to use
+
+If you already have a configured Zsh completion directory, copy
+`_babeltrace2` from this directory to yours and you're done.
+
+Otherwise:
+
+. Create a Zsh completion directory, for example:
++
+----
+$ mkdir -p ~/.zsh/completion
+----
+
+. In your `pass:[~/.zshrc]` file, add your completion directory to
+  the `fpath` variable:
++
+----
+fpath=(~/.zsh/completion $fpath)
+----
++
+Then ensure `compinit` is initialized:
++
+----
+autoload -U compinit
+compinit -D
+----
+
+. Copy the completion file from this directory to your completion
+  directory:
++
+----
+$ cp _babeltrace2 ~/.zsh/completion
+$ chmod 644 ~/.zsh/completion/_babeltrace2
+----
+
+To have access to the `babeltrace2` command completion immediately,
+reload Zsh:
+
+----
+$ exec zsh
+----
