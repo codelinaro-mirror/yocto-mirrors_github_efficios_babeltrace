@@ -85,6 +85,7 @@ pytestdebug.log
 !/tests/**/test-*.[hc]pp
 /tests/lib/conds/conds-triggers
 /tests/lib/plugin
+/tests/plugins/flt.lttng-utils.debug-info/dwarf-test
 /tests/plugins/sink.ctf.fs/succeed/gen-trace-double
 /tests/plugins/sink.ctf.fs/succeed/gen-trace-float
 /tests/plugins/src.ctf.fs/succeed/gen-trace-simple
