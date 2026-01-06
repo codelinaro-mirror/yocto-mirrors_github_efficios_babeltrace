@@ -8,7 +8,8 @@ SUBDIRS = \
 	bitfield \
 	ctf-writer \
 	plugins \
-	param-validation
+	param-validation \
+	python-plugin-provider
 
 AM_CPPFLAGS += -I$(top_srcdir)/tests/utils
 
@@ -68,9 +69,6 @@ dist_check_SCRIPTS = \
 	plugins/src.ctf.lttng-live/test-live.sh \
 	plugins/src.ctf.lttng-live/test-query.sh \
 	plugins/src.ctf.lttng-live/test_query.py \
-	python-plugin-provider/bt_plugin_test_python_plugin_provider.py \
-	python-plugin-provider/test-python-plugin-provider.sh \
-	python-plugin-provider/test_python_plugin_provider.py \
 	pytest-tests.sh
 
 noinst_PROGRAMS =
@@ -106,8 +104,6 @@ TESTS_PLUGINS = \
 	plugins/src.ctf.lttng-live/test-query.sh \
 	plugins/src.ctf.lttng-live/test-live.sh \
 	plugins/src.ctf.fs/field/test-field.sh
-
-TESTS_PYTHON_PLUGIN_PROVIDER = python-plugin-provider/test-python-plugin-provider.sh
 
 noinst_PROGRAMS += \
 	cpp-common/test-c-string-view
@@ -145,14 +141,12 @@ LOG_DRIVER = env AM_TAP_AWK='$(AWK)' \
 	     BT_TESTS_SRCDIR='$(abs_top_srcdir)/tests' \
 	     BT_TESTS_BUILDDIR='$(abs_top_builddir)/tests' \
 	     $(SHELL) $(srcdir)/utils/tap-driver.sh
-
 TESTS_PYTEST = pytest-tests.sh
 
 TESTS = \
 	$(TESTS_BINDINGS) \
 	$(TESTS_CLI) \
 	$(TESTS_PLUGINS) \
-	$(TESTS_PYTHON_PLUGIN_PROVIDER) \
 	$(TESTS_PYTEST)
 
 define check_target
@@ -163,7 +157,6 @@ endef
 $(eval $(call check_target,bindings,$(TESTS_BINDINGS)))
 $(eval $(call check_target,cli,$(TESTS_CLI)))
 $(eval $(call check_target,plugins,$(TESTS_PLUGINS)))
-$(eval $(call check_target,python-plugin-provider,$(TESTS_PYTHON_PLUGIN_PROVIDER)))
 $(eval $(call check_target,pytest,$(TESTS_PYTEST)))
 
 check-no-bitfield:
