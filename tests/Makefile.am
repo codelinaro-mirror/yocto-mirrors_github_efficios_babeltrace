@@ -4,6 +4,7 @@
 
 SUBDIRS = \
 	utils \
+	cli \
 	lib \
 	bitfield \
 	ctf-writer \
@@ -50,22 +51,6 @@ dist_check_SCRIPTS = \
 	bindings/python/bt2/test_trace_collection_message_iterator.py \
 	bindings/python/bt2/test_value.py \
 	bindings/python/bt2/utils.py \
-	cli/convert/test-auto-source-discovery-grouping.sh \
-	cli/convert/test-auto-source-discovery-params.sh \
-	cli/convert/test-auto-source-discovery-log-level.sh \
-	cli/convert/test-convert-args.sh \
-	cli/list-plugins/test-list-plugins.sh \
-	cli/params/test-params.sh \
-	cli/query/test-query.sh \
-	cli/test-exit-status.sh \
-	cli/test-help.sh \
-	cli/test-intersection.sh \
-	cli/test-output-ctf-metadata.sh \
-	cli/test-output-path-ctf-non-lttng-trace.sh \
-	cli/test-packet-seq-num.sh \
-	cli/test-trace-copy.sh \
-	cli/test-trace-read.sh \
-	cli/test-trimmer.sh \
 	plugins/src.ctf.lttng-live/test-live.sh \
 	plugins/src.ctf.lttng-live/test-query.sh \
 	plugins/src.ctf.lttng-live/test_query.py \
@@ -74,24 +59,6 @@ dist_check_SCRIPTS = \
 noinst_PROGRAMS =
 
 TESTS_BINDINGS = bindings/python/bt2/test-python-bt2.sh
-
-TESTS_CLI = \
-	cli/convert/test-convert-args.sh \
-	cli/test-help.sh \
-	cli/test-intersection.sh \
-	cli/test-output-ctf-metadata.sh \
-	cli/test-output-path-ctf-non-lttng-trace.sh \
-	cli/test-packet-seq-num.sh \
-	cli/test-trace-copy.sh \
-	cli/test-trace-read.sh \
-	cli/test-trimmer.sh \
-	cli/convert/test-auto-source-discovery-grouping.sh \
-	cli/convert/test-auto-source-discovery-log-level.sh \
-	cli/convert/test-auto-source-discovery-params.sh \
-	cli/list-plugins/test-list-plugins.sh \
-	cli/params/test-params.sh \
-	cli/query/test-query.sh \
-	cli/test-exit-status.sh
 
 TESTS_PLUGINS = \
 	plugins/src.ctf.fs/fail/test-fail.sh \
@@ -145,7 +112,6 @@ TESTS_PYTEST = pytest-tests.sh
 
 TESTS = \
 	$(TESTS_BINDINGS) \
-	$(TESTS_CLI) \
 	$(TESTS_PLUGINS) \
 	$(TESTS_PYTEST)
 
@@ -155,7 +121,6 @@ check-$(1):
 endef
 
 $(eval $(call check_target,bindings,$(TESTS_BINDINGS)))
-$(eval $(call check_target,cli,$(TESTS_CLI)))
 $(eval $(call check_target,plugins,$(TESTS_PLUGINS)))
 $(eval $(call check_target,pytest,$(TESTS_PYTEST)))
 
