@@ -103,6 +103,25 @@ def pytest_configure(config: "pytest.Config") -> None:
     setattr(config, "ctf_traces_dir", _src_tests_dir() / "data/ctf-traces")
 
 
+# pytest hook.
+def pytest_collection_modifyitems(
+    config: "pytest.Config", items: List[pytest.Item]
+) -> None:
+    # Cache plugin/feature availability once (bt2.find_plugin() can
+    # be expensive).
+    lttng_utils_plugin_avail = bt2.find_plugin("lttng-utils") is not None
+
+    for item in items:
+        # Handle `needs_lttng_utils_plugin` marker
+        if (
+            item.get_closest_marker("needs_lttng_utils_plugin")
+            and not lttng_utils_plugin_avail
+        ):
+            item.add_marker(
+                pytest.mark.skip(reason="`lttng-utils` plugin isn't available")
+            )
+
+
 @pytest.fixture(scope="session")
 def src_root_dir() -> pathlib.Path:
     return _src_root_dir()
