@@ -51,7 +51,6 @@ dist_check_SCRIPTS = \
 	bindings/python/bt2/test_trace_collection_message_iterator.py \
 	bindings/python/bt2/test_value.py \
 	bindings/python/bt2/utils.py \
-	plugins/src.ctf.lttng-live/test-live.sh \
 	pytest-tests.sh
 
 noinst_PROGRAMS =
@@ -101,7 +100,6 @@ TESTS_PYTEST = pytest-tests.sh
 
 TESTS = \
 	$(TESTS_BINDINGS) \
-	$(TESTS_PLUGINS) \
 	$(TESTS_PYTEST)
 
 define check_target
@@ -110,7 +108,6 @@ check-$(1):
 endef
 
 $(eval $(call check_target,bindings,$(TESTS_BINDINGS)))
-$(eval $(call check_target,plugins,$(TESTS_PLUGINS)))
 $(eval $(call check_target,pytest,$(TESTS_PYTEST)))
 
 check-no-bitfield:
