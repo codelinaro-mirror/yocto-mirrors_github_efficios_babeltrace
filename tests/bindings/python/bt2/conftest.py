@@ -11,9 +11,7 @@ import pytest
 def stream_beginning_msg() -> bt2._StreamBeginningMessage:
     import utils
 
-    return typing.cast(
-        bt2._StreamBeginningMessage, utils.get_stream_beginning_message()
-    )
+    return typing.cast(bt2._StreamBeginningMessage, utils.stream_beginning_msg())
 
 
 @pytest.fixture
@@ -21,7 +19,7 @@ def const_stream_beginning_msg() -> bt2._StreamBeginningMessageConst:
     import utils
 
     return typing.cast(
-        bt2._StreamBeginningMessageConst, utils.get_const_stream_beginning_message()
+        bt2._StreamBeginningMessageConst, utils.const_stream_beginning_msg()
     )
 
 
@@ -29,16 +27,14 @@ def const_stream_beginning_msg() -> bt2._StreamBeginningMessageConst:
 def stream_end_msg() -> bt2._StreamEndMessage:
     import utils
 
-    return typing.cast(bt2._StreamEndMessage, utils.get_stream_end_message())
+    return typing.cast(bt2._StreamEndMessage, utils.stream_end_msg())
 
 
 @pytest.fixture
 def pkt_beginning_msg() -> bt2._PacketBeginningMessage:
     import utils
 
-    return typing.cast(
-        bt2._PacketBeginningMessage, utils.get_packet_beginning_message()
-    )
+    return typing.cast(bt2._PacketBeginningMessage, utils.pkt_beginning_msg())
 
 
 @pytest.fixture
@@ -46,7 +42,7 @@ def const_pkt_beginning_msg() -> bt2._PacketBeginningMessageConst:
     import utils
 
     return typing.cast(
-        bt2._PacketBeginningMessageConst, utils.get_const_packet_beginning_message()
+        bt2._PacketBeginningMessageConst, utils.const_pkt_beginning_msg()
     )
 
 
@@ -54,21 +50,21 @@ def const_pkt_beginning_msg() -> bt2._PacketBeginningMessageConst:
 def pkt_end_msg() -> bt2._PacketEndMessage:
     import utils
 
-    return typing.cast(bt2._PacketEndMessage, utils.get_packet_end_message())
+    return typing.cast(bt2._PacketEndMessage, utils.pkt_end_msg())
 
 
 @pytest.fixture
 def ev_msg() -> bt2._EventMessage:
     import utils
 
-    return typing.cast(bt2._EventMessage, utils.get_event_message())
+    return typing.cast(bt2._EventMessage, utils.ev_msg())
 
 
 @pytest.fixture
 def const_ev_msg() -> bt2._EventMessageConst:
     import utils
 
-    return typing.cast(bt2._EventMessageConst, utils.get_const_event_message())
+    return typing.cast(bt2._EventMessageConst, utils.const_ev_msg())
 
 
 # Fresh, default trace class.
@@ -76,4 +72,4 @@ def const_ev_msg() -> bt2._EventMessageConst:
 def def_tc() -> bt2._TraceClass:
     import utils
 
-    return utils.get_default_trace_class()
+    return utils.def_tc()
