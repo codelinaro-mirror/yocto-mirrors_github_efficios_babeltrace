@@ -919,12 +919,10 @@ AC_CONFIG_FILES([
   tests/plugins/sink.text.details/Makefile
   tests/plugins/sink.text.pretty/Makefile
   tests/utils/env.sh
-  tests/utils/pytest-env.sh
   tests/utils/Makefile
-  tests/utils/tap/Makefile
 ])
 
-AC_CONFIG_FILES([tests/utils/run-in-pytest-env.sh], [chmod +x tests/utils/run-in-pytest-env.sh])
+AC_CONFIG_FILES([tests/utils/run-in-env.sh], [chmod +x tests/utils/run-in-env.sh])
 
 AC_OUTPUT
 
