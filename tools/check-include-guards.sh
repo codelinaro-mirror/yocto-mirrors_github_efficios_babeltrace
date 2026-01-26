@@ -12,6 +12,7 @@ find src tests \
 	! -path '/.git/*' \
 	! -path 'src/argpar/*' \
 	! -path 'src/cpp-common/vendor/*' \
-	! -path 'tests/data/plugins/flt.lttng-utils.debug-info/tp.h' \
+	! -path 'tests/plugins/flt.lttng-utils.debug-info/bins/tp.h' \
+	! -path 'tests/plugins/flt.lttng-utils.debug-info/bins/libhello.h' \
 	! -path 'tests/utils/catch.hpp' \
 	-print0 | xargs -P "$(nproc)" -n1 -t -0 tools/check-include-guard.py "$@"

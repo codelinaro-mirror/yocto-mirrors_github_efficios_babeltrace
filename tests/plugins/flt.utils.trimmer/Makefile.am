@@ -2,4 +2,5 @@
 #
 # SPDX-License-Identifier: MIT
 
-EXTRA_DIST = test_succeed_trimmer.py
+EXTRA_DIST = \
+	test_succeed_trimmer.py

@@ -7,6 +7,7 @@ SUBDIRS = \
 	cli \
 	lib \
 	bitfield \
+	cli \
 	ctf-writer \
 	plugins \
 	param-validation \
@@ -18,7 +19,7 @@ COMMON_TEST_LDADD = \
 	$(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/logging/liblogging.la
 
-EXTRA_DIST = $(srcdir)/data \
+EXTRA_DIST = $(srcdir)/common-data \
 	     bindings/python/bt2/conftest.py \
 	     bindings/python/bt2/test_clock_class.py \
 	     bindings/python/bt2/test_clock_offset.py \
