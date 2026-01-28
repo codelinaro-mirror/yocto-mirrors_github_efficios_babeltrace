@@ -24,79 +24,6 @@ def _create_const_val(raw_val):
     return bt2.QueryExecutor(MySink, "obj", None).query()["my_value"]
 
 
-# Binary operators for numeric value tests.
-_BIN_OPS = [
-    pytest.param(operator.lt, id="lt"),
-    pytest.param(operator.le, id="le"),
-    pytest.param(operator.eq, id="eq"),
-    pytest.param(operator.ne, id="ne"),
-    pytest.param(operator.ge, id="ge"),
-    pytest.param(operator.gt, id="gt"),
-    pytest.param(operator.add, id="add"),
-    pytest.param(lambda a, b: operator.add(b, a), id="radd"),
-    pytest.param(operator.and_, id="and"),
-    pytest.param(lambda a, b: operator.and_(b, a), id="rand"),
-    pytest.param(operator.floordiv, id="floordiv"),
-    pytest.param(lambda a, b: operator.floordiv(b, a), id="rfloordiv"),
-    pytest.param(operator.lshift, id="lshift"),
-    pytest.param(lambda a, b: operator.lshift(b, a), id="rlshift"),
-    pytest.param(operator.mod, id="mod"),
-    pytest.param(lambda a, b: operator.mod(b, a), id="rmod"),
-    pytest.param(operator.mul, id="mul"),
-    pytest.param(lambda a, b: operator.mul(b, a), id="rmul"),
-    pytest.param(operator.or_, id="or"),
-    pytest.param(lambda a, b: operator.or_(b, a), id="ror"),
-    pytest.param(operator.pow, id="pow"),
-    pytest.param(lambda a, b: operator.pow(b, a), id="rpow"),
-    pytest.param(operator.rshift, id="rshift"),
-    pytest.param(lambda a, b: operator.rshift(b, a), id="rrshift"),
-    pytest.param(operator.sub, id="sub"),
-    pytest.param(lambda a, b: operator.sub(b, a), id="rsub"),
-    pytest.param(operator.truediv, id="truediv"),
-    pytest.param(lambda a, b: operator.truediv(b, a), id="rtruediv"),
-    pytest.param(operator.xor, id="xor"),
-    pytest.param(lambda a, b: operator.xor(b, a), id="rxor"),
-]
-
-
-# Unary operators for numeric value tests.
-_UNARY_OPS = [
-    pytest.param(operator.neg, id="neg"),
-    pytest.param(operator.pos, id="pos"),
-    pytest.param(operator.abs, id="abs"),
-    pytest.param(operator.invert, id="invert"),
-    pytest.param(round, id="round"),
-    pytest.param(partial(round, ndigits=0), id="round-0"),
-    pytest.param(partial(round, ndigits=1), id="round-1"),
-    pytest.param(partial(round, ndigits=2), id="round-2"),
-    pytest.param(partial(round, ndigits=3), id="round-3"),
-    pytest.param(math.ceil, id="ceil"),
-    pytest.param(math.floor, id="floor"),
-    pytest.param(math.trunc, id="trunc"),
-]
-
-
-# Right-hand side operands for binary operator tests.
-_RHS_OPERANDS = [
-    pytest.param(False, id="false"),
-    pytest.param(True, id="true"),
-    pytest.param(2, id="pos-int"),
-    pytest.param(-23, id="neg-int"),
-    pytest.param(0, id="zero-int"),
-    pytest.param(bt2.create_value(2), id="pos-int-val"),
-    pytest.param(bt2.create_value(-23), id="neg-int-val"),
-    pytest.param(bt2.create_value(0), id="zero-int-val"),
-    pytest.param(2.2, id="pos-real"),
-    pytest.param(-23.4, id="neg-real"),
-    pytest.param(0.0, id="zero-real"),
-    pytest.param(bt2.create_value(2.2), id="pos-real-val"),
-    pytest.param(bt2.create_value(-23.4), id="neg-real-val"),
-    pytest.param(bt2.create_value(0.0), id="zero-real-val"),
-    pytest.param(-23 + 19j, id="complex"),
-    pytest.param(0j, id="zero-complex"),
-]
-
-
 class TestCreate:
     def test_none(self):
         assert bt2.create_value(None) is None
@@ -179,6 +106,78 @@ class _TestCopy:
 # raw_val() fixture:
 #     Returns the equivalent raw value of val().
 class _TestNumeric(_TestCopy):
+    # Binary operators
+    _BIN_OPS = [
+        operator.lt,
+        operator.le,
+        operator.eq,
+        operator.ne,
+        operator.ge,
+        operator.gt,
+        operator.add,
+        lambda a, b: operator.add(b, a),
+        operator.and_,
+        lambda a, b: operator.and_(b, a),
+        operator.floordiv,
+        lambda a, b: operator.floordiv(b, a),
+        operator.lshift,
+        lambda a, b: operator.lshift(b, a),
+        operator.mod,
+        lambda a, b: operator.mod(b, a),
+        operator.mul,
+        lambda a, b: operator.mul(b, a),
+        operator.or_,
+        lambda a, b: operator.or_(b, a),
+        operator.pow,
+        lambda a, b: operator.pow(b, a),
+        operator.rshift,
+        lambda a, b: operator.rshift(b, a),
+        operator.sub,
+        lambda a, b: operator.sub(b, a),
+        operator.truediv,
+        lambda a, b: operator.truediv(b, a),
+        operator.xor,
+        lambda a, b: operator.xor(b, a),
+    ]
+
+    # Unary operators
+    _UNARY_OPS = [
+        operator.neg,
+        operator.pos,
+        operator.abs,
+        operator.invert,
+        round,
+        partial(round, ndigits=0),
+        partial(round, ndigits=1),
+        partial(round, ndigits=2),
+        partial(round, ndigits=3),
+        math.ceil,
+        math.floor,
+        math.trunc,
+    ]
+
+    # Right-hand side operands for binary operator tests.
+    @pytest.fixture(scope="class")
+    def rhs_operands(self):
+        return [
+            False,
+            True,
+            2,
+            -23,
+            0,
+            bt2.create_value(2),
+            bt2.create_value(-23),
+            bt2.create_value(0),
+            2.2,
+            -23.4,
+            0.0,
+            bt2.create_value(2.2),
+            bt2.create_value(-23.4),
+            bt2.create_value(0.0),
+            -23 + 19j,
+            0j,
+        ]
+
     # Tries the binary operation `op(val, rhs)` and `op(raw_val, rhs)`,
     # returning both results.
     #
@@ -214,12 +213,15 @@ class _TestNumeric(_TestCopy):
     # the same exception type and returns a (`None`, `None`) tuple to
     # signal that there's no result to compare (the exception behavior
     # was validated).
+    #
+    # Returns `(None, None)` if `op` is `operator.invert` and either
+    # operand is a `bool` (invalid bitwise inversion on `bool`).
     @staticmethod
     def _unary_op(val, raw_val, op):
         if (
             isinstance(val, bt2._BoolValueConst) or isinstance(raw_val, bool)
         ) and op is operator.invert:
-            pytest.skip("Invalid bitwise inversion on `bool`")
+            return None, None
 
         val_exc_type = None
         raw_val_exc_type = None
@@ -240,9 +242,9 @@ class _TestNumeric(_TestCopy):
 
         return val_res, raw_val_res
 
-    @pytest.mark.parametrize("type_conv", [bool, int, float, complex, str])
-    def test_type_conv_op(self, val, raw_val, type_conv):
-        assert type_conv(val) == type_conv(raw_val)
+    def test_type_conv_op(self, val, raw_val):
+        for type_conv in (bool, int, float, complex, str):
+            assert type_conv(val) == type_conv(raw_val)
 
     def test_eq_none(self, val):
         # Disable the "comparison to None" warning, as this is precisely
@@ -257,102 +259,102 @@ class _TestNumeric(_TestCopy):
     # Tests that `==` returns `False`, `!=` returns `True`, and other
     # binary operators raise `TypeError` when the right-hand side
     # operand is an unknown type.
-    @pytest.mark.parametrize("op", _BIN_OPS)
-    def test_bin_op_unknown(self, val, op):
-        if op is operator.eq:
-            assert op(val, object()) is False
-        elif op is operator.ne:
-            assert op(val, object()) is True
-        else:
-            with pytest.raises(TypeError):
-                op(val, object())
+    def test_bin_op_unknown(self, val):
+        for op in self._BIN_OPS:
+            if op is operator.eq:
+                assert op(val, object()) is False
+            elif op is operator.ne:
+                assert op(val, object()) is True
+            else:
+                with pytest.raises(TypeError):
+                    op(val, object())
 
     # Tests that `==` returns `False`, `!=` returns `True`, and other
     # binary operators raise `TypeError` when the right-hand side
     # operand is `None`.
-    @pytest.mark.parametrize("op", _BIN_OPS)
-    def test_bin_op_none(self, val, op):
-        if op is operator.eq:
-            assert op(val, None) is False
-        elif op is operator.ne:
-            assert op(val, None) is True
-        else:
-            with pytest.raises(TypeError):
-                op(val, None)
+    def test_bin_op_none(self, val):
+        for op in self._BIN_OPS:
+            if op is operator.eq:
+                assert op(val, None) is False
+            elif op is operator.ne:
+                assert op(val, None) is True
+            else:
+                with pytest.raises(TypeError):
+                    op(val, None)
 
     # Tests that binary operators return the same type as the equivalent
     # operation on raw values (comparisons return `bool`).
-    @pytest.mark.parametrize("op", _BIN_OPS)
-    @pytest.mark.parametrize("rhs", _RHS_OPERANDS)
-    def test_bin_op_type(self, val, raw_val, op, rhs):
-        val_res, raw_val_res = self._bin_op(val, raw_val, op, rhs)
+    def test_bin_op_type(self, val, raw_val, rhs_operands):
+        for op in self._BIN_OPS:
+            for rhs in rhs_operands:
+                val_res, raw_val_res = self._bin_op(val, raw_val, op, rhs)
 
-        if val_res is not None:
-            if op in (operator.eq, operator.ne):
-                assert isinstance(val_res, bool)
-            else:
-                assert isinstance(val_res, type(raw_val_res))
+                if val_res is not None:
+                    if op in (operator.eq, operator.ne):
+                        assert isinstance(val_res, bool)
+                    else:
+                        assert isinstance(val_res, type(raw_val_res))
 
     # Tests that binary operators return the same value as the
     # equivalent operation on raw values.
-    @pytest.mark.parametrize("op", _BIN_OPS)
-    @pytest.mark.parametrize("rhs", _RHS_OPERANDS)
-    def test_bin_op_val(self, val, raw_val, op, rhs):
-        val_res, raw_val_res = self._bin_op(val, raw_val, op, rhs)
+    def test_bin_op_val(self, val, raw_val, rhs_operands):
+        for op in self._BIN_OPS:
+            for rhs in rhs_operands:
+                val_res, raw_val_res = self._bin_op(val, raw_val, op, rhs)
 
-        if val_res is not None:
-            assert val_res == raw_val_res
+                if val_res is not None:
+                    assert val_res == raw_val_res
 
     # Tests that binary operators don't change the address of the
     # left-hand side value object.
-    @pytest.mark.parametrize("op", _BIN_OPS)
-    @pytest.mark.parametrize("rhs", _RHS_OPERANDS)
-    def test_bin_op_lhs_addr_same(self, val, raw_val, op, rhs):
-        addr_before = val.addr
-        self._bin_op(val, raw_val, op, rhs)
-        assert val.addr == addr_before
+    def test_bin_op_lhs_addr_same(self, val, raw_val, rhs_operands):
+        for op in self._BIN_OPS:
+            for rhs in rhs_operands:
+                addr_before = val.addr
+                self._bin_op(val, raw_val, op, rhs)
+                assert val.addr == addr_before
 
     # Tests that binary operators don't modify the left-hand side
     # value object.
-    @pytest.mark.parametrize("op", _BIN_OPS)
-    @pytest.mark.parametrize("rhs", _RHS_OPERANDS)
-    def test_bin_op_lhs_val_same(self, val, raw_val, op, rhs):
-        val_before = val.__class__(val)
-        self._bin_op(val, raw_val, op, rhs)
-        assert val == val_before
+    def test_bin_op_lhs_val_same(self, val, raw_val, rhs_operands):
+        for op in self._BIN_OPS:
+            for rhs in rhs_operands:
+                val_before = val.__class__(val)
+                self._bin_op(val, raw_val, op, rhs)
+                assert val == val_before
 
     # Tests that unary operators return the same type as the equivalent
     # operation on raw values.
-    @pytest.mark.parametrize("op", _UNARY_OPS)
-    def test_unary_op_type(self, val, raw_val, op):
-        val_res, raw_val_res = self._unary_op(val, raw_val, op)
+    def test_unary_op_type(self, val, raw_val):
+        for op in self._UNARY_OPS:
+            val_res, raw_val_res = self._unary_op(val, raw_val, op)
 
-        if val_res is not None:
-            assert isinstance(val_res, type(raw_val_res))
+            if val_res is not None:
+                assert isinstance(val_res, type(raw_val_res))
 
     # Tests that unary operators return the same value as the equivalent
     # operation on raw values.
-    @pytest.mark.parametrize("op", _UNARY_OPS)
-    def test_unary_op_val(self, val, raw_val, op):
-        val_res, raw_val_res = self._unary_op(val, raw_val, op)
+    def test_unary_op_val(self, val, raw_val):
+        for op in self._UNARY_OPS:
+            val_res, raw_val_res = self._unary_op(val, raw_val, op)
 
-        if val_res is not None:
-            assert val_res == raw_val_res
+            if val_res is not None:
+                assert val_res == raw_val_res
 
     # Tests that unary operators don't change the address of the operand
     # value object.
-    @pytest.mark.parametrize("op", _UNARY_OPS)
-    def test_unary_op_addr_same(self, val, raw_val, op):
-        addr_before = val.addr
-        self._unary_op(val, raw_val, op)
-        assert val.addr == addr_before
+    def test_unary_op_addr_same(self, val, raw_val):
+        for op in self._UNARY_OPS:
+            addr_before = val.addr
+            self._unary_op(val, raw_val, op)
+            assert val.addr == addr_before
 
     # Tests that unary operators don't modify the operand value object.
-    @pytest.mark.parametrize("op", _UNARY_OPS)
-    def test_unary_op_val_same(self, val, raw_val, op):
-        val_before = val.__class__(val)
-        self._unary_op(val, raw_val, op)
-        assert val == val_before
+    def test_unary_op_val_same(self, val, raw_val):
+        for op in self._UNARY_OPS:
+            val_before = val.__class__(val)
+            self._unary_op(val, raw_val, op)
+            assert val == val_before
 
 
 class TestBool(_TestNumeric):
