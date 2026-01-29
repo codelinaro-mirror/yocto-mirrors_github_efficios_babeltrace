@@ -21,26 +21,7 @@ PLUGINS_PATH = $(abs_top_builddir)/src/plugins
 # no plugins found (plugins are effectively not embedded).
 plugin_archive_builtin = $(LD_WHOLE_ARCHIVE)$(PLUGINS_PATH)/$(1)/.libs/libbabeltrace-plugin-$(1)-builtin.a$(LD_NO_WHOLE_ARCHIVE)
 
-LTTNG_UTILS_PLUGIN_PATH =
-
-if ENABLE_DEBUG_INFO
-LTTNG_UTILS_PLUGIN_PATH += :$(PLUGINS_PATH)/lttng-utils
-endif
-
-if BABELTRACE_BUILD_WITH_MINGW
-IN_TREE_PLUGIN_PATH := $(shell cygpath -pm "$(PLUGINS_PATH)/ctf:$(PLUGINS_PATH)/text:$(PLUGINS_PATH)/utils$(LTTNG_UTILS_PLUGIN_PATH)")
-else
-IN_TREE_PLUGIN_PATH = $(PLUGINS_PATH)/ctf:$(PLUGINS_PATH)/text:$(PLUGINS_PATH)/utils$(LTTNG_UTILS_PLUGIN_PATH)
-endif
-
-AM_CPPFLAGS += '-DCONFIG_IN_TREE_PLUGIN_PATH="$(IN_TREE_PLUGIN_PATH)"'
-
-if ENABLE_PYTHON_PLUGINS
-AM_CPPFLAGS += '-DCONFIG_IN_TREE_PROVIDER_DIR="$(abs_top_builddir)/src/python-plugin-provider/.libs"'
-endif
-
 bin_PROGRAMS = babeltrace2
-noinst_PROGRAMS = babeltrace2-for-tests
 
 babeltrace2_SOURCES = \
 	babeltrace2.c \
@@ -129,9 +110,3 @@ if BABELTRACE_BUILD_WITH_MINGW
 babeltrace2_LDADD += -lws2_32 -lrpcrt4 -lintl -liconv -lole32 -lpthread
 endif
 
-# Only used for in-tree execution and tests
-babeltrace2_for_tests_SOURCES = $(babeltrace2_SOURCES)
-babeltrace2_for_tests_LDFLAGS = $(babeltrace2_LDFLAGS)
-babeltrace2_for_tests_LDADD = $(babeltrace2_LDADD)
-babeltrace2_for_tests_CFLAGS = $(AM_CFLAGS) -DBT_SET_DEFAULT_IN_TREE_CONFIGURATION
-EXTRA_babeltrace2_for_tests_DEPENDENCIES = $(EXTRA_babeltrace2_DEPENDENCIES)

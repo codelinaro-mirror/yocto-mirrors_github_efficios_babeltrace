@@ -1536,7 +1536,7 @@ The module contains:
     value string.
 
 `run_cli()`::
-    Runs the built `babeltrace2-for-tests` CLI with custom
+    Runs the built `babeltrace2` CLI with custom
     arguments `args`, which can contain both strings and `CliParams`
     instances, considering specific plugin paths.
 

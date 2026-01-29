@@ -50,7 +50,7 @@ def cli_params_from_obj(obj: Any, is_root: bool = True) -> str:
         assert False
 
 
-# `babeltrace2-for-tests` CLI parameters to be passed to `run_cli()`.
+# `babeltrace2` CLI parameters to be passed to `run_cli()`.
 class CliParams:
     def __init__(self, params: Dict[str, Any]):
         assert len(params) > 0
@@ -61,7 +61,7 @@ class CliParams:
         return self._params
 
 
-# Runs the `babeltrace2-for-tests` CLI compiled within `build_root_dir`
+# Runs the `babeltrace2` CLI compiled within `build_root_dir`
 # (the build directory containing the `tests` directory) with the
 # arguments `args` considering the plugin paths `plugin_paths`.
 #
@@ -97,7 +97,7 @@ def run_cli(
 
     return btu.run(
         build_root_dir,
-        build_root_dir / "src/cli/babeltrace2-for-tests",
+        build_root_dir / "src/cli/babeltrace2",
         cli_args,
         check=check,
         text=text,
