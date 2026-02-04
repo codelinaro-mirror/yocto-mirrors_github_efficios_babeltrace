@@ -147,12 +147,13 @@ protected:
     }
 
     template <typename PortT, typename LibPortT, typename AddPortFuncT, typename DataT>
-    PortT _addPort(const char * const name, DataT * const data, AddPortFuncT&& func) const
+    PortT _addPort(const char * const name, DataT * const dataParam, AddPortFuncT&& func) const
     {
         LibPortT *libPortPtr;
 
-        const auto status = func(this->libObjPtr(), name,
-                                 const_cast<void *>(static_cast<const void *>(data)), &libPortPtr);
+        const auto status =
+            func(this->libObjPtr(), name, const_cast<void *>(static_cast<const void *>(dataParam)),
+                 &libPortPtr);
 
         switch (status) {
         case BT_SELF_COMPONENT_ADD_PORT_STATUS_OK:
@@ -350,7 +351,7 @@ public:
     }
 
     template <typename DataT>
-    OutputPorts::Port addOutputPort(bt2c::CStringView name, DataT& data) const;
+    OutputPorts::Port addOutputPort(bt2c::CStringView name, DataT& dataParam) const;
 
     OutputPorts::Port addOutputPort(bt2c::CStringView name) const;
 
@@ -358,7 +359,7 @@ public:
 
 private:
     template <typename DataT>
-    OutputPorts::Port _addOutputPort(const char *name, DataT *data) const;
+    OutputPorts::Port _addOutputPort(const char *name, DataT *dataParam) const;
 };
 
 class SelfFilterComponent final : public internal::SelfSpecificComponent<bt_self_component_filter>
@@ -392,14 +393,14 @@ public:
     }
 
     template <typename DataT>
-    InputPorts::Port addInputPort(bt2c::CStringView name, DataT& data) const;
+    InputPorts::Port addInputPort(bt2c::CStringView name, DataT& dataParam) const;
 
     InputPorts::Port addInputPort(bt2c::CStringView name) const;
 
     InputPorts inputPorts() const noexcept;
 
     template <typename DataT>
-    OutputPorts::Port addOutputPort(bt2c::CStringView name, DataT& data) const;
+    OutputPorts::Port addOutputPort(bt2c::CStringView name, DataT& dataParam) const;
 
     OutputPorts::Port addOutputPort(bt2c::CStringView name) const;
 
@@ -407,10 +408,10 @@ public:
 
 private:
     template <typename DataT>
-    InputPorts::Port _addInputPort(const char *name, DataT *data) const;
+    InputPorts::Port _addInputPort(const char *name, DataT *dataParam) const;
 
     template <typename DataT>
-    OutputPorts::Port _addOutputPort(const char *name, DataT *data) const;
+    OutputPorts::Port _addOutputPort(const char *name, DataT *dataParam) const;
 };
 
 class SelfSinkComponent final : public internal::SelfSpecificComponent<bt_self_component_sink>
@@ -448,7 +449,7 @@ public:
     }
 
     template <typename DataT>
-    InputPorts::Port addInputPort(bt2c::CStringView name, DataT& data) const;
+    InputPorts::Port addInputPort(bt2c::CStringView name, DataT& dataParam) const;
 
     InputPorts::Port addInputPort(bt2c::CStringView name) const;
 
@@ -456,7 +457,7 @@ public:
 
 private:
     template <typename DataT>
-    InputPorts::Port _addInputPort(const char *name, DataT *data) const;
+    InputPorts::Port _addInputPort(const char *name, DataT *dataParam) const;
 };
 
 inline SelfComponent::SelfComponent(const SelfSourceComponent other) noexcept :
@@ -628,18 +629,18 @@ using SelfComponentOutputPort =
     SelfComponentPort<bt_self_component_port_output, const bt_port_output>;
 
 template <typename DataT>
-SelfSourceComponent::OutputPorts::Port SelfSourceComponent::_addOutputPort(const char * const name,
-                                                                           DataT * const data) const
+SelfSourceComponent::OutputPorts::Port
+SelfSourceComponent::_addOutputPort(const char * const name, DataT * const dataParam) const
 {
     return this->_addPort<SelfSourceComponent::OutputPorts::Port, bt_self_component_port_output>(
-        name, data, bt_self_component_source_add_output_port);
+        name, dataParam, bt_self_component_source_add_output_port);
 }
 
 template <typename DataT>
 SelfSourceComponent::OutputPorts::Port
-SelfSourceComponent::addOutputPort(const bt2c::CStringView name, DataT& data) const
+SelfSourceComponent::addOutputPort(const bt2c::CStringView name, DataT& dataParam) const
 {
-    return this->_addOutputPort(name, &data);
+    return this->_addOutputPort(name, &dataParam);
 }
 
 inline SelfSourceComponent::OutputPorts::Port
@@ -654,18 +655,18 @@ inline SelfSourceComponent::OutputPorts SelfSourceComponent::outputPorts() const
 }
 
 template <typename DataT>
-SelfFilterComponent::OutputPorts::Port SelfFilterComponent::_addOutputPort(const char * const name,
-                                                                           DataT * const data) const
+SelfFilterComponent::OutputPorts::Port
+SelfFilterComponent::_addOutputPort(const char * const name, DataT * const dataParam) const
 {
     return this->_addPort<SelfFilterComponent::OutputPorts::Port, bt_self_component_port_output>(
-        name, data, bt_self_component_filter_add_output_port);
+        name, dataParam, bt_self_component_filter_add_output_port);
 }
 
 template <typename DataT>
 SelfFilterComponent::OutputPorts::Port
-SelfFilterComponent::addOutputPort(const bt2c::CStringView name, DataT& data) const
+SelfFilterComponent::addOutputPort(const bt2c::CStringView name, DataT& dataParam) const
 {
-    return this->_addOutputPort(name, &data);
+    return this->_addOutputPort(name, &dataParam);
 }
 
 inline SelfFilterComponent::OutputPorts::Port
@@ -680,18 +681,18 @@ inline SelfFilterComponent::OutputPorts SelfFilterComponent::outputPorts() const
 }
 
 template <typename DataT>
-SelfFilterComponent::InputPorts::Port SelfFilterComponent::_addInputPort(const char * const name,
-                                                                         DataT * const data) const
+SelfFilterComponent::InputPorts::Port
+SelfFilterComponent::_addInputPort(const char * const name, DataT * const dataParam) const
 {
     return this->_addPort<SelfFilterComponent::InputPorts::Port, bt_self_component_port_input>(
-        name, data, bt_self_component_filter_add_input_port);
+        name, dataParam, bt_self_component_filter_add_input_port);
 }
 
 template <typename DataT>
 SelfFilterComponent::InputPorts::Port
-SelfFilterComponent::addInputPort(const bt2c::CStringView name, DataT& data) const
+SelfFilterComponent::addInputPort(const bt2c::CStringView name, DataT& dataParam) const
 {
-    return this->_addInputPort(name, &data);
+    return this->_addInputPort(name, &dataParam);
 }
 
 inline SelfFilterComponent::InputPorts::Port
@@ -727,17 +728,17 @@ SelfSinkComponent::createMessageIterator(const InputPorts::Port port) const
 
 template <typename DataT>
 SelfSinkComponent::InputPorts::Port SelfSinkComponent::_addInputPort(const char * const name,
-                                                                     DataT * const data) const
+                                                                     DataT * const dataParam) const
 {
     return this->_addPort<SelfSinkComponent::InputPorts::Port, bt_self_component_port_input>(
-        name, data, bt_self_component_sink_add_input_port);
+        name, dataParam, bt_self_component_sink_add_input_port);
 }
 
 template <typename DataT>
 SelfSinkComponent::InputPorts::Port SelfSinkComponent::addInputPort(const bt2c::CStringView name,
-                                                                    DataT& data) const
+                                                                    DataT& dataParam) const
 {
-    return this->_addInputPort(name, &data);
+    return this->_addInputPort(name, &dataParam);
 }
 
 inline SelfSinkComponent::InputPorts::Port
