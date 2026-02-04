@@ -134,7 +134,7 @@ public:
     auto addComponent(const bt2c::CStringView name, InitDataT&& initData,
                       const OptionalBorrowedObject<ConstMapValue> params = {},
                       const LoggingLevel loggingLevel = LoggingLevel::None) const
-        -> decltype(this->addComponent<UserComponentT>(nullptr))
+        -> decltype(this->addComponent(*createComponentClass<UserComponentT>(), nullptr))
     {
         return this->addComponent(*createComponentClass<UserComponentT>(), name,
                                   std::forward<InitDataT>(initData), params, loggingLevel);
