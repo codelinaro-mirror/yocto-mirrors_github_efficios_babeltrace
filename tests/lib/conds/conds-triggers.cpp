@@ -4,6 +4,7 @@
  * Copyright (C) 2020 Philippe Proulx <pproulx@efficios.com>
  */
 
+#include <memory>
 #include <utility>
 
 #include <babeltrace2/babeltrace.h>
@@ -11,7 +12,6 @@
 #include "cpp-common/bt2/graph.hpp"
 #include "cpp-common/bt2c/c-string-view.hpp"
 #include "cpp-common/bt2c/make-span.hpp"
-#include "cpp-common/bt2s/make-unique.hpp"
 
 #include "clk-cls-compat-postconds-triggers.hpp"
 #include "utils.hpp"
@@ -26,8 +26,7 @@ CondTrigger::UP makeSimpleTrigger(FuncT&& func, const CondTrigger::Type type,
                                   const std::string& condId,
                                   const bt2c::CStringView nameSuffix = {})
 {
-    return bt2s::make_unique<SimpleCondTrigger>(std::forward<FuncT>(func), type, condId,
-                                                nameSuffix);
+    return std::make_unique<SimpleCondTrigger>(std::forward<FuncT>(func), type, condId, nameSuffix);
 }
 
 using OnCompInitFunc = std::function<void(bt2::SelfComponent)>;
@@ -69,7 +68,7 @@ CondTrigger::UP makeRunInCompInitTrigger(OnCompInitFunc func, const CondTrigger:
                                          const std::string& condId,
                                          const bt2c::CStringView nameSuffix = {})
 {
-    return bt2s::make_unique<RunInCondTrigger<RunInDelegator>>(
+    return std::make_unique<RunInCondTrigger<RunInDelegator>>(
         RunInDelegator::makeOnCompInit(std::move(func)), type, condId, 0u, nameSuffix);
 }
 

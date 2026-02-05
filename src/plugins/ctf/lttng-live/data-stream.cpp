@@ -7,13 +7,13 @@
  * Copyright 2010-2011 EfficiOS Inc. and Linux Foundation
  */
 
+#include <memory>
 #include <sstream>
 
 #include <babeltrace2/babeltrace.h>
 
 #include "common/assert.h"
 #include "compat/mman.h" /* IWYU pragma: keep  */
-#include "cpp-common/bt2s/make-unique.hpp"
 #include "cpp-common/vendor/fmt/format.h"
 
 #include "../common/src/pkt-props.hpp"
@@ -101,7 +101,7 @@ lttng_live_stream_iterator_create_msg_iter(lttng_live_stream_iterator *liveStrea
     lttng_live_trace *trace = liveStreamIter->trace;
     lttng_live_msg_iter *liveMsgIter = trace->session->lttng_live_msg_iter;
 
-    auto tempMedium = bt2s::make_unique<ctf::src::live::CtfLiveMedium>(*liveStreamIter);
+    auto tempMedium = std::make_unique<ctf::src::live::CtfLiveMedium>(*liveStreamIter);
     const ctf::src::TraceCls *ctfTc = liveStreamIter->trace->metadata->traceCls();
     BT_ASSERT(ctfTc);
     ctf::src::PktProps pktProps =
@@ -137,7 +137,7 @@ lttng_live_stream_iterator_create_msg_iter(lttng_live_stream_iterator *liveStrea
     liveStreamIter->stream = bt2::Stream::Shared::createWithoutRef(streamPtr);
     liveStreamIter->stream->name(liveStreamIter->name);
 
-    auto medium = bt2s::make_unique<ctf::src::live::CtfLiveMedium>(*liveStreamIter);
+    auto medium = std::make_unique<ctf::src::live::CtfLiveMedium>(*liveStreamIter);
     liveStreamIter->msg_iter.emplace(liveMsgIter->selfMsgIter, *ctfTc,
                                      liveStreamIter->trace->metadata->metadataStreamUuid(),
                                      *liveStreamIter->stream, std::move(medium),
@@ -161,7 +161,7 @@ lttng_live_stream_iterator_create(struct lttng_live_session *session, uint64_t c
         return nullptr;
     }
 
-    auto stream_iter = bt2s::make_unique<lttng_live_stream_iterator>(session->logger);
+    auto stream_iter = std::make_unique<lttng_live_stream_iterator>(session->logger);
 
     stream_iter->trace = trace;
     stream_iter->state = LTTNG_LIVE_STREAM_ACTIVE_NO_DATA;

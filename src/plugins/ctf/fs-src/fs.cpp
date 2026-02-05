@@ -20,7 +20,6 @@
 #include "cpp-common/bt2/wrap.hpp"
 #include "cpp-common/bt2c/file-utils.hpp"
 #include "cpp-common/bt2c/glib-up.hpp"
-#include "cpp-common/bt2s/make-unique.hpp"
 
 #include "plugins/common/param-validation/param-validation.h"
 
@@ -120,7 +119,7 @@ static void instantiateMsgIter(ctf_fs_msg_iter_data *msg_iter_data)
 {
     ctf_fs_ds_file_group *ds_file_group = msg_iter_data->port_data->ds_file_group;
 
-    Medium::UP medium = bt2s::make_unique<fs::Medium>(ds_file_group->index, msg_iter_data->logger);
+    Medium::UP medium = std::make_unique<fs::Medium>(ds_file_group->index, msg_iter_data->logger);
     msg_iter_data->msgIter.emplace(msg_iter_data->selfMsgIter, *ds_file_group->ctf_fs_trace->cls(),
                                    ds_file_group->ctf_fs_trace->metadataStreamUuid(),
                                    *ds_file_group->stream, std::move(medium),
@@ -162,7 +161,7 @@ ctf_fs_iterator_init(bt_self_message_iterator *self_msg_iter,
             bt_self_component_port_output_as_self_component_port(self_port));
         BT_ASSERT(port_data);
 
-        auto msg_iter_data = bt2s::make_unique<ctf_fs_msg_iter_data>(bt2::wrap(self_msg_iter));
+        auto msg_iter_data = std::make_unique<ctf_fs_msg_iter_data>(bt2::wrap(self_msg_iter));
         msg_iter_data->port_data = port_data;
 
         instantiateMsgIter(msg_iter_data.get());
@@ -243,7 +242,7 @@ static int create_one_port_for_trace(struct ctf_fs_component *ctf_fs,
                                      const bt2::SelfSourceComponent selfSrcComp)
 {
     const auto port_name = ctf_fs_make_port_name(ds_file_group);
-    auto port_data = bt2s::make_unique<ctf_fs_port_data>();
+    auto port_data = std::make_unique<ctf_fs_port_data>();
 
     BT_CPPLOGI_SPEC(ctf_fs->logger, "Creating one port named `{}`", port_name);
 
@@ -337,7 +336,7 @@ static void merge_ctf_fs_ds_indexes(ctf_fs_ds_index& dest, const ctf_fs_ds_index
 static int add_ds_file_to_ds_file_group(struct ctf_fs_trace *ctf_fs_trace, const char *path,
                                         const bt2c::Logger& logger)
 {
-    auto ds_file_info = bt2s::make_unique<ctf_fs_ds_file_info>(path, logger);
+    auto ds_file_info = std::make_unique<ctf_fs_ds_file_info>(path, logger);
     const auto& traceCls = *ctf_fs_trace->cls();
     ctf_fs_ds_index tempIndex;
     ctf_fs_ds_index_entry tempIndexEntry {path, 0_bytes, ds_file_info->size()};
@@ -345,7 +344,7 @@ static int add_ds_file_to_ds_file_group(struct ctf_fs_trace *ctf_fs_trace, const
     tempIndex.entries.emplace_back(tempIndexEntry);
 
     const auto props =
-        readPktProps(traceCls, bt2s::make_unique<fs::Medium>(tempIndex, logger), 0_bytes, logger);
+        readPktProps(traceCls, std::make_unique<fs::Medium>(tempIndex, logger), 0_bytes, logger);
     const auto sc = props.dataStreamCls;
 
     BT_ASSERT(sc);
@@ -380,7 +379,7 @@ static int add_ds_file_to_ds_file_group(struct ctf_fs_trace *ctf_fs_trace, const
          * there's no timestamp to order the file within its
          * group.
          */
-        ctf_fs_trace->ds_file_groups.emplace_back(bt2s::make_unique<ctf_fs_ds_file_group>(
+        ctf_fs_trace->ds_file_groups.emplace_back(std::make_unique<ctf_fs_ds_file_group>(
             ctf_fs_trace, *sc, stream_instance_id ? *stream_instance_id : UINT64_C(-1),
             std::move(*index)));
         ctf_fs_trace->ds_file_groups.back()->add_ds_file_info(std::move(ds_file_info));
@@ -397,7 +396,7 @@ static int add_ds_file_to_ds_file_group(struct ctf_fs_trace *ctf_fs_trace, const
     }
 
     if (!ds_file_group) {
-        ctf_fs_trace->ds_file_groups.emplace_back(bt2s::make_unique<ctf_fs_ds_file_group>(
+        ctf_fs_trace->ds_file_groups.emplace_back(std::make_unique<ctf_fs_ds_file_group>(
             ctf_fs_trace, *sc, static_cast<std::uint64_t>(*stream_instance_id), std::move(*index)));
         ds_file_group = ctf_fs_trace->ds_file_groups.back().get();
     } else {
@@ -498,7 +497,7 @@ ctf_fs_trace_create(const char *path, const char *name, const ctf::src::ClkClsCf
                     const bt2::OptionalBorrowedObject<bt2::SelfComponent> selfComp,
                     const bt2c::Logger& logger)
 {
-    auto ctf_fs_trace = bt2s::make_unique<struct ctf_fs_trace>(clkClsCfg, selfComp, logger);
+    auto ctf_fs_trace = std::make_unique<struct ctf_fs_trace>(clkClsCfg, selfComp, logger);
     const auto metadataPath = fmt::format("{}" G_DIR_SEPARATOR_S CTF_FS_METADATA_FILENAME, path);
 
     ctf_fs_trace->path = path;
@@ -664,7 +663,7 @@ static int merge_matching_ctf_fs_ds_file_groups(struct ctf_fs_trace *dest_trace,
             const DataStreamCls *sc = (*dest_trace->cls())[src_group->dataStreamCls->id()];
             BT_ASSERT(sc);
 
-            dest_trace->ds_file_groups.emplace_back(bt2s::make_unique<ctf_fs_ds_file_group>(
+            dest_trace->ds_file_groups.emplace_back(std::make_unique<ctf_fs_ds_file_group>(
                 dest_trace, *sc, src_group->stream_id, ctf_fs_ds_index {}));
             dest_group = dest_trace->ds_file_groups.back().get();
         }
@@ -795,7 +794,7 @@ static int decode_clock_snapshot_after_event(struct ctf_fs_trace *ctf_fs_trace,
 
     tempIndex.entries.emplace_back(index_entry);
 
-    ItemSeqIter itemSeqIter {bt2s::make_unique<fs::Medium>(tempIndex, logger), *ctf_fs_trace->cls(),
+    ItemSeqIter itemSeqIter {std::make_unique<fs::Medium>(tempIndex, logger), *ctf_fs_trace->cls(),
                              index_entry.offsetInFile, logger};
     LoggingItemVisitor loggingVisitor {logger};
 
@@ -1435,7 +1434,7 @@ static ctf_fs_component::UP ctf_fs_create(const bt2::ConstMapValue params,
 {
     const bt2c::Logger logger {selfSrcComp, "PLUGIN/SRC.CTF.FS/COMP"};
     const auto parameters = read_src_fs_parameters(params, logger);
-    auto ctf_fs = bt2s::make_unique<ctf_fs_component>(parameters.clkClsCfg, logger);
+    auto ctf_fs = std::make_unique<ctf_fs_component>(parameters.clkClsCfg, logger);
 
     if (ctf_fs_component_create_ctf_fs_trace(ctf_fs.get(), parameters.inputs,
                                              parameters.traceName ? parameters.traceName->c_str() :
@@ -1463,7 +1462,7 @@ ctf_fs_get_supported_mip_versions(bt_self_component_class_source *selfCompClsSrc
                                    static_cast<bt2::LoggingLevel>(logLevel),
                                    "PLUGIN/SRC.CTF.FS/COMP"};
         const auto parameters = read_src_fs_parameters(bt2::ConstMapValue {params}, logger);
-        auto ctf_fs = bt2s::make_unique<ctf_fs_component>(parameters.clkClsCfg, logger);
+        auto ctf_fs = std::make_unique<ctf_fs_component>(parameters.clkClsCfg, logger);
 
         if (ctf_fs_component_create_ctf_fs_trace(
                 ctf_fs.get(), parameters.inputs,

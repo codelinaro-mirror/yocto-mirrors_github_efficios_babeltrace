@@ -6,7 +6,7 @@
  * Copyright 2010-2011 EfficiOS Inc. and Linux Foundation
  */
 
-#include "cpp-common/bt2s/make-unique.hpp"
+#include <memory>
 
 #include "../common/src/metadata/tsdl/ctf-meta-configure-ir-trace.hpp"
 #include "lttng-live.hpp"
@@ -184,7 +184,7 @@ enum lttng_live_iterator_status lttng_live_metadata_update(struct lttng_live_tra
 int lttng_live_metadata_create_stream(struct lttng_live_session *session, uint64_t ctf_trace_id,
                                       uint64_t stream_id)
 {
-    auto metadata = bt2s::make_unique<lttng_live_metadata>(session->selfComp, session->logger);
+    auto metadata = std::make_unique<lttng_live_metadata>(session->selfComp, session->logger);
 
     metadata->stream_id = stream_id;
 

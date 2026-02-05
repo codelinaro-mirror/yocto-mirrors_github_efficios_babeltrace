@@ -14,7 +14,6 @@
 #include "common/assert.h"
 #include "common/common.h"
 #include "compat/endian.h" /* IWYU pragma: keep  */
-#include "cpp-common/bt2s/make-unique.hpp"
 
 #include "data-stream.hpp"
 #include "lttng-live.hpp"
@@ -1633,7 +1632,7 @@ live_viewer_connection_create(const char *url, bool in_query,
                               struct lttng_live_msg_iter *lttng_live_msg_iter,
                               const bt2c::Logger& parentLogger, live_viewer_connection::UP& viewer)
 {
-    auto viewer_connection = bt2s::make_unique<live_viewer_connection>(parentLogger);
+    auto viewer_connection = std::make_unique<live_viewer_connection>(parentLogger);
 
     if (bt_socket_init(viewer_connection->logger) != 0) {
         BT_CPPLOGE_APPEND_CAUSE_SPEC(viewer_connection->logger, "Failed to init socket");

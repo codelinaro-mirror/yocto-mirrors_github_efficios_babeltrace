@@ -4,7 +4,8 @@
  * Copyright (C) 2024 EfficiOS Inc.
  */
 
-#include "cpp-common/bt2s/make-unique.hpp"
+#include <memory>
+
 #include "cpp-common/vendor/fmt/format.h" /* IWYU pragma: keep */
 
 #include "../utils/run-in.hpp"
@@ -145,7 +146,7 @@ void addClkClsCompatTriggers(CondTriggers& triggers)
                     continue;
                 }
 
-                triggers.emplace_back(bt2s::make_unique<RunInCondTrigger<ClockClsCompatRunIn>>(
+                triggers.emplace_back(std::make_unique<RunInCondTrigger<ClockClsCompatRunIn>>(
                     ClockClsCompatRunIn {msgType1, createClockCls1, msgType2, createClockCls2},
                     CondTrigger::Type::Post, condId, graphMipVersion,
                     fmt::format("mip{}-{}-{}", graphMipVersion, msgType1, msgType2)));

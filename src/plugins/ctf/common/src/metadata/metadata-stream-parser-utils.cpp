@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: MIT
  */
 
+#include <memory>
+
 #include "common/assert.h"
-#include "cpp-common/bt2s/make-unique.hpp"
 
 #include "json/ctf-2-metadata-stream-parser.hpp"
 #include "metadata-stream-parser-utils.hpp"
@@ -30,10 +31,10 @@ createMetadataStreamParser(const MetadataStreamMajorVersion majorVersion,
                            const ClkClsCfg& clkClsCfg, const bt2c::Logger& parentLogger)
 {
     if (majorVersion == MetadataStreamMajorVersion::V1) {
-        return bt2s::make_unique<Ctf1MetadataStreamParser>(selfComp, clkClsCfg, parentLogger);
+        return std::make_unique<Ctf1MetadataStreamParser>(selfComp, clkClsCfg, parentLogger);
     } else {
         BT_ASSERT(majorVersion == MetadataStreamMajorVersion::V2);
-        return bt2s::make_unique<Ctf2MetadataStreamParser>(selfComp, clkClsCfg, parentLogger);
+        return std::make_unique<Ctf2MetadataStreamParser>(selfComp, clkClsCfg, parentLogger);
     }
 }
 

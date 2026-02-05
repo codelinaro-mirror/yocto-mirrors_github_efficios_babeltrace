@@ -5,9 +5,9 @@
  */
 
 #include <algorithm>
+#include <memory>
 
 #include "common/assert.h"
-#include "cpp-common/bt2s/make-unique.hpp"
 
 #include "json-val.hpp"
 
@@ -136,42 +136,42 @@ void JsonObjVal::_accept(JsonValVisitor& visitor) const
 
 JsonNullVal::UP createJsonVal(TextLoc loc)
 {
-    return bt2s::make_unique<const JsonNullVal>(std::move(loc));
+    return std::make_unique<const JsonNullVal>(std::move(loc));
 }
 
 JsonBoolVal::UP createJsonVal(const bool val, TextLoc loc)
 {
-    return bt2s::make_unique<const JsonBoolVal>(val, std::move(loc));
+    return std::make_unique<const JsonBoolVal>(val, std::move(loc));
 }
 
 JsonSIntVal::UP createJsonVal(const long long val, TextLoc loc)
 {
-    return bt2s::make_unique<const JsonSIntVal>(val, std::move(loc));
+    return std::make_unique<const JsonSIntVal>(val, std::move(loc));
 }
 
 JsonUIntVal::UP createJsonVal(const unsigned long long val, TextLoc loc)
 {
-    return bt2s::make_unique<const JsonUIntVal>(val, std::move(loc));
+    return std::make_unique<const JsonUIntVal>(val, std::move(loc));
 }
 
 JsonRealVal::UP createJsonVal(const double val, TextLoc loc)
 {
-    return bt2s::make_unique<const JsonRealVal>(val, std::move(loc));
+    return std::make_unique<const JsonRealVal>(val, std::move(loc));
 }
 
 JsonStrVal::UP createJsonVal(std::string val, TextLoc loc)
 {
-    return bt2s::make_unique<const JsonStrVal>(std::move(val), std::move(loc));
+    return std::make_unique<const JsonStrVal>(std::move(val), std::move(loc));
 }
 
 JsonArrayVal::UP createJsonVal(JsonArrayVal::Container&& vals, TextLoc loc)
 {
-    return bt2s::make_unique<const JsonArrayVal>(std::move(vals), std::move(loc));
+    return std::make_unique<const JsonArrayVal>(std::move(vals), std::move(loc));
 }
 
 JsonObjVal::UP createJsonVal(JsonObjVal::Container&& vals, TextLoc loc)
 {
-    return bt2s::make_unique<const JsonObjVal>(std::move(vals), std::move(loc));
+    return std::make_unique<const JsonObjVal>(std::move(vals), std::move(loc));
 }
 
 } /* namespace bt2c */

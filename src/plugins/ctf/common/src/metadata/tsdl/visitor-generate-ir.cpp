@@ -7,6 +7,8 @@
  * Common Trace Format metadata visitor (generates CTF IR objects).
  */
 
+#include <memory>
+
 #include <stdio.h>
 #include <string.h>
 
@@ -19,7 +21,6 @@
 #include "common/uuid.h"
 #include "compat/endian.h" /* IWYU pragma: keep  */
 #include "cpp-common/bt2c/logging.hpp"
-#include "cpp-common/bt2s/make-unique.hpp"
 
 #include "../normalize-clk-offset.hpp"
 #include "ast.hpp"
@@ -466,7 +467,7 @@ ctf_visitor_generate_ir::~ctf_visitor_generate_ir()
 
 ctf_visitor_generate_ir::UP ctf_visitor_generate_ir_create(const bt2c::Logger& parentLogger)
 {
-    auto ctx = bt2s::make_unique<ctf_visitor_generate_ir>(parentLogger);
+    auto ctx = std::make_unique<ctf_visitor_generate_ir>(parentLogger);
 
     ctx->ctf_tc = ctf_trace_class_create();
     if (!ctx->ctf_tc) {

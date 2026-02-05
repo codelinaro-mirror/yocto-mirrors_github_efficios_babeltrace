@@ -11,7 +11,6 @@
 #include <babeltrace2/babeltrace.h>
 
 #include "cpp-common/bt2c/fmt.hpp" /* IWYU pragma: keep */
-#include "cpp-common/bt2s/make-unique.hpp"
 #include "cpp-common/vendor/fmt/format.h"
 
 #include "plugins/common/muxing/muxing.hpp"
@@ -43,7 +42,7 @@ MsgIter::MsgIter(const bt2::SelfMessageIterator selfMsgIter,
          * part of `_mUpstreamMsgItersToReload` (_ensureFullHeap() will
          * deal with it when downstream calls next()).
          */
-        auto upstreamMsgIter = bt2s::make_unique<UpstreamMsgIter>(
+        auto upstreamMsgIter = std::make_unique<UpstreamMsgIter>(
             this->_createMessageIterator(inputPort), inputPort.name(), _mLogger);
 
         canSeekForward = canSeekForward && upstreamMsgIter->canSeekForward();

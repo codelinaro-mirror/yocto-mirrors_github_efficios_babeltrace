@@ -14,7 +14,6 @@
 #include "compat/endian.h" /* IWYU pragma: keep  */
 #include "compat/mman.h"   /* IWYU: pragma keep  */
 #include "cpp-common/bt2c/glib-up.hpp"
-#include "cpp-common/bt2s/make-unique.hpp"
 #include "cpp-common/vendor/fmt/format.h"
 
 #include "../common/src/pkt-props.hpp"
@@ -240,7 +239,7 @@ static std::optional<ctf_fs_ds_index> build_index_from_idx_file(const ctf_fs_ds_
     tempIndex.entries.emplace_back(tempIndexEntry);
 
     ctf::src::fs::Medium::UP medium =
-        bt2s::make_unique<ctf::src::fs::Medium>(tempIndex, fileInfo.logger());
+        std::make_unique<ctf::src::fs::Medium>(tempIndex, fileInfo.logger());
     ctf::src::PktProps props =
         ctf::src::readPktProps(traceCls, std::move(medium), 0_bytes, fileInfo.logger());
 
@@ -361,7 +360,7 @@ build_index_from_stream_file(const ctf_fs_ds_file_info& fileInfo,
         ctf_fs_ds_index tempIndex;
         tempIndex.entries.emplace_back(tempIndexEntry);
         ctf::src::fs::Medium::UP medium =
-            bt2s::make_unique<ctf::src::fs::Medium>(tempIndex, fileInfo.logger());
+            std::make_unique<ctf::src::fs::Medium>(tempIndex, fileInfo.logger());
         ctf::src::PktProps props = ctf::src::readPktProps(traceCls, std::move(medium),
                                                           currentPacketOffset, fileInfo.logger());
 
@@ -411,9 +410,9 @@ build_index_from_stream_file(const ctf_fs_ds_file_info& fileInfo,
 ctf_fs_ds_file::UP ctf_fs_ds_file_create(const char *path, const bt2c::Logger& parentLogger)
 {
     const auto offset_align = bt_mmap_get_offset_align_size(static_cast<int>(parentLogger.level()));
-    auto ds_file = bt2s::make_unique<ctf_fs_ds_file>(parentLogger, offset_align * 2048);
+    auto ds_file = std::make_unique<ctf_fs_ds_file>(parentLogger, offset_align * 2048);
 
-    ds_file->file = bt2s::make_unique<ctf_fs_file>(ds_file->logger);
+    ds_file->file = std::make_unique<ctf_fs_file>(ds_file->logger);
     ds_file->file->path = path;
     int ret = ctf_fs_file_open(ds_file->file.get(), "rb");
     if (ret) {

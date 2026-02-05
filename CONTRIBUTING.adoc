@@ -1748,14 +1748,10 @@ Also provides conversion to `bt2c::Uuid`.
     from an `std::vector` instance quickly when the order isn't
     important.
 
-==== `bt2s`: drop-in replacements of {cpp}14 to {cpp}20 STL features
+==== `bt2s`: drop-in replacements of {cpp}20 STL features
 
 Everything under the `bt2s` namespace has its equivalent under the `std`
 namespace, but in {cpp} versions we don't yet have access to, namely:
-
-`make-unique.hpp`::
-    `bt2s::make_unique()`, a drop-in replacement of `std::make_unique()`
-    ({cpp}14).
 
 `span.hpp`::
     Drop-in replacement of the `std::span` API ({cpp}20).

@@ -8,6 +8,8 @@
  * Babeltrace CTF LTTng-live Client Component
  */
 
+#include <memory>
+
 #include <glib.h>
 #include <unistd.h>
 
@@ -16,7 +18,6 @@
 #include "cpp-common/bt2c/fmt.hpp" /* IWYU pragma: keep */
 #include "cpp-common/bt2c/glib-up.hpp"
 #include "cpp-common/bt2c/vector.hpp"
-#include "cpp-common/bt2s/make-unique.hpp"
 #include "cpp-common/vendor/fmt/format.h"
 
 #include "plugins/common/muxing/muxing.hpp"
@@ -83,7 +84,7 @@ static struct lttng_live_trace *lttng_live_create_trace(struct lttng_live_sessio
     BT_CPPLOGD_SPEC(session->logger, "Creating live trace: session-id={}, trace-id={}", session->id,
                     trace_id);
 
-    auto trace = bt2s::make_unique<lttng_live_trace>(session->logger);
+    auto trace = std::make_unique<lttng_live_trace>(session->logger);
 
     trace->session = session;
     trace->id = trace_id;
@@ -115,8 +116,8 @@ int lttng_live_add_session(struct lttng_live_msg_iter *lttng_live_msg_iter, uint
                     "session-id={}, hostname=\"{}\", session-name=\"{}\"",
                     session_id, hostname, session_name);
 
-    auto session = bt2s::make_unique<lttng_live_session>(lttng_live_msg_iter->logger,
-                                                         lttng_live_msg_iter->selfComp);
+    auto session = std::make_unique<lttng_live_session>(lttng_live_msg_iter->logger,
+                                                        lttng_live_msg_iter->selfComp);
 
     session->id = session_id;
     session->lttng_live_msg_iter = lttng_live_msg_iter;
@@ -1474,7 +1475,7 @@ static lttng_live_msg_iter::UP
 lttng_live_msg_iter_create(struct lttng_live_component *lttng_live_comp,
                            const bt2::SelfMessageIterator selfMsgIter)
 {
-    auto msg_iter = bt2s::make_unique<struct lttng_live_msg_iter>(
+    auto msg_iter = std::make_unique<struct lttng_live_msg_iter>(
         lttng_live_comp->logger, lttng_live_comp->selfComp, selfMsgIter);
 
     msg_iter->lttng_live_comp = lttng_live_comp;
@@ -1762,7 +1763,7 @@ lttng_live_component_create(const bt_value *params, bt_self_component_source *se
     }
 
     auto lttng_live =
-        bt2s::make_unique<lttng_live_component>(std::move(logger), bt2::wrap(self_comp));
+        std::make_unique<lttng_live_component>(std::move(logger), bt2::wrap(self_comp));
 
     lttng_live->max_query_size = MAX_QUERY_SIZE;
     lttng_live->has_msg_iter = false;

@@ -20,7 +20,6 @@
 #include "cpp-common/bt2/field-class.hpp"
 #include "cpp-common/bt2/trace-ir.hpp"
 #include "cpp-common/bt2c/data-len.hpp"
-#include "cpp-common/bt2s/make-unique.hpp"
 #include "cpp-common/vendor/wise-enum/wise_enum.h"
 
 #include "int-range-set.hpp"
@@ -1073,8 +1072,8 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<FixedLenBitArrayFc>(*this, *this, this->align(), _mLen,
-                                                     _mByteOrder, _mBitOrder, this->attrs());
+        return std::make_unique<FixedLenBitArrayFc>(*this, *this, this->align(), _mLen, _mByteOrder,
+                                                    _mBitOrder, this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -1143,9 +1142,9 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<FixedLenBitMapFc>(*this, *this, *this, this->align(), this->len(),
-                                                   this->byteOrder(), _mFlags, this->bitOrder(),
-                                                   this->attrs());
+        return std::make_unique<FixedLenBitMapFc>(*this, *this, *this, this->align(), this->len(),
+                                                  this->byteOrder(), _mFlags, this->bitOrder(),
+                                                  this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -1191,9 +1190,8 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<FixedLenBoolFc>(*this, *this, *this, this->align(), this->len(),
-                                                 this->byteOrder(), this->bitOrder(),
-                                                 this->attrs());
+        return std::make_unique<FixedLenBoolFc>(*this, *this, *this, this->align(), this->len(),
+                                                this->byteOrder(), this->bitOrder(), this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -1236,9 +1234,9 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<FixedLenFloatFc>(*this, *this, this->align(), this->len(),
-                                                  this->byteOrder(), this->bitOrder(),
-                                                  this->attrs());
+        return std::make_unique<FixedLenFloatFc>(*this, *this, this->align(), this->len(),
+                                                 this->byteOrder(), this->bitOrder(),
+                                                 this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -1484,7 +1482,7 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<FixedLenUIntFc>(
+        return std::make_unique<FixedLenUIntFc>(
             *this, *this, *this, *this, this->align(), this->len(), this->byteOrder(),
             this->bitOrder(), this->prefDispBase(), this->mappings(), this->roles(), this->attrs());
     }
@@ -1539,7 +1537,7 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<FixedLenSIntFc>(
+        return std::make_unique<FixedLenSIntFc>(
             *this, *this, *this, this->align(), this->len(), this->byteOrder(), this->bitOrder(),
             this->prefDispBase(), this->mappings(), this->attrs());
     }
@@ -1606,8 +1604,8 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<VarLenUIntFc>(*this, *this, *this, this->prefDispBase(),
-                                               this->mappings(), this->roles(), this->attrs());
+        return std::make_unique<VarLenUIntFc>(*this, *this, *this, this->prefDispBase(),
+                                              this->mappings(), this->roles(), this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -1648,8 +1646,8 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<VarLenSIntFc>(*this, *this, this->prefDispBase(), this->mappings(),
-                                               this->attrs());
+        return std::make_unique<VarLenSIntFc>(*this, *this, this->prefDispBase(), this->mappings(),
+                                              this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -1735,7 +1733,7 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<NullTerminatedStrFc>(*this, this->encoding(), this->attrs());
+        return std::make_unique<NullTerminatedStrFc>(*this, this->encoding(), this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -1951,8 +1949,8 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<StaticLenStrFc>(*this, *this, this->len(), this->encoding(),
-                                                 this->attrs());
+        return std::make_unique<StaticLenStrFc>(*this, *this, this->len(), this->encoding(),
+                                                this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -1993,8 +1991,8 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<DynLenStrFc>(*this, *this, this->lenFieldLoc(), this->encoding(),
-                                              this->attrs());
+        return std::make_unique<DynLenStrFc>(*this, *this, this->lenFieldLoc(), this->encoding(),
+                                             this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -2077,8 +2075,8 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<StaticLenBlobFc>(*this, *this, this->len(), this->mediaType(),
-                                                  _mHasMetadataStreamUuidRole, this->attrs());
+        return std::make_unique<StaticLenBlobFc>(*this, *this, this->len(), this->mediaType(),
+                                                 _mHasMetadataStreamUuidRole, this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -2123,8 +2121,8 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<DynLenBlobFc>(*this, *this, this->lenFieldLoc(), this->mediaType(),
-                                               this->attrs());
+        return std::make_unique<DynLenBlobFc>(*this, *this, this->lenFieldLoc(), this->mediaType(),
+                                              this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -2249,8 +2247,8 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<StaticLenArrayFc>(
-            *this, *this, this->len(), this->elemFc().clone(), this->minAlign(), this->attrs());
+        return std::make_unique<StaticLenArrayFc>(*this, *this, this->len(), this->elemFc().clone(),
+                                                  this->minAlign(), this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -2291,9 +2289,9 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<DynLenArrayFc>(*this, *this, this->lenFieldLoc(),
-                                                this->elemFc().clone(), this->minAlign(),
-                                                this->attrs());
+        return std::make_unique<DynLenArrayFc>(*this, *this, this->lenFieldLoc(),
+                                               this->elemFc().clone(), this->minAlign(),
+                                               this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -2494,8 +2492,7 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<StructFc>(*this, *this, _mMemberClasses, _mMinAlign,
-                                           this->attrs());
+        return std::make_unique<StructFc>(*this, *this, _mMemberClasses, _mMinAlign, this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -2672,8 +2669,8 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<OptionalWithBoolSelFc>(*this, *this, *this, this->fc().clone(),
-                                                        this->selFieldLoc(), this->attrs());
+        return std::make_unique<OptionalWithBoolSelFc>(*this, *this, *this, this->fc().clone(),
+                                                       this->selFieldLoc(), this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -2775,9 +2772,9 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<OptionalWithUIntSelFc>(*this, *this, *this, *this,
-                                                        this->fc().clone(), this->selFieldLoc(),
-                                                        this->selFieldRanges(), this->attrs());
+        return std::make_unique<OptionalWithUIntSelFc>(*this, *this, *this, *this,
+                                                       this->fc().clone(), this->selFieldLoc(),
+                                                       this->selFieldRanges(), this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -2820,9 +2817,9 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<OptionalWithSIntSelFc>(*this, *this, *this, *this,
-                                                        this->fc().clone(), this->selFieldLoc(),
-                                                        this->selFieldRanges(), this->attrs());
+        return std::make_unique<OptionalWithSIntSelFc>(*this, *this, *this, *this,
+                                                       this->fc().clone(), this->selFieldLoc(),
+                                                       this->selFieldRanges(), this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -3121,8 +3118,8 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<VariantWithUIntSelFc>(*this, *this, *this, this->opts(),
-                                                       this->selFieldLoc(), this->attrs());
+        return std::make_unique<VariantWithUIntSelFc>(*this, *this, *this, this->opts(),
+                                                      this->selFieldLoc(), this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
@@ -3159,8 +3156,8 @@ public:
 
     typename Fc<UserMixinsT>::UP clone() const override
     {
-        return bt2s::make_unique<VariantWithSIntSelFc>(*this, *this, *this, this->opts(),
-                                                       this->selFieldLoc(), this->attrs());
+        return std::make_unique<VariantWithSIntSelFc>(*this, *this, *this, this->opts(),
+                                                      this->selFieldLoc(), this->attrs());
     }
 
     void accept(FcVisitor<UserMixinsT>& visitor) override
