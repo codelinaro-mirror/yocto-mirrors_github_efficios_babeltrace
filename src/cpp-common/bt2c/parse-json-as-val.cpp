@@ -35,9 +35,9 @@ public:
         this->_handleVal(loc, val);
     }
 
-    void onScalarVal(const bt2s::string_view val, const TextLoc& loc)
+    void onScalarVal(const std::string_view val, const TextLoc& loc)
     {
-        this->_handleVal(loc, val.to_string());
+        this->_handleVal(loc, std::string {val});
     }
 
     void onArrayBegin(const TextLoc&)
@@ -58,9 +58,9 @@ public:
         _mStack.emplace_back(_State::InObj);
     }
 
-    void onObjKey(const bt2s::string_view key, const TextLoc&)
+    void onObjKey(const std::string_view key, const TextLoc&)
     {
-        this->_stackTop().lastObjKey = key.to_string();
+        this->_stackTop().lastObjKey = key;
     }
 
     void onObjEnd(const TextLoc& loc)
@@ -153,7 +153,7 @@ private:
 
 } /* namespace */
 
-JsonVal::UP parseJson(const bt2s::string_view str, const std::size_t baseOffset,
+JsonVal::UP parseJson(const std::string_view str, const std::size_t baseOffset,
                       const Logger& logger)
 {
     JsonValBuilder builder {baseOffset};

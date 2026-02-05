@@ -337,7 +337,7 @@ This API offers:
   @endcode
 
 - The event mode
-  parseJson(bt2s::string_view, ListenerT&, std::size_t, const Logger&)
+  parseJson(std::string_view, ListenerT&, std::size_t, const Logger&)
   function which parses an encoded JSON value, calling methods of a
   listener object as it decodes.
 
@@ -356,7 +356,7 @@ This API offers:
   @endcode
 
 - The value mode
-  parseJson(bt2s::string_view, std::size_t, const Logger&)
+  parseJson(std::string_view, std::size_t, const Logger&)
   function which parses an encoded JSON value into as a bt2c::JsonVal
   object.
 

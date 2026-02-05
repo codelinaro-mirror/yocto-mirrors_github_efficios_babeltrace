@@ -210,10 +210,8 @@ cpp_common_libcpp_common_la_SOURCES = \
 	cpp-common/bt2c/vector.hpp \
 	cpp-common/bt2s/make-unique.hpp \
 	cpp-common/bt2s/span.hpp \
-	cpp-common/bt2s/string-view.hpp \
 	cpp-common/vendor/nlohmann/json.hpp \
 	cpp-common/vendor/span-lite/span.hpp \
-	cpp-common/vendor/string-view-lite/string_view.hpp \
 	cpp-common/vendor/wise-enum/optional.h \
 	cpp-common/vendor/wise-enum/optional_common.h \
 	cpp-common/vendor/wise-enum/wise_enum.h \
@@ -943,5 +941,4 @@ nodist_EXTRA_lib_libbabeltrace2_builtin_la_SOURCES = dummy.cpp
 endif # ENABLE_BUILT_IN_PLUGINS
 
 EXTRA_DIST = \
-	cpp-common/vendor/span-lite/span.hpp.license \
-	cpp-common/vendor/string-view-lite/string_view.hpp.license
+	cpp-common/vendor/span-lite/span.hpp.license

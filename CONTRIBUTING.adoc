@@ -1659,7 +1659,7 @@ Notable files are:
     The `bt2c::CStringView` class: a view on a constant null-terminated
     C{nbsp}string.
 +
-We have this because `bt2s::string_view` doesn't imply null termination,
+We have this because `std::string_view` doesn't imply null termination,
 only a beginning and a length.
 +
 A `bt2c::CStringView` instance is convertible to `const char *` and may
@@ -1760,9 +1760,6 @@ namespace, but in {cpp} versions we don't yet have access to, namely:
 `span.hpp`::
     Drop-in replacement of the `std::span` API ({cpp}20).
 
-`string-view.hpp`::
-    Drop-in replacement of the `std::string_view` API ({cpp}17).
-
 ==== `vendor`: copies of {cpp} dependencies
 
 This directory contains copies of the source code of {cpp} dependencies
@@ -1786,12 +1783,6 @@ TIP: `src/cpp-common/bt2c/make-span.hpp` offers `bt2c::makeSpan()` which
 is an alternative to
 https://en.cppreference.com/w/cpp/language/class_template_argument_deduction[CTAD]
 (a {cpp}17 feature).
-
-`string-view-lite`::
-    https://github.com/martinmoene/string-view-lite[string_view lite].
-+
-IMPORTANT: Use the symbols of `src/cpp-common/bt2s/string-view.hpp`,
-under the `bt2s` namespace, instead of using this directly.
 
 `wise_enum`::
     https://github.com/quicknir/wise_enum[wise_enum].

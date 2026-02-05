@@ -10,11 +10,11 @@
 #include <cstdlib>
 #include <limits>
 #include <string>
+#include <string_view>
 
 #include "common/assert.h"
 #include "cpp-common/bt2c/logging.hpp"
 #include "cpp-common/bt2c/regex.hpp"
-#include "cpp-common/bt2s/string-view.hpp"
 
 #include "text-loc.hpp"
 
@@ -79,7 +79,7 @@ class StrScanner final
 {
 public:
     /*! @brief String view iterator. */
-    using Iter = bt2s::string_view::const_iterator;
+    using Iter = std::string_view::const_iterator;
 
     /*!
     @brief
@@ -100,19 +100,19 @@ public:
     @param[in] logger
         Logger to use on error.
     */
-    explicit StrScanner(bt2s::string_view str, std::size_t baseOffset, const Logger& logger);
+    explicit StrScanner(std::string_view str, std::size_t baseOffset, const Logger& logger);
 
     /*!
     @brief
-        Like StrScanner(bt2s::string_view, std::size_t, const Logger&),
+        Like StrScanner(std::string_view, std::size_t, const Logger&),
         but with \bt_p{baseOffset} set to&nbsp;0.
 
     @param[in] str
-        See StrScanner(bt2s::string_view, std::size_t, const Logger&).
+        See StrScanner(std::string_view, std::size_t, const Logger&).
     @param[in] logger
-        See StrScanner(bt2s::string_view, std::size_t, const Logger&).
+        See StrScanner(std::string_view, std::size_t, const Logger&).
     */
-    explicit StrScanner(bt2s::string_view str, const Logger& logger);
+    explicit StrScanner(std::string_view str, const Logger& logger);
 
     /*!
     @brief
@@ -152,7 +152,7 @@ public:
     @returns
         Wrapped string.
     */
-    bt2s::string_view str() const noexcept
+    std::string_view str() const noexcept
     {
         return _mStr;
     }
@@ -178,7 +178,7 @@ public:
         Current text location.
 
     This method uses the value of the \bt_p{baseOffset} parameter of
-    StrScanner(bt2s::string_view, std::size_t, const Logger&)
+    StrScanner(std::string_view, std::size_t, const Logger&)
     when you built this string scanner as the base offset of the
     text location to build.
 
@@ -255,7 +255,7 @@ public:
         \bt_p{escapeSeqStartList} only contains characters amongst
         \c a, \c b, \c f, \c n, \c r, \c t, \c u, and \c v.
     */
-    bt2s::string_view tryScanLitStr(bt2s::string_view escapeSeqStartList);
+    std::string_view tryScanLitStr(std::string_view escapeSeqStartList);
 
     /*!
     @brief
@@ -362,7 +362,7 @@ public:
     @retval true
         Scanned \bt_p{token}.
     */
-    bool tryScanToken(bt2s::string_view token) noexcept;
+    bool tryScanToken(std::string_view token) noexcept;
 
     /*!
     @brief
@@ -398,7 +398,7 @@ private:
      * the characters of `escapeSeqStartList`, `\`, and `"` as escape
      * sequence starting characters.
      */
-    bool _tryAppendEscapedChar(bt2s::string_view escapeSeqStartList);
+    bool _tryAppendEscapedChar(std::string_view escapeSeqStartList);
 
     /*
      * Tries to scan any character, returning it and advancing the
@@ -449,7 +449,7 @@ private:
 
 private:
     /* Viewed string, given by user */
-    bt2s::string_view _mStr;
+    std::string_view _mStr;
 
     /* Current position within `_mStr` */
     Iter _mAt;

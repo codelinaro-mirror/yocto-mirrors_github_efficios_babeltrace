@@ -6,8 +6,7 @@
 
 #include <array>
 #include <cmath>
-
-#include "cpp-common/bt2s/string-view.hpp"
+#include <string_view>
 
 #include "str-scanner.hpp"
 
@@ -26,14 +25,14 @@ const bt2c::Regex StrScanner::_realRegex {
 
 /* clang-format on */
 
-StrScanner::StrScanner(const bt2s::string_view str, const std::size_t baseOffset,
+StrScanner::StrScanner(const std::string_view str, const std::size_t baseOffset,
                        const Logger& logger) :
     _mStr {str}, _mAt {str.begin()}, _mLineBegin {str.begin()}, _mBaseOffset {baseOffset},
     _mLogger {logger, "STR-SCANNER"}
 {
 }
 
-StrScanner::StrScanner(const bt2s::string_view str, const Logger& logger) :
+StrScanner::StrScanner(const std::string_view str, const Logger& logger) :
     StrScanner {str, 0, logger}
 {
 }
@@ -105,7 +104,7 @@ void StrScanner::_appendEscapedUnicodeChar(const Iter at)
     }
 }
 
-bool StrScanner::_tryAppendEscapedChar(const bt2s::string_view escapeSeqStartList)
+bool StrScanner::_tryAppendEscapedChar(const std::string_view escapeSeqStartList)
 {
     if (this->charsLeft() < 2) {
         /* Need at least `\` and another character */
@@ -171,7 +170,7 @@ bool StrScanner::_tryAppendEscapedChar(const bt2s::string_view escapeSeqStartLis
     return false;
 }
 
-bt2s::string_view StrScanner::tryScanLitStr(const bt2s::string_view escapeSeqStartList)
+std::string_view StrScanner::tryScanLitStr(const std::string_view escapeSeqStartList)
 {
     this->skipWhitespaces();
 
@@ -237,7 +236,7 @@ bt2s::string_view StrScanner::tryScanLitStr(const bt2s::string_view escapeSeqSta
     return {};
 }
 
-bool StrScanner::tryScanToken(const bt2s::string_view token) noexcept
+bool StrScanner::tryScanToken(const std::string_view token) noexcept
 {
     this->skipWhitespaces();
 

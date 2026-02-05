@@ -9,8 +9,7 @@
 
 #include <sstream>
 #include <string>
-
-#include "cpp-common/bt2s/string-view.hpp"
+#include <string_view>
 
 namespace bt2c {
 namespace internal {
@@ -31,7 +30,7 @@ void appendStrToSs(std::ostringstream& ss, const StrT& str)
 @ingroup common-cpp-bt2c
 
 Some valid value types of \bt_p{ContainerT} are \c std::string,
-CStringView, and bt2s::string_view.
+CStringView, and `std::string_view`.
 
 Example:
 
@@ -69,7 +68,7 @@ allo, bobo, rhume, cerveau
     - \bt_p{ContainerT::value_type} has the \c size() method.
 */
 template <typename ContainerT>
-std::string join(const ContainerT& container, const bt2s::string_view delim)
+std::string join(const ContainerT& container, const std::string_view delim)
 {
     if (container.empty()) {
         /* No elements */

@@ -9,10 +9,10 @@
 
 #include <cstring>
 #include <string>
+#include <string_view>
 #include <unordered_set>
 
 #include "common/assert.h"
-#include "cpp-common/bt2s/string-view.hpp"
 
 #include "exc.hpp"
 #include "str-scanner.hpp"
@@ -35,7 +35,7 @@ public:
      * current thread, it uses `baseOffset` to format the text location
      * part of the message.
      */
-    explicit JsonParser(bt2s::string_view str, ListenerT& listener, std::size_t baseOffset,
+    explicit JsonParser(std::string_view str, ListenerT& listener, std::size_t baseOffset,
                         const Logger& parentLogger);
 
 private:
@@ -95,11 +95,10 @@ private:
      * Expects the specific token `token`, appending a cause to the
      * error of the current thread and throwing `Error` if not found.
      */
-    void _expectToken(const bt2s::string_view token)
+    void _expectToken(const std::string_view token)
     {
         if (!_mSs.tryScanToken(token)) {
-            BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW(Error, _mSs.loc(), "Expecting `{}`.",
-                                                       token.to_string());
+            BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW(Error, _mSs.loc(), "Expecting `{}`.", token);
         }
     }
 
@@ -107,7 +106,7 @@ private:
      * Calls StrScanner::tryScanLitStr() with the JSON-specific escape
      * sequence starting characters.
      */
-    bt2s::string_view _tryScanLitStr()
+    std::string_view _tryScanLitStr()
     {
         return _mSs.tryScanLitStr("/bfnrtu");
     }
@@ -137,7 +136,7 @@ private:
 };
 
 template <typename ListenerT>
-JsonParser<ListenerT>::JsonParser(const bt2s::string_view str, ListenerT& listener,
+JsonParser<ListenerT>::JsonParser(const std::string_view str, ListenerT& listener,
                                   const std::size_t baseOffset, const Logger& parentLogger) :
     _mLogger {parentLogger, "PARSE-JSON"}, _mSs {str, baseOffset, parentLogger},
     _mListener {&listener}
@@ -315,9 +314,9 @@ bool JsonParser<ListenerT>::_tryParseObjKey()
         BT_ASSERT(!_mKeys.empty());
 
         /* Insert, checking for duplicate key */
-        if (!_mKeys.back().insert(str.to_string()).second) {
-            BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW(
-                Error, _mSs.loc(), "Duplicate JSON object key `{}`.", str.to_string());
+        if (!_mKeys.back().insert(std::string {str}).second) {
+            BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW(Error, _mSs.loc(),
+                                                       "Duplicate JSON object key `{}`.", str);
         }
 
         _mListener->onObjKey(str, loc);
@@ -444,11 +443,11 @@ void onScalarVal(bool, const bt2c::TextLoc&);
 void onScalarVal(unsigned long long, const bt2c::TextLoc&);
 void onScalarVal(long long, const bt2c::TextLoc&);
 void onScalarVal(double, const bt2c::TextLoc&);
-void onScalarVal(bt2s::string_view, const bt2c::TextLoc&);
+void onScalarVal(std::string_view, const bt2c::TextLoc&);
 void onArrayBegin(const bt2c::TextLoc&);
 void onArrayEnd(const bt2c::TextLoc&);
 void onObjBegin(const bt2c::TextLoc&);
-void onObjKey(bt2s::string_view, const bt2c::TextLoc&);
+void onObjKey(std::string_view, const bt2c::TextLoc&);
 void onObjEnd(const bt2c::TextLoc&);
 @endcode
 
@@ -477,10 +476,10 @@ rest) or C-style comments.
 @param[in] parentLogger
     Parent logger to use on error.
 
-@sa parseJson(bt2s::string_view, std::size_t, const Logger&)
+@sa parseJson(std::string_view, std::size_t, const Logger&)
 */
 template <typename ListenerT>
-void parseJson(const bt2s::string_view str, ListenerT& listener, const std::size_t baseOffset,
+void parseJson(const std::string_view str, ListenerT& listener, const std::size_t baseOffset,
                const Logger& parentLogger)
 {
     internal::JsonParser<ListenerT> {str, listener, baseOffset, parentLogger};
@@ -489,20 +488,20 @@ void parseJson(const bt2s::string_view str, ListenerT& listener, const std::size
 /*!
 @brief
     Overload of
-    parseJson(bt2s::string_view, ListenerT&, std::size_t, const Logger&)
+    parseJson(std::string_view, ListenerT&, std::size_t, const Logger&)
     with \bt_p{baseOffset} set to&nbsp;0.
 
 @ingroup common-cpp-bt2c-json
 
 @param[in] str
-    See parseJson(bt2s::string_view, ListenerT&, std::size_t, const Logger&).
+    See parseJson(std::string_view, ListenerT&, std::size_t, const Logger&).
 @param[in] listener
-    See parseJson(bt2s::string_view, ListenerT&, std::size_t, const Logger&).
+    See parseJson(std::string_view, ListenerT&, std::size_t, const Logger&).
 @param[in] parentLogger
-    See parseJson(bt2s::string_view, ListenerT&, std::size_t, const Logger&).
+    See parseJson(std::string_view, ListenerT&, std::size_t, const Logger&).
 */
 template <typename ListenerT>
-void parseJson(const bt2s::string_view str, ListenerT& listener, const Logger& parentLogger)
+void parseJson(const std::string_view str, ListenerT& listener, const Logger& parentLogger)
 {
     parseJson(str, listener, 0, parentLogger);
 }

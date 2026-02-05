@@ -8,10 +8,9 @@
 #define BABELTRACE_CPP_COMMON_BT2C_PARSE_JSON_AS_VAL_HPP
 
 #include <cstdlib>
+#include <string_view>
 
 #include "logging.hpp"
-
-#include "cpp-common/bt2s/string-view.hpp"
 
 #include "json-val.hpp"
 
@@ -25,7 +24,7 @@ namespace bt2c {
 @ingroup common-cpp-bt2c-json
 
 This function uses
-parseJson(bt2s::string_view, ListenerT&, std::size_t, const Logger&)
+parseJson(std::string_view, ListenerT&, std::size_t, const Logger&)
 behind the scenes, therefore see its documentation to learn more about
 JSON parsing specifics.
 
@@ -45,29 +44,29 @@ JSON parsing specifics.
 @returns
     Decoded JSON value.
 
-@sa parseJson(bt2s::string_view, ListenerT&, std::size_t, const Logger&)
+@sa parseJson(std::string_view, ListenerT&, std::size_t, const Logger&)
 */
-JsonVal::UP parseJson(bt2s::string_view str, std::size_t baseOffset, const Logger& logger);
+JsonVal::UP parseJson(std::string_view str, std::size_t baseOffset, const Logger& logger);
 
 /*!
 @brief
     Overload of
-    parseJson(bt2s::string_view, std::size_t, const Logger&)
+    parseJson(std::string_view, std::size_t, const Logger&)
     with \bt_p{baseOffset} set to&nbsp;0.
 
 @ingroup common-cpp-bt2c-json
 
 @param[in] str
-    See parseJson(bt2s::string_view, std::size_t, const Logger&).
+    See parseJson(std::string_view, std::size_t, const Logger&).
 @param[in] logger
-    See parseJson(bt2s::string_view, std::size_t, const Logger&).
+    See parseJson(std::string_view, std::size_t, const Logger&).
 
 @returns
-    See parseJson(bt2s::string_view, std::size_t, const Logger&).
+    See parseJson(std::string_view, std::size_t, const Logger&).
 
-@sa parseJson(bt2s::string_view, ListenerT&, const Logger&)
+@sa parseJson(std::string_view, ListenerT&, const Logger&)
 */
-inline JsonVal::UP parseJson(const bt2s::string_view str, const Logger& logger)
+inline JsonVal::UP parseJson(const std::string_view str, const Logger& logger)
 {
     return parseJson(str, 0, logger);
 }

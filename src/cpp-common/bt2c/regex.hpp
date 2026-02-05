@@ -7,6 +7,8 @@
 #ifndef BABELTRACE_CPP_COMMON_BT2C_REGEX_HPP
 #define BABELTRACE_CPP_COMMON_BT2C_REGEX_HPP
 
+#include <string_view>
+
 #include <glib.h>
 
 #include "cpp-common/bt2c/logging.hpp"
@@ -85,7 +87,7 @@ public:
     @retval true
         This regex matches \bt_p{str}.
     */
-    bool match(const bt2s::string_view str) const noexcept
+    bool match(const std::string_view str) const noexcept
     {
         return g_regex_match_full(_mRegex, str.data(), str.size(), 0,
                                   static_cast<GRegexMatchFlags>(0), nullptr, nullptr);

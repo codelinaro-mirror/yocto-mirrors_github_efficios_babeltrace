@@ -5,6 +5,7 @@
  */
 
 #include <sstream>
+#include <string_view>
 
 #include "common/assert.h"
 #include "cpp-common/bt2c/contains.hpp"
@@ -14,7 +15,6 @@
 #include "cpp-common/bt2c/logging.hpp"
 #include "cpp-common/bt2c/make-span.hpp"
 #include "cpp-common/bt2c/parse-json-as-val.hpp"
-#include "cpp-common/bt2s/string-view.hpp"
 
 #include "../../../metadata/json-strings.hpp"
 #include "../ctf-ir.hpp"
@@ -124,7 +124,7 @@ void Ctf2MetadataStreamParser::_parseFragment(const bt2c::ConstBytes buffer)
 {
     try {
         this->_handleFragment(*bt2c::parseJson(
-            bt2s::string_view {reinterpret_cast<const char *>(buffer.data()), buffer.size()},
+            std::string_view {reinterpret_cast<const char *>(buffer.data()), buffer.size()},
             _mCurOffsetInStream.bytes(), _mLogger));
     } catch (const bt2c::Error&) {
         BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_RETHROW(

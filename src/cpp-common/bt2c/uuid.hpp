@@ -45,10 +45,10 @@ This file also contains the {fmt} formatting function for bt2c::Uuid.
 #include <array>
 #include <cstdint>
 #include <string>
+#include <string_view>
 
 #include "common/assert.h"
 #include "common/uuid.h"
-#include "cpp-common/bt2s/string-view.hpp"
 
 namespace bt2c {
 
@@ -355,7 +355,7 @@ public:
         for example <code>40311ef2-16a5-4a16-8ef4-10783d8701ab</code>
         (see isValidUuidStr()).
     */
-    explicit Uuid(const bt2s::string_view str) noexcept
+    explicit Uuid(const std::string_view str) noexcept
     {
         const auto ret = bt_uuid_from_str(str.data(), str.data() + str.size(), _mUuid.data());
         BT_ASSERT(ret == 0);
@@ -580,7 +580,7 @@ public:
     @returns
         \c true if \bt_p{str} is a valid UUID textual representation.
     */
-    static bool isValidUuidStr(const bt2s::string_view str) noexcept
+    static bool isValidUuidStr(const std::string_view str) noexcept
     {
         std::array<Val, Uuid::size()> tmp;
 

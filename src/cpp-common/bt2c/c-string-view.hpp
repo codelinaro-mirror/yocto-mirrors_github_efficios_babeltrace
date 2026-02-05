@@ -28,9 +28,9 @@ and equalOrBothNull().
 #include <cstring>
 #include <optional>
 #include <string>
+#include <string_view>
 
 #include "common/assert.h"
-#include "cpp-common/bt2s/string-view.hpp"
 #include "cpp-common/vendor/fmt/format.h" /* IWYU pragma: keep */
 
 #include "type-traits.hpp"
@@ -43,13 +43,13 @@ namespace bt2c {
 
 A C string view is a view of a constant null-terminated C&nbsp;string.
 
-This is similar to bt2s::string_view, but since we know it's
+This is similar to `std::string_view`, but since we know it's
 null-terminated, len() and end() compute the string length on demand.
 
 A C string view is a zero-cost way to receive and return a C&nbsp;string
 while having access to common string methods as well as implicit
-conversion to and from <code>const char *</code>, \c std::string, and
-bt2s::string_view.
+conversion to and from <code>const char *</code>, \c std::string,
+and `std::string_view`.
 
 Like <code>const char *</code>, a C string view may be empty (contain
 \c nullptr).
@@ -254,17 +254,17 @@ public:
 
     /*!
     @brief
-        bt2s::string_view instance viewing the contents,
+        `std::string_view` instance viewing the contents,
         excluding the null character, of the viewed C&nbsp;string
 
     @returns
-        bt2s::string_view instance viewing the contents,
+        `std::string_view` instance viewing the contents,
         excluding the null character, of the viewed C&nbsp;string
     */
-    bt2s::string_view strView() const noexcept
+    std::string_view strView() const noexcept
     {
         if (_mStr) {
-            return bt2s::string_view {this->begin(), this->len()};
+            return std::string_view {this->begin(), this->len()};
         } else {
             return {};
         }
@@ -277,7 +277,7 @@ public:
     @returns
         See strView().
     */
-    operator bt2s::string_view() const noexcept
+    operator std::string_view() const noexcept
     {
         return this->strView();
     }
