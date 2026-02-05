@@ -121,20 +121,18 @@ public:
     }
 
     template <typename UserComponentT>
-    auto addComponent(const bt2c::CStringView name,
-                      const OptionalBorrowedObject<ConstMapValue> params = {},
-                      const LoggingLevel loggingLevel = LoggingLevel::None) const
-        -> decltype(this->addComponent(*createComponentClass<UserComponentT>(), nullptr))
+    decltype(auto) addComponent(const bt2c::CStringView name,
+                                const OptionalBorrowedObject<ConstMapValue> params = {},
+                                const LoggingLevel loggingLevel = LoggingLevel::None) const
     {
         return this->addComponent(*createComponentClass<UserComponentT>(), name, params,
                                   loggingLevel);
     }
 
     template <typename UserComponentT, typename InitDataT>
-    auto addComponent(const bt2c::CStringView name, InitDataT&& initData,
-                      const OptionalBorrowedObject<ConstMapValue> params = {},
-                      const LoggingLevel loggingLevel = LoggingLevel::None) const
-        -> decltype(this->addComponent(*createComponentClass<UserComponentT>(), nullptr))
+    decltype(auto) addComponent(const bt2c::CStringView name, InitDataT&& initData,
+                                const OptionalBorrowedObject<ConstMapValue> params = {},
+                                const LoggingLevel loggingLevel = LoggingLevel::None) const
     {
         return this->addComponent(*createComponentClass<UserComponentT>(), name,
                                   std::forward<InitDataT>(initData), params, loggingLevel);
