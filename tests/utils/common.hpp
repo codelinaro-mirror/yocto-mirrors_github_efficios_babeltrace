@@ -9,12 +9,12 @@
 
 #include <cstdint>
 
-#include <babeltrace2/babeltrace.h>
+#include "cpp-common/bt2/mip.hpp"
 
 template <typename FuncT>
 void forEachMipVersion(FuncT&& func)
 {
-    for (std::uint64_t v = 0; v <= bt_get_maximal_mip_version(); ++v) {
+    for (std::uint64_t v = 0; v <= bt2::getMaximalMipVersion(); ++v) {
         func(v);
     }
 }
