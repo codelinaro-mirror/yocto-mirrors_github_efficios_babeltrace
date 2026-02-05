@@ -5385,11 +5385,11 @@ values:
 @bt_pre_fc_created_from_tc{optional_field_class, trace_class}
 @bt_pre_not_null{selector_field_class}
 @pre
-    \bt_p{selector_field_class} is an \bt_uint_fc.
+    \bt_p{selector_field_class} is a \bt_sint_fc.
 @bt_pre_fc_created_from_tc{selector_field_class, trace_class}
 @bt_pre_not_null{ranges}
 @pre
-    \bt_p{ranges} contains one or more \bt_p_uint_rg.
+    \bt_p{ranges} contains one or more \bt_p_sint_rg.
 
 @bt_post_success_frozen{optional_field_class}
 @bt_post_success_frozen{selector_field_class}
