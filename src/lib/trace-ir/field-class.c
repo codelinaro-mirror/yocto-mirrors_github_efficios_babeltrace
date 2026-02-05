@@ -1337,8 +1337,10 @@ bt_field_class_structure_append_member(
 
 	BT_ASSERT_PRE_NO_ERROR();
 	BT_ASSERT_PRE_FC_NON_NULL(fc);
-	BT_ASSERT_PRE_NAME_NON_NULL(name);
 	BT_ASSERT_PRE_FC_IS_STRUCT("field-class", fc, "Field class");
+	BT_ASSERT_PRE_NAME_NON_NULL(name);
+	BT_ASSERT_PRE_NON_NULL("member-field-class", member_fc,
+		"Member field class");
 	named_fc = create_named_field_class(name, member_fc);
 	if (!named_fc) {
 		/* create_named_field_class() logs errors */
