@@ -107,7 +107,7 @@ public:
     {
     }
 
-    void _next(bt2::ConstMessageArray&)
+    [[noreturn]] void _next(bt2::ConstMessageArray&)
     {
         throw bt2::Error {};
     }

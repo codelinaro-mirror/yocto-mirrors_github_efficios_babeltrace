@@ -308,11 +308,12 @@ protected:
     @returns
         Query results.
     */
-    static Value::Shared _query(SelfComponentClass selfCompCls __attribute__((unused)),
-                                PrivateQueryExecutor privQueryExec __attribute__((unused)),
-                                bt2c::CStringView object __attribute__((unused)),
-                                ConstValue params __attribute__((unused)),
-                                QueryDataT *queryData __attribute__((unused)))
+    [[noreturn]] static Value::Shared _query(SelfComponentClass selfCompCls __attribute__((unused)),
+                                             PrivateQueryExecutor privQueryExec
+                                             __attribute__((unused)),
+                                             bt2c::CStringView object __attribute__((unused)),
+                                             ConstValue params __attribute__((unused)),
+                                             QueryDataT *queryData __attribute__((unused)))
     {
         throw UnknownObject {};
     }
@@ -539,11 +540,12 @@ protected:
     @returns
         Query results.
     */
-    static Value::Shared _query(SelfComponentClass selfCompCls __attribute__((unused)),
-                                PrivateQueryExecutor privQueryExec __attribute__((unused)),
-                                bt2c::CStringView object __attribute__((unused)),
-                                ConstValue params __attribute__((unused)),
-                                QueryDataT *queryData __attribute__((unused)))
+    [[noreturn]] static Value::Shared _query(SelfComponentClass selfCompCls __attribute__((unused)),
+                                             PrivateQueryExecutor privQueryExec
+                                             __attribute__((unused)),
+                                             bt2c::CStringView object __attribute__((unused)),
+                                             ConstValue params __attribute__((unused)),
+                                             QueryDataT *queryData __attribute__((unused)))
     {
         throw UnknownObject {};
     }
@@ -828,11 +830,12 @@ protected:
     @returns
         Query results.
     */
-    static Value::Shared _query(SelfComponentClass selfCompCls __attribute__((unused)),
-                                PrivateQueryExecutor privQueryExec __attribute__((unused)),
-                                bt2c::CStringView object __attribute__((unused)),
-                                ConstValue params __attribute__((unused)),
-                                QueryDataT *queryData __attribute__((unused)))
+    [[noreturn]] static Value::Shared _query(SelfComponentClass selfCompCls __attribute__((unused)),
+                                             PrivateQueryExecutor privQueryExec
+                                             __attribute__((unused)),
+                                             bt2c::CStringView object __attribute__((unused)),
+                                             ConstValue params __attribute__((unused)),
+                                             QueryDataT *queryData __attribute__((unused)))
     {
         throw UnknownObject {};
     }
