@@ -187,7 +187,7 @@ bool MsgIter::_canSeekBeginning()
      * iterators also can.
      */
     return std::all_of(_mUpstreamMsgIters.begin(), _mUpstreamMsgIters.end(),
-                       [](UpstreamMsgIter::UP& upstreamMsgIter) {
+                       [](auto& upstreamMsgIter) {
                            return upstreamMsgIter->canSeekBeginning();
                        });
 }

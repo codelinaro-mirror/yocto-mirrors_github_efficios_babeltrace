@@ -3070,7 +3070,7 @@ public:
      */
     typename Opts::const_iterator findOptBySelVal(const SelVal selVal) const noexcept
     {
-        return std::find_if(_mOpts.begin(), _mOpts.end(), [selVal](const Opt& opt) {
+        return std::find_if(_mOpts.begin(), _mOpts.end(), [selVal](const auto& opt) {
             return opt.selFieldRanges().contains(selVal);
         });
     }

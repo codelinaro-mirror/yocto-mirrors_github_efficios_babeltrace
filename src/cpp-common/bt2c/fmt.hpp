@@ -87,7 +87,7 @@ inline std::string format_as(const bt2::ConstValue val) noexcept
         std::string ret {'{'};
         const char *maybeComma = "";
 
-        val.asMap().forEach([&](const bt2c::CStringView k, const bt2::ConstValue v) {
+        val.asMap().forEach([&](const auto k, const auto v) {
             ret += fmt::format("{}{}: {}", maybeComma, k, v);
             maybeComma = ", ";
         });

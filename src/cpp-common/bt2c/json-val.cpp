@@ -94,10 +94,9 @@ namespace {
 template <typename ContainerT, typename GetValueFuncT>
 bool valsNotNull(const ContainerT& vals, GetValueFuncT&& getValueFunc)
 {
-    return std::all_of(vals.begin(), vals.end(),
-                       [&getValueFunc](typename ContainerT::const_reference elem) {
-                           return static_cast<bool>(getValueFunc(elem));
-                       });
+    return std::all_of(vals.begin(), vals.end(), [&getValueFunc](const auto& elem) {
+        return static_cast<bool>(getValueFunc(elem));
+    });
 }
 
 } /* namespace */
@@ -108,7 +107,7 @@ JsonArrayVal::JsonArrayVal(Container&& vals, TextLoc loc) :
     JsonCompoundVal {std::move(vals), std::move(loc)}
 {
 #ifdef BT_DEBUG_MODE
-    BT_ASSERT_DBG(valsNotNull(_mVals, [](Container::const_reference elem) -> const JsonVal::UP& {
+    BT_ASSERT_DBG(valsNotNull(_mVals, [](const auto& elem) -> const JsonVal::UP& {
         return elem;
     }));
 #endif
@@ -123,7 +122,7 @@ JsonObjVal::JsonObjVal(Container&& vals, TextLoc loc) :
     JsonCompoundVal {std::move(vals), std::move(loc)}
 {
 #ifdef BT_DEBUG_MODE
-    BT_ASSERT_DBG(valsNotNull(_mVals, [](Container::const_reference elem) -> const JsonVal::UP& {
+    BT_ASSERT_DBG(valsNotNull(_mVals, [](const auto& elem) -> const JsonVal::UP& {
         return elem.second;
     }));
 #endif

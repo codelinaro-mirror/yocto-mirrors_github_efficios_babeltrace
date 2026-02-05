@@ -146,7 +146,7 @@ std::optional<bt2c::Uuid> uuidOfObj(const bt2c::JsonObjVal& jsonObjVal)
         auto& jsonArrayUuidVal = jsonUuidVal->asArray();
 
         std::transform(jsonArrayUuidVal.begin(), jsonArrayUuidVal.end(), uuid.begin(),
-                       [](const bt2c::JsonVal::UP& jsonUuidElemVal) {
+                       [](const auto& jsonUuidElemVal) {
                            return static_cast<bt2c::Uuid::Val>(*jsonUuidElemVal->asUInt());
                        });
         return bt2c::Uuid {uuid.data()};

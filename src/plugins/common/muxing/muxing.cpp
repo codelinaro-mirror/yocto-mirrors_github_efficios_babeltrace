@@ -303,11 +303,11 @@ int MessageComparator::_compareStreamsSameIds(const bt2::ConstStream left,
     }
 
     /* Compare the clock classes associated to the stream classes. */
-    return _compareOptionalBorrowedObjects(
-        leftCls.defaultClockClass(), rightCls.defaultClockClass(),
-        [this](const bt2::ConstClockClass leftCc, const bt2::ConstClockClass rightCc) {
-            return _compareClockClasses(leftCc, rightCc);
-        });
+    return _compareOptionalBorrowedObjects(leftCls.defaultClockClass(),
+                                           rightCls.defaultClockClass(),
+                                           [this](const auto leftCc, const auto rightCc) {
+                                               return _compareClockClasses(leftCc, rightCc);
+                                           });
 }
 
 int MessageComparator::_compareClockSnapshots(const bt2::ConstClockSnapshot left,
@@ -474,7 +474,7 @@ int MessageComparator::compare(const bt2::ConstMessage left,
 
     if (const auto ret = _compareOptionalBorrowedObjects(
             borrowStream(left), borrowStream(right),
-            [&](const bt2::ConstStream leftStream, const bt2::ConstStream rightStream) {
+            [&](const auto leftStream, const auto rightStream) {
                 const auto leftTrace = leftStream.trace();
                 const auto rightTrace = rightStream.trace();
 

@@ -70,10 +70,9 @@ nljson jsonFromIrValue(const bt2::ConstValue val)
         return std::invoke([val] {
             auto json = nljson::object();
 
-            val.asMap().forEach(
-                [&json](const bt2c::CStringView name, const bt2::ConstValue itemVal) {
-                    json[name] = jsonFromIrValue(itemVal);
-                });
+            val.asMap().forEach([&json](const auto name, const auto itemVal) {
+                json[name] = jsonFromIrValue(itemVal);
+            });
 
             return json;
         });

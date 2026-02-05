@@ -620,7 +620,7 @@ bt2::MapValue::Shared filterKnownUserAttrsOne(const bt2::ConstMapValue attrs)
 {
     bt2::MapValue::Shared filteredAttrs;
 
-    attrs.forEach([&](const bt2c::CStringView k, const bt2::ConstValue v) {
+    attrs.forEach([&](const auto k, const auto v) {
         if (k == jsonstr::logLevel || k == jsonstr::emfUri) {
             return;
         }
@@ -660,7 +660,7 @@ bt2::ConstMapValue::Shared filterKnownUserAttrs(const bt2::ConstMapValue attrs)
 
     auto newAttrs = bt2::MapValue::create();
 
-    attrs.forEach([&](const bt2c::CStringView k, const bt2::ConstValue v) {
+    attrs.forEach([&](const auto k, const auto v) {
         if (k != jsonstr::btNs || !v.isMap()) {
             /* Copy other namespaces as is */
             newAttrs->insert(k, *v.copy());

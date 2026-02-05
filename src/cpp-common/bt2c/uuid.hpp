@@ -279,7 +279,7 @@ public:
     */
     bool isNil() const noexcept
     {
-        return std::all_of(this->begin(), this->end(), [](const std::uint8_t byte) {
+        return std::all_of(this->begin(), this->end(), [](const auto byte) {
             return byte == 0;
         });
     }

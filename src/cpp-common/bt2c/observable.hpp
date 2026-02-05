@@ -36,7 +36,7 @@ the actor which notifies the observers to the observer callbacks.
 Attach an observer with attach():
 
 @code{.cpp}
-auto token = myObservable.attach([](const int i, const std::string& s) {
+auto token = myObservable.attach([](const auto i, const auto& s) {
     // Do something
 });
 @endcode
@@ -192,7 +192,7 @@ private:
     void _detach(const _TokenId tokenId)
     {
         const auto it =
-            std::remove_if(_mObservers.begin(), _mObservers.end(), [tokenId](_Observer& obs) {
+            std::remove_if(_mObservers.begin(), _mObservers.end(), [tokenId](auto& obs) {
                 return obs.tokenId == tokenId;
             });
 

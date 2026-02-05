@@ -41,7 +41,7 @@ void ctf_trace_class_configure_ir_trace(const ctf::src::TraceCls& tc, bt2::Trace
     }
 
     if (tc.env()) {
-        tc.env()->forEach([&irTrace, &logger](const char *name, bt2::ConstValue val) {
+        tc.env()->forEach([&irTrace, &logger](const auto name, const auto val) {
             switch (val.type()) {
             case bt2::ValueType::SignedInteger:
                 irTrace.environmentEntry(name, val.asSignedInteger().value());

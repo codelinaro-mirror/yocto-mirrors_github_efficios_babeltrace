@@ -435,11 +435,11 @@ Medium::Medium(const ctf_fs_ds_index& index, const bt2c::Logger& parentLogger) :
 ctf_fs_ds_index::EntriesT::const_iterator
 Medium::_mFindIndexEntryForOffset(bt2c::DataLen offsetInStream) const noexcept
 {
-    return std::lower_bound(
-        _mIndex.entries.begin(), _mIndex.entries.end(), offsetInStream,
-        [](const ctf_fs_ds_index_entry& entry, bt2c::DataLen offsetInStreamLambda) {
-            return (entry.offsetInStream + entry.packetSize - 1_bytes) < offsetInStreamLambda;
-        });
+    return std::lower_bound(_mIndex.entries.begin(), _mIndex.entries.end(), offsetInStream,
+                            [](const auto& entry, const auto offsetInStreamLambda) {
+                                return (entry.offsetInStream + entry.packetSize - 1_bytes) <
+                                       offsetInStreamLambda;
+                            });
 }
 
 ctf::src::Buf Medium::buf(const bt2c::DataLen requestedOffsetInStream, const bt2c::DataLen minSize)

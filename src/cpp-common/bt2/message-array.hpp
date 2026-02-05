@@ -393,7 +393,7 @@ private:
      */
     void _putMsgRefs() noexcept
     {
-        std::for_each(&_mLibArrayPtr[0], &_mLibArrayPtr[_mLen], [](const bt_message * const msg) {
+        std::for_each(&_mLibArrayPtr[0], &_mLibArrayPtr[_mLen], [](const auto msg) {
             bt_message_put_ref(msg);
         });
     }
