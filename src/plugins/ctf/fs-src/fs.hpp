@@ -44,7 +44,7 @@ struct ctf_fs_trace
         return _mParseRet->traceCls.get();
     }
 
-    const bt2s::optional<bt2c::Uuid>& metadataStreamUuid() const noexcept
+    const std::optional<bt2c::Uuid>& metadataStreamUuid() const noexcept
     {
         BT_ASSERT(_mParseRet);
         return _mParseRet->uuid;
@@ -74,7 +74,7 @@ private:
     bt2c::Logger _mLogger;
     ctf::src::ClkClsCfg _mClkClsCfg;
     bt2::OptionalBorrowedObject<bt2::SelfComponent> _mSelfComp;
-    bt2s::optional<ctf::src::MetadataStreamParser::ParseRet> _mParseRet;
+    std::optional<ctf::src::MetadataStreamParser::ParseRet> _mParseRet;
 };
 
 struct ctf_fs_port_data
@@ -124,7 +124,7 @@ struct ctf_fs_msg_iter_data
     /* Weak, belongs to ctf_fs_component */
     ctf_fs_port_data *port_data = nullptr;
 
-    bt2s::optional<ctf::src::MsgIter> msgIter;
+    std::optional<ctf::src::MsgIter> msgIter;
 
     /*
      * Saved error.  If we hit an error in the _next method, but have some
@@ -192,7 +192,7 @@ struct Parameters
     }
 
     bt2::ConstArrayValue inputs;
-    bt2s::optional<std::string> traceName;
+    std::optional<std::string> traceName;
     ClkClsCfg clkClsCfg;
 };
 

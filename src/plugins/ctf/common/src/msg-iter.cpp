@@ -26,7 +26,7 @@ namespace src {
 using namespace bt2c::literals::datalen;
 
 MsgIter::MsgIter(const bt2::SelfMessageIterator selfMsgIter, const ctf::src::TraceCls& traceCls,
-                 bt2s::optional<bt2c::Uuid> expectedMetadataStreamUuid, const bt2::Stream stream,
+                 std::optional<bt2c::Uuid> expectedMetadataStreamUuid, const bt2::Stream stream,
                  Medium::UP medium, const MsgIterQuirks& quirks, const bt2c::Logger& parentLogger) :
     _mLogger {parentLogger, "PLUGIN/CTF/MSG-ITER"}, _mSelfMsgIter {selfMsgIter}, _mStream {stream},
     _mExpectedMetadataStreamUuid {std::move(expectedMetadataStreamUuid)}, _mQuirks {quirks},
@@ -484,7 +484,7 @@ void MsgIter::_emitDelayedPktBeginMsg(const _OptUll& otherDefClkVal)
             return otherDefClkVal;
         }
 
-        return bt2s::nullopt;
+        return std::nullopt;
     }));
 }
 

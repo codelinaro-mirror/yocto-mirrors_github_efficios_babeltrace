@@ -8,10 +8,11 @@
 #ifndef BABELTRACE_PLUGINS_CTF_COMMON_SRC_METADATA_TSDL_METADATA_STREAM_DECODER_HPP
 #define BABELTRACE_PLUGINS_CTF_COMMON_SRC_METADATA_TSDL_METADATA_STREAM_DECODER_HPP
 
+#include <optional>
+
 #include "cpp-common/bt2c/aliases.hpp"
 #include "cpp-common/bt2c/data-len.hpp"
 #include "cpp-common/bt2c/logging.hpp"
-#include "cpp-common/bt2s/optional.hpp"
 
 #include "../../metadata/ctf-ir.hpp"
 
@@ -80,7 +81,7 @@ private:
  *     The next calls to decode() only accept plain text metadata stream
  *     data, throwing `bt2c::Error` otherwise.
  *
- *     pktInfo() returns `bt2s::nullopt`.
+ *     pktInfo() returns `std::nullopt`.
  *
  * Packetized mode:
  *     The next calls to decode() only accept packetized metadata stream
@@ -106,7 +107,7 @@ public:
      */
     std::string decode(bt2c::ConstBytes buffer);
 
-    const bt2s::optional<MetadataStreamPacketInfo>& pktInfo() const noexcept
+    const std::optional<MetadataStreamPacketInfo>& pktInfo() const noexcept
     {
         return _mPktInfo;
     }
@@ -155,11 +156,11 @@ private:
 
     /*
      * Returns the byte order of the metadata stream `buffer`, or
-     * `bt2s::nullopt` if `buffer` doesn't look like a packet header.
+     * `std::nullopt` if `buffer` doesn't look like a packet header.
      *
      * `buffer.size()` must be greater than or equal to 4.
      */
-    bt2s::optional<ByteOrder> _getByteOrder(bt2c::ConstBytes buffer) const noexcept;
+    std::optional<ByteOrder> _getByteOrder(bt2c::ConstBytes buffer) const noexcept;
 
     /*
      * Reads and returns one metadata stream packet header having the
@@ -193,9 +194,9 @@ private:
     void _maybeSetMetadataStreamType(bt2c::ConstBytes buffer);
 
     bt2c::Logger _mLogger;
-    bt2s::optional<MetadataStreamPacketInfo> _mPktInfo;
+    std::optional<MetadataStreamPacketInfo> _mPktInfo;
     std::size_t _mPktIdx = 0;
-    bt2s::optional<_MetadataStreamType> _mStreamType;
+    std::optional<_MetadataStreamType> _mStreamType;
 };
 
 } /* namespace src */

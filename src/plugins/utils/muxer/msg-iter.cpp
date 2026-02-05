@@ -57,7 +57,7 @@ MsgIter::MsgIter(const bt2::SelfMessageIterator selfMsgIter,
 
 namespace {
 
-std::string optMsgTsStr(const bt2s::optional<std::int64_t>& ts)
+std::string optMsgTsStr(const std::optional<std::int64_t>& ts)
 {
     if (ts) {
         return fmt::to_string(*ts);

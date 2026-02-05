@@ -26,10 +26,10 @@ and equalOrBothNull().
 
 #include <cstddef>
 #include <cstring>
+#include <optional>
 #include <string>
 
 #include "common/assert.h"
-#include "cpp-common/bt2s/optional.hpp"
 #include "cpp-common/bt2s/string-view.hpp"
 #include "cpp-common/vendor/fmt/format.h" /* IWYU pragma: keep */
 
@@ -113,7 +113,7 @@ public:
         If it has a value, \bt_p{*str} is the string containing the
         C&nbsp;string to view.
     */
-    CStringView(const bt2s::optional<std::string>& str) noexcept :
+    CStringView(const std::optional<std::string>& str) noexcept :
         _mStr {str ? str->c_str() : nullptr}
     {
     }

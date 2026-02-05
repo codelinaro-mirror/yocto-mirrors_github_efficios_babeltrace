@@ -25,8 +25,8 @@ namespace muxing {
  * the contents of both objects.
  */
 template <typename ObjT, typename ComparatorT>
-int MessageComparator::_compareOptionals(const bt2s::optional<ObjT>& left,
-                                         const bt2s::optional<ObjT>& right,
+int MessageComparator::_compareOptionals(const std::optional<ObjT>& left,
+                                         const std::optional<ObjT>& right,
                                          ComparatorT comparator) noexcept
 {
     if (left && !right) {
@@ -160,8 +160,8 @@ int MessageComparator::_compareUuids(const bt2c::UuidView left, const bt2c::Uuid
     return bt_uuid_compare(left.data(), right.data());
 }
 
-int MessageComparator::_compareOptUuids(const bt2s::optional<const bt2c::UuidView>& left,
-                                        const bt2s::optional<const bt2c::UuidView>& right) noexcept
+int MessageComparator::_compareOptUuids(const std::optional<const bt2c::UuidView>& left,
+                                        const std::optional<const bt2c::UuidView>& right) noexcept
 {
     return _compareOptionals(left, right, _compareUuids);
 }

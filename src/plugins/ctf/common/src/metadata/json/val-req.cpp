@@ -189,7 +189,7 @@ public:
                 }, parentLogger)
             }},
             {jsonstr::path, {
-                bt2c::JsonArrayValReq::shared(1, bt2s::nullopt,
+                bt2c::JsonArrayValReq::shared(1, std::nullopt,
                                               FieldLocPathElemValReq::shared(parentLogger), parentLogger),
                 true
             }},
@@ -1792,7 +1792,7 @@ public:
         /* clang-format off */
         FcValReq {this->typeStr(), {
             {jsonstr::opts, {
-                bt2c::JsonArrayValReq::shared(1, bt2s::nullopt,
+                bt2c::JsonArrayValReq::shared(1, std::nullopt,
                                               VariantFcOptValReq::shared(anyFullBlownFcValReq, parentLogger),
                                               parentLogger),
                 true
@@ -2238,7 +2238,7 @@ public:
             nsPropReqEntry(parentLogger),
             namePropReqEntry(false, parentLogger),
             uidPropReqEntry(false, parentLogger),
-            {jsonstr::freq, {bt2c::JsonUIntValInRangeReq::shared(1, bt2s::nullopt, parentLogger), true}},
+            {jsonstr::freq, {bt2c::JsonUIntValInRangeReq::shared(1, std::nullopt, parentLogger), true}},
             {jsonstr::descr, {bt2c::JsonValHasTypeReq::shared(bt2c::ValType::Str, parentLogger)}},
             {jsonstr::origin, {ClkClsOriginValReq::shared(parentLogger)}},
             {jsonstr::offsetFromOrigin, {ClkOffsetValReq::shared(parentLogger)}},

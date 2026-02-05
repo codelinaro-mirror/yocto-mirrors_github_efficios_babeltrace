@@ -234,7 +234,7 @@ requirement aliases:
 MeowObjReq introReq {{
     {"system", {MeowStrInSetReq::shared({"linux", "windows"}, logger), true}},
     {"version", MeowObjReq::shared({{
-        {"major", {MeowUIntInRangeReq::shared(2, bt2s::nullopt, logger), true}},
+        {"major", {MeowUIntInRangeReq::shared(2, std::nullopt, logger), true}},
         {"minor", {MeowHasTypeReq::shared(bt2c::ValType::UInt, logger), true}},
         {"patch", {MeowHasTypeReq::shared(bt2c::ValType::UInt, logger)}},
     }})},
@@ -305,7 +305,7 @@ class MeowVersionReq final : public MeowObjReq
 public:
     explicit MeowVersionReq(const bt2c::Logger& parentLogger) :
         MeowObjReq {{
-            {"major", {MeowUIntInRangeReq::shared(2, bt2s::nullopt, parentLogger), true}},
+            {"major", {MeowUIntInRangeReq::shared(2, std::nullopt, parentLogger), true}},
             {"minor", {MeowHasTypeReq::shared(bt2c::ValType::UInt, parentLogger), true}},
             {"patch", {MeowHasTypeReq::shared(bt2c::ValType::UInt, parentLogger)}},
         }}
@@ -740,8 +740,8 @@ public:
         If both \bt_p{minVal} and \bt_p{maxVal} are set, then
         \bt_p{*minVal}&nbsp;&le;&nbsp;\bt_p{*maxVal}.
     */
-    explicit IntValInRangeReq(const bt2s::optional<_RawVal>& minVal,
-                              const bt2s::optional<_RawVal>& maxVal,
+    explicit IntValInRangeReq(const std::optional<_RawVal>& minVal,
+                              const std::optional<_RawVal>& maxVal,
                               const Logger& parentLogger) noexcept :
         ValHasTypeReq<ValT, ValOpsT> {TypeV, parentLogger},
         _mMinVal {minVal ? *minVal : std::numeric_limits<_RawVal>::min()},
@@ -783,8 +783,8 @@ public:
     @returns
         New "integer value in range" requirement shared pointer.
     */
-    static typename ValReq<ValT, ValOpsT>::SP shared(const bt2s::optional<_RawVal>& minVal,
-                                                     const bt2s::optional<_RawVal>& maxVal,
+    static typename ValReq<ValT, ValOpsT>::SP shared(const std::optional<_RawVal>& minVal,
+                                                     const std::optional<_RawVal>& maxVal,
                                                      const Logger& parentLogger)
     {
         return std::make_shared<IntValInRangeReq>(minVal, maxVal, parentLogger);
@@ -1068,8 +1068,8 @@ public:
         If both \bt_p{minSize} and \bt_p{maxSize} are set, then
         \bt_p{*minSize}&nbsp;&le;&nbsp;\bt_p{*maxSize}.
     */
-    explicit ArrayValReq(const bt2s::optional<std::size_t>& minSize,
-                         const bt2s::optional<std::size_t>& maxSize, SP elemValReq,
+    explicit ArrayValReq(const std::optional<std::size_t>& minSize,
+                         const std::optional<std::size_t>& maxSize, SP elemValReq,
                          const Logger& parentLogger) :
         ValHasTypeReq<ValT, ValOpsT> {ValType::Array, parentLogger},
         _mMinSize {minSize ? *minSize : std::numeric_limits<std::size_t>::min()},
@@ -1106,8 +1106,8 @@ public:
         If both \bt_p{minSize} and \bt_p{maxSize} are set, then
         \bt_p{*minSize}&nbsp;&le;&nbsp;\bt_p{*maxSize}.
     */
-    explicit ArrayValReq(const bt2s::optional<std::size_t>& minSize,
-                         const bt2s::optional<std::size_t>& maxSize, const Logger& parentLogger) :
+    explicit ArrayValReq(const std::optional<std::size_t>& minSize,
+                         const std::optional<std::size_t>& maxSize, const Logger& parentLogger) :
         ArrayValReq {minSize, maxSize, nullptr, parentLogger}
     {
     }
@@ -1166,7 +1166,7 @@ public:
         Parent of the logger to create.
     */
     explicit ArrayValReq(SP elemValReq, const Logger& parentLogger) :
-        ArrayValReq {bt2s::nullopt, bt2s::nullopt, std::move(elemValReq), parentLogger}
+        ArrayValReq {std::nullopt, std::nullopt, std::move(elemValReq), parentLogger}
     {
     }
 
@@ -1179,7 +1179,7 @@ public:
         Parent of the logger to create.
     */
     explicit ArrayValReq(const Logger& parentLogger) :
-        ArrayValReq {bt2s::nullopt, bt2s::nullopt, parentLogger}
+        ArrayValReq {std::nullopt, std::nullopt, parentLogger}
     {
     }
 
@@ -1204,8 +1204,8 @@ public:
     @returns
         New array value requirement shared pointer.
     */
-    static SP shared(const bt2s::optional<std::size_t>& minSize,
-                     const bt2s::optional<std::size_t>& maxSize, SP elemValReq,
+    static SP shared(const std::optional<std::size_t>& minSize,
+                     const std::optional<std::size_t>& maxSize, SP elemValReq,
                      const Logger& parentLogger)
     {
         return std::make_shared<ArrayValReq>(minSize, maxSize, std::move(elemValReq), parentLogger);
@@ -1229,8 +1229,8 @@ public:
     @returns
         New array value requirement shared pointer.
     */
-    static SP shared(const bt2s::optional<std::size_t>& minSize,
-                     const bt2s::optional<std::size_t>& maxSize, const Logger& parentLogger)
+    static SP shared(const std::optional<std::size_t>& minSize,
+                     const std::optional<std::size_t>& maxSize, const Logger& parentLogger)
     {
         return std::make_shared<ArrayValReq>(minSize, maxSize, parentLogger);
     }

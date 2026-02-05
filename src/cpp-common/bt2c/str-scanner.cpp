@@ -268,7 +268,7 @@ bool StrScanner::tryScanToken(const bt2s::string_view token) noexcept
     return true;
 }
 
-bt2s::optional<double> StrScanner::tryScanConstReal() noexcept
+std::optional<double> StrScanner::tryScanConstReal() noexcept
 {
     this->skipWhitespaces();
 
@@ -279,7 +279,7 @@ bt2s::optional<double> StrScanner::tryScanConstReal() noexcept
      * JSON doesn't support.
      */
     if (!_realRegex.match(_mStr.substr(_mAt - _mStr.begin()))) {
-        return bt2s::nullopt;
+        return std::nullopt;
     }
 
     /* Parse */
@@ -289,7 +289,7 @@ bt2s::optional<double> StrScanner::tryScanConstReal() noexcept
     if (val == HUGE_VAL || (val == 0 && &(*_mAt) == strEnd) || errno == ERANGE) {
         /* Couldn't parse */
         errno = 0;
-        return bt2s::nullopt;
+        return std::nullopt;
     }
 
     /* Success: update character pointer and return value */

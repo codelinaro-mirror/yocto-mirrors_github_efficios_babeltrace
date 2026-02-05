@@ -79,7 +79,7 @@ public:
      * `bt2c::TryAgain` or a medium error.
      */
     explicit MsgIter(bt2::SelfMessageIterator selfMsgIter, const ctf::src::TraceCls& traceCls,
-                     bt2s::optional<bt2c::Uuid> expectedMetadataStreamUuid, bt2::Stream stream,
+                     std::optional<bt2c::Uuid> expectedMetadataStreamUuid, bt2::Stream stream,
                      Medium::UP medium, const MsgIterQuirks& quirks,
                      const bt2c::Logger& parentLogger);
 
@@ -93,7 +93,7 @@ public:
      * A libbabeltrace2 message:
      *     Said next message.
      *
-     * `bt2s::nullopt`:
+     * `std::nullopt`:
      *     The iterator is ended.
      *
      * May throw whatever Medium::buf() may throw as well
@@ -103,7 +103,7 @@ public:
 
 private:
     /* An optional `unsigned long long` value */
-    using _OptUll = bt2s::optional<unsigned long long>;
+    using _OptUll = std::optional<unsigned long long>;
 
     /* Single frame of a message iterator stack */
     class _StackFrame
@@ -468,7 +468,7 @@ private:
      *     The next available message from the message queue, removing
      *     it from the queue.
      *
-     * `bt2s::nullopt`:
+     * `std::nullopt`:
      *     The message queue is empty.
      */
     bt2::ConstMessage::Shared _releaseNextMsg();
@@ -483,7 +483,7 @@ private:
     bt2::Stream _mStream;
 
     /* Expected metadata stream UUID, if any */
-    bt2s::optional<bt2c::Uuid> _mExpectedMetadataStreamUuid;
+    std::optional<bt2c::Uuid> _mExpectedMetadataStreamUuid;
 
     /* Quirks to fix */
     MsgIterQuirks _mQuirks;

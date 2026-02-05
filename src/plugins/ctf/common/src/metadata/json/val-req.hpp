@@ -130,7 +130,7 @@ class Ctf2JsonIntRangeSetValReqBase final : public bt2c::JsonArrayValReq
 {
 public:
     explicit Ctf2JsonIntRangeSetValReqBase(const bt2c::Logger& parentLogger) :
-        bt2c::JsonArrayValReq {1, bt2s::nullopt,
+        bt2c::JsonArrayValReq {1, std::nullopt,
                                Ctf2JsonIntRangeValReq<JsonIntValReqT>::shared(parentLogger),
                                parentLogger}
     {

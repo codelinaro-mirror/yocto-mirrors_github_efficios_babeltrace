@@ -8,13 +8,13 @@
 #define BABELTRACE_CPP_COMMON_BT2_CLOCK_CLASS_HPP
 
 #include <cstdint>
+#include <optional>
 #include <type_traits>
 
 #include <babeltrace2/babeltrace.h>
 
 #include "cpp-common/bt2c/c-string-view.hpp"
 #include "cpp-common/bt2c/uuid.hpp"
-#include "cpp-common/bt2s/optional.hpp"
 
 #include "borrowed-object.hpp"
 #include "exc.hpp"
@@ -161,13 +161,13 @@ public:
         return *this;
     }
 
-    bt2s::optional<std::uint64_t> precision() const noexcept
+    std::optional<std::uint64_t> precision() const noexcept
     {
         std::uint64_t prec;
 
         if (bt_clock_class_get_opt_precision(this->libObjPtr(), &prec) ==
             BT_PROPERTY_AVAILABILITY_NOT_AVAILABLE) {
-            return bt2s::nullopt;
+            return std::nullopt;
         }
 
         return prec;
@@ -181,13 +181,13 @@ public:
         return *this;
     }
 
-    bt2s::optional<std::uint64_t> accuracy() const noexcept
+    std::optional<std::uint64_t> accuracy() const noexcept
     {
         std::uint64_t accuracy;
 
         if (bt_clock_class_get_accuracy(this->libObjPtr(), &accuracy) ==
             BT_PROPERTY_AVAILABILITY_NOT_AVAILABLE) {
-            return bt2s::nullopt;
+            return std::nullopt;
         }
 
         return accuracy;
@@ -322,7 +322,7 @@ public:
         return *this;
     }
 
-    bt2s::optional<bt2c::UuidView> uuid() const noexcept
+    std::optional<bt2c::UuidView> uuid() const noexcept
     {
         const auto uuid = bt_clock_class_get_uuid(this->libObjPtr());
 
@@ -330,7 +330,7 @@ public:
             return bt2c::UuidView {uuid};
         }
 
-        return bt2s::nullopt;
+        return std::nullopt;
     }
 
     template <typename LibValT>

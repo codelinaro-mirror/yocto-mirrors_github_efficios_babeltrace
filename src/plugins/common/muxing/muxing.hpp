@@ -25,8 +25,7 @@ private:
     static int _messageTypeWeight(const bt2::MessageType msgType) noexcept;
 
     template <typename ObjT, typename ComparatorT>
-    static int _compareOptionals(const bt2s::optional<ObjT>& left,
-                                 const bt2s::optional<ObjT>& right,
+    static int _compareOptionals(const std::optional<ObjT>& left, const std::optional<ObjT>& right,
                                  ComparatorT comparator) noexcept;
 
     template <typename ObjT, typename ComparatorT>
@@ -43,8 +42,8 @@ private:
     static int _compareMsgsTypes(const bt2::MessageType left,
                                  const bt2::MessageType right) noexcept;
     static int _compareUuids(const bt2c::UuidView left, const bt2c::UuidView right) noexcept;
-    static int _compareOptUuids(const bt2s::optional<const bt2c::UuidView>& left,
-                                const bt2s::optional<const bt2c::UuidView>& right) noexcept;
+    static int _compareOptUuids(const std::optional<const bt2c::UuidView>& left,
+                                const std::optional<const bt2c::UuidView>& right) noexcept;
     static int _compareIdentities(const bt2::IdentityView& left,
                                   const bt2::IdentityView& right) noexcept;
     static int _compareEventClasses(const bt2::ConstEventClass left,

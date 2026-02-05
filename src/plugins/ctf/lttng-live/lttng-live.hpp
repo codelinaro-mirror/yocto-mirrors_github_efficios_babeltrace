@@ -117,7 +117,7 @@ struct lttng_live_stream_iterator
      * Since only a single iterator per viewer connection, we have
      * only a single message iterator per stream.
      */
-    bt2s::optional<ctf::src::MsgIter> msg_iter;
+    std::optional<ctf::src::MsgIter> msg_iter;
 
     uint64_t viewer_stream_id = 0;
 
@@ -161,7 +161,7 @@ struct lttng_live_stream_iterator
         bt2c::DataLen len;
     };
 
-    bt2s::optional<CurPktInfo> curPktInfo;
+    std::optional<CurPktInfo> curPktInfo;
 };
 
 struct lttng_live_metadata
@@ -180,7 +180,7 @@ struct lttng_live_metadata
         return _mMetadataStreamParser->traceCls();
     }
 
-    const bt2s::optional<bt2c::Uuid>& metadataStreamUuid() const noexcept
+    const std::optional<bt2c::Uuid>& metadataStreamUuid() const noexcept
     {
         return _mMetadataStreamParser->metadataStreamUuid();
     }

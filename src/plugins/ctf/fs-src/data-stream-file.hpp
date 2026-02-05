@@ -174,8 +174,8 @@ struct ctf_fs_ds_file_group
 
 ctf_fs_ds_file::UP ctf_fs_ds_file_create(const char *path, const bt2c::Logger& parentLogger);
 
-bt2s::optional<ctf_fs_ds_index> ctf_fs_ds_file_build_index(const ctf_fs_ds_file_info& file_info,
-                                                           const ctf::src::TraceCls& traceCls);
+std::optional<ctf_fs_ds_index> ctf_fs_ds_file_build_index(const ctf_fs_ds_file_info& file_info,
+                                                          const ctf::src::TraceCls& traceCls);
 
 namespace ctf {
 namespace src {

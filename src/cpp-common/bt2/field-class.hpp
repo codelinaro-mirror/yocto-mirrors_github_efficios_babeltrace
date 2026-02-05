@@ -8,13 +8,13 @@
 #define BABELTRACE_CPP_COMMON_BT2_FIELD_CLASS_HPP
 
 #include <cstdint>
+#include <optional>
 #include <type_traits>
 
 #include <babeltrace2/babeltrace.h>
 
 #include "common/assert.h"
 #include "cpp-common/bt2c/c-string-view.hpp"
-#include "cpp-common/bt2s/optional.hpp"
 
 #include "borrowed-object-iterator.hpp"
 #include "borrowed-object.hpp"
@@ -2637,7 +2637,7 @@ public:
         return this->appendOption(name.data(), fc);
     }
 
-    CommonVariantWithoutSelectorFieldClass appendOption(const bt2s::optional<std::string>& name,
+    CommonVariantWithoutSelectorFieldClass appendOption(const std::optional<std::string>& name,
                                                         const FieldClass fc) const
     {
         return this->appendOption(name ? name->data() : nullptr, fc);
@@ -2875,7 +2875,7 @@ public:
     }
 
     CommonVariantWithIntegerSelectorFieldClass
-    appendOption(const bt2s::optional<std::string>& name, const FieldClass fc,
+    appendOption(const std::optional<std::string>& name, const FieldClass fc,
                  const typename Option::RangeSet ranges) const
     {
         return this->appendOption(name ? name->data() : nullptr, fc, ranges);

@@ -32,7 +32,7 @@ means <em>none</em>. Therefore, using an #OptionalBorrowedObject isn't
 more costly, in time and space, as using a libbabeltrace2 object pointer
 in&nbsp;C, but offers the typical C++ optional interface.
 
-There's no <code>bt2s::nullopt</code> equivalent: just use
+There's no <code>std::nullopt</code> equivalent: just use
 OptionalBorrowedObject() or call reset().
 
 There are a constructors an assignment operators which accept an

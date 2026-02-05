@@ -95,8 +95,8 @@ void ItemSeqIter::_updateDefClkVal(const unsigned long long val, const bt2c::Dat
 
 void ItemSeqIter::_resetForNewPkt()
 {
-    _mCurClsId = bt2s::nullopt;
-    _mLastFixedLenBitArrayFieldByteOrder = bt2s::nullopt;
+    _mCurClsId = std::nullopt;
+    _mLastFixedLenBitArrayFieldByteOrder = std::nullopt;
     _mStack.clear();
     _mDefClkVal = 0;
 
@@ -503,7 +503,7 @@ ItemSeqIter::_StateHandlingReaction ItemSeqIter::_handleSetDataStreamInfoItemSta
          * Reset `_mCurClsId` because we also use this member for the
          * current event record class ID.
          */
-        _mCurClsId = bt2s::nullopt;
+        _mCurClsId = std::nullopt;
     } else {
         /*
          * If there's no current data stream class ID and our trace

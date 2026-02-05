@@ -1757,9 +1757,6 @@ namespace, but in {cpp} versions we don't yet have access to, namely:
     `bt2s::make_unique()`, a drop-in replacement of `std::make_unique()`
     ({cpp}14).
 
-`optional.hpp`::
-    Drop-in replacement of the `std::optional` API ({cpp}17).
-
 `span.hpp`::
     Drop-in replacement of the `std::span` API ({cpp}20).
 
@@ -1778,12 +1775,6 @@ They are:
 
 `nlohmann`::
     https://json.nlohmann.me/[JSON for Modern C++].
-
-`optional-lite`::
-    https://github.com/martinmoene/optional-lite[optional lite].
-+
-IMPORTANT: Use the symbols of `src/cpp-common/bt2s/optional.hpp`, under
-the `bt2s` namespace, instead of using this directly.
 
 `span-lite`::
     https://github.com/martinmoene/span-lite[span lite].

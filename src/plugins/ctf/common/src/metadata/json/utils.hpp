@@ -21,14 +21,14 @@ namespace src {
 
 /*
  * Returns the object of the JSON object value `jsonObjVal` having the
- * key `key` as a libbabeltrace2 value object, or `bt2s::nullopt` if
+ * key `key` as a libbabeltrace2 value object, or `std::nullopt` if
  * there's no such key.
  */
 bt2::MapValue::Shared bt2ValueOfObj(const bt2c::JsonObjVal& jsonObjVal, const std::string& key);
 
 /*
  * Returns the attributes of the JSON object value `jsonObjVal`, or
- * `bt2s::nullopt` if there's no such property.
+ * `std::nullopt` if there's no such property.
  */
 inline bt2::MapValue::Shared attrsOfObj(const bt2c::JsonObjVal& jsonObjVal)
 {
@@ -53,8 +53,8 @@ ValT rawIntValFromJsonIntVal(const bt2c::JsonVal& jsonIntVal) noexcept
  * Returns the optional raw string value from the property named
  * `propName` within `jsonObjVal`.
  */
-inline bt2s::optional<std::string> optStrOfObj(const bt2c::JsonObjVal& jsonObjVal,
-                                               const char * const propName)
+inline std::optional<std::string> optStrOfObj(const bt2c::JsonObjVal& jsonObjVal,
+                                              const char * const propName)
 {
     const auto jsonVal = jsonObjVal[propName];
 
@@ -62,7 +62,7 @@ inline bt2s::optional<std::string> optStrOfObj(const bt2c::JsonObjVal& jsonObjVa
         return *jsonVal->asStr();
     }
 
-    return bt2s::nullopt;
+    return std::nullopt;
 }
 
 inline const char *scopeStr(const Scope scope) noexcept

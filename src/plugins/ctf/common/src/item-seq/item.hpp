@@ -1181,7 +1181,7 @@ public:
      * Note: Not to be confused with the _class Id of the data stream
      * of the current packet: use `cls().id()`.
      */
-    const bt2s::optional<unsigned long long>& id() const noexcept
+    const std::optional<unsigned long long>& id() const noexcept
     {
         return _mId;
     }
@@ -1190,11 +1190,11 @@ private:
     void _reset() noexcept
     {
         _mCls = nullptr;
-        _mId = bt2s::nullopt;
+        _mId = std::nullopt;
     }
 
     const DataStreamCls *_mCls = nullptr;
-    bt2s::optional<unsigned long long> _mId;
+    std::optional<unsigned long long> _mId;
 };
 
 /*
@@ -1260,7 +1260,7 @@ public:
      * Numeric sequence number of the current packet within its _data
      * stream (_not within its item sequence).
      */
-    const bt2s::optional<unsigned long long>& seqNum() const noexcept
+    const std::optional<unsigned long long>& seqNum() const noexcept
     {
         return _mSeqNum;
     }
@@ -1270,7 +1270,7 @@ public:
      * packet since the beginning of its _data stream (_not its item
      * sequence).
      */
-    const bt2s::optional<unsigned long long>& discEventRecordCounterSnap() const noexcept
+    const std::optional<unsigned long long>& discEventRecordCounterSnap() const noexcept
     {
         return _mDiscErCounterSnap;
     }
@@ -1281,7 +1281,7 @@ public:
      * This length _includes the packet padding bits before the end of
      * the packet, if any.
     */
-    const bt2s::optional<bt2c::DataLen>& expectedTotalLen() const noexcept
+    const std::optional<bt2c::DataLen>& expectedTotalLen() const noexcept
     {
         return _mExpectedTotalLen;
     }
@@ -1293,7 +1293,7 @@ public:
      * the packet, if any: the total length of the packet minus its
      * content length provides its padding length.
      */
-    const bt2s::optional<bt2c::DataLen>& expectedContentLen() const noexcept
+    const std::optional<bt2c::DataLen>& expectedContentLen() const noexcept
     {
         return _mExpectedContentLen;
     }
@@ -1302,7 +1302,7 @@ public:
      * Value (cycles) of the default clock of the data stream of the
      * current packet at its beginning.
      */
-    const bt2s::optional<unsigned long long>& beginDefClkVal() const noexcept
+    const std::optional<unsigned long long>& beginDefClkVal() const noexcept
     {
         return _mBeginDefClkVal;
     }
@@ -1314,7 +1314,7 @@ public:
      * During the packet decoding process, this default clock value is
      * known _before decoding the event records.
      */
-    const bt2s::optional<unsigned long long>& endDefClkVal() const noexcept
+    const std::optional<unsigned long long>& endDefClkVal() const noexcept
     {
         return _mEndDefClkVal;
     }
@@ -1322,20 +1322,20 @@ public:
 private:
     void _reset() noexcept
     {
-        _mSeqNum = bt2s::nullopt;
-        _mDiscErCounterSnap = bt2s::nullopt;
-        _mExpectedTotalLen = bt2s::nullopt;
-        _mExpectedContentLen = bt2s::nullopt;
-        _mBeginDefClkVal = bt2s::nullopt;
-        _mEndDefClkVal = bt2s::nullopt;
+        _mSeqNum = std::nullopt;
+        _mDiscErCounterSnap = std::nullopt;
+        _mExpectedTotalLen = std::nullopt;
+        _mExpectedContentLen = std::nullopt;
+        _mBeginDefClkVal = std::nullopt;
+        _mEndDefClkVal = std::nullopt;
     }
 
-    bt2s::optional<unsigned long long> _mSeqNum;
-    bt2s::optional<unsigned long long> _mDiscErCounterSnap;
-    bt2s::optional<bt2c::DataLen> _mExpectedTotalLen;
-    bt2s::optional<bt2c::DataLen> _mExpectedContentLen;
-    bt2s::optional<unsigned long long> _mBeginDefClkVal;
-    bt2s::optional<unsigned long long> _mEndDefClkVal;
+    std::optional<unsigned long long> _mSeqNum;
+    std::optional<unsigned long long> _mDiscErCounterSnap;
+    std::optional<bt2c::DataLen> _mExpectedTotalLen;
+    std::optional<bt2c::DataLen> _mExpectedContentLen;
+    std::optional<unsigned long long> _mBeginDefClkVal;
+    std::optional<unsigned long long> _mEndDefClkVal;
 };
 
 /*
@@ -1358,7 +1358,7 @@ public:
      * Value (cycles) of the default clock of the data stream of the
      * current event record when it occurred.
      */
-    const bt2s::optional<unsigned long long>& defClkVal() const noexcept
+    const std::optional<unsigned long long>& defClkVal() const noexcept
     {
         return _mDefClkVal;
     }
@@ -1376,11 +1376,11 @@ private:
     void _reset() noexcept
     {
         _mCls = nullptr;
-        _mDefClkVal = bt2s::nullopt;
+        _mDefClkVal = std::nullopt;
     }
 
     const EventRecordCls *_mCls = nullptr;
-    bt2s::optional<unsigned long long> _mDefClkVal;
+    std::optional<unsigned long long> _mDefClkVal;
 };
 
 /*

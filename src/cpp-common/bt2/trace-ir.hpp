@@ -8,6 +8,7 @@
 #define BABELTRACE_CPP_COMMON_BT2_TRACE_IR_HPP
 
 #include <cstdint>
+#include <optional>
 #include <type_traits>
 #include <vector>
 
@@ -16,7 +17,6 @@
 #include "common/macros.h"
 #include "cpp-common/bt2c/c-string-view.hpp"
 #include "cpp-common/bt2c/call.hpp"
-#include "cpp-common/bt2s/optional.hpp"
 #include "cpp-common/bt2s/span.hpp"
 
 #include "borrowed-object.hpp"
@@ -702,7 +702,7 @@ public:
         return *this;
     }
 
-    bt2s::optional<bt2c::UuidView> uuid() const noexcept
+    std::optional<bt2c::UuidView> uuid() const noexcept
     {
         const auto uuid = bt_trace_get_uuid(this->libObjPtr());
 
@@ -710,7 +710,7 @@ public:
             return bt2c::UuidView {uuid};
         }
 
-        return bt2s::nullopt;
+        return std::nullopt;
     }
 
     std::uint64_t length() const noexcept
@@ -1028,7 +1028,7 @@ public:
         return *this;
     }
 
-    bt2s::optional<EventClassLogLevel> logLevel() const noexcept
+    std::optional<EventClassLogLevel> logLevel() const noexcept
     {
         bt_event_class_log_level libLogLevel;
 
@@ -1036,7 +1036,7 @@ public:
             return static_cast<EventClassLogLevel>(libLogLevel);
         }
 
-        return bt2s::nullopt;
+        return std::nullopt;
     }
 
     CommonEventClass emfUri(const bt2c::CStringView emfUri) const

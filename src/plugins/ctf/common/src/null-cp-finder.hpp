@@ -9,9 +9,9 @@
 
 #include <array>
 #include <cstdlib>
+#include <optional>
 
 #include "cpp-common/bt2c/aliases.hpp"
-#include "cpp-common/bt2s/optional.hpp"
 
 namespace ctf {
 namespace src {
@@ -81,11 +81,11 @@ public:
      * what you already passed to this method and `CodeUnitLenV`.
      *
      * Returns an iterator _after_ the end of the encoded U+0000
-     * codepoint on success, or `bt2s::nullopt` when it didn't find any
+     * codepoint on success, or `std::nullopt` when it didn't find any
      * U+0000 codepoint. This means this method may return `str.end()`
      * if `str` finishes with a U+0000 codepoint.
      */
-    bt2s::optional<bt2c::ConstBytes::const_iterator>
+    std::optional<bt2c::ConstBytes::const_iterator>
     findNullCp(const bt2c::ConstBytes buffer) noexcept
     {
         for (auto it = buffer.begin(); it != buffer.end(); ++it) {
@@ -105,7 +105,7 @@ public:
         }
 
         /* No U+0000 codepoint found */
-        return bt2s::nullopt;
+        return std::nullopt;
     }
 
 private:

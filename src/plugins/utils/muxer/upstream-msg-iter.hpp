@@ -9,12 +9,12 @@
 #define BABELTRACE_PLUGINS_UTILS_MUXER_UPSTREAM_MSG_ITER_HPP
 
 #include <memory>
+#include <optional>
 
 #include "common/assert.h"
 #include "cpp-common/bt2/message-array.hpp"
 #include "cpp-common/bt2/message-iterator.hpp"
 #include "cpp-common/bt2c/logging.hpp"
-#include "cpp-common/bt2s/optional.hpp"
 
 namespace bt2mux {
 
@@ -79,7 +79,7 @@ public:
      *
      * It must be valid to call msg() when you call this method.
      */
-    const bt2s::optional<std::int64_t> msgTs() const noexcept
+    const std::optional<std::int64_t> msgTs() const noexcept
     {
         return _mMsgTs;
     }
@@ -165,12 +165,12 @@ private:
      */
     struct
     {
-        bt2s::optional<bt2::ConstMessageArray> msgs;
+        std::optional<bt2::ConstMessageArray> msgs;
         std::size_t index;
     } _mMsgs;
 
     /* Timestamp of the current message, if any */
-    bt2s::optional<std::int64_t> _mMsgTs;
+    std::optional<std::int64_t> _mMsgTs;
 
     /*
      * Only relevant in debug mode: true if a call to discard() is

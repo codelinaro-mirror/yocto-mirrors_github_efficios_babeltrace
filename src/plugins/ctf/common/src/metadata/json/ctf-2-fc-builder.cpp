@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+#include <optional>
+
 #include "common/assert.h"
 #include "cpp-common/bt2c/contains.hpp"
 #include "cpp-common/bt2c/logging.hpp"
-#include "cpp-common/bt2s/optional.hpp"
 
 #include "../../../metadata/json-strings.hpp"
 #include "../ctf-ir.hpp"
@@ -249,11 +250,11 @@ FieldLoc fieldLocOfJsonFc(const bt2c::JsonObjVal& jsonFc, const std::string& key
     auto& jsonLoc = jsonFc[key]->asObj();
 
     /* Origin (scope) */
-    const auto origin = bt2c::call([&jsonLoc]() -> bt2s::optional<Scope> {
+    const auto origin = bt2c::call([&jsonLoc]() -> std::optional<Scope> {
         const auto jsonOrig = jsonLoc[jsonstr::origin];
 
         if (!jsonOrig) {
-            return bt2s::nullopt;
+            return std::nullopt;
         }
 
         auto& scopeName = *jsonOrig->asStr();
@@ -282,8 +283,8 @@ FieldLoc fieldLocOfJsonFc(const bt2c::JsonObjVal& jsonFc, const std::string& key
 
         for (auto& jsonItem : jsonPath) {
             if (jsonItem->isNull()) {
-                /* `null` becomes `bt2s::nullopt` */
-                items.emplace_back(bt2s::nullopt);
+                /* `null` becomes `std::nullopt` */
+                items.emplace_back(std::nullopt);
             } else {
                 items.emplace_back(*jsonItem->asStr());
             }

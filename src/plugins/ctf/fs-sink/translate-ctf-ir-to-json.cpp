@@ -5,6 +5,7 @@
  */
 
 #include <cstdint>
+#include <optional>
 
 #include <glib.h>
 
@@ -22,7 +23,6 @@
 #include "cpp-common/bt2c/c-string-view.hpp"
 #include "cpp-common/bt2c/call.hpp"
 #include "cpp-common/bt2c/uuid.hpp"
-#include "cpp-common/bt2s/optional.hpp"
 #include "cpp-common/vendor/nlohmann/json.hpp"
 
 #include "../common/metadata/json-strings.hpp"
@@ -387,7 +387,7 @@ nljson jsonFieldLocFromIr(const bt2::ConstFieldLocation irFieldLoc)
 }
 
 nljson jsonFieldLocFromIrOrGenerated(const fs_sink_ctf_trace& fsTrace,
-                                     const bt2s::optional<bt2::ConstFieldLocation>& irFieldLoc,
+                                     const std::optional<bt2::ConstFieldLocation>& irFieldLoc,
                                      const bt2c::CStringView depMemberName,
                                      const char * const keyTypeStr)
 {
@@ -409,7 +409,7 @@ nljson jsonOptFcFromFs(const fs_sink_ctf_trace& fsTrace, const bt2c::CStringView
          jsonFcFromFs(fsTrace, nullptr,
                       *reinterpret_cast<const fs_sink_ctf_field_class_option&>(fsFc).content_fc)},
         {jsonstr::selFieldLoc, bt2c::call([&] {
-             bt2s::optional<bt2::ConstFieldLocation> irFieldLoc;
+             std::optional<bt2::ConstFieldLocation> irFieldLoc;
 
              if (irFc.isOptionWithSelector()) {
                  irFieldLoc = irFc.asOptionWithSelector().selectorFieldLocation();
@@ -458,7 +458,7 @@ nljson jsonVarFcFromFs(const fs_sink_ctf_trace& fsTrace, const bt2c::CStringView
     const auto irVarFc = bt2::wrap(fsFc.ir_fc).asVariant();
     nljson jsonExtra {
         {jsonstr::selFieldLoc, bt2c::call([&] {
-             bt2s::optional<bt2::ConstFieldLocation> irFieldLoc;
+             std::optional<bt2::ConstFieldLocation> irFieldLoc;
 
              if (irVarFc.isVariantWithSelector()) {
                  irFieldLoc = irVarFc.asVariantWithSelector().selectorFieldLocation();
@@ -557,7 +557,7 @@ nljson jsonFcFromFs(const fs_sink_ctf_trace& fsTrace, const bt2c::CStringView me
             {
                 {jsonstr::lenFieldLoc, bt2c::call([&] {
                      const auto irFc = bt2::wrap(fsFc.ir_fc);
-                     bt2s::optional<bt2::ConstFieldLocation> irFieldLoc;
+                     std::optional<bt2::ConstFieldLocation> irFieldLoc;
 
                      if (irFc.isDynamicArrayWithLength()) {
                          irFieldLoc = irFc.asDynamicArrayWithLength().lengthFieldLocation();
@@ -579,7 +579,7 @@ nljson jsonFcFromFs(const fs_sink_ctf_trace& fsTrace, const bt2c::CStringView me
             {
                 {jsonstr::lenFieldLoc, bt2c::call([&] {
                      const auto irFc = bt2::wrap(fsFc.ir_fc);
-                     bt2s::optional<bt2::ConstFieldLocation> irFieldLoc;
+                     std::optional<bt2::ConstFieldLocation> irFieldLoc;
 
                      if (irFc.isDynamicBlobWithLength()) {
                          irFieldLoc = irFc.asDynamicBlobWithLength().lengthFieldLocation();

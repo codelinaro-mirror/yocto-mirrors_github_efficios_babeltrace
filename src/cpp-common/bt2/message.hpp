@@ -8,6 +8,7 @@
 #define BABELTRACE_CPP_COMMON_BT2_MESSAGE_HPP
 
 #include <cstdint>
+#include <optional>
 #include <type_traits>
 
 #include <babeltrace2/babeltrace.h>
@@ -15,7 +16,6 @@
 #include "common/assert.h"
 #include "cpp-common/bt2/clock-snapshot.hpp"
 #include "cpp-common/bt2/trace-ir.hpp"
-#include "cpp-common/bt2s/optional.hpp"
 #include "cpp-common/vendor/wise-enum/wise_enum.h"
 
 #include "borrowed-object.hpp"
@@ -889,7 +889,7 @@ public:
         return *this;
     }
 
-    bt2s::optional<std::uint64_t> count() const noexcept
+    std::optional<std::uint64_t> count() const noexcept
     {
         std::uint64_t count;
 
@@ -897,7 +897,7 @@ public:
             return count;
         }
 
-        return bt2s::nullopt;
+        return std::nullopt;
     }
 
     Shared shared() const noexcept
@@ -1026,7 +1026,7 @@ public:
         return *this;
     }
 
-    bt2s::optional<std::uint64_t> count() const noexcept
+    std::optional<std::uint64_t> count() const noexcept
     {
         std::uint64_t count;
 
@@ -1034,7 +1034,7 @@ public:
             return count;
         }
 
-        return bt2s::nullopt;
+        return std::nullopt;
     }
 
     Shared shared() const noexcept

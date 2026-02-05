@@ -671,7 +671,7 @@ public:
     /*
      * Index of the saved key value of this field class.
      */
-    const bt2s::optional<std::size_t>& savedKeyValIndex() const noexcept
+    const std::optional<std::size_t>& savedKeyValIndex() const noexcept
     {
         return _mSavedKeyValIndex;
     }
@@ -710,7 +710,7 @@ public:
 
 private:
     /* Index of the saved key value of this field class */
-    bt2s::optional<std::size_t> _mSavedKeyValIndex;
+    std::optional<std::size_t> _mSavedKeyValIndex;
 
     /* Dependencies of this field class */
     FcSet _mKeyFcs;
@@ -858,13 +858,13 @@ using VarLenUIntFc = ir::VarLenUIntFc<internal::CtfIrMixins>;
  * Creates and returns a field location having the origin `origin` and
  * the path items `items`.
  */
-FieldLoc createFieldLoc(const bt2c::TextLoc& loc, bt2s::optional<Scope> origin,
+FieldLoc createFieldLoc(const bt2c::TextLoc& loc, std::optional<Scope> origin,
                         FieldLoc::Items items);
 
 /*
  * Overload without a text location.
  */
-inline FieldLoc createFieldLoc(bt2s::optional<Scope> origin, FieldLoc::Items items)
+inline FieldLoc createFieldLoc(std::optional<Scope> origin, FieldLoc::Items items)
 {
     return createFieldLoc(bt2c::TextLoc {}, std::move(origin), std::move(items));
 }
@@ -876,7 +876,7 @@ inline FieldLoc createFieldLoc(bt2s::optional<Scope> origin, FieldLoc::Items ite
  */
 std::unique_ptr<FixedLenBitArrayFc> createFixedLenBitArrayFc(
     const bt2c::TextLoc& loc, unsigned int align, bt2c::DataLen len, ByteOrder byteOrder,
-    const bt2s::optional<BitOrder>& bitOrder = bt2s::nullopt, OptAttrs attrs = OptAttrs {});
+    const std::optional<BitOrder>& bitOrder = std::nullopt, OptAttrs attrs = OptAttrs {});
 
 /*
  * Creates and returns a class of fixed-length bit map fields having the
@@ -887,7 +887,7 @@ std::unique_ptr<FixedLenBitArrayFc> createFixedLenBitArrayFc(
 std::unique_ptr<FixedLenBitMapFc>
 createFixedLenBitMapFc(const bt2c::TextLoc& loc, unsigned int align, bt2c::DataLen len,
                        ByteOrder byteOrder, FixedLenBitMapFc::Flags flags,
-                       const bt2s::optional<BitOrder>& bitOrder = bt2s::nullopt,
+                       const std::optional<BitOrder>& bitOrder = std::nullopt,
                        OptAttrs attrs = OptAttrs {});
 
 /*
@@ -897,7 +897,7 @@ createFixedLenBitMapFc(const bt2c::TextLoc& loc, unsigned int align, bt2c::DataL
  */
 std::unique_ptr<FixedLenBoolFc>
 createFixedLenBoolFc(const bt2c::TextLoc& loc, unsigned int align, bt2c::DataLen len,
-                     ByteOrder byteOrder, const bt2s::optional<BitOrder>& bitOrder = bt2s::nullopt,
+                     ByteOrder byteOrder, const std::optional<BitOrder>& bitOrder = std::nullopt,
                      OptAttrs attrs = OptAttrs {});
 
 /*
@@ -908,7 +908,7 @@ createFixedLenBoolFc(const bt2c::TextLoc& loc, unsigned int align, bt2c::DataLen
  */
 std::unique_ptr<FixedLenFloatFc>
 createFixedLenFloatFc(const bt2c::TextLoc& loc, unsigned int align, bt2c::DataLen len,
-                      ByteOrder byteOrder, const bt2s::optional<BitOrder>& bitOrder = bt2s::nullopt,
+                      ByteOrder byteOrder, const std::optional<BitOrder>& bitOrder = std::nullopt,
                       OptAttrs attrs = OptAttrs {});
 
 /*
@@ -916,7 +916,7 @@ createFixedLenFloatFc(const bt2c::TextLoc& loc, unsigned int align, bt2c::DataLe
  */
 inline std::unique_ptr<FixedLenFloatFc>
 createFixedLenFloatFc(const unsigned int align, const bt2c::DataLen len, const ByteOrder byteOrder,
-                      const bt2s::optional<BitOrder>& bitOrder = bt2s::nullopt,
+                      const std::optional<BitOrder>& bitOrder = std::nullopt,
                       OptAttrs attrs = OptAttrs {})
 {
     return createFixedLenFloatFc(bt2c::TextLoc {}, align, len, byteOrder, bitOrder,
@@ -932,7 +932,7 @@ createFixedLenFloatFc(const unsigned int align, const bt2c::DataLen len, const B
  */
 std::unique_ptr<FixedLenUIntFc>
 createFixedLenUIntFc(const bt2c::TextLoc& loc, unsigned int align, bt2c::DataLen len,
-                     ByteOrder byteOrder, const bt2s::optional<BitOrder>& bitOrder = bt2s::nullopt,
+                     ByteOrder byteOrder, const std::optional<BitOrder>& bitOrder = std::nullopt,
                      DispBase prefDispBase = DispBase::Dec, FixedLenUIntFc::Mappings mappings = {},
                      UIntFieldRoles roles = {}, OptAttrs attrs = OptAttrs {});
 
@@ -941,7 +941,7 @@ createFixedLenUIntFc(const bt2c::TextLoc& loc, unsigned int align, bt2c::DataLen
  */
 inline std::unique_ptr<FixedLenUIntFc>
 createFixedLenUIntFc(const unsigned int align, const bt2c::DataLen len, const ByteOrder byteOrder,
-                     const bt2s::optional<BitOrder>& bitOrder = bt2s::nullopt,
+                     const std::optional<BitOrder>& bitOrder = std::nullopt,
                      const DispBase prefDispBase = DispBase::Dec,
                      FixedLenUIntFc::Mappings mappings = {}, UIntFieldRoles roles = {},
                      OptAttrs attrs = OptAttrs {})
@@ -958,7 +958,7 @@ createFixedLenUIntFc(const unsigned int align, const bt2c::DataLen len, const By
  */
 std::unique_ptr<FixedLenSIntFc>
 createFixedLenSIntFc(const bt2c::TextLoc& loc, unsigned int align, bt2c::DataLen len,
-                     ByteOrder byteOrder, const bt2s::optional<BitOrder>& bitOrder = bt2s::nullopt,
+                     ByteOrder byteOrder, const std::optional<BitOrder>& bitOrder = std::nullopt,
                      DispBase prefDispBase = DispBase::Dec, FixedLenSIntFc::Mappings mappings = {},
                      OptAttrs attrs = OptAttrs {});
 
@@ -967,7 +967,7 @@ createFixedLenSIntFc(const bt2c::TextLoc& loc, unsigned int align, bt2c::DataLen
  */
 inline std::unique_ptr<FixedLenSIntFc>
 createFixedLenSIntFc(const unsigned int align, const bt2c::DataLen len, const ByteOrder byteOrder,
-                     const bt2s::optional<BitOrder>& bitOrder = bt2s::nullopt,
+                     const std::optional<BitOrder>& bitOrder = std::nullopt,
                      const DispBase prefDispBase = DispBase::Dec,
                      FixedLenSIntFc::Mappings mappings = {}, OptAttrs attrs = OptAttrs {})
 {
@@ -1201,7 +1201,7 @@ std::unique_ptr<OptionalWithSIntSelFc> createOptionalFc(const bt2c::TextLoc& loc
  * attributes `attrs`.
  */
 VariantWithUIntSelFc::Opt createVariantFcOpt(Fc::UP fc, UIntRangeSet selFieldRanges,
-                                             bt2s::optional<std::string> name,
+                                             std::optional<std::string> name,
                                              OptAttrs attrs = OptAttrs {});
 
 /*
@@ -1211,7 +1211,7 @@ VariantWithUIntSelFc::Opt createVariantFcOpt(Fc::UP fc, UIntRangeSet selFieldRan
  * attributes `attrs`.
  */
 VariantWithSIntSelFc::Opt createVariantFcOpt(Fc::UP fc, SIntRangeSet selFieldRanges,
-                                             bt2s::optional<std::string> name,
+                                             std::optional<std::string> name,
                                              OptAttrs attrs = OptAttrs {});
 
 /*
@@ -1264,16 +1264,13 @@ inline std::unique_ptr<VariantWithSIntSelFc> createVariantFc(VariantWithSIntSelF
  * precision `precision` cycles, the accuracy `accuracy` cycles, and the
  * attributes `attrs`.
  */
-ClkCls::SP createClkCls(std::string id, unsigned long long freq,
-                        bt2s::optional<std::string> ns = bt2s::nullopt,
-                        bt2s::optional<std::string> name = bt2s::nullopt,
-                        bt2s::optional<std::string> uid = bt2s::nullopt,
-                        const ClkOffset& offset = ClkOffset {},
-                        bt2s::optional<ClkOrigin> origin = ClkOrigin {},
-                        bt2s::optional<std::string> descr = bt2s::nullopt,
-                        bt2s::optional<unsigned long long> precision = bt2s::nullopt,
-                        bt2s::optional<unsigned long long> accuracy = bt2s::nullopt,
-                        OptAttrs attrs = OptAttrs {});
+ClkCls::SP createClkCls(
+    std::string id, unsigned long long freq, std::optional<std::string> ns = std::nullopt,
+    std::optional<std::string> name = std::nullopt, std::optional<std::string> uid = std::nullopt,
+    const ClkOffset& offset = ClkOffset {}, std::optional<ClkOrigin> origin = ClkOrigin {},
+    std::optional<std::string> descr = std::nullopt,
+    std::optional<unsigned long long> precision = std::nullopt,
+    std::optional<unsigned long long> accuracy = std::nullopt, OptAttrs attrs = OptAttrs {});
 
 /*
  * Creates and returns a class, having the ID `id`, of event records
@@ -1282,9 +1279,9 @@ ClkCls::SP createClkCls(std::string id, unsigned long long freq,
  * `payloadFc`, and the attributes `attrs`.
  */
 std::unique_ptr<EventRecordCls>
-createEventRecordCls(unsigned long long id, bt2s::optional<std::string> ns = bt2s::nullopt,
-                     bt2s::optional<std::string> name = bt2s::nullopt,
-                     bt2s::optional<std::string> uid = bt2s::nullopt, Fc::UP specCtxFc = nullptr,
+createEventRecordCls(unsigned long long id, std::optional<std::string> ns = std::nullopt,
+                     std::optional<std::string> name = std::nullopt,
+                     std::optional<std::string> uid = std::nullopt, Fc::UP specCtxFc = nullptr,
                      Fc::UP payloadFc = nullptr, OptAttrs attrs = OptAttrs {});
 
 /*
@@ -1296,9 +1293,9 @@ createEventRecordCls(unsigned long long id, bt2s::optional<std::string> ns = bt2
  * and the attributes `attrs`.
  */
 std::unique_ptr<DataStreamCls>
-createDataStreamCls(unsigned long long id, bt2s::optional<std::string> ns = bt2s::nullopt,
-                    bt2s::optional<std::string> name = bt2s::nullopt,
-                    bt2s::optional<std::string> uid = bt2s::nullopt, Fc::UP pktCtxFc = nullptr,
+createDataStreamCls(unsigned long long id, std::optional<std::string> ns = std::nullopt,
+                    std::optional<std::string> name = std::nullopt,
+                    std::optional<std::string> uid = std::nullopt, Fc::UP pktCtxFc = nullptr,
                     Fc::UP eventRecordHeaderFc = nullptr, Fc::UP commonEventRecordCtxFc = nullptr,
                     ClkCls::SP defClkCls = nullptr, OptAttrs attrs = OptAttrs {});
 
@@ -1308,9 +1305,9 @@ createDataStreamCls(unsigned long long id, bt2s::optional<std::string> ns = bt2s
  * header field class `pktHeaderFc`, and the attributes `attrs`.
  */
 std::unique_ptr<TraceCls>
-createTraceCls(bt2s::optional<std::string> ns = bt2s::nullopt,
-               bt2s::optional<std::string> name = bt2s::nullopt,
-               bt2s::optional<std::string> uid = bt2s::nullopt,
+createTraceCls(std::optional<std::string> ns = std::nullopt,
+               std::optional<std::string> name = std::nullopt,
+               std::optional<std::string> uid = std::nullopt,
                bt2::ConstMapValue::Shared env = bt2::ConstMapValue::Shared {},
                Fc::UP pktHeaderFc = nullptr, OptAttrs attrs = OptAttrs {});
 

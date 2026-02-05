@@ -8,11 +8,11 @@
 #define BABELTRACE_CPP_COMMON_BT2_PLUGIN_HPP
 
 #include <cstdint>
+#include <optional>
 
 #include <babeltrace2/babeltrace.h>
 
 #include "cpp-common/bt2c/c-string-view.hpp"
-#include "cpp-common/bt2s/optional.hpp"
 
 #include "borrowed-object-iterator.hpp"
 #include "borrowed-object.hpp"
@@ -216,14 +216,14 @@ public:
         return bt_plugin_get_path(this->libObjPtr());
     }
 
-    bt2s::optional<Version> version() const noexcept
+    std::optional<Version> version() const noexcept
     {
         unsigned int major, minor, patch;
         const char *extra;
 
         if (bt_plugin_get_version(this->libObjPtr(), &major, &minor, &patch, &extra) ==
             BT_PROPERTY_AVAILABILITY_NOT_AVAILABLE) {
-            return bt2s::nullopt;
+            return std::nullopt;
         }
 
         return Version {major, minor, patch, extra};

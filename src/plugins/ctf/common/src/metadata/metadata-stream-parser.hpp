@@ -43,7 +43,7 @@ public:
     struct ParseRet final
     {
         std::unique_ptr<TraceCls> traceCls;
-        bt2s::optional<bt2c::Uuid> uuid;
+        std::optional<bt2c::Uuid> uuid;
         MetadataStreamMajorVersion metadataVersion;
     };
 
@@ -78,10 +78,10 @@ public:
     }
 
     /*
-     * Current metadata stream UUID, or `bt2s::nullopt` if none exists
+     * Current metadata stream UUID, or `std::nullopt` if none exists
      * at this point.
      */
-    const bt2s::optional<bt2c::Uuid>& metadataStreamUuid() const noexcept
+    const std::optional<bt2c::Uuid>& metadataStreamUuid() const noexcept
     {
         return _mMetadataStreamUuid;
     }
@@ -134,7 +134,7 @@ protected:
     std::unique_ptr<TraceCls> _mTraceCls;
 
     /* Metadata stream UUID */
-    bt2s::optional<bt2c::Uuid> _mMetadataStreamUuid;
+    std::optional<bt2c::Uuid> _mMetadataStreamUuid;
 
 private:
     /* Clock class configuration */

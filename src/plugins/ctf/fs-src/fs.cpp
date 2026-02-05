@@ -350,7 +350,7 @@ static int add_ds_file_to_ds_file_group(struct ctf_fs_trace *ctf_fs_trace, const
 
     BT_ASSERT(sc);
 
-    bt2s::optional<unsigned long long> stream_instance_id = props.dataStreamId;
+    std::optional<unsigned long long> stream_instance_id = props.dataStreamId;
 
     int64_t begin_ns = -1;
     if (props.snapshots.beginDefClk) {
@@ -736,13 +736,13 @@ struct ClockSnapshotAfterEventItemVisitor : public ItemVisitor
         return _mDone;
     }
 
-    bt2s::optional<unsigned long long> result() const
+    std::optional<unsigned long long> result() const
     {
         return _mResult;
     }
 
 protected:
-    bt2s::optional<unsigned long long> _mResult;
+    std::optional<unsigned long long> _mResult;
     bool _mDone = false;
 };
 
@@ -778,7 +778,7 @@ struct ClockSnapshotAfterLastEventItemVisitor : public ClockSnapshotAfterEventIt
     }
 
 private:
-    bt2s::optional<unsigned long long> _mLastSeen;
+    std::optional<unsigned long long> _mLastSeen;
 };
 
 static int decode_clock_snapshot_after_event(struct ctf_fs_trace *ctf_fs_trace,

@@ -97,7 +97,7 @@ void MetadataStreamDecoder::_validatePktHeader(const _PktHeader& header) const
     }
 }
 
-bt2s::optional<ByteOrder>
+std::optional<ByteOrder>
 MetadataStreamDecoder::_getByteOrder(const bt2c::ConstBytes buffer) const noexcept
 {
     /* We need to read a 32-bit magic number */
@@ -117,7 +117,7 @@ MetadataStreamDecoder::_getByteOrder(const bt2c::ConstBytes buffer) const noexce
         return nativeByteOrder == ByteOrder::Big ? ByteOrder::Little : ByteOrder::Big;
     } else {
         /* Doesn't look like a metadata stream packet */
-        return bt2s::nullopt;
+        return std::nullopt;
     }
 }
 

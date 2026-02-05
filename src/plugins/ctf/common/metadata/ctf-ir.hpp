@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <optional>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -20,7 +21,6 @@
 #include "cpp-common/bt2/trace-ir.hpp"
 #include "cpp-common/bt2c/data-len.hpp"
 #include "cpp-common/bt2s/make-unique.hpp"
-#include "cpp-common/bt2s/optional.hpp"
 #include "cpp-common/vendor/wise-enum/wise_enum.h"
 
 #include "int-range-set.hpp"
@@ -991,7 +991,7 @@ protected:
     explicit FixedLenBitArrayFc(const FcType type, typename UserMixinsT::Fc fcMixin,
                                 typename UserMixinsT::FixedLenBitArrayFc mixin,
                                 const unsigned int align, const bt2c::DataLen len,
-                                const ByteOrder byteOrder, const bt2s::optional<BitOrder>& bitOrder,
+                                const ByteOrder byteOrder, const std::optional<BitOrder>& bitOrder,
                                 OptAttrs&& attrs) :
         Fc<UserMixinsT> {type, std::move(fcMixin), align, std::move(attrs)},
         UserMixinsT::FixedLenBitArrayFc(std::move(mixin)), _mLen {len}, _mByteOrder {byteOrder},
@@ -1010,7 +1010,7 @@ public:
                                 typename UserMixinsT::FixedLenBitArrayFc mixin,
                                 const unsigned int align, const bt2c::DataLen len,
                                 const ByteOrder byteOrder,
-                                const bt2s::optional<BitOrder>& bitOrder = bt2s::nullopt,
+                                const std::optional<BitOrder>& bitOrder = std::nullopt,
                                 OptAttrs attrs = OptAttrs {}) :
         FixedLenBitArrayFc {FcType::FixedLenBitArray,
                             std::move(fcMixin),
@@ -1051,9 +1051,9 @@ public:
      * Returns whether or not the bits of instances of a fixed-length
      * bit array field class having the byte order `byteOrder` and the
      * bit order `bitOrder` (deduced from `byteOrder` if
-     * `bt2s::nullopt`) are reversed, that is, in an unnatural way.
+     * `std::nullopt`) are reversed, that is, in an unnatural way.
      */
-    static bool isRev(const ByteOrder byteOrder, const bt2s::optional<BitOrder>& bitOrder) noexcept
+    static bool isRev(const ByteOrder byteOrder, const std::optional<BitOrder>& bitOrder) noexcept
     {
         if (!bitOrder) {
             return false;
@@ -1118,7 +1118,7 @@ public:
                               typename UserMixinsT::FixedLenBitMapFc mixin,
                               const unsigned int align, const bt2c::DataLen len,
                               const ByteOrder byteOrder, Flags flags,
-                              const bt2s::optional<BitOrder>& bitOrder = bt2s::nullopt,
+                              const std::optional<BitOrder>& bitOrder = std::nullopt,
                               OptAttrs attrs = OptAttrs {}) :
         FixedLenBitArrayFc<UserMixinsT> {FcType::FixedLenBitMap,
                                          std::move(fcMixin),
@@ -1175,7 +1175,7 @@ public:
                             typename UserMixinsT::FixedLenBitArrayFc fixedLenBitArrayFcMixin,
                             typename UserMixinsT::FixedLenBoolFc mixin, const unsigned int align,
                             const bt2c::DataLen len, const ByteOrder byteOrder,
-                            const bt2s::optional<BitOrder>& bitOrder = bt2s::nullopt,
+                            const std::optional<BitOrder>& bitOrder = std::nullopt,
                             OptAttrs attrs = OptAttrs {}) :
         FixedLenBitArrayFc<UserMixinsT> {FcType::FixedLenBool,
                                          std::move(fcMixin),
@@ -1218,7 +1218,7 @@ public:
                              typename UserMixinsT::FixedLenBitArrayFc fixedLenBitArrayFcMixin,
                              const unsigned int align, const bt2c::DataLen len,
                              const ByteOrder byteOrder,
-                             const bt2s::optional<BitOrder>& bitOrder = bt2s::nullopt,
+                             const std::optional<BitOrder>& bitOrder = std::nullopt,
                              OptAttrs attrs = OptAttrs {}) :
         FixedLenBitArrayFc<UserMixinsT> {FcType::FixedLenFloat,
                                          std::move(fcMixin),
@@ -1349,7 +1349,7 @@ protected:
                            typename UserMixinsT::FixedLenBitArrayFc fixedLenBitArrayFcMixin,
                            typename UserMixinsT::FixedLenIntFc mixin, const unsigned int align,
                            const bt2c::DataLen len, const ByteOrder byteOrder,
-                           const bt2s::optional<BitOrder>& bitOrder, const DispBase prefDispBase,
+                           const std::optional<BitOrder>& bitOrder, const DispBase prefDispBase,
                            OptAttrs&& attrs) :
         FixedLenBitArrayFc<UserMixinsT> {
             type,     std::move(fcMixin), std::move(fixedLenBitArrayFcMixin), align, len, byteOrder,
@@ -1464,7 +1464,7 @@ public:
                             typename UserMixinsT::FixedLenIntFc fixedLenIntFcMixin,
                             typename UserMixinsT::FixedLenUIntFc mixin, const unsigned int align,
                             const bt2c::DataLen len, const ByteOrder byteOrder,
-                            const bt2s::optional<BitOrder>& bitOrder = bt2s::nullopt,
+                            const std::optional<BitOrder>& bitOrder = std::nullopt,
                             const DispBase prefDispBase = DispBase::Dec, Mappings mappings = {},
                             UIntFieldRoles roles = {}, OptAttrs attrs = OptAttrs {}) :
         FixedLenIntFc<UserMixinsT> {FcType::FixedLenUInt,
@@ -1520,7 +1520,7 @@ public:
                             typename UserMixinsT::FixedLenIntFc fixedLenIntFcMixin,
                             const unsigned int align, const bt2c::DataLen len,
                             const ByteOrder byteOrder,
-                            const bt2s::optional<BitOrder>& bitOrder = bt2s::nullopt,
+                            const std::optional<BitOrder>& bitOrder = std::nullopt,
                             const DispBase prefDispBase = DispBase::Dec, Mappings mappings = {},
                             OptAttrs attrs = OptAttrs {}) :
         FixedLenIntFc<UserMixinsT> {FcType::FixedLenSInt,
@@ -1782,21 +1782,21 @@ WISE_ENUM_CLASS(Scope,
  * A field location may be:
  *
  * Absolute:
- *     Has an origin and no `bt2s::nullopt` items.
+ *     Has an origin and no `std::nullopt` items.
  *
  * Relative:
- *     Has no origin and may contain `bt2s::nullopt` items.
+ *     Has no origin and may contain `std::nullopt` items.
  *
- *     A `bt2s::nullopt` item means "go to parent structure field"
+ *     A `std::nullopt` item means "go to parent structure field"
  *     (CTF 2 strategy).
  */
 template <typename UserMixinsT>
 class FieldLoc final : public UserMixinsT::FieldLoc
 {
 public:
-    using Items = std::vector<bt2s::optional<std::string>>;
+    using Items = std::vector<std::optional<std::string>>;
 
-    explicit FieldLoc(typename UserMixinsT::FieldLoc mixin, bt2s::optional<Scope> origin,
+    explicit FieldLoc(typename UserMixinsT::FieldLoc mixin, std::optional<Scope> origin,
                       Items items) :
         UserMixinsT::FieldLoc {std::move(mixin)}, _mOrigin {std::move(origin)},
         _mItems {std::move(items)}
@@ -1804,10 +1804,10 @@ public:
     }
 
     /*
-     * Origin of this field location, or `bt2s::nullopt` if it's a
+     * Origin of this field location, or `std::nullopt` if it's a
      * relative field location.
      */
-    const bt2s::optional<Scope>& origin() const noexcept
+    const std::optional<Scope>& origin() const noexcept
     {
         return _mOrigin;
     }
@@ -1842,7 +1842,7 @@ public:
 
 private:
     /* Origin of this field location */
-    bt2s::optional<Scope> _mOrigin;
+    std::optional<Scope> _mOrigin;
 
     /* Path items of this field location */
     Items _mItems;
@@ -2852,7 +2852,7 @@ public:
     using SelVal = typename IntRangeSetT::Val;
 
     explicit VariantFcOpt(typename UserMixinsT::VariantFcOpt mixin, typename Fc<UserMixinsT>::UP fc,
-                          IntRangeSetT selFieldRanges, bt2s::optional<std::string> name,
+                          IntRangeSetT selFieldRanges, std::optional<std::string> name,
                           OptAttrs attrs = OptAttrs {}) :
         internal::WithAttrsMixin {std::move(attrs)}, UserMixinsT::VariantFcOpt(std::move(mixin)),
         _mName {std::move(name)}, _mFc {std::move(fc)}, _mSelFieldRanges {std::move(selFieldRanges)}
@@ -2873,7 +2873,7 @@ public:
     /*
      * Name of this variant field class option.
      */
-    const bt2s::optional<std::string>& name() const noexcept
+    const std::optional<std::string>& name() const noexcept
     {
         return _mName;
     }
@@ -2881,7 +2881,7 @@ public:
     /*
      * Moves the name of this variant field class option to the caller.
      */
-    typename bt2s::optional<std::string> takeName() noexcept
+    typename std::optional<std::string> takeName() noexcept
     {
         return std::move(_mName);
     }
@@ -2938,7 +2938,7 @@ public:
     }
 
 private:
-    bt2s::optional<std::string> _mName;
+    std::optional<std::string> _mName;
     typename Fc<UserMixinsT>::UP _mFc;
     IntRangeSetT _mSelFieldRanges;
 };
@@ -3611,7 +3611,7 @@ public:
      * Builds a clock origin having the (optional) namespace `ns`, the
      * name `name`, and the unique ID `uid`.
      */
-    explicit ClkOrigin(bt2s::optional<std::string> ns, std::string name, std::string uid) :
+    explicit ClkOrigin(std::optional<std::string> ns, std::string name, std::string uid) :
         _mNs {std::move(ns)}, _mName {std::move(name)}, _mUid {std::move(uid)}
     {
     }
@@ -3626,7 +3626,7 @@ public:
     /*
      * Namespace.
      */
-    const bt2s::optional<std::string>& ns() const noexcept
+    const std::optional<std::string>& ns() const noexcept
     {
         return _mNs;
     }
@@ -3662,7 +3662,7 @@ private:
     static const char * const _unixEpochUid;
 
     /* Namespace */
-    bt2s::optional<std::string> _mNs;
+    std::optional<std::string> _mNs;
 
     /* Name */
     std::string _mName;
@@ -3685,14 +3685,14 @@ public:
     using SP = std::shared_ptr<ClkCls>;
 
     explicit ClkCls(typename UserMixinsT::ClkCls mixin, std::string id,
-                    const unsigned long long freq, bt2s::optional<std::string> ns = bt2s::nullopt,
-                    bt2s::optional<std::string> name = bt2s::nullopt,
-                    bt2s::optional<std::string> uid = bt2s::nullopt,
+                    const unsigned long long freq, std::optional<std::string> ns = std::nullopt,
+                    std::optional<std::string> name = std::nullopt,
+                    std::optional<std::string> uid = std::nullopt,
                     const ClkOffset& offsetFromOrigin = ClkOffset {},
-                    bt2s::optional<ClkOrigin> origin = ClkOrigin {},
-                    bt2s::optional<std::string> descr = bt2s::nullopt,
-                    bt2s::optional<unsigned long long> precision = bt2s::nullopt,
-                    bt2s::optional<unsigned long long> accuracy = bt2s::nullopt,
+                    std::optional<ClkOrigin> origin = ClkOrigin {},
+                    std::optional<std::string> descr = std::nullopt,
+                    std::optional<unsigned long long> precision = std::nullopt,
+                    std::optional<unsigned long long> accuracy = std::nullopt,
                     OptAttrs attrs = OptAttrs {}) :
         internal::WithAttrsMixin {std::move(attrs)}, UserMixinsT::ClkCls {std::move(mixin)},
         _mId {std::move(id)}, _mNs {std::move(ns)}, _mName {std::move(name)},
@@ -3715,7 +3715,7 @@ public:
     /*
      * Namespace of instances of this clock class.
      */
-    const bt2s::optional<std::string>& ns() const noexcept
+    const std::optional<std::string>& ns() const noexcept
     {
         return _mNs;
     }
@@ -3723,7 +3723,7 @@ public:
     /*
      * Name of instances of this clock class.
      */
-    const bt2s::optional<std::string>& name() const noexcept
+    const std::optional<std::string>& name() const noexcept
     {
         return _mName;
     }
@@ -3731,7 +3731,7 @@ public:
     /*
      * UID of instances of this clock class.
      */
-    const bt2s::optional<std::string>& uid() const noexcept
+    const std::optional<std::string>& uid() const noexcept
     {
         return _mUid;
     }
@@ -3763,7 +3763,7 @@ public:
     /*
      * Origin of instances of this clock class.
      */
-    const bt2s::optional<ClkOrigin>& origin() const noexcept
+    const std::optional<ClkOrigin>& origin() const noexcept
     {
         return _mOrigin;
     }
@@ -3771,7 +3771,7 @@ public:
     /*
      * Sets the origin of instances of this clock class.
      */
-    void origin(bt2s::optional<ClkOrigin> origin) noexcept
+    void origin(std::optional<ClkOrigin> origin) noexcept
     {
         _mOrigin = std::move(origin);
     }
@@ -3779,7 +3779,7 @@ public:
     /*
      * Description of instances of this clock class.
      */
-    const bt2s::optional<std::string>& descr() const noexcept
+    const std::optional<std::string>& descr() const noexcept
     {
         return _mDescr;
     }
@@ -3787,7 +3787,7 @@ public:
     /*
      * Precision (cycles) of instances of this clock class.
      */
-    const bt2s::optional<unsigned long long>& precision() const noexcept
+    const std::optional<unsigned long long>& precision() const noexcept
     {
         return _mPrecision;
     }
@@ -3795,7 +3795,7 @@ public:
     /*
      * Accuracy (cycles) of instances of this clock class.
      */
-    const bt2s::optional<unsigned long long>& accuracy() const noexcept
+    const std::optional<unsigned long long>& accuracy() const noexcept
     {
         return _mAccuracy;
     }
@@ -3805,13 +3805,13 @@ private:
     std::string _mId;
 
     /* Namespace of instances of this clock class */
-    bt2s::optional<std::string> _mNs;
+    std::optional<std::string> _mNs;
 
     /* Name of instances of this clock class */
-    bt2s::optional<std::string> _mName;
+    std::optional<std::string> _mName;
 
     /* UID of instances of this clock class */
-    bt2s::optional<std::string> _mUid;
+    std::optional<std::string> _mUid;
 
     /* Frequency (Hz) of instances of this clock class */
     unsigned long long _mFreq;
@@ -3820,16 +3820,16 @@ private:
     ClkOffset _mOffsetFromOrigin;
 
     /* Origin of instances of this clock class */
-    bt2s::optional<ClkOrigin> _mOrigin;
+    std::optional<ClkOrigin> _mOrigin;
 
     /* Description of instances of this clock class */
-    bt2s::optional<std::string> _mDescr;
+    std::optional<std::string> _mDescr;
 
     /* Precision (cycles) of instances of this clock class */
-    bt2s::optional<unsigned long long> _mPrecision;
+    std::optional<unsigned long long> _mPrecision;
 
     /* Accuracy (cycles) of instances of this clock class */
-    bt2s::optional<unsigned long long> _mAccuracy;
+    std::optional<unsigned long long> _mAccuracy;
 };
 
 /*
@@ -3846,9 +3846,9 @@ public:
     using UP = std::unique_ptr<EventRecordCls>;
 
     explicit EventRecordCls(typename UserMixinsT::EventRecordCls mixin, const unsigned long long id,
-                            bt2s::optional<std::string> ns = bt2s::nullopt,
-                            bt2s::optional<std::string> name = bt2s::nullopt,
-                            bt2s::optional<std::string> uid = bt2s::nullopt,
+                            std::optional<std::string> ns = std::nullopt,
+                            std::optional<std::string> name = std::nullopt,
+                            std::optional<std::string> uid = std::nullopt,
                             typename StructFc<UserMixinsT>::UP specCtxFc = nullptr,
                             typename StructFc<UserMixinsT>::UP payloadFc = nullptr,
                             OptAttrs attrs = OptAttrs {}) :
@@ -3869,7 +3869,7 @@ public:
     /*
      * Namespace of instances of this event record class.
      */
-    const bt2s::optional<std::string>& ns() const noexcept
+    const std::optional<std::string>& ns() const noexcept
     {
         return _mNs;
     }
@@ -3877,7 +3877,7 @@ public:
     /*
      * Name of instances of this event record class.
      */
-    const bt2s::optional<std::string>& name() const noexcept
+    const std::optional<std::string>& name() const noexcept
     {
         return _mName;
     }
@@ -3885,7 +3885,7 @@ public:
     /*
      * UID of instances of this event record class.
      */
-    const bt2s::optional<std::string>& uid() const noexcept
+    const std::optional<std::string>& uid() const noexcept
     {
         return _mUid;
     }
@@ -3931,13 +3931,13 @@ private:
     unsigned long long _mId;
 
     /* Namespace of instances of this event record class */
-    bt2s::optional<std::string> _mNs;
+    std::optional<std::string> _mNs;
 
     /* Name of instances of this event record class */
-    bt2s::optional<std::string> _mName;
+    std::optional<std::string> _mName;
 
     /* UID of instances of this event record class */
-    bt2s::optional<std::string> _mUid;
+    std::optional<std::string> _mUid;
 
     /*
      * Class of the specific context field of instances of this event
@@ -3987,9 +3987,9 @@ public:
                                        internal::ObjUpIdLt<EventRecordCls<UserMixinsT>>>;
 
     explicit DataStreamCls(typename UserMixinsT::DataStreamCls mixin, const unsigned long long id,
-                           bt2s::optional<std::string> ns = bt2s::nullopt,
-                           bt2s::optional<std::string> name = bt2s::nullopt,
-                           bt2s::optional<std::string> uid = bt2s::nullopt,
+                           std::optional<std::string> ns = std::nullopt,
+                           std::optional<std::string> name = std::nullopt,
+                           std::optional<std::string> uid = std::nullopt,
                            typename StructFc<UserMixinsT>::UP pktCtxFc = nullptr,
                            typename StructFc<UserMixinsT>::UP eventRecordHeaderFc = nullptr,
                            typename StructFc<UserMixinsT>::UP commonEventRecordCtxFc = nullptr,
@@ -4014,7 +4014,7 @@ public:
     /*
      * Namespace of instances of this data stream class.
      */
-    const bt2s::optional<std::string>& ns() const noexcept
+    const std::optional<std::string>& ns() const noexcept
     {
         return _mNs;
     }
@@ -4022,7 +4022,7 @@ public:
     /*
      * Name of instances of this data stream class.
      */
-    const bt2s::optional<std::string>& name() const noexcept
+    const std::optional<std::string>& name() const noexcept
     {
         return _mName;
     }
@@ -4030,7 +4030,7 @@ public:
     /*
      * UID of instances of this data stream class.
      */
-    const bt2s::optional<std::string>& uid() const noexcept
+    const std::optional<std::string>& uid() const noexcept
     {
         return _mUid;
     }
@@ -4188,13 +4188,13 @@ private:
     _EventRecordClsByIdMap _mEventRecordClsIdMap;
 
     /* Namespace of instances of this data stream class */
-    bt2s::optional<std::string> _mNs;
+    std::optional<std::string> _mNs;
 
     /* Name of instances of this data stream class */
-    bt2s::optional<std::string> _mName;
+    std::optional<std::string> _mName;
 
     /* UID of instances of this data stream class */
-    bt2s::optional<std::string> _mUid;
+    std::optional<std::string> _mUid;
 
     /*
      * Class of the context field of packets which are part of instances
@@ -4236,9 +4236,9 @@ public:
                                       internal::ObjUpIdLt<DataStreamCls<UserMixinsT>>>;
 
     explicit TraceCls(typename UserMixinsT::TraceCls mixin,
-                      bt2s::optional<std::string> ns = bt2s::nullopt,
-                      bt2s::optional<std::string> name = bt2s::nullopt,
-                      bt2s::optional<std::string> uid = bt2s::nullopt,
+                      std::optional<std::string> ns = std::nullopt,
+                      std::optional<std::string> name = std::nullopt,
+                      std::optional<std::string> uid = std::nullopt,
                       bt2::ConstMapValue::Shared env = bt2::ConstMapValue::Shared {},
                       typename Fc<UserMixinsT>::UP pktHeaderFc = nullptr,
                       OptAttrs attrs = OptAttrs {}) :
@@ -4252,7 +4252,7 @@ public:
     /*
      * Namespace of instances of this trace class.
      */
-    const bt2s::optional<std::string>& ns() const noexcept
+    const std::optional<std::string>& ns() const noexcept
     {
         return _mNs;
     }
@@ -4260,7 +4260,7 @@ public:
     /*
      * Name of instances of this trace class.
      */
-    const bt2s::optional<std::string>& name() const noexcept
+    const std::optional<std::string>& name() const noexcept
     {
         return _mName;
     }
@@ -4268,7 +4268,7 @@ public:
     /*
      * UID of instances of this trace class.
      */
-    const bt2s::optional<std::string>& uid() const noexcept
+    const std::optional<std::string>& uid() const noexcept
     {
         return _mUid;
     }
@@ -4376,13 +4376,13 @@ private:
     _DataStreamClsByIdMap _mDataStreamClsIdMap;
 
     /* Namespace of instances of this trace class */
-    bt2s::optional<std::string> _mNs;
+    std::optional<std::string> _mNs;
 
     /* Name of instances of this trace class */
-    bt2s::optional<std::string> _mName;
+    std::optional<std::string> _mName;
 
     /* UID of instances of this trace class */
-    bt2s::optional<std::string> _mUid;
+    std::optional<std::string> _mUid;
 
     /* Environment of instances of this trace class */
     bt2::ConstMapValue::Shared _mEnv;

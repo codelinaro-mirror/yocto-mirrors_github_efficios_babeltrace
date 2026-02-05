@@ -4187,7 +4187,7 @@ private:
     } _mItems;
 
     /* Last fixed-length bit array field byte order */
-    bt2s::optional<ByteOrder> _mLastFixedLenBitArrayFieldByteOrder;
+    std::optional<ByteOrder> _mLastFixedLenBitArrayFieldByteOrder;
 
     /*
      * Head offset within current packet at the beginning of the current
@@ -4202,7 +4202,7 @@ private:
     bt2c::DataLen _mRemainingLenToSkip = bt2c::DataLen::fromBits(0);
 
     /* Current data stream class or event record class ID */
-    bt2s::optional<unsigned long long> _mCurClsId;
+    std::optional<unsigned long long> _mCurClsId;
 
     /* Current metadata stream UUID */
     std::array<bt2c::Uuid::Val, bt2c::Uuid::size()> _mCurMetadataStreamUuid;

@@ -6,6 +6,8 @@
  * Trace IR Reference Count test
  */
 
+#include <optional>
+
 #include <babeltrace2-ctf-writer/clock.h>
 #include <babeltrace2-ctf-writer/event-fields.h>
 #include <babeltrace2-ctf-writer/event-types.h>
@@ -128,9 +130,9 @@ void testExampleScenario(const bt2::SelfComponent selfComp)
 
     struct User final
     {
-        bt2s::optional<bt2::TraceClass::Shared> tc;
-        bt2s::optional<bt2::StreamClass::Shared> sc;
-        bt2s::optional<bt2::EventClass::Shared> ec;
+        std::optional<bt2::TraceClass::Shared> tc;
+        std::optional<bt2::StreamClass::Shared> sc;
+        std::optional<bt2::EventClass::Shared> ec;
     };
 
     User userA, userB, userC;

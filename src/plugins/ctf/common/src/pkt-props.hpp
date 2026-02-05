@@ -7,9 +7,10 @@
 #ifndef BABELTRACE_PLUGINS_CTF_COMMON_SRC_PKT_PROPS_HPP
 #define BABELTRACE_PLUGINS_CTF_COMMON_SRC_PKT_PROPS_HPP
 
+#include <optional>
+
 #include "cpp-common/bt2c/data-len.hpp"
 #include "cpp-common/bt2c/logging.hpp"
-#include "cpp-common/bt2s/optional.hpp"
 
 #include "item-seq/medium.hpp"
 #include "metadata/ctf-ir.hpp"
@@ -19,16 +20,16 @@ namespace src {
 
 struct PktProps final
 {
-    bt2s::optional<bt2c::DataLen> expectedTotalLen;
-    bt2s::optional<bt2c::DataLen> expectedContentLen;
+    std::optional<bt2c::DataLen> expectedTotalLen;
+    std::optional<bt2c::DataLen> expectedContentLen;
     const DataStreamCls *dataStreamCls;
-    bt2s::optional<unsigned long long> dataStreamId;
+    std::optional<unsigned long long> dataStreamId;
 
     struct
     {
-        bt2s::optional<unsigned long long> discEventRecordCounter;
-        bt2s::optional<unsigned long long> beginDefClk;
-        bt2s::optional<unsigned long long> endDefClk;
+        std::optional<unsigned long long> discEventRecordCounter;
+        std::optional<unsigned long long> beginDefClk;
+        std::optional<unsigned long long> endDefClk;
     } snapshots;
 };
 

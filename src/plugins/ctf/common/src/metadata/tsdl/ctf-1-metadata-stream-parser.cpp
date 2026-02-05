@@ -48,7 +48,7 @@ ByteOrder byteOrderFromOrigByteOrder(const ctf_byte_order origByteOrder)
     }
 }
 
-bt2s::optional<UIntFieldRole> roleFromOrigMeaning(const ctf_field_class_meaning meaning) noexcept
+std::optional<UIntFieldRole> roleFromOrigMeaning(const ctf_field_class_meaning meaning) noexcept
 {
     switch (meaning) {
     case CTF_FIELD_CLASS_MEANING_PACKET_BEGINNING_TIME:
@@ -73,7 +73,7 @@ bt2s::optional<UIntFieldRole> roleFromOrigMeaning(const ctf_field_class_meaning 
         return {UIntFieldRole::PktContentLen};
     case CTF_FIELD_CLASS_MEANING_UUID:
     case CTF_FIELD_CLASS_MEANING_NONE:
-        return bt2s::nullopt;
+        return std::nullopt;
     default:
         bt_common_abort();
     }
@@ -113,12 +113,12 @@ Fc::UP fcFromOrigFc(const ctf_field_class_int& oldFc)
     if (oldFc.is_signed) {
         return createFixedLenSIntFc(oldFc.base.base.alignment,
                                     bt2c::DataLen::fromBits(oldFc.base.size),
-                                    byteOrderFromOrigByteOrder(oldFc.base.byte_order),
-                                    bt2s::nullopt, dispBaseFromIrDispBase(oldFc.disp_base));
+                                    byteOrderFromOrigByteOrder(oldFc.base.byte_order), std::nullopt,
+                                    dispBaseFromIrDispBase(oldFc.disp_base));
     } else {
         return createFixedLenUIntFc(
             oldFc.base.base.alignment, bt2c::DataLen::fromBits(oldFc.base.size),
-            byteOrderFromOrigByteOrder(oldFc.base.byte_order), bt2s::nullopt,
+            byteOrderFromOrigByteOrder(oldFc.base.byte_order), std::nullopt,
             dispBaseFromIrDispBase(oldFc.disp_base), {}, rolesFromOrigIntFc(oldFc));
     }
 }
@@ -165,14 +165,13 @@ Fc::UP fcFromOrigFc(const ctf_field_class_enum& origFc)
     const auto dispBase = dispBaseFromIrDispBase(origFc.base.disp_base);
 
     if (origFc.base.is_signed) {
-        return createFixedLenSIntFc(origFc.base.base.base.alignment,
-                                    bt2c::DataLen::fromBits(origFc.base.base.size), byteOrder,
-                                    bt2s::nullopt, dispBase,
-                                    intFcMappingsFromOrigEnumFc<FixedLenSIntFc>(origFc));
+        return createFixedLenSIntFc(
+            origFc.base.base.base.alignment, bt2c::DataLen::fromBits(origFc.base.base.size),
+            byteOrder, std::nullopt, dispBase, intFcMappingsFromOrigEnumFc<FixedLenSIntFc>(origFc));
     } else {
         return createFixedLenUIntFc(
             origFc.base.base.base.alignment, bt2c::DataLen::fromBits(origFc.base.base.size),
-            byteOrder, bt2s::nullopt, dispBase, intFcMappingsFromOrigEnumFc<FixedLenUIntFc>(origFc),
+            byteOrder, std::nullopt, dispBase, intFcMappingsFromOrigEnumFc<FixedLenUIntFc>(origFc),
             rolesFromOrigIntFc(origFc.base));
     }
 }
@@ -532,15 +531,15 @@ Ctf1MetadataStreamParser::_translateTraceCls(ctf_trace_class& origTraceCls)
     }
 
     /* LTTng namespace */
-    bt2s::optional<std::string> ns;
+    std::optional<std::string> ns;
 
     if (origTraceCls.is_lttng) {
         ns = lttngUserAttrsNs;
     }
 
     /* Name and UID */
-    bt2s::optional<std::string> name;
-    bt2s::optional<std::string> uid;
+    std::optional<std::string> name;
+    std::optional<std::string> uid;
 
     if (origTraceCls.is_uuid_set) {
         /*
@@ -585,21 +584,21 @@ ClkCls::SP Ctf1MetadataStreamParser::_clkClsFromOrigClkCls(const ctf_clock_class
     /* Translate clock class */
     {
         /* Description */
-        bt2s::optional<std::string> descr;
+        std::optional<std::string> descr;
 
         if (origClkCls.description->len > 0) {
             descr = origClkCls.description->str;
         }
 
         /* UID from UUID */
-        bt2s::optional<std::string> uid;
+        std::optional<std::string> uid;
 
         if (origClkCls.has_uuid) {
             uid = bt2c::UuidView {origClkCls.uuid}.str();
         }
 
         /* Clock origin */
-        bt2s::optional<ClkOrigin> origin;
+        std::optional<ClkOrigin> origin;
 
         if (origClkCls.is_absolute) {
             /* Unix epoch */
@@ -607,7 +606,7 @@ ClkCls::SP Ctf1MetadataStreamParser::_clkClsFromOrigClkCls(const ctf_clock_class
         }
 
         /* Create clock class */
-        auto clkCls = createClkCls(origClkCls.name->str, origClkCls.frequency, bt2s::nullopt,
+        auto clkCls = createClkCls(origClkCls.name->str, origClkCls.frequency, std::nullopt,
                                    origClkCls.name->str, std::move(uid),
                                    ClkOffset {origClkCls.offset_seconds, origClkCls.offset_cycles},
                                    std::move(origin), std::move(descr), origClkCls.precision);
@@ -658,7 +657,7 @@ Ctf1MetadataStreamParser::_tryTranslateDataStreamCls(ctf_stream_class& origDataS
 
     /* Create data stream class */
     auto dataStreamClsSp = createDataStreamCls(
-        origDataStreamCls.id, bt2s::nullopt, bt2s::nullopt, bt2s::nullopt, std::move(pktCtxFc),
+        origDataStreamCls.id, std::nullopt, std::nullopt, std::nullopt, std::move(pktCtxFc),
         std::move(eventRecordHeaderFc), std::move(commonEventRecordCtxFc), std::move(defClkCls));
     auto& dataStreamCls = *dataStreamClsSp;
 
@@ -695,8 +694,8 @@ void Ctf1MetadataStreamParser::_tryTranslateEventRecordCls(ctf_event_class& orig
 
     /* Create event record class */
     auto eventRecordCls =
-        createEventRecordCls(origEventRecordCls.id, bt2s::nullopt, origEventRecordCls.name->str,
-                             bt2s::nullopt, std::move(specCtxFc), std::move(payloadFc),
+        createEventRecordCls(origEventRecordCls.id, std::nullopt, origEventRecordCls.name->str,
+                             std::nullopt, std::move(specCtxFc), std::move(payloadFc),
                              eventRecordClsBtAttrsFromOrigEventRecordCls(origEventRecordCls));
 
     /* Add to data stream class */

@@ -275,14 +275,14 @@ public:
     on success.
 
     @returns
-        Decoded constant integer on success, or bt2s::nullopt
+        Decoded constant integer on success, or std::nullopt
         if the method couldn't scan a constant integer.
 
     @sa tryScanConstUInt()
     @sa tryScanConstSInt()
     */
     template <typename ValT>
-    bt2s::optional<ValT> tryScanConstInt() noexcept;
+    std::optional<ValT> tryScanConstInt() noexcept;
 
     /*!
     @brief
@@ -293,7 +293,7 @@ public:
 
     @sa tryScanConstSInt()
     */
-    bt2s::optional<unsigned long long> tryScanConstUInt() noexcept
+    std::optional<unsigned long long> tryScanConstUInt() noexcept
     {
         return this->tryScanConstInt<unsigned long long>();
     }
@@ -307,7 +307,7 @@ public:
 
     @sa tryScanConstUInt()
     */
-    bt2s::optional<long long> tryScanConstSInt() noexcept
+    std::optional<long long> tryScanConstSInt() noexcept
     {
         return this->tryScanConstInt<long long>();
     }
@@ -315,12 +315,12 @@ public:
     /*!
     @brief
         Tries to scan and decode a constant real number string,
-        returning bt2s::nullopt if not possible.
+        returning std::nullopt if not possible.
 
     The format of the real number string to scan is the
     <a href="https://www.json.org/">JSON</a> number one, \em with
     a fraction or an exponent part. Without a fraction/exponent part,
-    this method returns bt2s::nullopt: use tryScanConstInt() to
+    this method returns std::nullopt: use tryScanConstInt() to
     try scanning a constant integer instead.
 
     Valid examples:
@@ -340,10 +340,10 @@ public:
     string on success.
 
     @returns
-        Decoded constant real number on success, or bt2s::nullopt
+        Decoded constant real number on success, or std::nullopt
         if the method couldn't scan a constant real number.
     */
-    bt2s::optional<double> tryScanConstReal() noexcept;
+    std::optional<double> tryScanConstReal() noexcept;
 
     /*!
     @brief
@@ -374,13 +374,13 @@ public:
 private:
     /*
      * Tries to negate `ullVal` as a signed integer value if `ValT` is
-     * signed and `negate` is true, returning `bt2s::nullopt` if it
+     * signed and `negate` is true, returning `std::nullopt` if it
      * can't.
      *
      * Always succeeds when `ValT` is unsigned.
      */
     template <typename ValT>
-    static bt2s::optional<ValT> _tryNegateConstInt(unsigned long long ullVal, bool negate) noexcept;
+    static std::optional<ValT> _tryNegateConstInt(unsigned long long ullVal, bool negate) noexcept;
 
     /*
      * Handles a `\u` escape sequence, appending the UTF-8-encoded
@@ -474,8 +474,8 @@ private:
 };
 
 template <typename ValT>
-bt2s::optional<ValT> StrScanner::_tryNegateConstInt(const unsigned long long ullVal,
-                                                    const bool negate) noexcept
+std::optional<ValT> StrScanner::_tryNegateConstInt(const unsigned long long ullVal,
+                                                   const bool negate) noexcept
 {
     /* Check for overflow */
     if (std::is_signed<ValT>::value) {
@@ -484,11 +484,11 @@ bt2s::optional<ValT> StrScanner::_tryNegateConstInt(const unsigned long long ull
 
         if (negate) {
             if (ullVal > llMaxAsUll + 1) {
-                return bt2s::nullopt;
+                return std::nullopt;
             }
         } else {
             if (ullVal > llMaxAsUll) {
-                return bt2s::nullopt;
+                return std::nullopt;
             }
         }
     }
@@ -504,7 +504,7 @@ bt2s::optional<ValT> StrScanner::_tryNegateConstInt(const unsigned long long ull
 }
 
 template <typename ValT>
-bt2s::optional<ValT> StrScanner::tryScanConstInt() noexcept
+std::optional<ValT> StrScanner::tryScanConstInt() noexcept
 {
     static_assert(std::is_same<ValT, long long>::value ||
                       std::is_same<ValT, unsigned long long>::value,
@@ -520,7 +520,7 @@ bt2s::optional<ValT> StrScanner::tryScanConstInt() noexcept
 
     if (c < 0) {
         /* Nothing left */
-        return bt2s::nullopt;
+        return std::nullopt;
     }
 
     /* Check for negation */
@@ -529,7 +529,7 @@ bt2s::optional<ValT> StrScanner::tryScanConstInt() noexcept
     if (negate && !std::is_signed<ValT>::value) {
         /* Can't negate an unsigned integer */
         this->at(initAt);
-        return bt2s::nullopt;
+        return std::nullopt;
     }
 
     if (!negate) {
@@ -543,7 +543,7 @@ bt2s::optional<ValT> StrScanner::tryScanConstInt() noexcept
      */
     if (this->isDone() || !std::isdigit(*_mAt)) {
         this->at(initAt);
-        return bt2s::nullopt;
+        return std::nullopt;
     }
 
     /* Parse */
@@ -554,7 +554,7 @@ bt2s::optional<ValT> StrScanner::tryScanConstInt() noexcept
         /* Couldn't parse */
         errno = 0;
         this->at(initAt);
-        return bt2s::nullopt;
+        return std::nullopt;
     }
 
     /* Negate if needed */
@@ -563,7 +563,7 @@ bt2s::optional<ValT> StrScanner::tryScanConstInt() noexcept
     if (!val) {
         /* Couldn't negate */
         this->at(initAt);
-        return bt2s::nullopt;
+        return std::nullopt;
     }
 
     /* Success: update current position and return value */

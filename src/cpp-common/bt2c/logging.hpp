@@ -8,6 +8,7 @@
 
 #include <cstring>
 #include <iterator>
+#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
@@ -21,7 +22,6 @@
 #include "cpp-common/bt2/self-component-class.hpp"
 #include "cpp-common/bt2/self-component-port.hpp"
 #include "cpp-common/bt2/self-message-iterator.hpp"
-#include "cpp-common/bt2s/optional.hpp"
 #include "cpp-common/vendor/fmt/core.h"
 #include "cpp-common/vendor/wise-enum/wise_enum.h"
 #include "logging/log-api.h"
@@ -252,33 +252,33 @@ public:
     }
 
     /*
-     * Self component class actor, or `bt2s::nullopt` if none.
+     * Self component class actor, or `std::nullopt` if none.
      */
-    const bt2s::optional<bt2::SelfComponentClass>& selfCompCls() const noexcept
+    const std::optional<bt2::SelfComponentClass>& selfCompCls() const noexcept
     {
         return _mSelfCompCls;
     }
 
     /*
-     * Self component actor, or `bt2s::nullopt` if none.
+     * Self component actor, or `std::nullopt` if none.
      */
-    const bt2s::optional<bt2::SelfComponent>& selfComp() const noexcept
+    const std::optional<bt2::SelfComponent>& selfComp() const noexcept
     {
         return _mSelfComp;
     }
 
     /*
-     * Self message iterator actor, or `bt2s::nullopt` if none.
+     * Self message iterator actor, or `std::nullopt` if none.
      */
-    const bt2s::optional<bt2::SelfMessageIterator>& selfMsgIter() const noexcept
+    const std::optional<bt2::SelfMessageIterator>& selfMsgIter() const noexcept
     {
         return _mSelfMsgIter;
     }
 
     /*
-     * Name of module actor, or `bt2s::nullopt` if none.
+     * Name of module actor, or `std::nullopt` if none.
      */
-    const bt2s::optional<std::string>& moduleName() const noexcept
+    const std::optional<std::string>& moduleName() const noexcept
     {
         return _mModuleName;
     }
@@ -577,10 +577,10 @@ private:
     }
 
     /* Exactly one of the following four members has a value */
-    bt2s::optional<bt2::SelfComponentClass> _mSelfCompCls;
-    bt2s::optional<bt2::SelfComponent> _mSelfComp;
-    bt2s::optional<bt2::SelfMessageIterator> _mSelfMsgIter;
-    bt2s::optional<std::string> _mModuleName;
+    std::optional<bt2::SelfComponentClass> _mSelfCompCls;
+    std::optional<bt2::SelfComponent> _mSelfComp;
+    std::optional<bt2::SelfMessageIterator> _mSelfMsgIter;
+    std::optional<std::string> _mModuleName;
 
     /* Current logging level */
     Level _mLevel;

@@ -1709,7 +1709,7 @@ private:
             if (const auto userAttr =
                     this->_strUserAttr(*eventRecordCls.attrs(), jsonstr::logLevel)) {
                 const auto logLevel =
-                    bt2c::call([&userAttr]() -> bt2s::optional<bt2::EventClassLogLevel> {
+                    bt2c::call([&userAttr]() -> std::optional<bt2::EventClassLogLevel> {
                         if (userAttr->value() == jsonstr::logLevelEmergency) {
                             return bt2::EventClassLogLevel::Emergency;
                         } else if (userAttr->value() == jsonstr::logLevelAlert) {

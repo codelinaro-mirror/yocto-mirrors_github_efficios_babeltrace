@@ -575,17 +575,17 @@ See \ref common-cpp-bt2-opt-borrowed-obj for an optional version.
 @section common-cpp-bt2-opt-borrowed-obj Optional borrowed object wrapper
 
 Although you can use something like
-<code>bt2s::optional&lt;bt2::ConstClockClass&gt;</code>,
-it ends up being nonoptimal because a bt2s::optional instance contains
-the optional object as well as another field to know whether or not
-there's a value.
+<code>std::optional&lt;bt2::ConstClockClass&gt;</code>,
+it ends up being nonoptimal because an <code>std::optional</code>
+instance contains the optional object as well as another field to know
+whether or not there's a value.
 
 In libbabeltrace2's case, we're always dealing with pointers to objects,
 therefore we can leverage \c nullptr to indicate there's no value.
 
 This is what bt2::OptionalBorrowedObject does: like bt2::BorrowedObject,
 it only contains a libbabeltrace2 pointer, but offers the typical
-bt2s::optional API: natural copy/move operations,
+<code>std::optional</code> API: natural copy/move operations,
 bt2::OptionalBorrowedObject::operator*(),
 bt2::OptionalBorrowedObject::operator->(),
 and bt2::OptionalBorrowedObject::operator bool(),

@@ -136,9 +136,9 @@ namespace {
 
 /*
  * Returns the UUID of the JSON object value `jsonObjVal`, or
- * `bt2s::nullopt` if there's no such property.
+ * `std::nullopt` if there's no such property.
  */
-bt2s::optional<bt2c::Uuid> uuidOfObj(const bt2c::JsonObjVal& jsonObjVal)
+std::optional<bt2c::Uuid> uuidOfObj(const bt2c::JsonObjVal& jsonObjVal)
 {
     if (const auto jsonUuidVal = jsonObjVal[jsonstr::uuid]) {
         std::array<bt2c::Uuid::Val, bt2c::Uuid::size()> uuid;
@@ -151,7 +151,7 @@ bt2s::optional<bt2c::Uuid> uuidOfObj(const bt2c::JsonObjVal& jsonObjVal)
         return bt2c::Uuid {uuid.data()};
     }
 
-    return bt2s::nullopt;
+    return std::nullopt;
 }
 
 } /* namespace */
@@ -309,9 +309,9 @@ namespace {
  */
 struct NsNameUid final
 {
-    bt2s::optional<std::string> ns;
-    bt2s::optional<std::string> name;
-    bt2s::optional<std::string> uid;
+    std::optional<std::string> ns;
+    std::optional<std::string> name;
+    std::optional<std::string> uid;
 };
 
 /*
@@ -388,7 +388,7 @@ void Ctf2MetadataStreamParser::_handleClkClsFragment(const bt2c::JsonObjVal& jso
                 jsonOffsetVal.rawVal(jsonstr::cycles, 0ULL),
             };
         }),
-        bt2c::call([&jsonFragment]() -> bt2s::optional<ClkOrigin> {
+        bt2c::call([&jsonFragment]() -> std::optional<ClkOrigin> {
             if (const auto jsonOriginVal = jsonFragment[jsonstr::origin]) {
                 if (jsonOriginVal->isStr()) {
                     /* Unix epoch */
@@ -409,22 +409,22 @@ void Ctf2MetadataStreamParser::_handleClkClsFragment(const bt2c::JsonObjVal& jso
                 }
             }
 
-            return bt2s::nullopt;
+            return std::nullopt;
         }),
         optStrOfObj(jsonFragment, jsonstr::descr),
-        bt2c::call([&jsonFragment]() -> bt2s::optional<unsigned long long> {
+        bt2c::call([&jsonFragment]() -> std::optional<unsigned long long> {
             if (const auto jsonPrecision = jsonFragment[jsonstr::precision]) {
                 return *jsonPrecision->asUInt();
             }
 
-            return bt2s::nullopt;
+            return std::nullopt;
         }),
-        bt2c::call([&jsonFragment]() -> bt2s::optional<unsigned long long> {
+        bt2c::call([&jsonFragment]() -> std::optional<unsigned long long> {
             if (const auto jsonAccuracy = jsonFragment[jsonstr::accuracy]) {
                 return *jsonAccuracy->asUInt();
             }
 
-            return bt2s::nullopt;
+            return std::nullopt;
         }),
         attrsOfObj(jsonFragment));
 
@@ -437,9 +437,9 @@ namespace {
 /*
  * Returns the "full class ID" string of `id`, `ns`, `name`, and `uid`.
  */
-std::string fullClsIdStr(const unsigned long long id, const bt2s::optional<std::string>& ns,
-                         const bt2s::optional<std::string>& name,
-                         const bt2s::optional<std::string>& uid)
+std::string fullClsIdStr(const unsigned long long id, const std::optional<std::string>& ns,
+                         const std::optional<std::string>& name,
+                         const std::optional<std::string>& uid)
 {
     std::ostringstream ss;
 
@@ -556,16 +556,16 @@ struct StrAndLoc final
 
 /*
  * Returns the string value and text location of the property `propName`
- * within `jsonObjVal`, or `bt2s::nullopt` if there's no such property.
+ * within `jsonObjVal`, or `std::nullopt` if there's no such property.
  */
-bt2s::optional<StrAndLoc> optStrOfObjWithLoc(const bt2c::JsonObjVal& jsonObjVal,
-                                             const std::string& propName)
+std::optional<StrAndLoc> optStrOfObjWithLoc(const bt2c::JsonObjVal& jsonObjVal,
+                                            const std::string& propName)
 {
     if (const auto jsonVal = jsonObjVal[propName]) {
         return StrAndLoc {*jsonVal->asStr(), jsonVal->loc()};
     }
 
-    return bt2s::nullopt;
+    return std::nullopt;
 }
 
 } /* namespace */
