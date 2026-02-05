@@ -8,6 +8,7 @@
 #define BABELTRACE_PLUGINS_CTF_COMMON_SRC_METADATA_CTF_IR_HPP
 
 #include <cstdlib>
+#include <functional>
 #include <set>
 #include <vector>
 
@@ -494,7 +495,7 @@ public:
          * Adjust the deep type of the field class so as to include that
          * it's a key one.
          */
-        deepType = bt2c::call([deepType] {
+        deepType = std::invoke([deepType] {
             switch (deepType) {
             case FcDeepType::FixedLenBoolBa8:
                 return FcDeepType::FixedLenBoolBa8SaveVal;

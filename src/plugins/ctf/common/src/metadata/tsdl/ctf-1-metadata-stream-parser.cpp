@@ -5,6 +5,8 @@
  * Copyright 2024 Philippe Proulx <pproulx@efficios.com>
  */
 
+#include <functional>
+
 #include <babeltrace2/babeltrace.h>
 
 #include "common/common.h"
@@ -311,7 +313,7 @@ Fc::UP Ctf1MetadataStreamParser::_fcFromOrigFc(const ctf_field_class_array& orig
 FieldLoc Ctf1MetadataStreamParser::_fieldLocFromOrigFieldPath(const ctf_field_path& origFieldPath)
 {
     /* Get original CTF IR root field class and CTF IR scope */
-    const auto origFcAndScope = bt2c::call([this, &origFieldPath] {
+    const auto origFcAndScope = std::invoke([this, &origFieldPath] {
         switch (origFieldPath.root) {
         case CTF_SCOPE_PACKET_HEADER:
             return std::make_pair(_mFcTranslationCtx.origTraceCls->packet_header_fc,

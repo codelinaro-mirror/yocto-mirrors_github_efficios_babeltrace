@@ -169,7 +169,6 @@ cpp_common_libcpp_common_la_SOURCES = \
 	cpp-common/bt2c/bt2-value-from-json-val.cpp \
 	cpp-common/bt2c/bt2-value-from-json-val.hpp \
 	cpp-common/bt2c/c-string-view.hpp \
-	cpp-common/bt2c/call.hpp \
 	cpp-common/bt2c/contains.hpp \
 	cpp-common/bt2c/data-len.hpp \
 	cpp-common/bt2c/endian.hpp \

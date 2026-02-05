@@ -8,6 +8,7 @@
 #define BABELTRACE_CPP_COMMON_BT2_TRACE_IR_HPP
 
 #include <cstdint>
+#include <functional>
 #include <optional>
 #include <type_traits>
 #include <vector>
@@ -16,7 +17,6 @@
 
 #include "common/macros.h"
 #include "cpp-common/bt2c/c-string-view.hpp"
-#include "cpp-common/bt2c/call.hpp"
 #include "cpp-common/bt2s/span.hpp"
 
 #include "borrowed-object.hpp"
@@ -1771,7 +1771,7 @@ public:
     {
         static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
 
-        const auto ptrItems = bt2c::call([items] {
+        const auto ptrItems = std::invoke([items] {
             std::vector<const char *> v;
 
             for (auto& item : items) {

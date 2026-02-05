@@ -4,6 +4,8 @@
  * Copyright (C) 2020-2023 EfficiOS, inc.
  */
 
+#include <functional>
+
 #include "common/assert.h"
 #include "cpp-common/bt2/component-class-dev.hpp"
 #include "cpp-common/bt2/component-class.hpp"
@@ -11,7 +13,6 @@
 #include "cpp-common/bt2/plugin-load.hpp"
 #include "cpp-common/bt2/plugin.hpp"
 #include "cpp-common/bt2/query-executor.hpp"
-#include "cpp-common/bt2c/call.hpp"
 
 #include "run-in.hpp"
 
@@ -100,7 +101,7 @@ void runIn(RunIn& runIn, const std::uint64_t graphMipVersion)
     const auto srcComp = graph->addComponent(*srcCompCls, "the-source", runIn);
 
     /* Add dummy sink component */
-    const auto sinkComp = bt2c::call([&] {
+    const auto sinkComp = std::invoke([&] {
         const auto utilsPlugin = bt2::findPlugin("utils");
 
         BT_ASSERT(utilsPlugin);

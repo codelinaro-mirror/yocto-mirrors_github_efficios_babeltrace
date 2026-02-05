@@ -4,6 +4,7 @@
  * Copyright (C) 2017 Philippe Proulx <pproulx@efficios.com>
  */
 
+#include <functional>
 #include <string>
 
 #include <glib.h>
@@ -15,7 +16,6 @@
 #include "cpp-common/bt2/plugin-load.hpp"
 #include "cpp-common/bt2/query-executor.hpp"
 #include "cpp-common/bt2/value.hpp"
-#include "cpp-common/bt2c/call.hpp"
 #include "cpp-common/bt2c/fmt.hpp" /* IWYU pragma: keep */
 #include "cpp-common/vendor/fmt/core.h"
 
@@ -167,7 +167,7 @@ TEST_CASE_METHOD(SfsPluginFixture, "sfs plugin: add sink component to graph")
 
 TEST_CASE("bt2::findAllPluginsFromDir() with nonexistent path")
 {
-    CHECK(bt2c::call([] {
+    CHECK(std::invoke([] {
         try {
             bt2::findAllPluginsFromDir(NON_EXISTING_PATH, BT_FALSE, BT_FALSE);
             return false;

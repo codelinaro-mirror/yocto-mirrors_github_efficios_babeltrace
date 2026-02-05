@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+#include <functional>
+
 #include "common/assert.h"
 #include "common/common.h"
 #include "cpp-common/bt2c/logging.hpp"
@@ -139,7 +141,7 @@ private:
          * • `../../meow/mix/../glue/all` → `../../meow/glue/all`.
          * • `hello/../../world` → `../world`.
          */
-        const auto tmpItems = bt2c::call([&fieldLoc] {
+        const auto tmpItems = std::invoke([&fieldLoc] {
             FieldLoc::Items retItems;
 
             for (auto& item : fieldLoc.items()) {

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
+#include <functional>
 #include <sstream>
 #include <string_view>
 
@@ -33,7 +34,7 @@ Ctf2MetadataStreamParser::Ctf2MetadataStreamParser(
     const bt2c::Logger& parentLogger) :
     MetadataStreamParser {selfComp, clkClsCfg},
     _mLogger {parentLogger, "PLUGIN/CTF/CTF-2-META-STREAM-PARSER"}, _mFragmentValReq {_mLogger},
-    _mDefClkOffsetVal {bt2c::call([] {
+    _mDefClkOffsetVal {std::invoke([] {
         bt2c::JsonObjVal::Container entries;
 
         entries.insert(
@@ -374,11 +375,11 @@ void Ctf2MetadataStreamParser::_handleClkClsFragment(const bt2c::JsonObjVal& jso
     /* Create corresponding clock class */
     auto clkCls = createClkCls(
         id, jsonFragment.rawUIntVal(jsonstr::freq), std::move(nsNameUid.ns),
-        std::move(nsNameUid.name), std::move(nsNameUid.uid), bt2c::call([this, &jsonFragment] {
+        std::move(nsNameUid.name), std::move(nsNameUid.uid), std::invoke([this, &jsonFragment] {
             auto& jsonOffsetVal = jsonFragment.val(jsonstr::offsetFromOrigin, *_mDefClkOffsetVal);
 
             return ClkOffset {
-                bt2c::call([&jsonOffsetVal] {
+                std::invoke([&jsonOffsetVal] {
                     if (const auto jsonOffsetSecsVal = jsonOffsetVal[jsonstr::seconds]) {
                         return rawIntValFromJsonIntVal<long long>(*jsonOffsetSecsVal);
                     }
@@ -388,7 +389,7 @@ void Ctf2MetadataStreamParser::_handleClkClsFragment(const bt2c::JsonObjVal& jso
                 jsonOffsetVal.rawVal(jsonstr::cycles, 0ULL),
             };
         }),
-        bt2c::call([&jsonFragment]() -> std::optional<ClkOrigin> {
+        std::invoke([&jsonFragment]() -> std::optional<ClkOrigin> {
             if (const auto jsonOriginVal = jsonFragment[jsonstr::origin]) {
                 if (jsonOriginVal->isStr()) {
                     /* Unix epoch */
@@ -412,14 +413,14 @@ void Ctf2MetadataStreamParser::_handleClkClsFragment(const bt2c::JsonObjVal& jso
             return std::nullopt;
         }),
         optStrOfObj(jsonFragment, jsonstr::descr),
-        bt2c::call([&jsonFragment]() -> std::optional<unsigned long long> {
+        std::invoke([&jsonFragment]() -> std::optional<unsigned long long> {
             if (const auto jsonPrecision = jsonFragment[jsonstr::precision]) {
                 return *jsonPrecision->asUInt();
             }
 
             return std::nullopt;
         }),
-        bt2c::call([&jsonFragment]() -> std::optional<unsigned long long> {
+        std::invoke([&jsonFragment]() -> std::optional<unsigned long long> {
             if (const auto jsonAccuracy = jsonFragment[jsonstr::accuracy]) {
                 return *jsonAccuracy->asUInt();
             }
@@ -584,7 +585,7 @@ void Ctf2MetadataStreamParser::_handleDataStreamClsFragment(const bt2c::JsonObjV
     }
 
     /* Default clock class */
-    auto defClkCls = bt2c::call([this, &jsonFragment]() -> ClkCls::SP {
+    auto defClkCls = std::invoke([this, &jsonFragment]() -> ClkCls::SP {
         if (const auto defClkClsId = optStrOfObjWithLoc(jsonFragment, jsonstr::defClkClsId)) {
             const auto it = _mClkClasses.find(defClkClsId->str);
 
@@ -660,7 +661,7 @@ void Ctf2MetadataStreamParser::_handleEventRecordClsFragment(const bt2c::JsonObj
     this->_ensureExistingTraceCls();
 
     /* Data stream class ID */
-    auto dataStreamCls = bt2c::call([this, &jsonFragment] {
+    auto dataStreamCls = std::invoke([this, &jsonFragment] {
         const auto jsonDataStreamClsIdVal = jsonFragment[jsonstr::dataStreamClsId];
         const auto dataStreamClsId =
             jsonDataStreamClsIdVal ? *jsonDataStreamClsIdVal->asUInt() : 0ULL;
@@ -676,7 +677,7 @@ void Ctf2MetadataStreamParser::_handleEventRecordClsFragment(const bt2c::JsonObj
     });
 
     /* ID */
-    const auto id = bt2c::call([this, &jsonFragment, &dataStreamCls] {
+    const auto id = std::invoke([this, &jsonFragment, &dataStreamCls] {
         const auto jsonIdVal = jsonFragment[jsonstr::id];
         const auto theId = jsonIdVal ? *jsonIdVal->asUInt() : 0ULL;
 

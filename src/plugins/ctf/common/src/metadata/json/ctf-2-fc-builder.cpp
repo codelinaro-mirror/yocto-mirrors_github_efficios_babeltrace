@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
+#include <functional>
 #include <optional>
 
 #include "common/assert.h"
@@ -188,7 +189,7 @@ Fc::UP fcFromJsonFixedLenBitArrayFc(const bt2c::JsonObjVal& jsonFc, const std::s
                                ByteOrder::Big;
 
     /* Bit order */
-    const auto bitOrder = bt2c::call([&jsonFc, byteOrder] {
+    const auto bitOrder = std::invoke([&jsonFc, byteOrder] {
         const auto bitOrderStr = optStrOfObj(jsonFc, jsonstr::bitOrder);
 
         if (!bitOrderStr) {
@@ -250,7 +251,7 @@ FieldLoc fieldLocOfJsonFc(const bt2c::JsonObjVal& jsonFc, const std::string& key
     auto& jsonLoc = jsonFc[key]->asObj();
 
     /* Origin (scope) */
-    const auto origin = bt2c::call([&jsonLoc]() -> std::optional<Scope> {
+    const auto origin = std::invoke([&jsonLoc]() -> std::optional<Scope> {
         const auto jsonOrig = jsonLoc[jsonstr::origin];
 
         if (!jsonOrig) {
@@ -301,7 +302,7 @@ FieldLoc fieldLocOfJsonFc(const bt2c::JsonObjVal& jsonFc, const std::string& key
  */
 Fc::UP fcFromJsonStrFc(const bt2c::JsonObjVal& jsonFc, const std::string& type, OptAttrs&& attrs)
 {
-    const auto encoding = bt2c::call([&jsonFc] {
+    const auto encoding = std::invoke([&jsonFc] {
         const auto encodingStr = optStrOfObj(jsonFc, jsonstr::encoding);
 
         if (!encodingStr || encodingStr == jsonstr::utf8) {

@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+#include <functional>
 #include <memory>
-
-#include "cpp-common/bt2c/call.hpp"
 
 #include "ctf-ir.hpp"
 
@@ -66,7 +65,7 @@ createFixedLenBitArrayFc(const bt2c::TextLoc& loc, const unsigned int align,
                          const bt2c::DataLen len, const ByteOrder byteOrder,
                          const std::optional<BitOrder>& bitOrder, OptAttrs attrs)
 {
-    const auto deepType = bt2c::call([align, len, byteOrder, &bitOrder] {
+    const auto deepType = std::invoke([align, len, byteOrder, &bitOrder] {
         const auto isRev = FixedLenBitArrayFc::isRev(byteOrder, bitOrder);
         const auto isStd = isStdBitArrayFc(align, len);
 
@@ -156,7 +155,7 @@ createFixedLenBitMapFc(const bt2c::TextLoc& loc, const unsigned int align, const
                        const ByteOrder byteOrder, FixedLenBitMapFc::Flags flags,
                        const std::optional<BitOrder>& bitOrder, OptAttrs attrs)
 {
-    const auto deepType = bt2c::call([align, len, byteOrder, &bitOrder] {
+    const auto deepType = std::invoke([align, len, byteOrder, &bitOrder] {
         const auto isRev = FixedLenBitArrayFc::isRev(byteOrder, bitOrder);
         const auto isStd = isStdBitArrayFc(align, len);
 
@@ -247,7 +246,7 @@ createFixedLenBoolFc(const bt2c::TextLoc& loc, const unsigned int align, const b
                      const ByteOrder byteOrder, const std::optional<BitOrder>& bitOrder,
                      OptAttrs attrs)
 {
-    const auto deepType = bt2c::call([align, len, byteOrder, &bitOrder] {
+    const auto deepType = std::invoke([align, len, byteOrder, &bitOrder] {
         const auto isRev = FixedLenBitArrayFc::isRev(byteOrder, bitOrder);
         const auto isStd = isStdBitArrayFc(align, len);
 
@@ -338,7 +337,7 @@ createFixedLenFloatFc(const bt2c::TextLoc& loc, const unsigned int align, const 
                       const ByteOrder byteOrder, const std::optional<BitOrder>& bitOrder,
                       OptAttrs attrs)
 {
-    const auto deepType = bt2c::call([align, len, byteOrder, &bitOrder] {
+    const auto deepType = std::invoke([align, len, byteOrder, &bitOrder] {
         const auto isRev = FixedLenBitArrayFc::isRev(byteOrder, bitOrder);
         const auto isStd = isStdBitArrayFc(align, len);
 
@@ -441,7 +440,7 @@ createFixedLenUIntFc(const bt2c::TextLoc& loc, const unsigned int align, const b
                      const DispBase prefDispBase, FixedLenUIntFc::Mappings mappings,
                      UIntFieldRoles roles, OptAttrs attrs)
 {
-    const auto deepType = bt2c::call([align, len, byteOrder, &bitOrder, &roles] {
+    const auto deepType = std::invoke([align, len, byteOrder, &bitOrder, &roles] {
         const auto isRev = FixedLenBitArrayFc::isRev(byteOrder, bitOrder);
         const auto isStd = isStdBitArrayFc(align, len);
         const auto hasRole = !roles.empty();
@@ -554,7 +553,7 @@ createFixedLenSIntFc(const bt2c::TextLoc& loc, const unsigned int align, const b
                      const ByteOrder byteOrder, const std::optional<BitOrder>& bitOrder,
                      const DispBase prefDispBase, FixedLenSIntFc::Mappings mappings, OptAttrs attrs)
 {
-    const auto deepType = bt2c::call([align, len, byteOrder, &bitOrder] {
+    const auto deepType = std::invoke([align, len, byteOrder, &bitOrder] {
         const auto isRev = FixedLenBitArrayFc::isRev(byteOrder, bitOrder);
         const auto isStd = isStdBitArrayFc(align, len);
 
@@ -665,7 +664,7 @@ std::unique_ptr<VarLenSIntFc> createVarLenSIntFc(const bt2c::TextLoc& loc,
 std::unique_ptr<NullTerminatedStrFc>
 createNullTerminatedStrFc(const bt2c::TextLoc& loc, const StrEncoding encoding, OptAttrs attrs)
 {
-    const auto deepType = bt2c::call([encoding] {
+    const auto deepType = std::invoke([encoding] {
         switch (encoding) {
         case StrEncoding::Utf8:
             return FcDeepType::NullTerminatedStrUtf8;

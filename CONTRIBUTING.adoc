@@ -1665,22 +1665,6 @@ only a beginning and a length.
 A `bt2c::CStringView` instance is convertible to `const char *` and may
 be empty (the underlying pointer is null).
 
-`call.hpp`::
-    The `bt2c::call()` function template: a partial implementation of
-    https://en.cppreference.com/w/cpp/utility/functional[INVOKE].
-+
-We use this mostly to assign the result of calling an immediately
-invoked function expression (lambda) to an `auto` variable without
-risking to assign the lambda itself, should we forget the calling
-parentheses:
-+
-[source,cpp]
-----
-const auto res = bt2c::call([&] {
-    /* Complex initialization */
-});
-----
-
 `endian.hpp`::
     Typed wrappers of `src/compat/endian.h`.
 
@@ -1990,13 +1974,13 @@ doMoreStuff(&obj);
 ----
 +
 This also means to either use a dedicated, named method/function or to
-use `bt2c::call()` with an immediately invoked function expression
+use `std::invoke()` with an immediately invoked function expression
 (lambda) to perform complex initialization of an ideally `const`
 variable:
 +
 [source,cpp]
 ----
-const auto size = bt2c::call([this] {
+const auto size = std::invoke([this] {
     auto& sender = this->_curSender();
 
     if (sender.strategy() == Strategy::ACK) {
@@ -2009,21 +1993,21 @@ const auto size = bt2c::call([this] {
 });
 ----
 
-* Always use `bt2c::call()` to call an immediately invoked function
+* Always use `std::invoke()` to call an immediately invoked function
   expression (see the previous point).
 
 * If possible, initialize object members without a default value with
   the initializer list of a constructor, not in the constructor body.
 +
 If the initialization is complex, either use a dedicated, named
-method/function or `bt2c::call()` with an immediately invoked function
+method/function or `std::invoke()` with an immediately invoked function
 expression (lambda):
 +
 [source,cpp]
 ----
 MyObj::MyObj(const std::size_t size) :
     _mSize {size},
-    _mOtherObj {bt2c::call([size] {
+    _mOtherObj {std::invoke([size] {
         /* Complex initialization here */
     })}
 {

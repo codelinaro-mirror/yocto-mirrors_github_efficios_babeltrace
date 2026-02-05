@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
+#include <functional>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -357,7 +358,7 @@ private:
         }
 
         /* Retrieve scope field class from `_mCtx` */
-        const auto scopeFc = bt2c::call([this, &fieldLoc] {
+        const auto scopeFc = std::invoke([this, &fieldLoc] {
             switch (*fieldLoc.origin()) {
             case Scope::PktHeader:
                 return _mCtx.pktHeaderFc;

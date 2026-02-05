@@ -36,7 +36,6 @@ $(DX_DOCDIR)/$(PACKAGE).tag: \
 	@top_srcdir@/src/cpp-common/bt2c/align.hpp \
 	@top_srcdir@/src/cpp-common/bt2c/bt2-value-from-json-val.hpp \
 	@top_srcdir@/src/cpp-common/bt2c/c-string-view.hpp \
-	@top_srcdir@/src/cpp-common/bt2c/call.hpp \
 	@top_srcdir@/src/cpp-common/bt2c/contains.hpp \
 	@top_srcdir@/src/cpp-common/bt2c/data-len.hpp \
 	@top_srcdir@/src/cpp-common/bt2c/endian.hpp \

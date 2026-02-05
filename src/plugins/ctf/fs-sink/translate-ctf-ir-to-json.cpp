@@ -5,6 +5,7 @@
  */
 
 #include <cstdint>
+#include <functional>
 #include <optional>
 
 #include <glib.h>
@@ -21,7 +22,6 @@
 #include "cpp-common/bt2/value.hpp"
 #include "cpp-common/bt2/wrap.hpp"
 #include "cpp-common/bt2c/c-string-view.hpp"
-#include "cpp-common/bt2c/call.hpp"
 #include "cpp-common/bt2c/uuid.hpp"
 #include "cpp-common/vendor/nlohmann/json.hpp"
 
@@ -56,7 +56,7 @@ nljson jsonFromIrValue(const bt2::ConstValue val)
         return *val.asString().value();
 
     case bt2::ValueType::Array:
-        return bt2c::call([val] {
+        return std::invoke([val] {
             auto json = nljson::array();
 
             for (const auto elemVal : val.asArray()) {
@@ -67,7 +67,7 @@ nljson jsonFromIrValue(const bt2::ConstValue val)
         });
 
     case bt2::ValueType::Map:
-        return bt2c::call([val] {
+        return std::invoke([val] {
             auto json = nljson::object();
 
             val.asMap().forEach(
@@ -196,7 +196,7 @@ nljson jsonFixedLenBitArrayFcFromFs(const fs_sink_ctf_field_class& fsFc)
 
     return jsonFixedLenBitArrayFc(
         irFc.flagCount() == 0 ? jsonstr::fixedLenBitArray : jsonstr::fixedLenBitMap, fsFc,
-        irFc.length(), bt2c::call([irFc] {
+        irFc.length(), std::invoke([irFc] {
             if (irFc.flagCount() > 0) {
                 nljson jsonFlags;
 
@@ -217,7 +217,7 @@ nljson jsonFixedLenIntFcFromFs(const fs_sink_ctf_field_class& fsFc, const char *
     const auto irIntFc = bt2::wrap(fsFc.ir_fc).asInteger();
 
     return jsonFixedLenBitArrayFc(
-        intFcTypeStr, fsFc, irIntFc.fieldValueRange(), bt2c::call([irIntFc] {
+        intFcTypeStr, fsFc, irIntFc.fieldValueRange(), std::invoke([irIntFc] {
             nljson jsonExtra;
 
             if (irIntFc.preferredDisplayBase() != bt2::DisplayBase::Decimal) {
@@ -358,7 +358,7 @@ nljson jsonStructFcFromFs(const fs_sink_ctf_trace& fsTrace, const fs_sink_ctf_fi
 nljson jsonFieldLocFromIr(const bt2::ConstFieldLocation irFieldLoc)
 {
     nljson json {
-        {jsonstr::origin, bt2c::call([&irFieldLoc] {
+        {jsonstr::origin, std::invoke([&irFieldLoc] {
              switch (irFieldLoc.rootScope()) {
              case bt2::ConstFieldLocation::Scope::PacketContext:
                  return jsonstr::pktCtx;
@@ -408,7 +408,7 @@ nljson jsonOptFcFromFs(const fs_sink_ctf_trace& fsTrace, const bt2c::CStringView
         {jsonstr::fc,
          jsonFcFromFs(fsTrace, nullptr,
                       *reinterpret_cast<const fs_sink_ctf_field_class_option&>(fsFc).content_fc)},
-        {jsonstr::selFieldLoc, bt2c::call([&] {
+        {jsonstr::selFieldLoc, std::invoke([&] {
              std::optional<bt2::ConstFieldLocation> irFieldLoc;
 
              if (irFc.isOptionWithSelector()) {
@@ -457,7 +457,7 @@ nljson jsonVarFcFromFs(const fs_sink_ctf_trace& fsTrace, const bt2c::CStringView
 {
     const auto irVarFc = bt2::wrap(fsFc.ir_fc).asVariant();
     nljson jsonExtra {
-        {jsonstr::selFieldLoc, bt2c::call([&] {
+        {jsonstr::selFieldLoc, std::invoke([&] {
              std::optional<bt2::ConstFieldLocation> irFieldLoc;
 
              if (irVarFc.isVariantWithSelector()) {
@@ -512,7 +512,7 @@ nljson jsonFcFromFs(const fs_sink_ctf_trace& fsTrace, const bt2c::CStringView me
         return jsonFixedLenBitArrayFcFromFs(fsFc);
 
     case FS_SINK_CTF_FIELD_CLASS_TYPE_INT:
-        return bt2c::call([&fsFc] {
+        return std::invoke([&fsFc] {
             const auto irFc = bt2::wrap(fsFc.ir_fc);
 
             if (irFc.isUnsignedInteger()) {
@@ -555,7 +555,7 @@ nljson jsonFcFromFs(const fs_sink_ctf_trace& fsTrace, const bt2c::CStringView me
         return jsonFc(
             jsonstr::dynLenArray, fsFc,
             {
-                {jsonstr::lenFieldLoc, bt2c::call([&] {
+                {jsonstr::lenFieldLoc, std::invoke([&] {
                      const auto irFc = bt2::wrap(fsFc.ir_fc);
                      std::optional<bt2::ConstFieldLocation> irFieldLoc;
 
@@ -577,7 +577,7 @@ nljson jsonFcFromFs(const fs_sink_ctf_trace& fsTrace, const bt2c::CStringView me
         return jsonBlobFcFromFs(
             jsonstr::dynLenBlob, fsFc,
             {
-                {jsonstr::lenFieldLoc, bt2c::call([&] {
+                {jsonstr::lenFieldLoc, std::invoke([&] {
                      const auto irFc = bt2::wrap(fsFc.ir_fc);
                      std::optional<bt2::ConstFieldLocation> irFieldLoc;
 
@@ -627,7 +627,7 @@ nljson jsonEventRecordClsFromFs(const fs_sink_ctf_event_class& fsEventRecordCls)
         /* Log level */
         if (irEventCls.logLevel()) {
             jsonEventRecordCls[jsonstr::attrs][jsonstr::btNs][jsonstr::logLevel] =
-                bt2c::call([irEventCls] {
+                std::invoke([irEventCls] {
                     switch (*irEventCls.logLevel()) {
                     case bt2::EventClassLogLevel::Emergency:
                         return jsonstr::logLevelEmergency;
@@ -684,7 +684,7 @@ nljson jsonFixedLenUIntMember(std::string name, const unsigned int len, const ch
     /* clang-format off */
     return {
         {jsonstr::name, std::move(name)},
-        {jsonstr::fc, bt2c::call([&] {
+        {jsonstr::fc, std::invoke([&] {
             nljson json {
                 {jsonstr::type, jsonstr::fixedLenUInt},
                 {jsonstr::len, len},
@@ -876,7 +876,7 @@ void translate_trace_ctf_ir_to_json(fs_sink_ctf_trace * const trace, GString * c
     appendFragment({
         {jsonstr::type, jsonstr::preamble},
         {jsonstr::version, 2},
-        {jsonstr::uuid, bt2c::call([trace] {
+        {jsonstr::uuid, std::invoke([trace] {
             auto json = nljson::array();
 
             for (const auto byte : bt2c::UuidView {trace->uuid}) {

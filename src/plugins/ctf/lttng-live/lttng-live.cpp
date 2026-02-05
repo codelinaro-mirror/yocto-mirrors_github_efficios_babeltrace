@@ -8,6 +8,7 @@
  * Babeltrace CTF LTTng-live Client Component
  */
 
+#include <functional>
 #include <memory>
 
 #include <glib.h>
@@ -924,7 +925,7 @@ handle_late_message(struct lttng_live_msg_iter *lttng_live_msg_iter,
 
     bt2::ConstMessage::Shared adjustedMessage;
 
-    const auto adjust_status = bt2c::call([&] {
+    const auto adjust_status = std::invoke([&] {
         switch (late_msg.type()) {
         case bt2::MessageType::DiscardedEvents:
             return adjust_discarded_events_message(lttng_live_msg_iter->selfMsgIter.libObjPtr(),

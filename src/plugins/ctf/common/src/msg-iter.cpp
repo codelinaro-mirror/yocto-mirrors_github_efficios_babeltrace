@@ -6,13 +6,13 @@
  */
 
 #include <algorithm>
+#include <functional>
 
 #include "common/assert.h"
 #include "common/common.h"
 #include "cpp-common/bt2/message.hpp"
 #include "cpp-common/bt2/trace-ir.hpp"
 #include "cpp-common/bt2c/aliases.hpp"
-#include "cpp-common/bt2c/call.hpp"
 #include "cpp-common/bt2c/fmt.hpp" /* IWYU pragma: keep */
 #include "cpp-common/vendor/fmt/format.h"
 
@@ -452,7 +452,7 @@ void MsgIter::_emitPktBeginMsg(const _OptUll& defClkVal)
     BT_ASSERT_DBG(_mCurPkt);
 
     /* Add new message to queue */
-    this->_addMsgToQueue(bt2c::call([this, &defClkVal] {
+    this->_addMsgToQueue(std::invoke([this, &defClkVal] {
         if (defClkVal) {
             _mCurDefClkVal = defClkVal;
             return _mSelfMsgIter.createPacketBeginningMessage(*_mCurPkt, *defClkVal);
@@ -475,7 +475,7 @@ void MsgIter::_emitDelayedPktBeginMsg(const _OptUll& otherDefClkVal)
      *
      * Emit a packet beginning message now.
      */
-    this->_emitPktBeginMsg(bt2c::call([this, &otherDefClkVal]() -> _OptUll {
+    this->_emitPktBeginMsg(std::invoke([this, &otherDefClkVal]() -> _OptUll {
         if (_mPktBeginDefClkVal && otherDefClkVal) {
             return std::min(*_mPktBeginDefClkVal, *otherDefClkVal);
         } else if (_mPktBeginDefClkVal) {
@@ -697,7 +697,7 @@ void MsgIter::_handleStrFieldEndItem()
     case StrEncoding::Utf32Le:
     {
         /* Convert to UTF-8 */
-        const auto utf8Str = bt2c::call([this] {
+        const auto utf8Str = std::invoke([this] {
             bt2c::ConstBytes inBytes {_mStrBuf.begin(), _mStrBuf.end()};
 
             switch (_mCurStrFieldEncoding) {
@@ -763,7 +763,7 @@ void MsgIter::_handleStrRawDataItem(const RawDataItem& item)
     } else {
         /* Try to find the first U+0000 codepoint */
         auto endIt = item.data().end();
-        const auto afterNullCpIt = bt2c::call([this, &item] {
+        const auto afterNullCpIt = std::invoke([this, &item] {
             if (_mCurStrFieldEncoding == StrEncoding::Utf16Be ||
                 _mCurStrFieldEncoding == StrEncoding::Utf16Le) {
                 return _mUtf16NullCpFinder.findNullCp(item.data());

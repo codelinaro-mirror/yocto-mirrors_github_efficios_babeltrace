@@ -5,10 +5,10 @@
  */
 
 #include <cstring>
+#include <functional>
 
 #include "common/assert.h"
 #include "cpp-common/bt2/field-class.hpp"
-#include "cpp-common/bt2c/call.hpp"
 
 #include "../../metadata/json-strings.hpp"
 #include "metadata-stream-parser.hpp"
@@ -1021,7 +1021,7 @@ private:
         }
 
         return _mTraceCls->libCls()->createFieldLocation(
-            bt2c::call([&fieldLoc] {
+            std::invoke([&fieldLoc] {
                 switch (*fieldLoc.origin()) {
                 case Scope::CommonEventRecordCtx:
                     return bt2::ConstFieldLocation::Scope::CommonEventContext;
@@ -1033,7 +1033,7 @@ private:
                     bt_common_abort();
                 }
             }),
-            bt2c::call([&fieldLoc] {
+            std::invoke([&fieldLoc] {
                 std::vector<std::string> items;
 
                 for (auto& item : fieldLoc.items()) {
@@ -1709,7 +1709,7 @@ private:
             if (const auto userAttr =
                     this->_strUserAttr(*eventRecordCls.attrs(), jsonstr::logLevel)) {
                 const auto logLevel =
-                    bt2c::call([&userAttr]() -> std::optional<bt2::EventClassLogLevel> {
+                    std::invoke([&userAttr]() -> std::optional<bt2::EventClassLogLevel> {
                         if (userAttr->value() == jsonstr::logLevelEmergency) {
                             return bt2::EventClassLogLevel::Emergency;
                         } else if (userAttr->value() == jsonstr::logLevelAlert) {
