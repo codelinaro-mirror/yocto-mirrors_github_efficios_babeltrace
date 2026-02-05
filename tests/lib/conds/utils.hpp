@@ -138,6 +138,49 @@ private:
     std::uint64_t _mGraphMipVersion;
 };
 
+using OnCompInitFunc = std::function<void(bt2::SelfComponent)>;
+
+/*
+ * A "run in" class that delegates the execution to stored callables.
+ *
+ * Use the makeRunInCompInitTrigger*() helpers below.
+ */
+class RunInCompInitDelegator final : public RunIn
+{
+public:
+    static RunInCompInitDelegator makeOnCompInit(OnCompInitFunc func)
+    {
+        return RunInCompInitDelegator {std::move(func)};
+    }
+
+    void onCompInit(const bt2::SelfComponent self) override
+    {
+        if (_mOnCompInitFunc) {
+            _mOnCompInitFunc(self);
+        }
+    }
+
+private:
+    explicit RunInCompInitDelegator(OnCompInitFunc onCompInitFunc) :
+        _mOnCompInitFunc {std::move(onCompInitFunc)}
+    {
+    }
+
+    OnCompInitFunc _mOnCompInitFunc;
+};
+
+/*
+ * Creates a condition trigger, calling `func` in a component
+ * initialization context.
+ */
+inline CondTrigger::UP makeRunInCompInitTrigger(OnCompInitFunc func, const CondTrigger::Type type,
+                                                const std::string& condId,
+                                                const bt2c::CStringView nameSuffix = {})
+{
+    return std::make_unique<RunInCondTrigger<RunInCompInitDelegator>>(
+        RunInCompInitDelegator::makeOnCompInit(std::move(func)), type, condId, 0u, nameSuffix);
+}
+
 /*
  * List of condition triggers.
  */

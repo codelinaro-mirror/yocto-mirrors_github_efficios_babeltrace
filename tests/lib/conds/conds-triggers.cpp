@@ -29,49 +29,6 @@ CondTrigger::UP makeSimpleTrigger(FuncT&& func, const CondTrigger::Type type,
     return std::make_unique<SimpleCondTrigger>(std::forward<FuncT>(func), type, condId, nameSuffix);
 }
 
-using OnCompInitFunc = std::function<void(bt2::SelfComponent)>;
-
-/*
- * A "run in" class that delegates the execution to stored callables.
- *
- * Use the makeRunIn*Trigger() helpers below.
- */
-class RunInDelegator final : public RunIn
-{
-public:
-    static RunInDelegator makeOnCompInit(OnCompInitFunc func)
-    {
-        return RunInDelegator {std::move(func)};
-    }
-
-    void onCompInit(const bt2::SelfComponent self) override
-    {
-        if (_mOnCompInitFunc) {
-            _mOnCompInitFunc(self);
-        }
-    }
-
-private:
-    explicit RunInDelegator(OnCompInitFunc onCompInitFunc) :
-        _mOnCompInitFunc {std::move(onCompInitFunc)}
-    {
-    }
-
-    OnCompInitFunc _mOnCompInitFunc;
-};
-
-/*
- * Creates a condition trigger, calling `func` in a component
- * initialization context.
- */
-CondTrigger::UP makeRunInCompInitTrigger(OnCompInitFunc func, const CondTrigger::Type type,
-                                         const std::string& condId,
-                                         const bt2c::CStringView nameSuffix = {})
-{
-    return std::make_unique<RunInCondTrigger<RunInDelegator>>(
-        RunInDelegator::makeOnCompInit(std::move(func)), type, condId, 0u, nameSuffix);
-}
-
 bt2::IntegerFieldClass::Shared createUIntFc(const bt2::SelfComponent self)
 {
     return self.createTraceClass()->createUnsignedIntegerFieldClass();
