@@ -1115,6 +1115,34 @@
 #define BT_ASSERT_PRE_DEV_FC_MIP_VERSION_GE(_field_class, _val)		\
 	BT_ASSERT_PRE_DEV_MIP_VERSION_GE((_field_class)->mip_version, _val)
 
+/*
+ * Asserts that a field class belongs to the specified trace class.
+ */
+#define BT_ASSERT_PRE_FC_HAS_TRACE_CLASS_FROM_FUNC(_func, _fc, _tc)	\
+	BT_ASSERT_PRE_FROM_FUNC(_func,					\
+		"fc-has-expected-trace-class",				\
+		(_fc)->trace_class == (_tc),				\
+		"Field class's trace class is different from "		\
+		"expected trace class: %![fc-]+F, %![tc-]+T",		\
+		(_fc), (_tc))
+
+#define BT_ASSERT_PRE_FC_HAS_TRACE_CLASS(_fc, _tc)			\
+	BT_ASSERT_PRE_FC_HAS_TRACE_CLASS_FROM_FUNC(__func__, (_fc), (_tc))
+
+/*
+ * Asserts that two field classes have the same trace class.
+ */
+#define BT_ASSERT_PRE_FCS_HAVE_SAME_TRACE_CLASS_FROM_FUNC(_func, _fc_a, _fc_b) \
+	BT_ASSERT_PRE_FROM_FUNC(_func,					\
+		"fcs-have-same-trace-class",				\
+		(_fc_a)->trace_class == (_fc_b)->trace_class,		\
+		"Field classes do not have the same trace class: "	\
+		"%![fc-a-]+F, %![fc-b-]+F", (_fc_a), (_fc_b))
+
+#define BT_ASSERT_PRE_FCS_HAVE_SAME_TRACE_CLASS(_fc_a, _fc_b)		\
+	BT_ASSERT_PRE_FCS_HAVE_SAME_TRACE_CLASS_FROM_FUNC(__func__,	\
+		(_fc_a), (_fc_b))
+
 #define _BT_ASSERT_PRE_INTR_NAME	"Interrupter"
 #define _BT_ASSERT_PRE_INTR_ID		"interrupter"
 

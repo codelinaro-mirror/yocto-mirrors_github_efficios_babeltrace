@@ -15,6 +15,7 @@
 #include "cpp-common/bt2c/make-span.hpp"
 
 #include "clk-cls-compat-postconds-triggers.hpp"
+#include "fc-tc-match-preconds-triggers.hpp"
 #include "utils.hpp"
 
 namespace {
@@ -70,5 +71,6 @@ int main(const int argc, const char ** const argv)
         CondTrigger::Type::Pre, "field-class-integer-set-field-value-range:not-null:field-class"));
 
     addClkClsCompatTriggers(triggers);
+    addFcTcMatchTriggers(triggers);
     condMain(bt2c::makeSpan(argv, argc), triggers);
 }

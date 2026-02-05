@@ -4031,6 +4031,7 @@ property values:
 @bt_pre_not_null{trace_class}
 @bt_pre_not_null{element_field_class}
 @bt_pre_fc_not_in_tc{element_field_class}
+@bt_pre_fc_created_from_tc{element_field_class, trace_class}
 
 @bt_post_success_frozen{element_field_class}
 */
@@ -4128,9 +4129,13 @@ property values:
 @bt_pre_tc_with_mip{trace_class, 0}
 @bt_pre_not_null{element_field_class}
 @bt_pre_fc_not_in_tc{element_field_class}
+@bt_pre_fc_created_from_tc{element_field_class, trace_class}
 @pre
     <strong>If \bt_p{length_field_class} isn't \c NULL</strong>,
     \bt_p{length_field_class} is an \bt_uint_fc.
+@pre
+    <strong>If \bt_p{length_field_class} isn't \c NULL</strong>,
+    \bt_p{length_field_class} was created from \bt_p{trace_class}.
 
 @bt_post_success_frozen{element_field_class}
 @bt_post_success_frozen{length_field_class}
@@ -4188,6 +4193,7 @@ property values:
 @bt_pre_tc_with_mip{trace_class, 1}
 @bt_pre_not_null{element_field_class}
 @bt_pre_fc_not_in_tc{element_field_class}
+@bt_pre_fc_created_from_tc{element_field_class, trace_class}
 
 @bt_post_success_frozen{element_field_class}
 
@@ -4252,6 +4258,7 @@ property values:
 @bt_pre_tc_with_mip{trace_class, 1}
 @bt_pre_not_null{element_field_class}
 @bt_pre_fc_not_in_tc{element_field_class}
+@bt_pre_fc_created_from_tc{element_field_class, trace_class}
 @bt_pre_not_null{length_field_location}
 
 @bt_post_success_frozen{element_field_class}
@@ -4414,6 +4421,7 @@ See the \ref api-tir-fc-struct-prop-members "members" property.
 @bt_pre_not_null{name}
 @bt_pre_not_null{member_field_class}
 @bt_pre_fc_not_in_tc{member_field_class}
+@bt_pre_fc_same_tc{member_field_class, field_class}
 
 @bt_post_success_frozen{member_field_class}
 */
@@ -4777,6 +4785,7 @@ values:
 @bt_pre_tc_with_mip{trace_class, 0}
 @bt_pre_not_null{optional_field_class}
 @bt_pre_fc_not_in_tc{optional_field_class}
+@bt_pre_fc_created_from_tc{optional_field_class, trace_class}
 
 @bt_post_success_frozen{optional_field_class}
 
@@ -4824,6 +4833,7 @@ values:
 @bt_pre_tc_with_mip{trace_class, 1}
 @bt_pre_not_null{optional_field_class}
 @bt_pre_fc_not_in_tc{optional_field_class}
+@bt_pre_fc_created_from_tc{optional_field_class, trace_class}
 
 @bt_post_success_frozen{optional_field_class}
 
@@ -4976,9 +4986,11 @@ values:
 @bt_pre_tc_with_mip{trace_class, 0}
 @bt_pre_not_null{optional_field_class}
 @bt_pre_fc_not_in_tc{optional_field_class}
+@bt_pre_fc_created_from_tc{optional_field_class, trace_class}
 @bt_pre_not_null{selector_field_class}
 @pre
     \bt_p{selector_field_class} is a \bt_bool_fc.
+@bt_pre_fc_created_from_tc{selector_field_class, trace_class}
 
 @bt_post_success_frozen{optional_field_class}
 @bt_post_success_frozen{selector_field_class}
@@ -5041,6 +5053,7 @@ values:
 @bt_pre_tc_with_mip{trace_class, 1}
 @bt_pre_not_null{optional_field_class}
 @bt_pre_fc_not_in_tc{optional_field_class}
+@bt_pre_fc_created_from_tc{optional_field_class, trace_class}
 @bt_pre_not_null{selector_field_location}
 
 @bt_post_success_frozen{optional_field_class}
@@ -5179,9 +5192,11 @@ values:
 @bt_pre_tc_with_mip{trace_class, 0}
 @bt_pre_not_null{optional_field_class}
 @bt_pre_fc_not_in_tc{optional_field_class}
+@bt_pre_fc_created_from_tc{optional_field_class, trace_class}
 @bt_pre_not_null{selector_field_class}
 @pre
     \bt_p{selector_field_class} is an \bt_uint_fc.
+@bt_pre_fc_created_from_tc{selector_field_class, trace_class}
 @bt_pre_not_null{ranges}
 @pre
     \bt_p{ranges} contains one or more \bt_p_uint_rg.
@@ -5255,6 +5270,7 @@ values:
 @bt_pre_tc_with_mip{trace_class, 1}
 @bt_pre_not_null{optional_field_class}
 @bt_pre_fc_not_in_tc{optional_field_class}
+@bt_pre_fc_created_from_tc{optional_field_class, trace_class}
 @bt_pre_not_null{selector_field_location}
 @bt_pre_not_null{ranges}
 @pre
@@ -5366,9 +5382,11 @@ values:
 @bt_pre_tc_with_mip{trace_class, 0}
 @bt_pre_not_null{optional_field_class}
 @bt_pre_fc_not_in_tc{optional_field_class}
+@bt_pre_fc_created_from_tc{optional_field_class, trace_class}
 @bt_pre_not_null{selector_field_class}
 @pre
     \bt_p{selector_field_class} is an \bt_uint_fc.
+@bt_pre_fc_created_from_tc{selector_field_class, trace_class}
 @bt_pre_not_null{ranges}
 @pre
     \bt_p{ranges} contains one or more \bt_p_uint_rg.
@@ -5441,6 +5459,7 @@ values:
 @bt_pre_tc_with_mip{trace_class, 1}
 @bt_pre_not_null{optional_field_class}
 @bt_pre_fc_not_in_tc{optional_field_class}
+@bt_pre_fc_created_from_tc{optional_field_class, trace_class}
 @bt_pre_not_null{selector_field_location}
 @bt_pre_not_null{ranges}
 @pre
@@ -5555,6 +5574,9 @@ property values:
 @pre
     <strong>If \bt_p{selector_field_class} isn't \c NULL</strong>,
     then \bt_p{selector_field_class} is an \bt_int_fc.
+@pre
+    <strong>If \bt_p{selector_field_class} isn't \c NULL</strong>,
+    \bt_p{selector_field_class} was created from \bt_p{trace_class}.
 
 @bt_post_success_frozen{element_field_class}
 @bt_post_success_frozen{selector_field_class}
@@ -5956,6 +5978,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
     version&nbsp;0</strong>, then \bt_p{name} is \em not \c NULL.
 @bt_pre_not_null{option_field_class}
 @bt_pre_fc_not_in_tc{option_field_class}
+@bt_pre_fc_same_tc{option_field_class, field_class}
 
 @bt_post_success_frozen{option_field_class}
 */
@@ -6162,6 +6185,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
     version&nbsp;0</strong>, then \bt_p{name} is \em not \c NULL.
 @bt_pre_not_null{option_field_class}
 @bt_pre_fc_not_in_tc{option_field_class}
+@bt_pre_fc_same_tc{option_field_class, field_class}
 @bt_pre_not_null{ŗanges}
 @pre
     \bt_p{ranges} contains one or more unsigned integer ranges.
@@ -6422,6 +6446,7 @@ See the \ref api-tir-fc-var-prop-opts "options" property.
     version&nbsp;0</strong>, then \bt_p{name} is \em not \c NULL.
 @bt_pre_not_null{option_field_class}
 @bt_pre_fc_not_in_tc{option_field_class}
+@bt_pre_fc_same_tc{option_field_class, field_class}
 @bt_pre_not_null{ŗanges}
 @pre
     \bt_p{ranges} contains one or more signed integer ranges.

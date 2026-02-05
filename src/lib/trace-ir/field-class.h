@@ -50,6 +50,9 @@ struct bt_field_class {
 
 	/* Effective MIP version for this field class */
 	uint64_t mip_version;
+
+	/* Trace class this field class was created from (weak). */
+	const struct bt_trace_class *trace_class;
 };
 
 struct bt_field_class_bool {

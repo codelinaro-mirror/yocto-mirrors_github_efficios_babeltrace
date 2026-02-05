@@ -696,7 +696,9 @@ lib_conds_conds_triggers_bin_SOURCES = \
 	lib/conds/utils.cpp \
 	lib/conds/utils.hpp \
 	lib/conds/clk-cls-compat-postconds-triggers.cpp \
-	lib/conds/clk-cls-compat-postconds-triggers.hpp
+	lib/conds/clk-cls-compat-postconds-triggers.hpp \
+	lib/conds/fc-tc-match-preconds-triggers.cpp \
+	lib/conds/fc-tc-match-preconds-triggers.hpp
 lib_conds_conds_triggers_bin_LDADD = \
 	$(LIB_COMMON_TEST_LDADD) \
 	$(top_builddir)/src/lib/libbabeltrace2.la

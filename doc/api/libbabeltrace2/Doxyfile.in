@@ -47,6 +47,8 @@ ALIASES                += bt_pre_hot{1}="@pre \bt_p{\1} is \em not \link api-fun
 ALIASES                += bt_pre_assign_expr{1}="@pre \bt_p{\1} is an assignable expression."
 ALIASES                += bt_pre_valid_fmt{1}="@pre \bt_p{\1} is a valid <code>printf()</code>-like format string."
 ALIASES                += bt_pre_fc_not_in_tc{1}="@pre \bt_p{\1} isn't already part of another field class, an \bt_ev_cls, or a \bt_stream_cls."
+ALIASES                += bt_pre_fc_created_from_tc{2}="@pre \bt_p{\1} was created from \bt_p{\2}."
+ALIASES                += bt_pre_fc_same_tc{2}="@pre \bt_p{\1} was created from the same \bt_trace_cls as \bt_p{\2}."
 
 # Aliases: postconditions
 ALIASES                += bt_post_success_frozen{1}="@post <strong>On success</strong>, \bt_p{\1} is \link api-fund-freezing frozen\endlink."

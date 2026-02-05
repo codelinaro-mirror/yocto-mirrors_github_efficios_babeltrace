@@ -57,6 +57,7 @@ int init_field_class(struct bt_field_class *fc, enum bt_field_class_type type,
 	}
 
 	fc->mip_version = trace_class->mip_version;
+	fc->trace_class = trace_class;
 
 end:
 	return ret;
@@ -1297,6 +1298,8 @@ int append_named_field_class_to_container_field_class(
 	BT_ASSERT(container_fc);
 	BT_ASSERT(named_fc);
 	BT_ASSERT_PRE_DEV_FC_HOT_FROM_FUNC(api_func, container_fc);
+	BT_ASSERT_PRE_FCS_HAVE_SAME_TRACE_CLASS_FROM_FUNC(api_func,
+		&container_fc->common, named_fc->fc);
 	BT_ASSERT_PRE_FROM_FUNC(api_func, unique_entry_precond_id,
 		!named_fc->name ||
 			!bt_g_hash_table_contains(container_fc->name_to_index,
@@ -1540,8 +1543,15 @@ struct bt_field_class *create_option_field_class(
 
 	BT_ASSERT_PRE_NON_NULL_FROM_FUNC(api_func, "content-field-class",
 		content_fc, "Content field class");
+	BT_ASSERT_PRE_FC_HAS_TRACE_CLASS_FROM_FUNC(api_func, content_fc,
+		trace_class);
 
 	BT_ASSERT(!(selector_fc && selector_fl));
+
+	if (selector_fc) {
+		BT_ASSERT_PRE_FC_HAS_TRACE_CLASS_FROM_FUNC(api_func, selector_fc,
+			trace_class);
+	}
 
 	BT_LIB_LOGD("Creating option field class: "
 		"type=%s, %![content-fc-]+F, %![sel-fc-]+F",
@@ -2012,11 +2022,17 @@ struct bt_field_class *create_variant_field_class(
 		struct bt_trace_class *trace_class,
 		enum bt_field_class_type fc_type,
 		struct bt_field_class *selector_fc,
-		const struct bt_field_location *selector_fl)
+		const struct bt_field_location *selector_fl,
+		const char *api_func)
 {
 	int ret;
 	struct bt_field_class_variant *var_fc = NULL;
 	struct bt_field_class_variant_with_selector_field *var_with_sel_fc = NULL;
+
+	if (selector_fc) {
+		BT_ASSERT_PRE_FC_HAS_TRACE_CLASS_FROM_FUNC(api_func,
+			selector_fc, trace_class);
+	}
 
 	if (fc_type != BT_FIELD_CLASS_TYPE_VARIANT_WITHOUT_SELECTOR_FIELD) {
 		BT_ASSERT((selector_fc && !selector_fl) ||
@@ -2128,7 +2144,8 @@ struct bt_field_class *bt_field_class_variant_create(
 		fc_type = BT_FIELD_CLASS_TYPE_VARIANT_WITHOUT_SELECTOR_FIELD;
 	}
 
-	return create_variant_field_class(trace_class, fc_type, selector_fc, NULL);
+	return create_variant_field_class(trace_class, fc_type, selector_fc,
+		NULL, __func__);
 }
 
 BT_EXPORT
@@ -2140,7 +2157,8 @@ struct bt_field_class *bt_field_class_variant_without_selector_field_location_cr
 	BT_ASSERT_PRE_TC_MIP_VERSION_GE(trace_class, 1);
 
 	return create_variant_field_class(trace_class,
-		BT_FIELD_CLASS_TYPE_VARIANT_WITHOUT_SELECTOR_FIELD, NULL, NULL);
+		BT_FIELD_CLASS_TYPE_VARIANT_WITHOUT_SELECTOR_FIELD, NULL, NULL,
+		__func__);
 }
 
 BT_EXPORT
@@ -2155,7 +2173,7 @@ struct bt_field_class *bt_field_class_variant_with_selector_field_location_integ
 
 	return create_variant_field_class(trace_class,
 		BT_FIELD_CLASS_TYPE_VARIANT_WITH_UNSIGNED_INTEGER_SELECTOR_FIELD,
-		NULL, selector_fl);
+		NULL, selector_fl, __func__);
 }
 
 BT_EXPORT
@@ -2170,7 +2188,7 @@ struct bt_field_class *bt_field_class_variant_with_selector_field_location_integ
 
 	return create_variant_field_class(trace_class,
 		BT_FIELD_CLASS_TYPE_VARIANT_WITH_SIGNED_INTEGER_SELECTOR_FIELD,
-		NULL, selector_fl);
+		NULL, selector_fl, __func__);
 }
 
 #define VAR_FC_OPT_NAME_IS_UNIQUE_ID					\
@@ -2349,7 +2367,7 @@ int append_option_to_variant_with_selector_field_field_class(
 	}
 
 	status = append_named_field_class_to_container_field_class((void *) fc,
-		&opt->common, __func__, VAR_FC_OPT_NAME_IS_UNIQUE_ID);
+		&opt->common, api_func, VAR_FC_OPT_NAME_IS_UNIQUE_ID);
 	if (status == BT_FUNC_STATUS_OK) {
 		/* Moved to the container */
 		opt = NULL;
@@ -2620,6 +2638,8 @@ int init_array_field_class(struct bt_field_class_array *fc,
 
 	BT_ASSERT_PRE_NON_NULL_FROM_FUNC(api_func, "element-field-class",
 		element_fc, "Element field class");
+	BT_ASSERT_PRE_FC_HAS_TRACE_CLASS_FROM_FUNC(api_func, element_fc,
+		trace_class);
 
 	ret = init_field_class((void *) fc, type, release_func,
 		trace_class);
@@ -2813,6 +2833,7 @@ struct bt_field_class *bt_field_class_array_dynamic_create(
 
 		BT_ASSERT_PRE_FC_IS_UNSIGNED_INT("length-field-class",
 			length_fc, "Length field class");
+		BT_ASSERT_PRE_FC_HAS_TRACE_CLASS(length_fc, trace_class);
 		array_fc->length_field.path.class = length_fc;
 		bt_object_get_ref_no_null_check(length_fc);
 		bt_field_class_freeze(length_fc);
