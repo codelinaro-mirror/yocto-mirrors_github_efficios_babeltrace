@@ -135,8 +135,8 @@ AC_CHECK_TYPES([ptrdiff_t])
 ## C++ compiler checks ##
 ##                     ##
 
-# Require a C++11 compiler without GNU extensions (-std=c++11)
-AX_CXX_COMPILE_STDCXX([11], [noext], [mandatory])
+# Require a C++17 compiler without GNU extensions (-std=c++17)
+AX_CXX_COMPILE_STDCXX([17], [noext], [mandatory])
 
 
 ##               ##

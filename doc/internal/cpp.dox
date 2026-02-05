@@ -17,10 +17,10 @@ to \bt_name.
 
 @section cpp-std Standard
 
-The \bt_name project is configured to use the C++11 standard.
+The \bt_name project is configured to use the C++17 standard.
 
-C++11 makes it possible to build \bt_name with a broad range of
-compilers, from GCC&nbsp;4.8 and Clang&nbsp;3.3.
+C++17 makes it possible to build \bt_name with a broad range of
+compilers, from GCC&nbsp;7.5 and Clang&nbsp;5.
 
 @section cpp-automake-libtool Automake/Libtool requirements
 
@@ -199,7 +199,7 @@ Also:
 
 @section cpp-coding-conv Coding convention
 
-In general, the project contributors make an effort to follow, for C++11
+In general, the project contributors make an effort to follow, for C++17
 code:
 
 - The
@@ -284,12 +284,12 @@ Here are a few important reminders:
   @endcode
 
   This also means to either use a dedicated, named method/function or to
-  use bt2c::call() with an immediately invoked function
+  use <code>std::invoke()</code> with an immediately invoked function
   expression (lambda) to perform complex initialization of an ideally
   \c const variable:
 
   @code{.cpp}
-  const auto size = bt2c::call([this] {
+  const auto size = std::invoke([this] {
       auto& sender = this->_curSender();
 
       if (sender.strategy() == Strategy::ACK) {
@@ -302,20 +302,20 @@ Here are a few important reminders:
   });
   @endcode
 
-- Always use bt2c::call() to call an immediately invoked
+- Always use <code>std::invoke()</code> to call an immediately invoked
   function expression (see the previous point).
 
 - If possible, initialize object members without a default value with
   the initializer list of a constructor, not in the constructor body.
 
   If the initialization is complex, either use a dedicated, named
-  method/function or bt2c::call() with an immediately
+  method/function or <code>std::invoke()</code> with an immediately
   invoked function expression (lambda):
 
   @code{.cpp}
   MyObj::MyObj(const std::size_t size) :
       _mSize {size},
-      _mOtherObj {bt2c::call([size] {
+      _mOtherObj {std::invoke([size] {
           /* Complex initialization here */
       })}
   {

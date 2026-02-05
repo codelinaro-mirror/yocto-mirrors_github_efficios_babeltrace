@@ -5,7 +5,7 @@
 // Render with Asciidoctor
 
 = Babeltrace 2
-23 January 2026
+4 February 2026
 :btversion: 2.1
 :bt2: Babeltrace{nbsp}2
 ifdef::env-github[]
@@ -84,8 +84,8 @@ Compiler::
 +
 https://clang.llvm.org/[Clang] is one of those.
 
-    * Any {cpp} compiler with {cpp}11 support (for example,
-      GCC{nbsp}≥{nbsp}4.8 and Clang{nbsp}≥{nbsp}3.3).
+    * Any {cpp} compiler with {cpp}17 support (for example,
+      GCC{nbsp}≥{nbsp}7.5 and Clang{nbsp}≥{nbsp}5).
 
 Tools::
     * https://www.gnu.org/software/make/[GNU Make]

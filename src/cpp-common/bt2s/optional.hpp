@@ -7,6 +7,9 @@
 #ifndef BABELTRACE_CPP_COMMON_BT2S_OPTIONAL_HPP
 #define BABELTRACE_CPP_COMMON_BT2S_OPTIONAL_HPP
 
+/* Force `nonstd::optional` during the transition to C++17 */
+#define optional_CONFIG_SELECT_OPTIONAL 1
+
 #include "cpp-common/vendor/optional-lite/optional.hpp"
 
 namespace bt2s {

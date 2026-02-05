@@ -26,7 +26,7 @@ Jérémie Galarneau, Simon Marchi, Philippe Proulx
 :nofooter:
 :bt2: Babeltrace{nbsp}2
 :c-cpp: C/{cpp}
-:cpp11: {cpp}11
+:cpp17: {cpp}17
 :fmt: pass:[{fmt}]
 
 This is a partial contributor's guide for the
@@ -1594,10 +1594,13 @@ ABI compatibility over time.
 
 === Standard
 
-The {bt2} project is configured to use the {cpp11} standard.
+The {bt2} project is configured to use the {cpp17} standard.
 
-{cpp11} makes it possible to build {bt2} with a broad range of
-compilers, from GCC{nbsp}4.8 and Clang{nbsp}3.3.
+{cpp17} makes it possible to build {bt2} with a broad range of
+compilers, from GCC{nbsp}7.5 and Clang{nbsp}5.
+
+IMPORTANT: The project is currently moving from {cpp}11 to {cpp}17,
+therefore some parts of the text below may not be accurate.
 
 === Common {cpp} code
 
@@ -1920,7 +1923,7 @@ However, try to keep the name readable. For example, prefer
 === Coding convention
 
 In general, the project's contributors make an effort to follow,
-for {cpp11} code:
+for {cpp17} code:
 
 * The
   https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md[{cpp} Core Guidelines].
