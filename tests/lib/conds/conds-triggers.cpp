@@ -10,6 +10,7 @@
 #include <babeltrace2/babeltrace.h>
 
 #include "cpp-common/bt2/graph.hpp"
+#include "cpp-common/bt2/mip.hpp"
 #include "cpp-common/bt2c/c-string-view.hpp"
 #include "cpp-common/bt2c/make-span.hpp"
 
@@ -46,17 +47,21 @@ int main(const int argc, const char ** const argv)
         },
         CondTrigger::Type::Pre, "graph-create:valid-mip-version"));
 
-    triggers.emplace_back(makeRunInCompInitTrigger(
-        [](const bt2::SelfComponent self) {
-            createUIntFc(self)->fieldValueRange(0);
-        },
-        CondTrigger::Type::Pre, "field-class-integer-set-field-value-range:valid-n", "0"));
+    for (std::uint64_t mipVersion = 0; mipVersion < bt2::getMaximalMipVersion(); ++mipVersion) {
+        triggers.emplace_back(makeRunInCompInitTrigger(
+            [](const bt2::SelfComponent self) {
+                createUIntFc(self)->fieldValueRange(0);
+            },
+            CondTrigger::Type::Pre, "field-class-integer-set-field-value-range:valid-n", mipVersion,
+            fmt::format("mip{}-0", mipVersion)));
 
-    triggers.emplace_back(makeRunInCompInitTrigger(
-        [](const bt2::SelfComponent self) {
-            createUIntFc(self)->fieldValueRange(65);
-        },
-        CondTrigger::Type::Pre, "field-class-integer-set-field-value-range:valid-n", "gt-64"));
+        triggers.emplace_back(makeRunInCompInitTrigger(
+            [](const bt2::SelfComponent self) {
+                createUIntFc(self)->fieldValueRange(65);
+            },
+            CondTrigger::Type::Pre, "field-class-integer-set-field-value-range:valid-n", mipVersion,
+            fmt::format("mip{}-gt-64", mipVersion)));
+    }
 
     triggers.emplace_back(makeSimpleTrigger(
         [] {

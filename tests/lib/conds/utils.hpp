@@ -175,10 +175,12 @@ private:
  */
 inline CondTrigger::UP makeRunInCompInitTrigger(OnCompInitFunc func, const CondTrigger::Type type,
                                                 const std::string& condId,
+                                                const std::uint64_t graphMipVersion,
                                                 const bt2c::CStringView nameSuffix = {})
 {
     return std::make_unique<RunInCondTrigger<RunInCompInitDelegator>>(
-        RunInCompInitDelegator::makeOnCompInit(std::move(func)), type, condId, 0u, nameSuffix);
+        RunInCompInitDelegator::makeOnCompInit(std::move(func)), type, condId, graphMipVersion,
+        nameSuffix);
 }
 
 /*
