@@ -20,8 +20,9 @@ ItemSeqIter::ItemSeqIter(std::unique_ptr<Medium> medium, const TraceCls& traceCl
                          const bt2c::Logger& parentLogger) :
     _mMedium {std::move(medium)}, _mTraceCls {&traceCls},
     _mTraceClsSavedKeyValCountUpdatedObservableToken(
-        _mTraceCls->savedKeyValCountUpdatedObservable().attach(
-            std::bind(&ItemSeqIter::_savedKeyValCountUpdated, this, std::placeholders::_1))),
+        _mTraceCls->savedKeyValCountUpdatedObservable().attach([this](const auto count) {
+            this->_savedKeyValCountUpdated(count);
+        })),
     _mLogger {parentLogger, "PLUGIN/CTF/ITEM-SEQ-ITER"}
 {
     /* Allocate enough elements to save values for dependent fields */
