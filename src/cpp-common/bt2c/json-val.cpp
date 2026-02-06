@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <utility>
 
 #include "common/assert.h"
 
@@ -94,9 +95,11 @@ namespace {
 template <typename ContainerT, typename GetValueFuncT>
 bool valsNotNull(const ContainerT& vals, GetValueFuncT&& getValueFunc)
 {
-    return std::all_of(vals.begin(), vals.end(), [&getValueFunc](const auto& elem) {
-        return static_cast<bool>(getValueFunc(elem));
-    });
+    return std::all_of(
+        vals.begin(), vals.end(),
+        [getValueFunc = std::forward<GetValueFuncT>(getValueFunc)](const auto& elem) {
+            return static_cast<bool>(getValueFunc(elem));
+        });
 }
 
 } /* namespace */
