@@ -445,7 +445,7 @@ public:
     template <typename LibValT>
     CommonFieldClass userAttributes(const CommonMapValue<LibValT> userAttrs) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstFieldClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstFieldClass`.");
 
         bt_field_class_set_user_attributes(this->libObjPtr(), userAttrs.libObjPtr());
         return *this;
@@ -580,7 +580,7 @@ public:
     CommonBitArrayFieldClass addFlag(const bt2c::CStringView label,
                                      const ConstBitArrayFieldClassFlag::RangeSet ranges) const
     {
-        static_assert(!std::is_const<LibObjT>::value,
+        static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::ConstBitArrayFieldClass`.");
 
         if (bt_field_class_bit_array_add_flag(this->libObjPtr(), label, ranges.libObjPtr()) ==
@@ -682,7 +682,7 @@ public:
 
     CommonIntegerFieldClass fieldValueRange(const std::uint64_t n) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
+        static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::ConstIntegerFieldClass`.");
 
         bt_field_class_integer_set_field_value_range(this->libObjPtr(), n);
@@ -696,7 +696,7 @@ public:
 
     CommonIntegerFieldClass fieldValueHints(const std::uint64_t hints) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
+        static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::ConstIntegerFieldClass`.");
 
         bt_field_class_integer_set_field_value_hints(this->libObjPtr(), hints);
@@ -716,7 +716,7 @@ public:
 
     CommonIntegerFieldClass preferredDisplayBase(const DisplayBase base) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
+        static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::ConstIntegerFieldClass`.");
 
         bt_field_class_integer_set_preferred_display_base(
@@ -808,9 +808,9 @@ private:
 public:
     using typename BorrowedObject<LibObjT>::LibObjPtr;
 
-    using RangeSet = typename std::conditional<
-        std::is_same<LibObjT, const bt_field_class_enumeration_unsigned_mapping>::value,
-        ConstUnsignedIntegerRangeSet, ConstSignedIntegerRangeSet>::type;
+    using RangeSet = std::conditional_t<
+        std::is_same_v<LibObjT, const bt_field_class_enumeration_unsigned_mapping>,
+        ConstUnsignedIntegerRangeSet, ConstSignedIntegerRangeSet>;
 
     explicit ConstEnumerationFieldClassMapping(const LibObjPtr libObjPtr) noexcept :
         _ThisBorrowedObject {libObjPtr}
@@ -999,7 +999,7 @@ public:
     CommonEnumerationFieldClass addMapping(const bt2c::CStringView label,
                                            const typename Mapping::RangeSet ranges) const
     {
-        static_assert(!std::is_const<LibObjT>::value,
+        static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::Const*EnumerationFieldClass`.");
 
         const auto status = internal::CommonEnumerationFieldClassSpec<MappingT>::addMapping(
@@ -1164,7 +1164,7 @@ public:
     CommonStructureFieldClassMember
     userAttributes(const CommonMapValue<LibValT> userAttrs) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
+        static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::ConstStructureFieldClassMember`.");
 
         bt_field_class_structure_member_set_user_attributes(this->libObjPtr(),
@@ -1282,7 +1282,7 @@ public:
 
     CommonStructureFieldClass appendMember(const bt2c::CStringView name, const FieldClass fc) const
     {
-        static_assert(!std::is_const<LibObjT>::value,
+        static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::ConstStructureFieldClass`.");
 
         const auto status =
@@ -1643,8 +1643,7 @@ public:
 
     CommonBlobFieldClass mediaType(const bt2c::CStringView mediaType) const
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstBlobFieldClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstBlobFieldClass`.");
 
         if (bt_field_class_blob_set_media_type(this->libObjPtr(), mediaType) ==
             BT_FIELD_CLASS_BLOB_SET_MEDIA_TYPE_STATUS_MEMORY_ERROR) {
@@ -2289,7 +2288,7 @@ public:
     CommonVariantFieldClassOption
     userAttributes(const CommonMapValue<LibValT> userAttrs) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
+        static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::ConstVariantFieldClassOption`.");
 
         bt_field_class_variant_option_set_user_attributes(this->libObjPtr(), userAttrs.libObjPtr());
@@ -2385,11 +2384,10 @@ private:
 public:
     using typename BorrowedObject<LibObjT>::LibObjPtr;
 
-    using RangeSet = typename std::conditional<
-        std::is_same<
-            LibObjT,
-            const bt_field_class_variant_with_selector_field_integer_unsigned_option>::value,
-        ConstUnsignedIntegerRangeSet, ConstSignedIntegerRangeSet>::type;
+    using RangeSet = std::conditional_t<
+        std::is_same_v<LibObjT,
+                       const bt_field_class_variant_with_selector_field_integer_unsigned_option>,
+        ConstUnsignedIntegerRangeSet, ConstSignedIntegerRangeSet>;
 
     explicit ConstVariantWithIntegerSelectorFieldClassOption(const LibObjPtr libObjPtr) noexcept :
         _ThisBorrowedObject {libObjPtr}
@@ -2617,7 +2615,7 @@ public:
     CommonVariantWithoutSelectorFieldClass appendOption(const char * const name,
                                                         const FieldClass fc) const
     {
-        static_assert(!std::is_const<LibObjT>::value,
+        static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::ConstVariantWithoutSelectorFieldClass`.");
 
         const auto status = bt_field_class_variant_without_selector_append_option(
@@ -2853,7 +2851,7 @@ public:
                  const typename Option::RangeSet ranges) const
     {
         static_assert(
-            !std::is_const<LibObjT>::value,
+            !std::is_const_v<LibObjT>,
             "Not available with `bt2::ConstVariantWithUnsignedIntegerSelectorFieldClass`.");
 
         const auto status =

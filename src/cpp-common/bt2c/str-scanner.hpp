@@ -478,7 +478,7 @@ std::optional<ValT> StrScanner::_tryNegateConstInt(const unsigned long long ullV
                                                    const bool negate) noexcept
 {
     /* Check for overflow */
-    if (std::is_signed<ValT>::value) {
+    if (std::is_signed_v<ValT>) {
         constexpr auto llMaxAsUll =
             static_cast<unsigned long long>(std::numeric_limits<long long>::max());
 
@@ -506,8 +506,7 @@ std::optional<ValT> StrScanner::_tryNegateConstInt(const unsigned long long ullV
 template <typename ValT>
 std::optional<ValT> StrScanner::tryScanConstInt() noexcept
 {
-    static_assert(std::is_same<ValT, long long>::value ||
-                      std::is_same<ValT, unsigned long long>::value,
+    static_assert(std::is_same_v<ValT, long long> || std::is_same_v<ValT, unsigned long long>,
                   "`ValT` is `long long` or `unsigned long long`.");
 
     this->skipWhitespaces();
@@ -526,7 +525,7 @@ std::optional<ValT> StrScanner::tryScanConstInt() noexcept
     /* Check for negation */
     const bool negate = (c == '-');
 
-    if (negate && !std::is_signed<ValT>::value) {
+    if (negate && !std::is_signed_v<ValT>) {
         /* Can't negate an unsigned integer */
         this->at(initAt);
         return std::nullopt;

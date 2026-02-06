@@ -73,9 +73,8 @@ private:
 public:
     using typename BorrowedObject<LibObjT>::LibObjPtr;
 
-    using Value =
-        typename std::conditional<std::is_same<LibObjT, const bt_integer_range_unsigned>::value,
-                                  std::uint64_t, std::int64_t>::type;
+    using Value = std::conditional_t<std::is_same_v<LibObjT, const bt_integer_range_unsigned>,
+                                     std::uint64_t, std::int64_t>;
 
 public:
     explicit ConstIntegerRange(const LibObjPtr libObjPtr) noexcept : _ThisBorrowedObject {libObjPtr}

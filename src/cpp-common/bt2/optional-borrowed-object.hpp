@@ -102,7 +102,7 @@ public:
     template <typename OtherObjT>
     OptionalBorrowedObject(const OtherObjT obj) noexcept : _mLibObjPtr {obj.libObjPtr()}
     {
-        static_assert(std::is_constructible<ObjT, OtherObjT>::value,
+        static_assert(std::is_constructible_v<ObjT, OtherObjT>,
                       "`ObjT` is constructible with an instance of `OtherObjT`.");
     }
 
@@ -123,7 +123,7 @@ public:
     OptionalBorrowedObject(const OptionalBorrowedObject<OtherObjT> optObj) noexcept :
         _mLibObjPtr {optObj.libObjPtr()}
     {
-        static_assert(std::is_constructible<ObjT, OtherObjT>::value,
+        static_assert(std::is_constructible_v<ObjT, OtherObjT>,
                       "`ObjT` is constructible with an instance of `OtherObjT`.");
     }
 
@@ -162,7 +162,7 @@ public:
     template <typename OtherObjT>
     OptionalBorrowedObject& operator=(const ObjT obj) noexcept
     {
-        static_assert(std::is_constructible<ObjT, OtherObjT>::value,
+        static_assert(std::is_constructible_v<ObjT, OtherObjT>,
                       "`ObjT` is constructible with an instance of `OtherObjT`.");
         _mLibObjPtr = obj.libObjPtr();
         return *this;
@@ -184,7 +184,7 @@ public:
     template <typename OtherObjT>
     OptionalBorrowedObject& operator=(const OptionalBorrowedObject<ObjT> optObj) noexcept
     {
-        static_assert(std::is_constructible<ObjT, OtherObjT>::value,
+        static_assert(std::is_constructible_v<ObjT, OtherObjT>,
                       "`ObjT` is constructible with an instance of `OtherObjT`.");
         _mLibObjPtr = optObj.libObjPtr();
         return *this;

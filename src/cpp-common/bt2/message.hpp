@@ -285,7 +285,7 @@ public:
 
     CommonStreamBeginningMessage defaultClockSnapshot(const std::uint64_t val) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
+        static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::ConstStreamBeginningMessage`.");
 
         bt_message_stream_beginning_set_default_clock_snapshot(this->libObjPtr(), val);
@@ -406,7 +406,7 @@ public:
 
     CommonStreamEndMessage defaultClockSnapshot(const std::uint64_t val) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
+        static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::ConstStreamEndMessage`.");
 
         bt_message_stream_end_set_default_clock_snapshot(this->libObjPtr(), val);
@@ -528,7 +528,7 @@ public:
 
     CommonPacketBeginningMessage defaultClockSnapshot(const std::uint64_t val) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
+        static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::ConstPacketBeginningMessage`.");
 
         bt_message_packet_beginning_set_default_clock_snapshot(this->libObjPtr(), val);
@@ -644,7 +644,7 @@ public:
 
     CommonPacketEndMessage defaultClockSnapshot(const std::uint64_t val) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
+        static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::ConstPacketEndMessage`.");
 
         bt_message_packet_end_set_default_clock_snapshot(this->libObjPtr(), val);
@@ -882,7 +882,7 @@ public:
 
     CommonDiscardedEventsMessage count(const std::uint64_t count) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
+        static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::ConstDiscardedEventsMessage`.");
 
         bt_message_discarded_events_set_count(this->libObjPtr(), count);
@@ -1019,7 +1019,7 @@ public:
 
     CommonDiscardedPacketsMessage count(const std::uint64_t count) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
+        static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::ConstDiscardedPacketsMessage`.");
 
         bt_message_discarded_packets_set_count(this->libObjPtr(), count);

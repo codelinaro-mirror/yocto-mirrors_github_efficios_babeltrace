@@ -434,7 +434,7 @@ public:
 
     Packet::Shared createPacket() const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstStream`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStream`.");
 
         const auto libObjPtr = bt_packet_create(this->libObjPtr());
 
@@ -452,7 +452,7 @@ public:
 
     CommonStream name(const bt2c::CStringView name) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstStream`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStream`.");
 
         const auto status = bt_stream_set_name(this->libObjPtr(), name);
 
@@ -471,7 +471,7 @@ public:
     template <typename LibValT>
     CommonStream userAttributes(const CommonMapValue<LibValT> userAttrs) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstStream`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStream`.");
 
         bt_stream_set_user_attributes(this->libObjPtr(), userAttrs.libObjPtr());
         return *this;
@@ -642,7 +642,7 @@ public:
 
     CommonTrace nameSpace(const bt2c::CStringView nameSpace) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTrace`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTrace`.");
 
         if (bt_trace_set_namespace(this->libObjPtr(), nameSpace) ==
             BT_TRACE_SET_NAMESPACE_STATUS_MEMORY_ERROR) {
@@ -659,7 +659,7 @@ public:
 
     CommonTrace name(const bt2c::CStringView name) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTrace`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTrace`.");
 
         const auto status = bt_trace_set_name(this->libObjPtr(), name);
 
@@ -677,7 +677,7 @@ public:
 
     CommonTrace uid(const bt2c::CStringView uid) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTrace`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTrace`.");
 
         if (bt_trace_set_uid(this->libObjPtr(), uid) == BT_TRACE_SET_UID_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
@@ -730,7 +730,7 @@ public:
 
     CommonTrace environmentEntry(const bt2c::CStringView name, const std::int64_t val) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTrace`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTrace`.");
 
         const auto status = bt_trace_set_environment_entry_integer(this->libObjPtr(), name, val);
 
@@ -743,7 +743,7 @@ public:
 
     CommonTrace environmentEntry(const bt2c::CStringView name, const bt2c::CStringView val) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTrace`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTrace`.");
 
         const auto status = bt_trace_set_environment_entry_string(this->libObjPtr(), name, val);
 
@@ -777,7 +777,7 @@ public:
     template <typename LibValT>
     CommonTrace userAttributes(const CommonMapValue<LibValT> userAttrs) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTrace`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTrace`.");
 
         bt_trace_set_user_attributes(this->libObjPtr(), userAttrs.libObjPtr());
         return *this;
@@ -969,7 +969,7 @@ public:
 
     CommonEventClass nameSpace(const bt2c::CStringView nameSpace) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstEventClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstEventClass`.");
 
         if (bt_event_class_set_namespace(this->libObjPtr(), nameSpace) ==
             BT_EVENT_CLASS_SET_NAMESPACE_STATUS_MEMORY_ERROR) {
@@ -986,7 +986,7 @@ public:
 
     CommonEventClass name(const bt2c::CStringView name) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstEventClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstEventClass`.");
 
         const auto status = bt_event_class_set_name(this->libObjPtr(), name);
 
@@ -1004,7 +1004,7 @@ public:
 
     CommonEventClass uid(const bt2c::CStringView uid) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstEventClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstEventClass`.");
 
         if (bt_event_class_set_uid(this->libObjPtr(), uid) ==
             BT_EVENT_CLASS_SET_UID_STATUS_MEMORY_ERROR) {
@@ -1021,7 +1021,7 @@ public:
 
     CommonEventClass logLevel(const EventClassLogLevel logLevel) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstEventClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstEventClass`.");
 
         bt_event_class_set_log_level(this->libObjPtr(),
                                      static_cast<bt_event_class_log_level>(logLevel));
@@ -1041,7 +1041,7 @@ public:
 
     CommonEventClass emfUri(const bt2c::CStringView emfUri) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstEventClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstEventClass`.");
 
         const auto status = bt_event_class_set_emf_uri(this->libObjPtr(), emfUri);
 
@@ -1059,7 +1059,7 @@ public:
 
     CommonEventClass payloadFieldClass(const StructureFieldClass fc) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstEventClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstEventClass`.");
 
         const auto status =
             bt_event_class_set_payload_field_class(this->libObjPtr(), fc.libObjPtr());
@@ -1078,7 +1078,7 @@ public:
 
     CommonEventClass specificContextFieldClass(const StructureFieldClass fc) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstEventClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstEventClass`.");
 
         const auto status =
             bt_event_class_set_specific_context_field_class(this->libObjPtr(), fc.libObjPtr());
@@ -1098,7 +1098,7 @@ public:
     template <typename LibValT>
     CommonEventClass userAttributes(const CommonMapValue<LibValT> userAttrs) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstEventClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstEventClass`.");
 
         bt_event_class_set_user_attributes(this->libObjPtr(), userAttrs.libObjPtr());
         return *this;
@@ -1295,8 +1295,7 @@ public:
 
     Stream::Shared instantiate(const Trace trace) const
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         const auto libObjPtr = bt_stream_create(this->libObjPtr(), trace.libObjPtr());
 
@@ -1306,8 +1305,7 @@ public:
 
     Stream::Shared instantiate(const Trace trace, const std::uint64_t id) const
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         const auto libObjPtr = bt_stream_create_with_id(this->libObjPtr(), trace.libObjPtr(), id);
 
@@ -1317,8 +1315,7 @@ public:
 
     EventClass::Shared createEventClass() const
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         const auto libObjPtr = bt_event_class_create(this->libObjPtr());
 
@@ -1328,8 +1325,7 @@ public:
 
     EventClass::Shared createEventClass(const std::uint64_t id) const
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         const auto libObjPtr = bt_event_class_create_with_id(this->libObjPtr(), id);
 
@@ -1346,8 +1342,7 @@ public:
 
     CommonStreamClass nameSpace(const bt2c::CStringView nameSpace) const
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         if (bt_stream_class_set_namespace(this->libObjPtr(), nameSpace) ==
             BT_STREAM_CLASS_SET_NAMESPACE_STATUS_MEMORY_ERROR) {
@@ -1364,8 +1359,7 @@ public:
 
     CommonStreamClass name(const bt2c::CStringView name) const
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         const auto status = bt_stream_class_set_name(this->libObjPtr(), name);
 
@@ -1383,8 +1377,7 @@ public:
 
     CommonStreamClass uid(const bt2c::CStringView uid) const
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         if (bt_stream_class_set_uid(this->libObjPtr(), uid) ==
             BT_STREAM_CLASS_SET_UID_STATUS_MEMORY_ERROR) {
@@ -1401,8 +1394,7 @@ public:
 
     CommonStreamClass assignsAutomaticEventClassId(const bool val) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         bt_stream_class_set_assigns_automatic_event_class_id(this->libObjPtr(),
                                                              static_cast<bt_bool>(val));
@@ -1417,8 +1409,7 @@ public:
 
     CommonStreamClass assignsAutomaticStreamId(const bool val) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         bt_stream_class_set_assigns_automatic_stream_id(this->libObjPtr(),
                                                         static_cast<bt_bool>(val));
@@ -1434,8 +1425,7 @@ public:
                                       const bool withBeginningDefaultClkSnapshot,
                                       const bool withEndDefaultClkSnapshot) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         bt_stream_class_set_supports_packets(this->libObjPtr(),
                                              static_cast<bt_bool>(supportsPackets),
@@ -1464,8 +1454,7 @@ public:
     CommonStreamClass supportsDiscardedEvents(const bool supportsDiscardedEvents,
                                               const bool withDefaultClkSnapshots) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         bt_stream_class_set_supports_discarded_events(
             this->libObjPtr(), static_cast<bt_bool>(supportsDiscardedEvents),
@@ -1487,8 +1476,7 @@ public:
     CommonStreamClass supportsDiscardedPackets(const bool supportsDiscardedPackets,
                                                const bool withDefaultClkSnapshots) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         bt_stream_class_set_supports_discarded_packets(
             this->libObjPtr(), static_cast<bt_bool>(supportsDiscardedPackets),
@@ -1509,8 +1497,7 @@ public:
 
     CommonStreamClass defaultClockClass(const ClockClass clkCls) const
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         const auto status =
             bt_stream_class_set_default_clock_class(this->libObjPtr(), clkCls.libObjPtr());
@@ -1541,8 +1528,7 @@ public:
 
     CommonStreamClass packetContextFieldClass(const StructureFieldClass fc) const
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         const auto status =
             bt_stream_class_set_packet_context_field_class(this->libObjPtr(), fc.libObjPtr());
@@ -1561,8 +1547,7 @@ public:
 
     CommonStreamClass commonEventContextFieldClass(const StructureFieldClass fc) const
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         const auto status =
             bt_stream_class_set_event_common_context_field_class(this->libObjPtr(), fc.libObjPtr());
@@ -1582,8 +1567,7 @@ public:
     template <typename LibValT>
     CommonStreamClass userAttributes(const CommonMapValue<LibValT> userAttrs) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstStreamClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
         bt_stream_class_set_user_attributes(this->libObjPtr(), userAttrs.libObjPtr());
         return *this;
@@ -1740,7 +1724,7 @@ public:
 
     Trace::Shared instantiate() const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_trace_create(this->libObjPtr());
 
@@ -1756,7 +1740,7 @@ public:
     ConstFieldLocation::Shared createFieldLocation(const ConstFieldLocation::Scope scope,
                                                    const bt2s::span<const char * const> items) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr =
             bt_field_location_create(this->libObjPtr(), static_cast<bt_field_location_scope>(scope),
@@ -1769,7 +1753,7 @@ public:
     ConstFieldLocation::Shared createFieldLocation(const ConstFieldLocation::Scope scope,
                                                    const bt2s::span<const std::string> items) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto ptrItems = std::invoke([items] {
             std::vector<const char *> v;
@@ -1786,7 +1770,7 @@ public:
 
     StreamClass::Shared createStreamClass() const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_stream_class_create(this->libObjPtr());
 
@@ -1796,7 +1780,7 @@ public:
 
     StreamClass::Shared createStreamClass(const std::uint64_t id) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_stream_class_create_with_id(this->libObjPtr(), id);
 
@@ -1806,7 +1790,7 @@ public:
 
     FieldClass::Shared createBoolFieldClass() const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_bool_create(this->libObjPtr());
 
@@ -1816,7 +1800,7 @@ public:
 
     BitArrayFieldClass::Shared createBitArrayFieldClass(const std::uint64_t length) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_bit_array_create(this->libObjPtr(), length);
 
@@ -1826,7 +1810,7 @@ public:
 
     IntegerFieldClass::Shared createUnsignedIntegerFieldClass() const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_integer_unsigned_create(this->libObjPtr());
 
@@ -1836,7 +1820,7 @@ public:
 
     IntegerFieldClass::Shared createSignedIntegerFieldClass() const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_integer_signed_create(this->libObjPtr());
 
@@ -1846,7 +1830,7 @@ public:
 
     UnsignedEnumerationFieldClass::Shared createUnsignedEnumerationFieldClass() const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_enumeration_unsigned_create(this->libObjPtr());
 
@@ -1856,7 +1840,7 @@ public:
 
     SignedEnumerationFieldClass::Shared createSignedEnumerationFieldClass() const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_enumeration_signed_create(this->libObjPtr());
 
@@ -1866,7 +1850,7 @@ public:
 
     FieldClass::Shared createSinglePrecisionRealFieldClass() const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_real_single_precision_create(this->libObjPtr());
 
@@ -1876,7 +1860,7 @@ public:
 
     FieldClass::Shared createDoublePrecisionRealFieldClass() const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_real_double_precision_create(this->libObjPtr());
 
@@ -1886,7 +1870,7 @@ public:
 
     FieldClass::Shared createStringFieldClass() const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_string_create(this->libObjPtr());
 
@@ -1897,7 +1881,7 @@ public:
     StaticArrayFieldClass::Shared createStaticArrayFieldClass(const FieldClass elementFieldClass,
                                                               const std::uint64_t length) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_array_static_create(
             this->libObjPtr(), elementFieldClass.libObjPtr(), length);
@@ -1908,7 +1892,7 @@ public:
 
     ArrayFieldClass::Shared createDynamicArrayFieldClass(const FieldClass elementFieldClass) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_array_dynamic_create(
             this->libObjPtr(), elementFieldClass.libObjPtr(), nullptr);
@@ -1921,7 +1905,7 @@ public:
     createDynamicArrayFieldClass(const FieldClass elementFieldClass,
                                  const IntegerFieldClass lengthFieldClass) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_array_dynamic_create(
             this->libObjPtr(), elementFieldClass.libObjPtr(), lengthFieldClass.libObjPtr());
@@ -1933,7 +1917,7 @@ public:
     ArrayFieldClass::Shared
     createDynamicArrayWithoutLengthFieldLocationFieldClass(const FieldClass elementFieldClass) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_array_dynamic_without_length_field_location_create(
             this->libObjPtr(), elementFieldClass.libObjPtr());
@@ -1945,7 +1929,7 @@ public:
     DynamicArrayWithLengthFieldClass::Shared createDynamicArrayWithLengthFieldLocationFieldClass(
         const FieldClass elementFieldClass, const ConstFieldLocation lengthFieldLocation) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_array_dynamic_with_length_field_location_create(
             this->libObjPtr(), elementFieldClass.libObjPtr(), lengthFieldLocation.libObjPtr());
@@ -1956,7 +1940,7 @@ public:
 
     StaticBlobFieldClass::Shared createStaticBlobFieldClass(const std::uint64_t length) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_blob_static_create(this->libObjPtr(), length);
 
@@ -1966,7 +1950,7 @@ public:
 
     BlobFieldClass::Shared createDynamicBlobWithoutLengthFieldLocationFieldClass() const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr =
             bt_field_class_blob_dynamic_without_length_field_location_create(this->libObjPtr());
@@ -1978,7 +1962,7 @@ public:
     DynamicBlobWithLengthFieldClass::Shared createDynamicBlobWithLengthFieldLocationFieldClass(
         const ConstFieldLocation lengthFieldLocation) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_blob_dynamic_with_length_field_location_create(
             this->libObjPtr(), lengthFieldLocation.libObjPtr());
@@ -1989,7 +1973,7 @@ public:
 
     StructureFieldClass::Shared createStructureFieldClass() const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_structure_create(this->libObjPtr());
 
@@ -1999,7 +1983,7 @@ public:
 
     OptionFieldClass::Shared createOptionFieldClass(const FieldClass optionalFieldClass) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_option_without_selector_create(
             this->libObjPtr(), optionalFieldClass.libObjPtr());
@@ -2011,7 +1995,7 @@ public:
     OptionFieldClass::Shared
     createOptionWithoutSelectorFieldLocationFieldClass(const FieldClass optionalFieldClass) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_option_without_selector_field_location_create(
             this->libObjPtr(), optionalFieldClass.libObjPtr());
@@ -2024,7 +2008,7 @@ public:
     createOptionWithBoolSelectorFieldClass(const FieldClass optionalFieldClass,
                                            const FieldClass selectorFieldClass) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_option_with_selector_field_bool_create(
             this->libObjPtr(), optionalFieldClass.libObjPtr(), selectorFieldClass.libObjPtr());
@@ -2036,7 +2020,7 @@ public:
     OptionWithBoolSelectorFieldClass::Shared createOptionWithBoolSelectorFieldLocationFieldClass(
         const FieldClass optionalFieldClass, const ConstFieldLocation selectorFieldLocation) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_option_with_selector_field_location_bool_create(
             this->libObjPtr(), optionalFieldClass.libObjPtr(), selectorFieldLocation.libObjPtr());
@@ -2050,7 +2034,7 @@ public:
         const FieldClass optionalFieldClass, const IntegerFieldClass selectorFieldClass,
         const ConstUnsignedIntegerRangeSet ranges) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_option_with_selector_field_integer_unsigned_create(
             this->libObjPtr(), optionalFieldClass.libObjPtr(), selectorFieldClass.libObjPtr(),
@@ -2065,7 +2049,7 @@ public:
         const FieldClass optionalFieldClass, const ConstFieldLocation selectorFieldLocation,
         const ConstUnsignedIntegerRangeSet ranges) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr =
             bt_field_class_option_with_selector_field_location_integer_unsigned_create(
@@ -2081,7 +2065,7 @@ public:
                                                     const IntegerFieldClass selectorFieldClass,
                                                     const ConstSignedIntegerRangeSet ranges) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_option_with_selector_field_integer_signed_create(
             this->libObjPtr(), optionalFieldClass.libObjPtr(), selectorFieldClass.libObjPtr(),
@@ -2096,7 +2080,7 @@ public:
         const FieldClass optionalFieldClass, const ConstFieldLocation selectorFieldLocation,
         const ConstSignedIntegerRangeSet ranges) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr =
             bt_field_class_option_with_selector_field_location_integer_signed_create(
@@ -2109,7 +2093,7 @@ public:
 
     VariantWithoutSelectorFieldClass::Shared createVariantFieldClass() const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr = bt_field_class_variant_create(this->libObjPtr(), nullptr);
 
@@ -2120,7 +2104,7 @@ public:
     VariantWithoutSelectorFieldClass::Shared
     createVariantWithoutSelectorFieldLocationFieldClass() const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr =
             bt_field_class_variant_without_selector_field_location_create(this->libObjPtr());
@@ -2141,7 +2125,7 @@ public:
     createVariantWithUnsignedIntegerSelectorFieldLocationFieldClass(
         const ConstFieldLocation selectorFieldLocation) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr =
             bt_field_class_variant_with_selector_field_location_integer_unsigned_create(
@@ -2163,7 +2147,7 @@ public:
     createVariantWithSignedIntegerSelectorFieldLocationFieldClass(
         const ConstFieldLocation selectorFieldLocation) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr =
             bt_field_class_variant_with_selector_field_location_integer_signed_create(
@@ -2175,7 +2159,7 @@ public:
 
     CommonTraceClass assignsAutomaticStreamClassId(const bool val) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         bt_trace_class_set_assigns_automatic_stream_class_id(this->libObjPtr(),
                                                              static_cast<bt_bool>(val));
@@ -2206,7 +2190,7 @@ public:
     template <typename LibValT>
     CommonTraceClass userAttributes(const CommonMapValue<LibValT> userAttrs) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         bt_trace_class_set_user_attributes(this->libObjPtr(), userAttrs.libObjPtr());
         return *this;
@@ -2227,7 +2211,7 @@ private:
     typename ObjT::Shared
     _createVariantWithIntegerSelectorFieldClass(const IntegerFieldClass selectorFieldClass) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstTraceClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTraceClass`.");
 
         const auto libObjPtr =
             bt_field_class_variant_create(this->libObjPtr(), selectorFieldClass.libObjPtr());

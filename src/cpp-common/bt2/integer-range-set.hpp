@@ -136,7 +136,7 @@ class CommonIntegerRangeSet final : public BorrowedObject<LibObjT>
 {
 private:
     using typename BorrowedObject<LibObjT>::_ThisBorrowedObject;
-    using _ConstLibObjT = typename std::add_const<LibObjT>::type;
+    using _ConstLibObjT = std::add_const_t<LibObjT>;
     using _Spec = internal::CommonIntegerRangeSetSpec<_ConstLibObjT>;
 
 public:
@@ -145,9 +145,9 @@ public:
     using Shared = SharedObject<CommonIntegerRangeSet, LibObjT,
                                 internal::IntegerRangeSetRefFuncs<_ConstLibObjT>>;
 
-    using Range = typename std::conditional<
-        std::is_same<_ConstLibObjT, const bt_integer_range_set_unsigned>::value,
-        ConstUnsignedIntegerRange, ConstSignedIntegerRange>::type;
+    using Range =
+        std::conditional_t<std::is_same_v<_ConstLibObjT, const bt_integer_range_set_unsigned>,
+                           ConstUnsignedIntegerRange, ConstSignedIntegerRange>;
 
     using Value = typename Range::Value;
     using Iterator = BorrowedObjectIterator<CommonIntegerRangeSet>;
@@ -198,7 +198,7 @@ public:
     CommonIntegerRangeSet addRange(const Value lower, const Value upper) const
     {
         static_assert(
-            !std::is_const<LibObjT>::value,
+            !std::is_const_v<LibObjT>,
             "Not available with `bt2::ConstUnsignedIntegerRangeSet` or `bt2::ConstSignedIntegerRangeSet`.");
 
         const auto status = _Spec::addRange(this->libObjPtr(), lower, upper);

@@ -44,7 +44,7 @@ See OptionalBorrowedObject for an optional version.
 template <typename LibObjT>
 class BorrowedObject
 {
-    static_assert(!std::is_pointer<LibObjT>::value, "`LibObjT` must not be a pointer");
+    static_assert(!std::is_pointer_v<LibObjT>, "`LibObjT` must not be a pointer");
 
     /*
      * This makes it possible for a `BorrowedObject<const bt_something>`
@@ -59,30 +59,26 @@ class BorrowedObject
 
 private:
     /*
-     * Provides `val` which indicates whether or not you can assign this
-     * object from a borrowed object of type `OtherLibObjT`.
+     * Whether or not you can assign this object from a borrowed object
+     * of type `OtherLibObjT`.
+     *
+     * If `LibObjT` is const (for example, `const bt_value`), then
+     * you may always assign from its non-const equivalent (for
+     * example, `bt_value`). In C (correct):
+     *
+     *     bt_value * const meow = bt_value_bool_create_init(BT_TRUE);
+     *     const bt_value * const mix = meow;
+     *
+     * If `LibObjT` is non-const, then you may not assign from its
+     * const equivalent. In C (not correct):
+     *
+     *     const bt_value * const meow =
+     *         bt_value_array_borrow_element_by_index_const(some_val, 17);
+     *     bt_value * const mix = meow;
      */
     template <typename OtherLibObjT>
-    struct _AssignableFromConst final
-    {
-        /*
-         * If `LibObjT` is const (for example, `const bt_value`), then
-         * you may always assign from its non-const equivalent (for
-         * example, `bt_value`). In C (correct):
-         *
-         *     bt_value * const meow = bt_value_bool_create_init(BT_TRUE);
-         *     const bt_value * const mix = meow;
-         *
-         * If `LibObjT` is non-const, then you may not assign from its
-         * const equivalent. In C (not correct):
-         *
-         *     const bt_value * const meow =
-         *         bt_value_array_borrow_element_by_index_const(some_val, 17);
-         *     bt_value * const mix = meow;
-         */
-        static constexpr bool val =
-            std::is_const<LibObjT>::value || !std::is_const<OtherLibObjT>::value;
-    };
+    static constexpr bool _assignableFromConst =
+        std::is_const_v<LibObjT> || !std::is_const_v<OtherLibObjT>;
 
 protected:
     /// The type of this complete wrapper.
@@ -137,7 +133,7 @@ protected:
     BorrowedObject(const BorrowedObject<OtherLibObjT>& other) noexcept :
         BorrowedObject {other._mLibObjPtr}
     {
-        static_assert(_AssignableFromConst<OtherLibObjT>::val,
+        static_assert(_assignableFromConst<OtherLibObjT>,
                       "Don't assign a non-const wrapper from a const wrapper.");
     }
 
@@ -171,7 +167,7 @@ protected:
     template <typename OtherLibObjT>
     _ThisBorrowedObject operator=(const BorrowedObject<OtherLibObjT>& other) noexcept
     {
-        static_assert(_AssignableFromConst<OtherLibObjT>::val,
+        static_assert(_assignableFromConst<OtherLibObjT>,
                       "Don't assign a non-const wrapper from a const wrapper.");
 
         _mLibObjPtr = other._mLibObjPtr;

@@ -220,8 +220,8 @@ template <typename UserComponentT, typename UserMessageIteratorT, typename InitD
           typename QueryDataT = void>
 class UserSourceComponent : public UserComponent<SelfSourceComponent, InitDataT, QueryDataT>
 {
-    static_assert(std::is_base_of<UserMessageIterator<UserMessageIteratorT, UserComponentT>,
-                                  UserMessageIteratorT>::value,
+    static_assert(std::is_base_of_v<UserMessageIterator<UserMessageIteratorT, UserComponentT>,
+                                    UserMessageIteratorT>,
                   "`UserMessageIteratorT` inherits `UserMessageIterator`");
 
 public:
@@ -442,8 +442,8 @@ template <typename UserComponentT, typename UserMessageIteratorT, typename InitD
           typename QueryDataT = void>
 class UserFilterComponent : public UserComponent<SelfFilterComponent, InitDataT, QueryDataT>
 {
-    static_assert(std::is_base_of<UserMessageIterator<UserMessageIteratorT, UserComponentT>,
-                                  UserMessageIteratorT>::value,
+    static_assert(std::is_base_of_v<UserMessageIterator<UserMessageIteratorT, UserComponentT>,
+                                    UserMessageIteratorT>,
                   "`UserMessageIteratorT` inherits `UserMessageIterator`");
 
 public:
@@ -1463,12 +1463,12 @@ bt_message_iterator_class *createLibMsgIterCls()
 template <typename UserComponentT>
 bt_component_class_source *createSourceCompCls()
 {
-    static_assert(
-        std::is_base_of<UserSourceComponent<
-                            UserComponentT, typename UserComponentT::MessageIterator,
-                            typename UserComponentT::InitData, typename UserComponentT::QueryData>,
-                        UserComponentT>::value,
-        "`UserComponentT` inherits `UserSourceComponent`");
+    static_assert(std::is_base_of_v<
+                      UserSourceComponent<UserComponentT, typename UserComponentT::MessageIterator,
+                                          typename UserComponentT::InitData,
+                                          typename UserComponentT::QueryData>,
+                      UserComponentT>,
+                  "`UserComponentT` inherits `UserSourceComponent`");
 
     using CompClsBridge = internal::SrcCompClsBridge<UserComponentT>;
     using MsgIterClsBridge = internal::MsgIterClsBridge<typename UserComponentT::MessageIterator>;
@@ -1503,12 +1503,12 @@ bt_component_class_source *createSourceCompCls()
 template <typename UserComponentT>
 bt_component_class_filter *createFilterCompCls()
 {
-    static_assert(
-        std::is_base_of<UserFilterComponent<
-                            UserComponentT, typename UserComponentT::MessageIterator,
-                            typename UserComponentT::InitData, typename UserComponentT::QueryData>,
-                        UserComponentT>::value,
-        "`UserComponentT` inherits `UserFilterComponent`");
+    static_assert(std::is_base_of_v<
+                      UserFilterComponent<UserComponentT, typename UserComponentT::MessageIterator,
+                                          typename UserComponentT::InitData,
+                                          typename UserComponentT::QueryData>,
+                      UserComponentT>,
+                  "`UserComponentT` inherits `UserFilterComponent`");
 
     using CompClsBridge = internal::FltCompClsBridge<UserComponentT>;
     using MsgIterClsBridge = internal::MsgIterClsBridge<typename UserComponentT::MessageIterator>;
@@ -1551,9 +1551,9 @@ template <typename UserComponentT>
 bt_component_class_sink *createSinkCompCls()
 {
     static_assert(
-        std::is_base_of<UserSinkComponent<UserComponentT, typename UserComponentT::InitData,
-                                          typename UserComponentT::QueryData>,
-                        UserComponentT>::value,
+        std::is_base_of_v<UserSinkComponent<UserComponentT, typename UserComponentT::InitData,
+                                            typename UserComponentT::QueryData>,
+                          UserComponentT>,
         "`UserComponentT` inherits `UserSinkComponent`");
 
     using CompClsBridge = internal::SinkCompClsBridge<UserComponentT>;
@@ -1602,8 +1602,7 @@ bt_component_class_sink *createSinkCompCls()
     Source component class wrapper.
 */
 template <typename UserComponentT>
-typename std::enable_if<UserComponentT::type() == ComponentClassType::Source,
-                        SourceComponentClass::Shared>::type
+std::enable_if_t<UserComponentT::type() == ComponentClassType::Source, SourceComponentClass::Shared>
 createComponentClass()
 {
     return SourceComponentClass::Shared::createWithoutRef(
@@ -1622,8 +1621,7 @@ createComponentClass()
     Filter component class wrapper.
 */
 template <typename UserComponentT>
-typename std::enable_if<UserComponentT::type() == ComponentClassType::Filter,
-                        FilterComponentClass::Shared>::type
+std::enable_if_t<UserComponentT::type() == ComponentClassType::Filter, FilterComponentClass::Shared>
 createComponentClass()
 {
     return FilterComponentClass::Shared::createWithoutRef(
@@ -1642,8 +1640,7 @@ createComponentClass()
     Sink component class wrapper.
 */
 template <typename UserComponentT>
-typename std::enable_if<UserComponentT::type() == ComponentClassType::Sink,
-                        SinkComponentClass::Shared>::type
+std::enable_if_t<UserComponentT::type() == ComponentClassType::Sink, SinkComponentClass::Shared>
 createComponentClass()
 {
     return SinkComponentClass::Shared::createWithoutRef(

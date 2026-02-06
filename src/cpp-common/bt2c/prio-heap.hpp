@@ -63,9 +63,9 @@ single heap rebalance.
 template <typename T, typename CompT = std::greater<T>>
 class PrioHeap final
 {
-    static_assert(std::is_default_constructible<T>::value, "`T` is default-constructible.");
-    static_assert(std::is_copy_constructible<T>::value, "`T` is copy-constructible.");
-    static_assert(std::is_copy_assignable<T>::value, "`T` is copy-assignable.");
+    static_assert(std::is_default_constructible_v<T>, "`T` is default-constructible.");
+    static_assert(std::is_copy_constructible_v<T>, "`T` is copy-constructible.");
+    static_assert(std::is_copy_assignable_v<T>, "`T` is copy-assignable.");
 
 public:
     /*!

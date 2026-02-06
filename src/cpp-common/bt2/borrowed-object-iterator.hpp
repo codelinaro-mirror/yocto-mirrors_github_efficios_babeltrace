@@ -50,8 +50,8 @@ class BorrowedObjectIterator final
 
 public:
     /// Type of contained wrappers.
-    using Object = typename std::remove_reference<
-        decltype(std::declval<ContainerT>()[std::declval<std::uint64_t>()])>::type;
+    using Object = std::remove_reference_t<
+        decltype(std::declval<ContainerT>()[std::declval<std::uint64_t>()])>;
 
 private:
     explicit BorrowedObjectIterator(const ContainerT container, const uint64_t idx) :

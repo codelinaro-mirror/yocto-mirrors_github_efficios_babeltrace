@@ -51,6 +51,10 @@ struct IsOneOf<T, U, Ts...> : IsOneOf<T, Ts...>
 {
 };
 
+/// Alias for the value of IsOneOf.
+template <typename T, typename... Ts>
+inline constexpr bool IsOneOfV = IsOneOf<T, Ts...>::value;
+
 } /* namespace bt2c */
 
 #endif /* BABELTRACE_CPP_COMMON_BT2C_TYPE_TRAITS_HPP */

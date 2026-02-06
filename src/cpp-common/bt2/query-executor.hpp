@@ -79,8 +79,7 @@ public:
 
     ConstValue::Shared query() const
     {
-        static_assert(!std::is_const<LibObjT>::value,
-                      "Not available with `bt2::ConstQueryExecutor`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstQueryExecutor`.");
 
         const bt_value *res;
         const auto status = bt_query_executor_query(this->libObjPtr(), &res);

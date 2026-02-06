@@ -263,9 +263,9 @@ inline NonOptItemView Item::asNonOpt() const noexcept
 template <typename OptionalItemT>
 class Iter final
 {
-    static_assert(std::is_default_constructible<OptionalItemT>::value,
+    static_assert(std::is_default_constructible_v<OptionalItemT>,
                   "`OptionalItemT` has a callable default constructor.");
-    static_assert(std::is_constructible<OptionalItemT, Item&&>::value,
+    static_assert(std::is_constructible_v<OptionalItemT, Item&&>,
                   "`OptionalItemT::OptionalItemT(argpar::Item&&)` is callable.");
 
 public:

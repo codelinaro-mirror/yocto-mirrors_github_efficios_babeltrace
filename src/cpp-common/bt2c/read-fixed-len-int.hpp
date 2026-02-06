@@ -64,7 +64,7 @@ namespace bt2c {
 template <typename IntT>
 IntT readFixedLenInt(const std::uint8_t * const buf)
 {
-    static_assert(std::is_integral<IntT>::value, "`IntT` is an integral type.");
+    static_assert(std::is_integral_v<IntT>, "`IntT` is an integral type.");
 
     IntT val;
 

@@ -361,7 +361,11 @@ inline const char *asConstCharPtr(const char * const val) noexcept
 
 template <typename StrT>
 using ComparableWithCStringView =
-    IsOneOf<typename std::decay<StrT>::type, CStringView, std::string, const char *>;
+    IsOneOf<std::decay_t<StrT>, CStringView, std::string, const char *>;
+
+template <typename StrT>
+inline constexpr bool ComparableWithCStringViewV =
+    IsOneOfV<std::decay_t<StrT>, CStringView, std::string, const char *>;
 
 } /* namespace internal */
 
@@ -391,10 +395,9 @@ using ComparableWithCStringView =
     - If \bt_p{RhsT} is <code>const char *</code> or bt2c::CStringView,
       then \bt_p{rhs} does \em not contain \c nullptr.
 */
-template <
-    typename LhsT, typename RhsT,
-    typename = typename std::enable_if<internal::ComparableWithCStringView<LhsT>::value>::type,
-    typename = typename std::enable_if<internal::ComparableWithCStringView<RhsT>::value>::type>
+template <typename LhsT, typename RhsT,
+          typename = std::enable_if_t<internal::ComparableWithCStringViewV<LhsT>>,
+          typename = std::enable_if_t<internal::ComparableWithCStringViewV<RhsT>>>
 bool operator==(LhsT&& lhs, RhsT&& rhs) noexcept
 {
     const auto rawLhs = internal::asConstCharPtr(lhs);
@@ -431,10 +434,9 @@ bool operator==(LhsT&& lhs, RhsT&& rhs) noexcept
     - If \bt_p{RhsT} is <code>const char *</code> or bt2c::CStringView
       then \bt_p{rhs} does \em not contain \c nullptr.
 */
-template <
-    typename LhsT, typename RhsT,
-    typename = typename std::enable_if<internal::ComparableWithCStringView<LhsT>::value>::type,
-    typename = typename std::enable_if<internal::ComparableWithCStringView<RhsT>::value>::type>
+template <typename LhsT, typename RhsT,
+          typename = std::enable_if_t<internal::ComparableWithCStringViewV<LhsT>>,
+          typename = std::enable_if_t<internal::ComparableWithCStringViewV<RhsT>>>
 bool operator!=(LhsT&& lhs, RhsT&& rhs) noexcept
 {
     return !(std::forward<LhsT>(lhs) == std::forward<RhsT>(rhs));

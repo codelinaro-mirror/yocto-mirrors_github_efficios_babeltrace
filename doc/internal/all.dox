@@ -1004,7 +1004,8 @@ libbabeltrace2 type is as such:
   } /* namespace internal */
   @endcode
 
-  This makes those types work with bt2::AddConst and bt2::RemoveConst.
+  This makes those types work with bt2::AddConst, bt2::AddConstT,
+  bt2::RemoveConst, and bt2::RemoveConstT.
 
 Also make sure to add a <code>%bt2::wrap()</code> overload in
 cpp-common/bt2/wrap.hpp.

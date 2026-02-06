@@ -124,7 +124,7 @@ public:
 
     CommonClockClass frequency(const std::uint64_t frequency) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstClockClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
         bt_clock_class_set_frequency(this->libObjPtr(), frequency);
         return *this;
@@ -137,7 +137,7 @@ public:
 
     CommonClockClass offsetFromOrigin(const ClockOffset& offsetFromOrigin) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstClockClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
         bt_clock_class_set_offset(this->libObjPtr(), offsetFromOrigin.seconds(),
                                   offsetFromOrigin.cycles());
@@ -155,7 +155,7 @@ public:
 
     CommonClockClass precision(const std::uint64_t precision) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstClockClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
         bt_clock_class_set_precision(this->libObjPtr(), precision);
         return *this;
@@ -175,7 +175,7 @@ public:
 
     CommonClockClass accuracy(const std::uint64_t accuracy) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstClockClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
         bt_clock_class_set_accuracy(this->libObjPtr(), accuracy);
         return *this;
@@ -195,7 +195,7 @@ public:
 
     CommonClockClass originIsUnixEpoch(const bool originIsUnixEpoch) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstClockClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
         bt_clock_class_set_origin_is_unix_epoch(this->libObjPtr(),
                                                 static_cast<bt_bool>(originIsUnixEpoch));
@@ -204,7 +204,7 @@ public:
 
     CommonClockClass setOriginIsUnixEpoch() const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstClockClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
         bt_clock_class_set_origin_unix_epoch(this->libObjPtr());
         return *this;
@@ -212,7 +212,7 @@ public:
 
     CommonClockClass setOriginIsUnknown() const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstClockClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
         bt_clock_class_set_origin_unknown(this->libObjPtr());
         return *this;
@@ -221,7 +221,7 @@ public:
     CommonClockClass origin(const bt2c::CStringView nameSpace, const bt2c::CStringView name,
                             const bt2c::CStringView uid) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstClockClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
         if (bt_clock_class_set_origin(this->libObjPtr(), nameSpace, name, uid) ==
             BT_CLOCK_CLASS_SET_ORIGIN_STATUS_MEMORY_ERROR) {
@@ -235,7 +235,7 @@ public:
 
     CommonClockClass nameSpace(const bt2c::CStringView nameSpace) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstClockClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
         if (bt_clock_class_set_namespace(this->libObjPtr(), nameSpace) ==
             BT_CLOCK_CLASS_SET_NAMESPACE_STATUS_MEMORY_ERROR) {
@@ -252,7 +252,7 @@ public:
 
     CommonClockClass name(const bt2c::CStringView name) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstClockClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
         const auto status = bt_clock_class_set_name(this->libObjPtr(), name);
 
@@ -270,7 +270,7 @@ public:
 
     CommonClockClass uid(const bt2c::CStringView uid) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstClockClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
         if (bt_clock_class_set_uid(this->libObjPtr(), uid) ==
             BT_CLOCK_CLASS_SET_UID_STATUS_MEMORY_ERROR) {
@@ -298,7 +298,7 @@ public:
 
     CommonClockClass description(const bt2c::CStringView description) const
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstClockClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
         const auto status = bt_clock_class_set_description(this->libObjPtr(), description);
 
@@ -316,7 +316,7 @@ public:
 
     CommonClockClass uuid(const bt2c::UuidView uuid) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstClockClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
         bt_clock_class_set_uuid(this->libObjPtr(), uuid.data());
         return *this;
@@ -336,7 +336,7 @@ public:
     template <typename LibValT>
     CommonClockClass userAttributes(const CommonMapValue<LibValT> userAttrs) const noexcept
     {
-        static_assert(!std::is_const<LibObjT>::value, "Not available with `bt2::ConstClockClass`.");
+        static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
         bt_clock_class_set_user_attributes(this->libObjPtr(), userAttrs.libObjPtr());
         return *this;

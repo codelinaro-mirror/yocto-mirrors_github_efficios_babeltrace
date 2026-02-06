@@ -40,7 +40,7 @@ namespace bt2c {
 template <typename ValT, typename AlignT>
 ValT align(const ValT val, const AlignT align) noexcept
 {
-    static_assert(std::is_unsigned<ValT>::value, "`ValT` is unsigned.");
+    static_assert(std::is_unsigned_v<ValT>, "`ValT` is unsigned.");
     return BT_ALIGN(val, static_cast<ValT>(align));
 }
 

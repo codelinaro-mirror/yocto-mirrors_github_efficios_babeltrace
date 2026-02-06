@@ -523,7 +523,7 @@ private:
         }
     };
 
-    std::unique_ptr<std::remove_pointer<LibObjPtr>::type, _LibErrorDeleter> _mLibError;
+    std::unique_ptr<std::remove_pointer_t<LibObjPtr>, _LibErrorDeleter> _mLibError;
 };
 
 inline ConstErrorCause ConstErrorIterator::operator*() const noexcept

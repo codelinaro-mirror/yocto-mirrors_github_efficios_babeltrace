@@ -247,13 +247,13 @@ private:
                 new (&array) bt2::ArrayField {field};
             }
 
-            static_assert(std::is_trivially_destructible<bt2::StructureField>::value,
+            static_assert(std::is_trivially_destructible_v<bt2::StructureField>,
                           "`bt2::StructureField` is trivially destructible.");
-            static_assert(std::is_trivially_destructible<bt2::VariantField>::value,
+            static_assert(std::is_trivially_destructible_v<bt2::VariantField>,
                           "`bt2::VariantField` is trivially destructible.");
-            static_assert(std::is_trivially_destructible<bt2::OptionField>::value,
+            static_assert(std::is_trivially_destructible_v<bt2::OptionField>,
                           "`bt2::OptionField` is trivially destructible.");
-            static_assert(std::is_trivially_destructible<bt2::ArrayField>::value,
+            static_assert(std::is_trivially_destructible_v<bt2::ArrayField>,
                           "`bt2::ArrayField` is trivially destructible.");
 
             bt2::StructureField structure;

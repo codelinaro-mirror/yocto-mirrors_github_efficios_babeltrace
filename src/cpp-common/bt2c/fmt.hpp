@@ -34,8 +34,7 @@ When you include this file, you get custom {fmt} formatting of:
 namespace internal {
 
 template <typename T>
-using EnableIfIsWiseEnum =
-    typename std::enable_if<wise_enum::is_wise_enum<T>::value, wise_enum::string_type>::type;
+using EnableIfIsWiseEnum = std::enable_if_t<wise_enum::is_wise_enum_v<T>, wise_enum::string_type>;
 
 } /* namespace internal */
 

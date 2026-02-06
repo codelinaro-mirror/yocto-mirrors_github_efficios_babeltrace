@@ -53,8 +53,7 @@ void validateCreatedObjPtr(const LibObjPtrT libOjbPtr)
 }
 
 template <typename LibObjT, typename DepObjT, typename ConstDepObjT>
-using DepType =
-    typename std::conditional<std::is_const<LibObjT>::value, ConstDepObjT, DepObjT>::type;
+using DepType = std::conditional_t<std::is_const_v<LibObjT>, ConstDepObjT, DepObjT>;
 
 template <typename LibObjT>
 using DepUserAttrs = DepType<LibObjT, CommonMapValue<bt_value>, CommonMapValue<const bt_value>>;

@@ -21,7 +21,8 @@
 #include "cpp-common/bt2/type-traits.hpp"
 @endcode
 
-This header offers bt2::AddConst and bt2::RemoveConst.
+This header offers bt2::AddConst, bt2::AddConstT, bt2::RemoveConst,
+and bt2::RemoveConstT.
 */
 
 namespace bt2 {
@@ -41,6 +42,10 @@ struct AddConst
     using Type = typename internal::TypeDescr<ObjT>::Const;
 };
 
+/// Alias for the type of AddConst.
+template <typename ObjT>
+using AddConstT = typename AddConst<ObjT>::Type;
+
 /*!
 @brief
     Offers #Type which is the non-constant version of the wrapper
@@ -55,6 +60,10 @@ struct RemoveConst
     /// Non-constant version of \bt_p{ObjT}.
     using Type = typename internal::TypeDescr<ObjT>::NonConst;
 };
+
+/// Alias for the type of RemoveConstT.
+template <typename ObjT>
+using RemoveConstT = typename RemoveConst<ObjT>::Type;
 
 } /* namespace bt2 */
 

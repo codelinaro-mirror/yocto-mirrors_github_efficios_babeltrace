@@ -67,8 +67,8 @@ namespace internal {
  * `SignednessV`.
  */
 template <bt2c::Signedness SignednessV>
-using ReadFixedLenIntFuncRet = typename std::conditional<SignednessV == bt2c::Signedness::Signed,
-                                                         long long, unsigned long long>::type;
+using ReadFixedLenIntFuncRet =
+    std::conditional_t<SignednessV == bt2c::Signedness::Signed, long long, unsigned long long>;
 
 /*
  * Whether or not the bits are reversed (unnatural).
@@ -3822,7 +3822,7 @@ private:
               typename FloatT>
     _StateHandlingReaction _handleCommonReadFixedLenFloatFieldState()
     {
-        static_assert(std::is_same<FloatT, float>::value || std::is_same<FloatT, double>::value,
+        static_assert(std::is_same_v<FloatT, float> || std::is_same_v<FloatT, double>,
                       "`FloatT` is `float` or `double`.");
 
         /* Decode the floating-point number value as an unsigned integer */
@@ -3833,15 +3833,15 @@ private:
         /* Update for user */
         {
             /* Check IEEE-754 binary compatibility */
-            using UIntT = typename std::conditional<std::is_same<FloatT, float>::value,
-                                                    std::uint32_t, std::uint64_t>::type;
+            using UIntT =
+                std::conditional_t<std::is_same_v<FloatT, float>, std::uint32_t, std::uint64_t>;
 
             static_assert(std::numeric_limits<FloatT>::is_iec559,
                           "`FloatT` fulfills the requirements of IEC 559.");
             static_assert(sizeof(FloatT) == sizeof(UIntT),
                           "Size of `FloatT` and of its equivalent integral type match in union.");
             static_assert(
-                std::alignment_of<FloatT>::value == std::alignment_of<UIntT>::value,
+                std::alignment_of_v<FloatT> == std::alignment_of_v<UIntT>,
                 "Alignment of `FloatT` and of its equivalent integral type match in union.");
 
             /* Convert unsigned integer value to floating-point number value */
