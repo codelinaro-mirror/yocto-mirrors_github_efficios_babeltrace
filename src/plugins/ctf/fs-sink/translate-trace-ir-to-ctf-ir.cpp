@@ -564,9 +564,7 @@ static int translate_field_class(ctf::sink::TraceIrToCtfIrCtx *ctx);
 static inline void append_to_parent_field_class(ctf::sink::TraceIrToCtfIrCtx *ctx,
                                                 struct fs_sink_ctf_field_class *fc)
 {
-    struct fs_sink_ctf_field_class *parent_fc = cur_path_stack_top(ctx)->parent_fc;
-
-    switch (parent_fc->type) {
+    switch (const auto parent_fc = cur_path_stack_top(ctx)->parent_fc; parent_fc->type) {
     case FS_SINK_CTF_FIELD_CLASS_TYPE_STRUCT:
         fs_sink_ctf_field_class_struct_append_member(fs_sink_ctf_field_class_as_struct(parent_fc),
                                                      cur_path_stack_top(ctx)->name->str, fc);
@@ -604,9 +602,7 @@ static inline void append_to_parent_field_class(ctf::sink::TraceIrToCtfIrCtx *ct
 static inline void update_parent_field_class_alignment(ctf::sink::TraceIrToCtfIrCtx *ctx,
                                                        unsigned int alignment)
 {
-    struct fs_sink_ctf_field_class *parent_fc = cur_path_stack_top(ctx)->parent_fc;
-
-    switch (parent_fc->type) {
+    switch (const auto parent_fc = cur_path_stack_top(ctx)->parent_fc; parent_fc->type) {
     case FS_SINK_CTF_FIELD_CLASS_TYPE_STRUCT:
         fs_sink_ctf_field_class_struct_align_at_least(fs_sink_ctf_field_class_as_struct(parent_fc),
                                                       alignment);
@@ -975,9 +971,8 @@ static inline int translate_variant_field_class(ctf::sink::TraceIrToCtfIrCtx *ct
             uint64_t option_count;
 
             /* CTF 1.8: selector FC must be an enumeration FC */
-            bt_field_class_type type = bt_field_class_get_type(tgt_fc->ir_fc);
-
-            if (!bt_field_class_type_is(type, BT_FIELD_CLASS_TYPE_ENUMERATION)) {
+            if (!bt_field_class_type_is(bt_field_class_get_type(tgt_fc->ir_fc),
+                                        BT_FIELD_CLASS_TYPE_ENUMERATION)) {
                 fc->tag_is_before = true;
                 goto validate_opts;
             }
@@ -1282,9 +1277,9 @@ static inline int translate_string_field_class(ctf::sink::TraceIrToCtfIrCtx *ctx
 static int translate_field_class(ctf::sink::TraceIrToCtfIrCtx *ctx)
 {
     int ret;
-    bt_field_class_type ir_fc_type = bt_field_class_get_type(cur_path_stack_top(ctx)->ir_fc);
 
-    if (ir_fc_type == BT_FIELD_CLASS_TYPE_BOOL) {
+    if (const auto ir_fc_type = bt_field_class_get_type(cur_path_stack_top(ctx)->ir_fc);
+        ir_fc_type == BT_FIELD_CLASS_TYPE_BOOL) {
         ret = translate_bool_field_class(ctx);
     } else if (ir_fc_type == BT_FIELD_CLASS_TYPE_BIT_ARRAY) {
         ret = translate_bit_array_field_class(ctx);
@@ -1699,9 +1694,7 @@ static int translate_stream_class(struct fs_sink_comp *fs_sink, struct fs_sink_c
 
     /* Set default clock class's protected name, if any */
     if ((*out_sc)->default_clock_class) {
-        const char *name = bt_clock_class_get_name((*out_sc)->default_clock_class);
-
-        if (name) {
+        if (const auto name = bt_clock_class_get_name((*out_sc)->default_clock_class)) {
             /* Try original name, protected (TSDL) */
             g_string_assign((*out_sc)->default_clock_class_name, "");
 

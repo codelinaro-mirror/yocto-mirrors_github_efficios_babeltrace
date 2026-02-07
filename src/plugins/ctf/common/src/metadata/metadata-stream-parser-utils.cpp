@@ -52,9 +52,8 @@ parseMetadataStream(const bt2::OptionalBorrowedObject<bt2::SelfComponent> selfCo
                     const ClkClsCfg& clkClsCfg, const bt2c::ConstBytes buffer,
                     const bt2c::Logger& parentLogger)
 {
-    const auto majorVersion = getMetadataStreamMajorVersion(buffer);
-
-    if (majorVersion == MetadataStreamMajorVersion::V1) {
+    if (const auto majorVersion = getMetadataStreamMajorVersion(buffer);
+        majorVersion == MetadataStreamMajorVersion::V1) {
         return Ctf1MetadataStreamParser::parse(selfComp, clkClsCfg, buffer, parentLogger);
     } else {
         BT_ASSERT(majorVersion == MetadataStreamMajorVersion::V2);

@@ -36,8 +36,8 @@ enum debug_info_trace_ir_mapping_status copy_trace_content(const bt_trace *in_tr
     trace_name = bt_trace_get_name(in_trace);
 
     if (trace_name) {
-        bt_trace_set_name_status set_name_status = bt_trace_set_name(out_trace, trace_name);
-        if (set_name_status != BT_TRACE_SET_NAME_STATUS_OK) {
+        if (const auto set_name_status = bt_trace_set_name(out_trace, trace_name);
+            set_name_status != BT_TRACE_SET_NAME_STATUS_OK) {
             BT_COMP_LOGE_APPEND_CAUSE(self_comp,
                                       "Cannot set trace's name: "
                                       "out-t-addr=%p, name=\"%s\"",
@@ -137,8 +137,8 @@ enum debug_info_trace_ir_mapping_status copy_stream_content(const bt_stream *in_
     stream_name = bt_stream_get_name(in_stream);
 
     if (stream_name) {
-        bt_stream_set_name_status set_name_status = bt_stream_set_name(out_stream, stream_name);
-        if (set_name_status != BT_STREAM_SET_NAME_STATUS_OK) {
+        if (const auto set_name_status = bt_stream_set_name(out_stream, stream_name);
+            set_name_status != BT_STREAM_SET_NAME_STATUS_OK) {
             BT_COMP_LOGE_APPEND_CAUSE(self_comp,
                                       "Cannot set stream's name: "
                                       "stream-addr=%p, name=\"%s\"",

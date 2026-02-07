@@ -175,9 +175,8 @@ private:
     template <typename VariantFcT>
     void _visitVariantFc(VariantFcT& variantFc)
     {
-        const auto optIndexIt = _mVariantOptIndexes->find(&variantFc);
-
-        if (optIndexIt == _mVariantOptIndexes->end()) {
+        if (const auto optIndexIt = _mVariantOptIndexes->find(&variantFc);
+            optIndexIt == _mVariantOptIndexes->end()) {
             /*
              * Dependent field class isn't within `variantFc`: consider
              * all options.
@@ -837,9 +836,7 @@ public:
     {
         BT_ASSERT(_mMipVersion >= 1);
 
-        const auto fieldLoc = this->_libFieldLocFromFieldLoc(fc.lenFieldLoc());
-
-        if (fieldLoc) {
+        if (const auto fieldLoc = this->_libFieldLocFromFieldLoc(fc.lenFieldLoc()); fieldLoc) {
             this->_setLibBlobFc(
                 fc, _mTraceCls->libCls()->createDynamicBlobWithLengthFieldLocationFieldClass(
                         *fieldLoc));
@@ -1474,9 +1471,7 @@ private:
             /* MIP 0 only knows field paths */
             BT_ASSERT(fc.keyFcs().size() == 1);
 
-            const auto keyFc = *fc.keyFcs().begin();
-
-            if (keyFc->libCls()) {
+            if (const auto keyFc = *fc.keyFcs().begin(); keyFc->libCls()) {
                 this->_setLibFc(fc, CreateLibFcFuncsT::mip0With(
                                         *_mTraceCls, fc, _mLastTranslatedLibFc, *keyFc->libCls()));
             } else {
@@ -1914,9 +1909,7 @@ private:
 
             /* Translate packet context field class, if any */
             if (dataStreamCls.pktCtxFc()) {
-                const auto fc = this->_translate(*dataStreamCls.pktCtxFc());
-
-                if (fc->length() > 0) {
+                if (const auto fc = this->_translate(*dataStreamCls.pktCtxFc()); fc->length() > 0) {
                     libDataStreamCls->packetContextFieldClass(*fc);
                 }
             }

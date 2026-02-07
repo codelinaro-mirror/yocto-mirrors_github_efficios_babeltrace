@@ -152,9 +152,8 @@ private:
 
     void _visit(const OptionalFc& fc)
     {
-        const auto keyFcType = this->_addOptionalOrVariantKeyFcType(fc);
-
-        if (fc.isOptionalWithBoolSel() && keyFcType != KeyFcType::Bool) {
+        if (fc.isOptionalWithBoolSel() &&
+            this->_addOptionalOrVariantKeyFcType(fc) != KeyFcType::Bool) {
             BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW(
                 bt2c::Error, fc.loc(),
                 "Expecting a class of optional fields with a boolean selector field "
@@ -286,9 +285,8 @@ private:
             return this->_findKeyFcs(optionalFc, dependentFc, fieldLoc, fieldLocIt, keyFcs);
         } else if (baseFc.isVariant()) {
             auto& opts = baseFc.asVariantWithUIntSel().opts();
-            const auto curOptIndexIt = _mCompoundFcIndexes.find(&baseFc);
-
-            if (curOptIndexIt == _mCompoundFcIndexes.end()) {
+            if (const auto curOptIndexIt = _mCompoundFcIndexes.find(&baseFc);
+                curOptIndexIt == _mCompoundFcIndexes.end()) {
                 /*
                  * Not currently visiting this variant field class:
                  * consider all options.

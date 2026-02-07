@@ -56,9 +56,7 @@ ValT rawIntValFromJsonIntVal(const bt2c::JsonVal& jsonIntVal) noexcept
 inline std::optional<std::string> optStrOfObj(const bt2c::JsonObjVal& jsonObjVal,
                                               const char * const propName)
 {
-    const auto jsonVal = jsonObjVal[propName];
-
-    if (jsonVal) {
+    if (const auto jsonVal = jsonObjVal[propName]) {
         return *jsonVal->asStr();
     }
 

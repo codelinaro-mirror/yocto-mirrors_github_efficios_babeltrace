@@ -251,17 +251,16 @@ private:
     {
         while (true) {
             std::size_t largestPos;
-            const auto leftPos = (pos << 1) + 1;
 
-            if (leftPos < this->len() && this->_gt(_mElems[leftPos], _mElems[pos])) {
+            if (const auto leftPos = (pos << 1) + 1;
+                leftPos < this->len() && this->_gt(_mElems[leftPos], _mElems[pos])) {
                 largestPos = leftPos;
             } else {
                 largestPos = pos;
             }
 
-            const auto rightPos = (pos << 1) + 2;
-
-            if (rightPos < this->len() && this->_gt(_mElems[rightPos], _mElems[largestPos])) {
+            if (const auto rightPos = (pos << 1) + 2;
+                rightPos < this->len() && this->_gt(_mElems[rightPos], _mElems[largestPos])) {
                 largestPos = rightPos;
             }
 

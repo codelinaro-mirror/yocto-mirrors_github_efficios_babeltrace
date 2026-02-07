@@ -73,9 +73,7 @@ private:
                 const auto uLower = *lowerJsonVal.asUInt();
 
                 if (upperJsonVal.isUInt()) {
-                    const auto uUpper = *upperJsonVal.asUInt();
-
-                    if (uUpper < uLower) {
+                    if (const auto uUpper = *upperJsonVal.asUInt(); uUpper < uLower) {
                         /* ID 1 */
                         this->_throwLowerGtUpper(uLower, uUpper, jsonVal);
                     }
@@ -96,16 +94,13 @@ private:
                 const auto sLower = *lowerJsonVal.asSInt();
 
                 if (upperJsonVal.isSInt()) {
-                    const auto sUpper = *upperJsonVal.asSInt();
-
-                    if (sUpper < sLower) {
+                    if (const auto sUpper = *upperJsonVal.asSInt(); sUpper < sLower) {
                         /* ID 2 */
                         this->_throwLowerGtUpper(sLower, sUpper, jsonVal);
                     }
                 } else if (sLower >= 0) {
-                    const auto uUpper = *upperJsonVal.asUInt();
-
-                    if (uUpper < static_cast<unsigned long long>(sLower)) {
+                    if (const auto uUpper = *upperJsonVal.asUInt();
+                        uUpper < static_cast<unsigned long long>(sLower)) {
                         /* ID 5 */
                         this->_throwLowerGtUpper(sLower, uUpper, jsonVal);
                     }

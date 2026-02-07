@@ -104,8 +104,7 @@ static ds_file_status ds_file_mmap(struct ctf_fs_ds_file *ds_file, off_t request
     }
 
     /* Unmap old region */
-    ds_file_status status = ds_file_munmap(ds_file);
-    if (status != DS_FILE_STATUS_OK) {
+    if (const auto status = ds_file_munmap(ds_file); status != DS_FILE_STATUS_OK) {
         return status;
     }
 
@@ -414,8 +413,7 @@ ctf_fs_ds_file::UP ctf_fs_ds_file_create(const char *path, const bt2c::Logger& p
 
     ds_file->file = std::make_unique<ctf_fs_file>(ds_file->logger);
     ds_file->file->path = path;
-    int ret = ctf_fs_file_open(ds_file->file.get(), "rb");
-    if (ret) {
+    if (ctf_fs_file_open(ds_file->file.get(), "rb")) {
         return nullptr;
     }
 
@@ -487,8 +485,7 @@ ctf::src::Buf Medium::buf(const bt2c::DataLen requestedOffsetInStream, const bt2
     const auto fileStartInStream = indexEntry.offsetInStream - indexEntry.offsetInFile;
     const auto requestedOffsetInFile = requestedOffsetInStream - fileStartInStream;
 
-    ds_file_status status = ds_file_mmap(_mCurrentDsFile.get(), requestedOffsetInFile.bytes());
-    if (status != DS_FILE_STATUS_OK) {
+    if (ds_file_mmap(_mCurrentDsFile.get(), requestedOffsetInFile.bytes()) != DS_FILE_STATUS_OK) {
         throw bt2::Error("Failed to mmap file");
     }
 

@@ -291,9 +291,8 @@ bool JsonParser<ListenerT>::_tryParseStr()
     _mSs.skipWhitespaces();
 
     const auto loc = _mSs.loc();
-    const auto str = this->_tryScanLitStr();
 
-    if (str.data()) {
+    if (const auto str = this->_tryScanLitStr(); str.data()) {
         _mListener->onScalarVal(str, loc);
         return true;
     }
@@ -307,9 +306,8 @@ bool JsonParser<ListenerT>::_tryParseObjKey()
     _mSs.skipWhitespaces();
 
     const auto loc = _mSs.loc();
-    const auto str = this->_tryScanLitStr();
 
-    if (!str.empty()) {
+    if (const auto str = this->_tryScanLitStr(); !str.empty()) {
         /* _tryParseObj() pushes */
         BT_ASSERT(!_mKeys.empty());
 

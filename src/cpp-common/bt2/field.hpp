@@ -993,9 +993,8 @@ public:
     {
         static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStringField`.");
 
-        const auto status = bt_field_string_set_value(this->libObjPtr(), *val);
-
-        if (status == BT_FIELD_STRING_SET_VALUE_STATUS_MEMORY_ERROR) {
+        if (bt_field_string_set_value(this->libObjPtr(), *val) ==
+            BT_FIELD_STRING_SET_VALUE_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
         }
 
@@ -1006,9 +1005,8 @@ public:
     {
         static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStringField`.");
 
-        const auto status = bt_field_string_append_with_length(this->libObjPtr(), begin, len);
-
-        if (status == BT_FIELD_STRING_APPEND_STATUS_MEMORY_ERROR) {
+        if (bt_field_string_append_with_length(this->libObjPtr(), begin, len) ==
+            BT_FIELD_STRING_APPEND_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
         }
 
@@ -1492,9 +1490,8 @@ public:
         static_assert(!std::is_const_v<LibObjT>,
                       "Not available with `bt2::ConstDynamicArrayField`.");
 
-        const auto status = bt_field_array_dynamic_set_length(this->libObjPtr(), length);
-
-        if (status == BT_FIELD_DYNAMIC_ARRAY_SET_LENGTH_STATUS_MEMORY_ERROR) {
+        if (bt_field_array_dynamic_set_length(this->libObjPtr(), length) ==
+            BT_FIELD_DYNAMIC_ARRAY_SET_LENGTH_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
         }
 

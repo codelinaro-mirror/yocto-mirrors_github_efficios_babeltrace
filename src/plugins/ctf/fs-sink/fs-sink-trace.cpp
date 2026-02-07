@@ -522,9 +522,7 @@ void fs_sink_trace_destroy(struct fs_sink_trace *trace)
     }
 
     if (fh) {
-        int ret = fclose(fh);
-
-        if (ret != 0) {
+        if (fclose(fh) != 0) {
             BT_CPPLOGW_ERRNO_SPEC(trace->logger,
                                   "In trace destruction listener: "
                                   "cannot close metadata file",

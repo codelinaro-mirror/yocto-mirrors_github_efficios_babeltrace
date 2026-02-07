@@ -83,9 +83,9 @@ copy_clock_class_content_origin(const bt_clock_class *in_clock_class,
         const auto ns = bt_clock_class_get_origin_namespace(in_clock_class);
         const auto name = bt_clock_class_get_origin_name(in_clock_class);
         const auto uid = bt_clock_class_get_origin_uid(in_clock_class);
-        const auto set_origin_status = bt_clock_class_set_origin(out_clock_class, ns, name, uid);
-
-        if (set_origin_status != BT_CLOCK_CLASS_SET_ORIGIN_STATUS_OK) {
+        if (const auto set_origin_status =
+                bt_clock_class_set_origin(out_clock_class, ns, name, uid);
+            set_origin_status != BT_CLOCK_CLASS_SET_ORIGIN_STATUS_OK) {
             BT_COMP_LOGE_APPEND_CAUSE(self_comp,
                                       "Error setting clock class' origin: cc-addr=%p, "
                                       "cc-origin-namespace=\"%s\", cc-origin-name=\"%s\", "
@@ -155,9 +155,7 @@ copy_clock_class_content(const bt_clock_class *in_clock_class, bt_clock_class *o
     }
 
     if (graph_mip_version == 0) {
-        bt_uuid uuid = bt_clock_class_get_uuid(in_clock_class);
-
-        if (uuid) {
+        if (const auto uuid = bt_clock_class_get_uuid(in_clock_class)) {
             bt_clock_class_set_uuid(out_clock_class, uuid);
         }
     } else {

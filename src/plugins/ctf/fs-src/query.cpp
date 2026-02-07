@@ -187,9 +187,7 @@ bt2::Value::Shared support_info_query(const bt2::ConstValue params, const bt2c::
         BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(logger, bt2::Error, "{}", validateError);
     }
 
-    const auto type = params["type"]->asString().value();
-
-    if (strcmp(type, "directory") != 0) {
+    if (const auto type = params["type"]->asString().value(); strcmp(type, "directory") != 0) {
         /*
          * The input type is not a directory so we are 100% sure it's not a CTF
          * 1.8 trace as it would need a directory with at least 1 metadata file
@@ -215,10 +213,9 @@ bt2::Value::Shared support_info_query(const bt2::ConstValue params, const bt2c::
          */
         result->insert("weight", 0.75);
 
-        const auto& name = parseRet.traceCls->name();
-        const auto& uid = parseRet.traceCls->uid();
-
-        if (name && uid) {
+        if (const auto& [uid, name] =
+                std::tuple {parseRet.traceCls->uid(), parseRet.traceCls->name()};
+            name && uid) {
             const auto& ns = parseRet.traceCls->ns();
 
             result->insert("group",

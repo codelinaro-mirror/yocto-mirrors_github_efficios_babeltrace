@@ -873,9 +873,8 @@ public:
     {
         static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStringValue`.");
 
-        const auto status = bt_value_string_set(this->libObjPtr(), *val);
-
-        if (status == BT_VALUE_STRING_SET_STATUS_MEMORY_ERROR) {
+        if (bt_value_string_set(this->libObjPtr(), *val) ==
+            BT_VALUE_STRING_SET_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
         }
 

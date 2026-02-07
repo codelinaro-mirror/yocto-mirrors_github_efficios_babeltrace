@@ -201,9 +201,8 @@ public:
             !std::is_const_v<LibObjT>,
             "Not available with `bt2::ConstUnsignedIntegerRangeSet` or `bt2::ConstSignedIntegerRangeSet`.");
 
-        const auto status = _Spec::addRange(this->libObjPtr(), lower, upper);
-
-        if (status == BT_INTEGER_RANGE_SET_ADD_RANGE_STATUS_MEMORY_ERROR) {
+        if (_Spec::addRange(this->libObjPtr(), lower, upper) ==
+            BT_INTEGER_RANGE_SET_ADD_RANGE_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
         }
 

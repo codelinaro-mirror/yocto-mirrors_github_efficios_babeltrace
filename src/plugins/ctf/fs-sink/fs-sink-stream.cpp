@@ -49,9 +49,8 @@ static bool stream_file_name_exists(struct fs_sink_trace *trace, const char *nam
     g_hash_table_iter_init(&iter, trace->streams);
 
     while (g_hash_table_iter_next(&iter, &key, &value)) {
-        struct fs_sink_stream *stream = (fs_sink_stream *) value;
-
-        if (strcmp(name, stream->file_name->str) == 0) {
+        if (const auto stream = (fs_sink_stream *) value;
+            strcmp(name, stream->file_name->str) == 0) {
             exists = true;
             goto end;
         }

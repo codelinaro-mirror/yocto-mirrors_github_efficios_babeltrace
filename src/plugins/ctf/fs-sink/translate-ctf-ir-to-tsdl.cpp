@@ -400,9 +400,7 @@ static void append_struct_field_class_members(ctf::sink::CtfIrToTsdlCtx *ctx,
             append_end_block(ctx);
             g_string_append_printf(ctx->tsdl, " %s;\n", opt_fc->tag_ref->str);
         } else if (fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_VARIANT) {
-            struct fs_sink_ctf_field_class_variant *var_fc = fs_sink_ctf_field_class_as_variant(fc);
-
-            if (var_fc->tag_is_before) {
+            if (const auto var_fc = fs_sink_ctf_field_class_as_variant(fc); var_fc->tag_is_before) {
                 append_indent(ctx);
                 g_string_append(ctx->tsdl, "enum : ");
                 append_integer_field_class_from_props(

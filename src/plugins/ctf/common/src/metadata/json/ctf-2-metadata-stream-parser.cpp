@@ -273,9 +273,7 @@ void Ctf2MetadataStreamParser::_validatePktHeaderFcRoles(const Fc& pktHeaderFc)
                     jsonstr::pktMagicNumber, jsonstr::fixedLenUInt);
             }
 
-            auto& magicUIntFc = magicFc.asFixedLenUInt();
-
-            if (*magicUIntFc.len() != 32) {
+            if (auto& magicUIntFc = magicFc.asFixedLenUInt(); *magicUIntFc.len() != 32) {
                 BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW(
                     bt2c::Error, magicFc.loc(),
                     "Unexpected `{}` property of fixed-length unsigned integer field class having the `{}` role: "
@@ -291,9 +289,8 @@ void Ctf2MetadataStreamParser::_validatePktHeaderFcRoles(const Fc& pktHeaderFc)
      * stream has a UUID.
      */
     {
-        const auto fcs = fcsWithRole(pktHeaderFc, {}, true);
-
-        if (!fcs.empty() && !_mMetadataStreamUuid) {
+        if (const auto fcs = fcsWithRole(pktHeaderFc, {}, true);
+            !fcs.empty() && !_mMetadataStreamUuid) {
             BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW(
                 bt2c::Error, (*fcs.begin())->loc(),
                 "Static-length BLOB field class has the role `{}`, "

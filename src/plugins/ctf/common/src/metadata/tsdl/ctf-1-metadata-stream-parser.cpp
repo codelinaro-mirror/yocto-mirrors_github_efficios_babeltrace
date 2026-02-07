@@ -96,9 +96,8 @@ UIntFieldRoles rolesFromOrigIntFc(const ctf_field_class_int& origIntFc)
     }
 
     {
-        const auto hasPktEndDefClkTsRole = role && *role == UIntFieldRole::PktEndDefClkTs;
-
-        if (!hasPktEndDefClkTsRole && origIntFc.mapped_clock_class) {
+        if (const auto hasPktEndDefClkTsRole = role && *role == UIntFieldRole::PktEndDefClkTs;
+            !hasPktEndDefClkTsRole && origIntFc.mapped_clock_class) {
             roles.insert(UIntFieldRole::DefClkTs);
         }
     }
@@ -576,9 +575,7 @@ Ctf1MetadataStreamParser::_translateTraceCls(ctf_trace_class& origTraceCls)
 ClkCls::SP Ctf1MetadataStreamParser::_clkClsFromOrigClkCls(const ctf_clock_class& origClkCls)
 {
     /* Try to find a corresponding clock class for `origClkCls`*/
-    const auto it = _mClkClsMap.find(&origClkCls);
-
-    if (it != _mClkClsMap.end()) {
+    if (const auto it = _mClkClsMap.find(&origClkCls); it != _mClkClsMap.end()) {
         /* Found it */
         return it->second;
     }

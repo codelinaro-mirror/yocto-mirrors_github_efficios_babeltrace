@@ -683,9 +683,8 @@ protected:
         static constexpr auto llMaxAsUll =
             static_cast<unsigned long long>(std::numeric_limits<long long>::max());
 
-        const auto rawVal = ValOpsT::scalarValRawVal(ValOpsT::asUInt(val));
-
-        if (rawVal > llMaxAsUll) {
+        if (const auto rawVal = ValOpsT::scalarValRawVal(ValOpsT::asUInt(val));
+            rawVal > llMaxAsUll) {
             BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW_SPEC(
                 this->_logger(), Error, this->_loc(val),
                 "Expecting a signed integer: {} is greater than {}.", rawVal, llMaxAsUll);
@@ -970,9 +969,9 @@ protected:
         ValHasTypeReq<ValT, ValOpsT>::_validate(val);
 
         auto& scalarVal = static_cast<const ScalarValT&>(val);
-        const auto& rawVal = ValOpsT::scalarValRawVal(scalarVal);
 
-        if (_mSet.find(rawVal) == _mSet.end()) {
+        if (const auto& rawVal = ValOpsT::scalarValRawVal(scalarVal);
+            _mSet.find(rawVal) == _mSet.end()) {
             BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW_SPEC(
                 this->_logger(), Error, this->_loc(val), "Unexpected value {}: expecting {}.",
                 internal::rawValStr(rawVal), this->_setStr());
@@ -1564,9 +1563,8 @@ protected:
         const auto objValTypeStr = ValOpsT::typeStr(ValType::Obj);
 
         for (auto& keyPropReqPair : _mPropReqs) {
-            auto& key = keyPropReqPair.first;
-
-            if (keyPropReqPair.second.isRequired() && !ValOpsT::objValVal(objVal, key)) {
+            if (auto& key = keyPropReqPair.first;
+                keyPropReqPair.second.isRequired() && !ValOpsT::objValVal(objVal, key)) {
                 BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW_SPEC(
                     this->_logger(), Error, this->_loc(objVal), "Missing mandatory {} {} `{}`.",
                     objValTypeStr, ValOpsT::objValPropName, key);

@@ -1401,9 +1401,8 @@ void setCompClsCommonProps(
     }
 
     if (UserComponentT::help != nullptr) {
-        const auto status = bt_component_class_set_help(libCompClsPtr, UserComponentT::help);
-
-        if (status == BT_COMPONENT_CLASS_SET_HELP_STATUS_MEMORY_ERROR) {
+        if (bt_component_class_set_help(libCompClsPtr, UserComponentT::help) ==
+            BT_COMPONENT_CLASS_SET_HELP_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
         }
     }

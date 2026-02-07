@@ -83,8 +83,7 @@ static inline void viewer_connection_close_socket(struct live_viewer_connection 
         return;
     }
 
-    int ret = bt_socket_close(viewer_connection->control_sock);
-    if (ret == -1) {
+    if (bt_socket_close(viewer_connection->control_sock) == -1) {
         BT_CPPLOGW_ERRNO_SPEC(viewer_connection->logger,
                               "Error closing viewer connection socket: ", ".");
     }
@@ -729,9 +728,8 @@ live_viewer_connection_list_sessions(struct live_viewer_connection *viewer_conne
                 throw bt2c::TryAgain {};
             }
 
-            const auto traceFmt = be32toh(lSession.v2_15.trace_format);
-
-            if (traceFmt != LTTNG_LIVE_TRACE_FORMAT_CTF_V1_8 &&
+            if (const auto traceFmt = be32toh(lSession.v2_15.trace_format);
+                traceFmt != LTTNG_LIVE_TRACE_FORMAT_CTF_V1_8 &&
                 traceFmt != LTTNG_LIVE_TRACE_FORMAT_CTF_V2_0) {
                 BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(
                     viewer_connection->logger, bt2::Error,
@@ -850,9 +848,8 @@ lttng_live_query_session_ids(struct lttng_live_msg_iter *lttng_live_msg_iter)
                 return status;
             }
 
-            const auto traceFmt = be32toh(lSession.v2_15.trace_format);
-
-            if (traceFmt != LTTNG_LIVE_TRACE_FORMAT_CTF_V1_8 &&
+            if (const auto traceFmt = be32toh(lSession.v2_15.trace_format);
+                traceFmt != LTTNG_LIVE_TRACE_FORMAT_CTF_V1_8 &&
                 traceFmt != LTTNG_LIVE_TRACE_FORMAT_CTF_V2_0) {
                 viewer_handle_recv_status(status,
                                           "unknown trace format in session (v2.15 protocol)");

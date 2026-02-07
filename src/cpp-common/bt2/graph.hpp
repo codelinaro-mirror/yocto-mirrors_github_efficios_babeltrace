@@ -154,9 +154,8 @@ public:
 
     Graph runOnce() const
     {
-        const auto status = bt_graph_run_once(this->libObjPtr());
-
-        if (status == BT_GRAPH_RUN_ONCE_STATUS_ERROR) {
+        if (const auto status = bt_graph_run_once(this->libObjPtr());
+            status == BT_GRAPH_RUN_ONCE_STATUS_ERROR) {
             throw Error {};
         } else if (status == BT_GRAPH_RUN_ONCE_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
@@ -169,9 +168,8 @@ public:
 
     Graph run() const
     {
-        const auto status = bt_graph_run(this->libObjPtr());
-
-        if (status == BT_GRAPH_RUN_STATUS_ERROR) {
+        if (const auto status = bt_graph_run(this->libObjPtr());
+            status == BT_GRAPH_RUN_STATUS_ERROR) {
             throw Error {};
         } else if (status == BT_GRAPH_RUN_STATUS_MEMORY_ERROR) {
             throw MemoryError {};

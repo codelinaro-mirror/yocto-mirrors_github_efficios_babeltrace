@@ -68,8 +68,7 @@ ctf_fs_iterator_next(bt_self_message_iterator *iterator, bt_message_array_const 
 
     do {
         try {
-            bt2::ConstMessage::Shared msg = msg_iter_data->msgIter->next();
-            if (G_LIKELY(msg)) {
+            if (auto msg = msg_iter_data->msgIter->next(); G_LIKELY(msg)) {
                 msgs[i] = msg.release().libObjPtr();
                 ++i;
             } else {
@@ -265,8 +264,8 @@ static int create_ports_for_trace(struct ctf_fs_component *ctf_fs,
 {
     /* Create one output port for each stream file group */
     for (const auto& ds_file_group : ctf_fs_trace->ds_file_groups) {
-        int ret = create_one_port_for_trace(ctf_fs, ds_file_group.get(), selfSrcComp);
-        if (ret) {
+        if (const auto ret = create_one_port_for_trace(ctf_fs, ds_file_group.get(), selfSrcComp);
+            ret) {
             BT_CPPLOGE_APPEND_CAUSE_SPEC(ctf_fs->logger, "Cannot create output port.");
             return ret;
         }
@@ -476,8 +475,7 @@ static void set_trace_name(const bt2::Trace trace, const char *name_suffix)
      * Check if we have a trace environment string value named `hostname`.
      * If so, use it as the trace name's prefix.
      */
-    const auto val = trace.environmentEntry("hostname");
-    if (val && val->isString()) {
+    if (const auto val = trace.environmentEntry("hostname"); val && val->isString()) {
         name += val->asString().value();
 
         if (name_suffix) {
@@ -514,8 +512,7 @@ ctf_fs_trace_create(const char *path, const char *name, const ctf::src::ClkClsCf
         set_trace_name(*ctf_fs_trace->trace, name);
     }
 
-    int ret = create_ds_file_groups(ctf_fs_trace.get(), logger);
-    if (ret) {
+    if (create_ds_file_groups(ctf_fs_trace.get(), logger)) {
         return nullptr;
     }
 
@@ -541,8 +538,7 @@ static int ctf_fs_component_create_ctf_fs_trace_one_path(
         return -1;
     }
 
-    int ret = path_is_ctf_trace(norm_path->str);
-    if (ret < 0) {
+    if (const auto ret = path_is_ctf_trace(norm_path->str); ret < 0) {
         BT_CPPLOGE_APPEND_CAUSE_SPEC(
             ctf_fs->logger, "Failed to check if path is a CTF trace: path={}", norm_path->str);
         return ret;
@@ -714,8 +710,7 @@ static int merge_ctf_fs_traces(std::vector<ctf_fs_trace::UP> traces, ctf_fs_trac
         }
 
         /* Merge trace's data stream file groups into winner's. */
-        int ret = merge_matching_ctf_fs_ds_file_groups(winner, std::move(trace));
-        if (ret) {
+        if (const auto ret = merge_matching_ctf_fs_ds_file_groups(winner, std::move(trace))) {
             return ret;
         }
     }
@@ -980,10 +975,9 @@ static int fix_index_lttng_crash_quirk(struct ctf_fs_trace *trace, const bt2c::L
 
         BT_ASSERT(!index.entries.empty());
 
-        auto& last_entry = index.entries.back();
-
         /* 1. Fix the last entry first. */
-        if (last_entry.timestamp_end == 0 && last_entry.timestamp_begin != 0) {
+        if (auto& last_entry = index.entries.back();
+            last_entry.timestamp_end == 0 && last_entry.timestamp_begin != 0) {
             /*
              * Decode packet to read the timestamp of the
              * last event of the stream file.
@@ -1290,8 +1284,7 @@ int ctf_fs_component_create_ctf_fs_trace(
             }
         }
 
-        int ret = merge_ctf_fs_traces(std::move(traces), ctf_fs->trace);
-        if (ret) {
+        if (const auto ret = merge_ctf_fs_traces(std::move(traces), ctf_fs->trace)) {
             BT_CPPLOGE_APPEND_CAUSE_SPEC(ctf_fs->logger,
                                          "Failed to merge traces with the same UUID.");
             return ret;
@@ -1304,8 +1297,7 @@ int ctf_fs_component_create_ctf_fs_trace(
         BT_DIAG_POP
     }
 
-    int ret = fix_packet_index_tracer_bugs(ctf_fs);
-    if (ret) {
+    if (const auto ret = fix_packet_index_tracer_bugs(ctf_fs)) {
         BT_CPPLOGE_APPEND_CAUSE_SPEC(ctf_fs->logger, "Failed to fix packet index tracer bugs.");
         return ret;
     }

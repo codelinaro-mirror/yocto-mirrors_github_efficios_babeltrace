@@ -454,9 +454,7 @@ public:
     {
         static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStream`.");
 
-        const auto status = bt_stream_set_name(this->libObjPtr(), name);
-
-        if (status == BT_STREAM_SET_NAME_STATUS_MEMORY_ERROR) {
+        if (bt_stream_set_name(this->libObjPtr(), name) == BT_STREAM_SET_NAME_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
         }
 
@@ -661,9 +659,7 @@ public:
     {
         static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTrace`.");
 
-        const auto status = bt_trace_set_name(this->libObjPtr(), name);
-
-        if (status == BT_TRACE_SET_NAME_STATUS_MEMORY_ERROR) {
+        if (bt_trace_set_name(this->libObjPtr(), name) == BT_TRACE_SET_NAME_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
         }
 
@@ -704,9 +700,7 @@ public:
 
     std::optional<bt2c::UuidView> uuid() const noexcept
     {
-        const auto uuid = bt_trace_get_uuid(this->libObjPtr());
-
-        if (uuid) {
+        if (const auto uuid = bt_trace_get_uuid(this->libObjPtr())) {
             return bt2c::UuidView {uuid};
         }
 
@@ -732,9 +726,8 @@ public:
     {
         static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTrace`.");
 
-        const auto status = bt_trace_set_environment_entry_integer(this->libObjPtr(), name, val);
-
-        if (status == BT_TRACE_SET_ENVIRONMENT_ENTRY_STATUS_MEMORY_ERROR) {
+        if (bt_trace_set_environment_entry_integer(this->libObjPtr(), name, val) ==
+            BT_TRACE_SET_ENVIRONMENT_ENTRY_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
         }
 
@@ -745,9 +738,8 @@ public:
     {
         static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstTrace`.");
 
-        const auto status = bt_trace_set_environment_entry_string(this->libObjPtr(), name, val);
-
-        if (status == BT_TRACE_SET_ENVIRONMENT_ENTRY_STATUS_MEMORY_ERROR) {
+        if (bt_trace_set_environment_entry_string(this->libObjPtr(), name, val) ==
+            BT_TRACE_SET_ENVIRONMENT_ENTRY_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
         }
 
@@ -988,9 +980,8 @@ public:
     {
         static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstEventClass`.");
 
-        const auto status = bt_event_class_set_name(this->libObjPtr(), name);
-
-        if (status == BT_EVENT_CLASS_SET_NAME_STATUS_MEMORY_ERROR) {
+        if (bt_event_class_set_name(this->libObjPtr(), name) ==
+            BT_EVENT_CLASS_SET_NAME_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
         }
 
@@ -1043,9 +1034,8 @@ public:
     {
         static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstEventClass`.");
 
-        const auto status = bt_event_class_set_emf_uri(this->libObjPtr(), emfUri);
-
-        if (status == BT_EVENT_CLASS_SET_EMF_URI_STATUS_MEMORY_ERROR) {
+        if (bt_event_class_set_emf_uri(this->libObjPtr(), emfUri) ==
+            BT_EVENT_CLASS_SET_EMF_URI_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
         }
 
@@ -1361,9 +1351,8 @@ public:
     {
         static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstStreamClass`.");
 
-        const auto status = bt_stream_class_set_name(this->libObjPtr(), name);
-
-        if (status == BT_STREAM_CLASS_SET_NAME_STATUS_MEMORY_ERROR) {
+        if (bt_stream_class_set_name(this->libObjPtr(), name) ==
+            BT_STREAM_CLASS_SET_NAME_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
         }
 

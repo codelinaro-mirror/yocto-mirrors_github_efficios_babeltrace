@@ -3340,9 +3340,8 @@ private:
          * packet content.
          */
         {
-            const auto strDataLen = bt2c::DataLen::fromBytes(end - begin);
-
-            if (strDataLen > this->_remainingPktContentLen()) {
+            if (const auto strDataLen = bt2c::DataLen::fromBytes(end - begin);
+                strDataLen > this->_remainingPktContentLen()) {
                 CTF_SRC_ITEM_SEQ_ITER_CPPLOGE_APPEND_CAUSE_AND_THROW(
                     "{} null-terminated string field bytes required at this point, "
                     "but only {} bits of packet content remain.",

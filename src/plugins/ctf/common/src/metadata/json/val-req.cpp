@@ -44,9 +44,7 @@ protected:
 
     void _validate(const bt2c::JsonVal& jsonVal) const override
     {
-        const auto val = *jsonVal.asUInt();
-
-        if (!this->_isPowOfTwo(val)) {
+        if (const auto val = *jsonVal.asUInt(); !this->_isPowOfTwo(val)) {
             BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW_SPEC(
                 this->_logger(), bt2c::Error, jsonVal.loc(), "{} is not a power of two.", val);
         }
@@ -279,9 +277,8 @@ private:
 
             /* Validate types of entries */
             for (auto& keyJsonValPair : jsonVal.asObj()) {
-                auto& jsonEntry = keyJsonValPair.second;
-
-                if (!jsonEntry->isUInt() && !jsonEntry->isSInt() && !jsonEntry->isStr()) {
+                if (auto& jsonEntry = keyJsonValPair.second;
+                    !jsonEntry->isUInt() && !jsonEntry->isSInt() && !jsonEntry->isStr()) {
                     BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW_SPEC(
                         this->_logger(), bt2c::Error, jsonEntry->loc(),
                         "Entry `{}`: expecting an integer or a string.", keyJsonValPair.first);
@@ -598,9 +595,8 @@ private:
 
             for (auto& keyJsonValPair : jsonVal.asObj()[jsonstr::flags]->asObj()) {
                 for (auto& jsonRange : keyJsonValPair.second->asArray()) {
-                    auto& jsonRangeUpper = jsonRange->asArray()[1].asUInt();
-
-                    if (*jsonRangeUpper >= len) {
+                    if (auto& jsonRangeUpper = jsonRange->asArray()[1].asUInt();
+                        *jsonRangeUpper >= len) {
                         BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW_SPEC(
                             this->_logger(), bt2c::Error, jsonRangeUpper.loc(),
                             "Flag `{}`: bit index {} is greater than or equal to "
@@ -1271,13 +1267,10 @@ private:
         try {
             FcValReq::_validate(jsonVal);
 
-            const auto jsonRoles = jsonVal.asObj()[jsonstr::roles];
-
-            if (jsonRoles && !jsonRoles->asArray().isEmpty()) {
+            if (const auto jsonRoles = jsonVal.asObj()[jsonstr::roles];
+                jsonRoles && !jsonRoles->asArray().isEmpty()) {
                 /* The only valid role is the metadata stream UUID */
-                auto& jsonLen = jsonVal.asObj()[jsonstr::len]->asUInt();
-
-                if (*jsonLen != 16) {
+                if (auto& jsonLen = jsonVal.asObj()[jsonstr::len]->asUInt(); *jsonLen != 16) {
                     BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW_SPEC(
                         this->_logger(), bt2c::Error, jsonLen.loc(),
                         "`{}` property: expecting 16, not {}, because the field class has the `{}` role.",

@@ -99,9 +99,8 @@ static inline bool bt_socket_interrupted(void)
 static inline const char *bt_socket_errormsg(void)
 {
     const char *errstr;
-    int error = WSAGetLastError();
 
-    switch (error) {
+    switch (WSAGetLastError()) {
     case WSAEINTR:
         errstr = "Call interrupted";
         break;

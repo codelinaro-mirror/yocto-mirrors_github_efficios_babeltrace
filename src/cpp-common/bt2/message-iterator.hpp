@@ -55,9 +55,8 @@ public:
     {
         bt_message_array_const libMsgsPtr;
         std::uint64_t count;
-        const auto status = bt_message_iterator_next(this->libObjPtr(), &libMsgsPtr, &count);
 
-        switch (status) {
+        switch (bt_message_iterator_next(this->libObjPtr(), &libMsgsPtr, &count)) {
         case BT_MESSAGE_ITERATOR_NEXT_STATUS_OK:
             /* Caller becomes the owner of the contained messages */
             return ConstMessageArray::wrapExisting(libMsgsPtr, count);
@@ -78,9 +77,7 @@ public:
     {
         bt_bool canSeek;
 
-        const auto status = bt_message_iterator_can_seek_beginning(this->libObjPtr(), &canSeek);
-
-        switch (status) {
+        switch (bt_message_iterator_can_seek_beginning(this->libObjPtr(), &canSeek)) {
         case BT_MESSAGE_ITERATOR_CAN_SEEK_BEGINNING_STATUS_OK:
             return static_cast<bool>(canSeek);
         case BT_MESSAGE_ITERATOR_CAN_SEEK_BEGINNING_STATUS_AGAIN:
@@ -96,9 +93,7 @@ public:
 
     MessageIterator seekBeginning() const
     {
-        const auto status = bt_message_iterator_seek_beginning(this->libObjPtr());
-
-        switch (status) {
+        switch (bt_message_iterator_seek_beginning(this->libObjPtr())) {
         case BT_MESSAGE_ITERATOR_SEEK_BEGINNING_STATUS_OK:
             break;
         case BT_MESSAGE_ITERATOR_SEEK_BEGINNING_STATUS_AGAIN:
@@ -118,10 +113,8 @@ public:
     {
         bt_bool canSeek;
 
-        const auto status =
-            bt_message_iterator_can_seek_ns_from_origin(this->libObjPtr(), nsFromOrigin, &canSeek);
-
-        switch (status) {
+        switch (bt_message_iterator_can_seek_ns_from_origin(this->libObjPtr(), nsFromOrigin,
+                                                            &canSeek)) {
         case BT_MESSAGE_ITERATOR_CAN_SEEK_NS_FROM_ORIGIN_STATUS_OK:
             return static_cast<bool>(canSeek);
         case BT_MESSAGE_ITERATOR_CAN_SEEK_NS_FROM_ORIGIN_STATUS_AGAIN:
@@ -137,10 +130,7 @@ public:
 
     MessageIterator seekNsFromOrigin(const std::int64_t nsFromOrigin) const
     {
-        const auto status =
-            bt_message_iterator_seek_ns_from_origin(this->libObjPtr(), nsFromOrigin);
-
-        switch (status) {
+        switch (bt_message_iterator_seek_ns_from_origin(this->libObjPtr(), nsFromOrigin)) {
         case BT_MESSAGE_ITERATOR_SEEK_NS_FROM_ORIGIN_STATUS_OK:
             break;
         case BT_MESSAGE_ITERATOR_SEEK_NS_FROM_ORIGIN_STATUS_AGAIN:

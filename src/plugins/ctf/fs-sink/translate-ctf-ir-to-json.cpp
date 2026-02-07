@@ -278,9 +278,9 @@ nljson jsonStructFcMemberClassesFromFs(const fs_sink_ctf_trace& fsTrace,
 
         if (member.fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_SEQUENCE ||
             member.fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_DYN_BLOB) {
-            auto& fsSeqFc = *reinterpret_cast<const fs_sink_ctf_field_class_sequence *>(member.fc);
-
-            if (fsSeqFc.length_is_before) {
+            if (auto& fsSeqFc =
+                    *reinterpret_cast<const fs_sink_ctf_field_class_sequence *>(member.fc);
+                fsSeqFc.length_is_before) {
                 /* Generate length field class */
                 json.emplace_back(nljson {
                     /* clang-format off */
@@ -296,9 +296,9 @@ nljson jsonStructFcMemberClassesFromFs(const fs_sink_ctf_trace& fsTrace,
                 });
             }
         } else if (member.fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_OPTION) {
-            auto& fsOptFc = *reinterpret_cast<const fs_sink_ctf_field_class_option *>(member.fc);
-
-            if (fsOptFc.tag_is_before) {
+            if (auto& fsOptFc =
+                    *reinterpret_cast<const fs_sink_ctf_field_class_option *>(member.fc);
+                fsOptFc.tag_is_before) {
                 /* Generate selector field class */
                 json.emplace_back(nljson {
                     /* clang-format off */
@@ -314,9 +314,9 @@ nljson jsonStructFcMemberClassesFromFs(const fs_sink_ctf_trace& fsTrace,
                 });
             }
         } else if (member.fc->type == FS_SINK_CTF_FIELD_CLASS_TYPE_VARIANT) {
-            auto& fsVarFc = *reinterpret_cast<const fs_sink_ctf_field_class_variant *>(member.fc);
-
-            if (fsVarFc.tag_is_before) {
+            if (auto& fsVarFc =
+                    *reinterpret_cast<const fs_sink_ctf_field_class_variant *>(member.fc);
+                fsVarFc.tag_is_before) {
                 /* Generate selector field class */
                 json.emplace_back(nljson {
                     /* clang-format off */
@@ -512,9 +512,7 @@ nljson jsonFcFromFs(const fs_sink_ctf_trace& fsTrace, const bt2c::CStringView me
 
     case FS_SINK_CTF_FIELD_CLASS_TYPE_INT:
         return std::invoke([&fsFc] {
-            const auto irFc = bt2::wrap(fsFc.ir_fc);
-
-            if (irFc.isUnsignedInteger()) {
+            if (const auto irFc = bt2::wrap(fsFc.ir_fc); irFc.isUnsignedInteger()) {
                 return jsonFixedLenIntFcFromFs<bt2::ConstUnsignedEnumerationFieldClass>(
                     fsFc, jsonstr::fixedLenUInt);
             } else {
@@ -838,9 +836,8 @@ nljson jsonTraceClsFromFs(const fs_sink_ctf_trace& fsTrace)
             auto jsonEnv = nljson::object();
 
             for (std::uint64_t i = 0; i < irTrace.environmentSize(); ++i) {
-                const auto envEntry = irTrace.environmentEntry(i);
-
-                if (envEntry.value.isUnsignedInteger()) {
+                if (const auto envEntry = irTrace.environmentEntry(i);
+                    envEntry.value.isUnsignedInteger()) {
                     jsonEnv[*envEntry.name] = envEntry.value.asUnsignedInteger().value();
                 } else if (envEntry.value.isSignedInteger()) {
                     jsonEnv[*envEntry.name] = envEntry.value.asSignedInteger().value();

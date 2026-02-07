@@ -32,10 +32,7 @@ static bool stream_classes_all_have_default_clock_class(bt2::ConstTraceClass tc,
                                                         const bt2c::Logger& logger)
 {
     for (std::uint64_t i = 0; i < tc.length(); ++i) {
-        auto sc = tc[i];
-        auto cc = sc.defaultClockClass();
-
-        if (!cc) {
+        if (const auto sc = tc[i]; !sc.defaultClockClass()) {
             BT_CPPLOGE_APPEND_CAUSE_SPEC(logger,
                                          "Stream class doesn't have a default clock class: "
                                          "sc-id={}, sc-name=\"{}\"",
@@ -155,10 +152,10 @@ enum lttng_live_iterator_status lttng_live_metadata_update(struct lttng_live_tra
                            trace->session->lttng_live_msg_iter->viewer_connection->minor);
     if (!trace->trace) {
         const ctf::src::TraceCls *ctfTraceCls = metadata->traceCls();
-        BT_ASSERT(ctfTraceCls);
-        bt2::OptionalBorrowedObject<bt2::TraceClass> irTraceCls = ctfTraceCls->libCls();
 
-        if (irTraceCls) {
+        BT_ASSERT(ctfTraceCls);
+
+        if (auto irTraceCls = ctfTraceCls->libCls(); irTraceCls) {
             trace->trace = irTraceCls->instantiate();
 
             ctf_trace_class_configure_ir_trace(*ctfTraceCls, *trace->trace,

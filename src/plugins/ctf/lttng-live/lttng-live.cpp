@@ -145,9 +145,7 @@ lttng_live_session::~lttng_live_session()
             }
         }
 
-        const auto error = bt2::takeCurrentThreadError();
-
-        if (error) {
+        if (bt2::takeCurrentThreadError()) {
             BT_CPPLOGW_SPEC(this->logger,
                             "Clearing current thread error during live session teardown");
         }
@@ -296,8 +294,8 @@ lttng_live_get_session(struct lttng_live_msg_iter *lttng_live_msg_iter,
     if (!session->attached) {
         BT_CPPLOGD_SPEC(lttng_live_msg_iter->logger, "Attach to session: session-id={}",
                         session->id);
-        lttng_live_viewer_status attach_status = lttng_live_session_attach(session);
-        if (attach_status != LTTNG_LIVE_VIEWER_STATUS_OK) {
+        if (const auto attach_status = lttng_live_session_attach(session);
+            attach_status != LTTNG_LIVE_VIEWER_STATUS_OK) {
             if (lttng_live_graph_is_canceled(lttng_live_msg_iter)) {
                 /*
                  * Clear any causes appended in
@@ -443,8 +441,7 @@ lttng_live_iterator_handle_new_streams_and_metadata(struct lttng_live_msg_iter *
     }
 
     for (const auto& session : lttng_live_msg_iter->sessions) {
-        const auto status = lttng_live_get_session(lttng_live_msg_iter, session.get());
-        switch (status) {
+        switch (const auto status = lttng_live_get_session(lttng_live_msg_iter, session.get())) {
         case LTTNG_LIVE_ITERATOR_STATUS_OK:
         case LTTNG_LIVE_ITERATOR_STATUS_END:
             /*

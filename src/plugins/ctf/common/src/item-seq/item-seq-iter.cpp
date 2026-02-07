@@ -76,9 +76,7 @@ void ItemSeqIter::_updateDefClkVal(const unsigned long long val, const bt2c::Dat
     const auto newValMask = (1ULL << *len) - 1;
 
     {
-        const auto curValMasked = _mDefClkVal & newValMask;
-
-        if (val < curValMasked) {
+        if (val < (_mDefClkVal & newValMask)) {
             /*
              * It looks like a wrap occurred on the number of bits of the
              * new value. Assume that the clock value wrapped only once.
@@ -264,9 +262,8 @@ ItemSeqIter::_StateHandlingReaction ItemSeqIter::_handleEndReadPktContentState()
          */
         BT_ASSERT_DBG(_mCurPktExpectedLens.content != this->_infDataLen());
 
-        const auto lenToSkip = _mCurPktExpectedLens.total - _mHeadOffsetInCurPkt;
-
-        if (lenToSkip > 0_bits) {
+        if (const auto lenToSkip = _mCurPktExpectedLens.total - _mHeadOffsetInCurPkt;
+            lenToSkip > 0_bits) {
             /*
              * Set the state so as to skip padding, but also try to skip
              * all of it immediately.

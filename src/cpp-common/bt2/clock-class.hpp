@@ -254,9 +254,8 @@ public:
     {
         static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
-        const auto status = bt_clock_class_set_name(this->libObjPtr(), name);
-
-        if (status == BT_CLOCK_CLASS_SET_NAME_STATUS_MEMORY_ERROR) {
+        if (bt_clock_class_set_name(this->libObjPtr(), name) ==
+            BT_CLOCK_CLASS_SET_NAME_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
         }
 
@@ -300,9 +299,8 @@ public:
     {
         static_assert(!std::is_const_v<LibObjT>, "Not available with `bt2::ConstClockClass`.");
 
-        const auto status = bt_clock_class_set_description(this->libObjPtr(), description);
-
-        if (status == BT_CLOCK_CLASS_SET_DESCRIPTION_STATUS_MEMORY_ERROR) {
+        if (bt_clock_class_set_description(this->libObjPtr(), description) ==
+            BT_CLOCK_CLASS_SET_DESCRIPTION_STATUS_MEMORY_ERROR) {
             throw MemoryError {};
         }
 
@@ -324,9 +322,7 @@ public:
 
     std::optional<bt2c::UuidView> uuid() const noexcept
     {
-        const auto uuid = bt_clock_class_get_uuid(this->libObjPtr());
-
-        if (uuid) {
+        if (const auto uuid = bt_clock_class_get_uuid(this->libObjPtr())) {
             return bt2c::UuidView {uuid};
         }
 

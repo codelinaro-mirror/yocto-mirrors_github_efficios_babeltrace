@@ -35,9 +35,7 @@ UIntFieldRoles uIntFieldRolesOfJsonUIntFc(const bt2c::JsonObjVal& jsonFc)
     }
 
     for (auto& jsonRole : jsonRoles->asArray()) {
-        auto& roleName = *jsonRole->asStr();
-
-        if (roleName == jsonstr::dataStreamClsId) {
+        if (auto& roleName = *jsonRole->asStr(); roleName == jsonstr::dataStreamClsId) {
             roles.insert(UIntFieldRole::DataStreamClsId);
         } else if (roleName == jsonstr::dataStreamId) {
             roles.insert(UIntFieldRole::DataStreamId);
@@ -258,9 +256,7 @@ FieldLoc fieldLocOfJsonFc(const bt2c::JsonObjVal& jsonFc, const std::string& key
             return std::nullopt;
         }
 
-        auto& scopeName = *jsonOrig->asStr();
-
-        if (scopeName == jsonstr::pktHeader) {
+        if (auto& scopeName = *jsonOrig->asStr(); scopeName == jsonstr::pktHeader) {
             return Scope::PktHeader;
         } else if (scopeName == jsonstr::pktCtx) {
             return Scope::PktCtx;
@@ -303,9 +299,8 @@ FieldLoc fieldLocOfJsonFc(const bt2c::JsonObjVal& jsonFc, const std::string& key
 Fc::UP fcFromJsonStrFc(const bt2c::JsonObjVal& jsonFc, const std::string& type, OptAttrs&& attrs)
 {
     const auto encoding = std::invoke([&jsonFc] {
-        const auto encodingStr = optStrOfObj(jsonFc, jsonstr::encoding);
-
-        if (!encodingStr || encodingStr == jsonstr::utf8) {
+        if (const auto encodingStr = optStrOfObj(jsonFc, jsonstr::encoding);
+            !encodingStr || encodingStr == jsonstr::utf8) {
             return StrEncoding::Utf8;
         } else if (encodingStr == jsonstr::utf16Be) {
             return StrEncoding::Utf16Be;

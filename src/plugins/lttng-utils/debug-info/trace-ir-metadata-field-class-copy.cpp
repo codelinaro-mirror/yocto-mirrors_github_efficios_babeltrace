@@ -661,9 +661,7 @@ static bt_field_class *create_field_class_dynamic_array_copy(struct trace_ir_met
     bt_self_component *self_comp = md_maps->self_comp;
     bt_field_class *out_field_class = nullptr;
     bt_field_class_type fc_type = bt_field_class_get_type(in_field_class);
-    uint64_t graph_mip_version = bt_self_component_get_graph_mip_version(self_comp);
-
-    if (graph_mip_version == 0) {
+    if (bt_self_component_get_graph_mip_version(self_comp) == 0) {
         bt_field_class *out_length_fc = nullptr;
 
         if (fc_type == BT_FIELD_CLASS_TYPE_DYNAMIC_ARRAY_WITH_LENGTH_FIELD) {
@@ -704,9 +702,9 @@ static bt_field_class *create_field_class_option_copy_mip_0(struct trace_ir_meta
                                                             bt_field_class *out_content_fc)
 {
     bt_field_class *out_field_class = nullptr;
-    bt_field_class_type fc_type = bt_field_class_get_type(in_field_class);
 
-    if (fc_type == BT_FIELD_CLASS_TYPE_OPTION_WITHOUT_SELECTOR_FIELD) {
+    if (const auto fc_type = bt_field_class_get_type(in_field_class);
+        fc_type == BT_FIELD_CLASS_TYPE_OPTION_WITHOUT_SELECTOR_FIELD) {
         out_field_class = bt_field_class_option_without_selector_create(md_maps->output_trace_class,
                                                                         out_content_fc);
     } else {
@@ -754,9 +752,9 @@ create_field_class_option_copy_mip_1_plus(struct trace_ir_metadata_maps *md_maps
                                           bt_field_class *out_content_fc)
 {
     bt_field_class *out_field_class = nullptr;
-    bt_field_class_type fc_type = bt_field_class_get_type(in_field_class);
 
-    if (fc_type == BT_FIELD_CLASS_TYPE_OPTION_WITHOUT_SELECTOR_FIELD) {
+    if (const auto fc_type = bt_field_class_get_type(in_field_class);
+        fc_type == BT_FIELD_CLASS_TYPE_OPTION_WITHOUT_SELECTOR_FIELD) {
         out_field_class = bt_field_class_option_without_selector_field_location_create(
             md_maps->output_trace_class, out_content_fc);
     } else {

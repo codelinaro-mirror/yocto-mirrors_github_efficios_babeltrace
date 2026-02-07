@@ -64,12 +64,9 @@ static bt_param_validation_map_value_entry_descr fs_sink_params_descr[] = {
 
 static int ctfVersionFromParams(const bt_value *params, const bt2c::Logger& logger)
 {
-    const auto wParams = bt2::wrap(params).asMap();
-
-    if (wParams.hasEntry(ctfVersionParamName)) {
-        const auto ctfVersionVal = wParams[ctfVersionParamName]->asString();
-
-        if (ctfVersionVal.value() == "1" || ctfVersionVal.value() == "1.8") {
+    if (const auto wParams = bt2::wrap(params).asMap(); wParams.hasEntry(ctfVersionParamName)) {
+        if (const auto ctfVersionVal = wParams[ctfVersionParamName]->asString();
+            ctfVersionVal.value() == "1" || ctfVersionVal.value() == "1.8") {
             return 1;
         } else if (ctfVersionVal.value() != "2" && ctfVersionVal.value() != "2.0") {
             BT_CPPLOGE_APPEND_CAUSE_SPEC(
@@ -140,9 +137,8 @@ configure_component(bt_self_component_sink *self_comp_sink, struct fs_sink_comp 
     }
 
     {
-        const auto mipVersion = bt2::wrap(self_comp_sink).graphMipVersion();
-
-        if ((fs_sink->ctf_version == 1 && mipVersion == 1) ||
+        if (const auto mipVersion = bt2::wrap(self_comp_sink).graphMipVersion();
+            (fs_sink->ctf_version == 1 && mipVersion == 1) ||
             (fs_sink->ctf_version == 2 && mipVersion == 0)) {
             status = BT_COMPONENT_CLASS_INITIALIZE_METHOD_STATUS_ERROR;
             BT_CPPLOGE_APPEND_CAUSE_SPEC(
@@ -751,9 +747,7 @@ handle_stream_end_msg(struct fs_sink_comp *fs_sink, const bt_message *msg)
 
     if (G_UNLIKELY(!stream->sc->has_packets && stream->packet_state.is_open)) {
         /* Close stream's current artificial packet */
-        int ret = fs_sink_stream_close_packet(stream, NULL);
-
-        if (ret) {
+        if (fs_sink_stream_close_packet(stream, NULL)) {
             BT_CPPLOGE_APPEND_CAUSE_SPEC(fs_sink->logger, "Failed to close packet.");
             status = BT_COMPONENT_CLASS_SINK_CONSUME_METHOD_STATUS_ERROR;
             goto end;
@@ -1133,9 +1127,7 @@ ctf_fs_sink_supported_mip_versions(bt_self_component_class_sink *self_component_
     }
 
     {
-        const auto ctfVersion = ctfVersionFromParams(params, logger);
-
-        if (ctfVersion < 0) {
+        if (ctfVersionFromParams(params, logger) < 0) {
             status = BT_COMPONENT_CLASS_GET_SUPPORTED_MIP_VERSIONS_METHOD_STATUS_ERROR;
             goto end;
         }
