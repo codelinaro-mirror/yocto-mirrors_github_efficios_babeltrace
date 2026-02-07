@@ -19,9 +19,7 @@
 #include "cpp-common/bt2c/fmt.hpp" /* IWYU pragma: keep */
 #include "cpp-common/vendor/fmt/core.h"
 
-#define CATCH_CONFIG_MAIN
-
-#include "catch.hpp"
+#include "catch2/catch_test_macros.hpp"
 
 #define NON_EXISTING_PATH "/this/hopefully/does/not/exist/5bc75f8d-0dba-4043-a509-d7984b97e42b.so"
 

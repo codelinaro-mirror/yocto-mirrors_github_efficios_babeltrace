@@ -14,7 +14,9 @@
 #include <babeltrace2-ctf-writer/trace.h>
 #include <babeltrace2-ctf-writer/writer.h>
 #include <fcntl.h>
+#include <float.h>
 #include <glib.h>
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -23,11 +25,8 @@
 
 #include "common/uuid.h"
 #include "compat/limits.h"
-#define CATCH_CONFIG_MAIN
-#include <float.h>
-#include <math.h>
 
-#include "catch.hpp"
+#include "catch2/catch_test_macros.hpp"
 
 extern "C" {
 

@@ -48,6 +48,20 @@ According with:
 	LICENSES/GPL-2.0
 
 
+The Catch2 C++ test framework is provided under the terms of the Boost
+Software License 1.0:
+
+	SPDX-License-Identifier: BSL-1.0
+
+According with:
+
+	LICENSES/BSL-1.0
+
+It's only used when running the tests in the source tree. This applies to:
+
+	tests/utils/catch2/*
+
+
 The library documentation is provided under the terms of the Creative Commons
 Attribution Share Alike 4.0 International:
 

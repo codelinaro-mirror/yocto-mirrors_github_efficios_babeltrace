@@ -6,11 +6,8 @@
 
 #include <functional>
 
+#include "catch2/catch_test_macros.hpp"
 #include "utils/run-in.hpp"
-
-#define CATCH_CONFIG_MAIN
-
-#include "catch.hpp"
 
 namespace {
 

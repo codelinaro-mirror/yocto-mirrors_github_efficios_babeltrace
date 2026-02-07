@@ -23,9 +23,7 @@
 #include "common/assert.h"
 #include "common/macros.h"
 
-#define CATCH_CONFIG_MAIN
-
-#include "catch.hpp"
+#include "catch2/catch_test_macros.hpp"
 
 #define SO_NAME                  "libhello-so"
 #define DEBUG_NAME               "libhello-so.debug"

@@ -10,9 +10,7 @@
 #include "cpp-common/bt2/plugin-load.hpp"
 #include "cpp-common/bt2c/c-string-view.hpp"
 
-#define CATCH_CONFIG_MAIN
-
-#include "catch.hpp"
+#include "catch2/catch_test_macros.hpp"
 
 TEST_CASE("bt2::findAllPluginsFromDir() fails on load error")
 {

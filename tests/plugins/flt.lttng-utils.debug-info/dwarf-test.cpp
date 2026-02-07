@@ -15,9 +15,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define CATCH_CONFIG_MAIN
-
-#include "catch.hpp"
+#include "catch2/catch_test_macros.hpp"
 
 #define SO_NAME        "libhello-so"
 #define DWARF_DIR_NAME "dwarf-full"

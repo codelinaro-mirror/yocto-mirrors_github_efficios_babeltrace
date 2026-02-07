@@ -243,6 +243,11 @@ class _Catch2TestItem(btu.PytestItem):
         self._catch2_test_name = catch2_test_name
         self._build_root_dir = build_root_dir
 
+    # Catch2 test name with special test spec characters escaped.
+    @property
+    def _escaped_catch2_test_name(self) -> str:
+        return re.sub(r"([\\,\[*~])", r"\\\1", self._catch2_test_name)
+
     def runtest(self) -> None:
         _logger.info(
             "Running Catch2 test case `{}` in `{}`".format(
@@ -252,7 +257,7 @@ class _Catch2TestItem(btu.PytestItem):
         result = btu.run(
             self._build_root_dir,
             self._test_binary,
-            [self._catch2_test_name],
+            [self._escaped_catch2_test_name],
         )
 
         if result.returncode != 0:
@@ -316,16 +321,12 @@ class _Catch2TestFile(btu.PytestFile):
             assert os.access(test_binary, os.X_OK)
 
         # List test names from Catch2.
-        #
-        # With the `--list-test-names-only` option, Catch2 uses the
-        # number of test cases as its exit status. Therefore ignore the
-        # exit status here.
         _logger.info("Listing Catch2 test case names from `{}`".format(test_binary))
         build_root_dir = _config_build_root_dir(self.config)
         result = btu.run(
             build_root_dir,
             test_binary,
-            ["--list-test-names-only"],
+            ["--list-tests", "-v", "quiet", "--order", "decl"],
         )
         _logger.debug(result.stdout)
 

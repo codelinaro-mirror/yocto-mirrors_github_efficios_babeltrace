@@ -7,9 +7,7 @@
 #include "cpp-common/bt2c/uuid.hpp"
 #include "cpp-common/vendor/fmt/format.h"
 
-#define CATCH_CONFIG_MAIN
-
-#include "catch.hpp"
+#include "catch2/catch_test_macros.hpp"
 
 namespace {
 

@@ -237,12 +237,14 @@ EXTRA_DIST = \
 AM_CPPFLAGS += -I$(top_srcdir)/tests/utils
 
 COMMON_TEST_LDADD = \
+	utils/catch2/libcatch2.la \
 	$(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/logging/liblogging.la
 
 LIB_COMMON_TEST_LDADD = \
 	utils/libtestcommon.la \
 	lib/utils/liblib-utils.la \
+	utils/catch2/libcatch2.la \
 	$(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/logging/liblogging.la \
 	$(top_builddir)/src/cpp-common/vendor/fmt/libfmt.la
@@ -256,12 +258,302 @@ GEN_TRACE_LDADD = \
 noinst_LTLIBRARIES =
 noinst_PROGRAMS =
 
+noinst_LTLIBRARIES += utils/catch2/libcatch2.la
+utils_catch2_libcatch2_la_SOURCES = \
+	utils/catch2/benchmark/catch_benchmark.hpp \
+	utils/catch2/benchmark/catch_benchmark_all.hpp \
+	utils/catch2/benchmark/catch_chronometer.cpp \
+	utils/catch2/benchmark/catch_chronometer.hpp \
+	utils/catch2/benchmark/catch_clock.hpp \
+	utils/catch2/benchmark/catch_constructor.hpp \
+	utils/catch2/benchmark/catch_environment.hpp \
+	utils/catch2/benchmark/catch_estimate.hpp \
+	utils/catch2/benchmark/catch_execution_plan.hpp \
+	utils/catch2/benchmark/catch_optimizer.hpp \
+	utils/catch2/benchmark/catch_outlier_classification.hpp \
+	utils/catch2/benchmark/catch_sample_analysis.hpp \
+	utils/catch2/benchmark/detail/catch_analyse.cpp \
+	utils/catch2/benchmark/detail/catch_analyse.hpp \
+	utils/catch2/benchmark/detail/catch_benchmark_function.cpp \
+	utils/catch2/benchmark/detail/catch_benchmark_function.hpp \
+	utils/catch2/benchmark/detail/catch_benchmark_stats.hpp \
+	utils/catch2/benchmark/detail/catch_benchmark_stats_fwd.hpp \
+	utils/catch2/benchmark/detail/catch_complete_invoke.hpp \
+	utils/catch2/benchmark/detail/catch_estimate_clock.hpp \
+	utils/catch2/benchmark/detail/catch_measure.hpp \
+	utils/catch2/benchmark/detail/catch_repeat.hpp \
+	utils/catch2/benchmark/detail/catch_run_for_at_least.cpp \
+	utils/catch2/benchmark/detail/catch_run_for_at_least.hpp \
+	utils/catch2/benchmark/detail/catch_stats.cpp \
+	utils/catch2/benchmark/detail/catch_stats.hpp \
+	utils/catch2/benchmark/detail/catch_timing.hpp \
+	utils/catch2/catch_all.hpp \
+	utils/catch2/catch_approx.cpp \
+	utils/catch2/catch_approx.hpp \
+	utils/catch2/catch_assertion_info.hpp \
+	utils/catch2/catch_assertion_result.cpp \
+	utils/catch2/catch_assertion_result.hpp \
+	utils/catch2/catch_case_sensitive.hpp \
+	utils/catch2/catch_config.cpp \
+	utils/catch2/catch_config.hpp \
+	utils/catch2/catch_get_random_seed.cpp \
+	utils/catch2/catch_get_random_seed.hpp \
+	utils/catch2/catch_message.cpp \
+	utils/catch2/catch_message.hpp \
+	utils/catch2/catch_registry_hub.cpp \
+	utils/catch2/catch_section_info.hpp \
+	utils/catch2/catch_session.cpp \
+	utils/catch2/catch_session.hpp \
+	utils/catch2/catch_tag_alias.hpp \
+	utils/catch2/catch_tag_alias_autoregistrar.cpp \
+	utils/catch2/catch_tag_alias_autoregistrar.hpp \
+	utils/catch2/catch_template_test_macros.hpp \
+	utils/catch2/catch_test_case_info.cpp \
+	utils/catch2/catch_test_case_info.hpp \
+	utils/catch2/catch_test_macros.hpp \
+	utils/catch2/catch_test_run_info.hpp \
+	utils/catch2/catch_test_spec.cpp \
+	utils/catch2/catch_test_spec.hpp \
+	utils/catch2/catch_timer.cpp \
+	utils/catch2/catch_timer.hpp \
+	utils/catch2/catch_tostring.cpp \
+	utils/catch2/catch_tostring.hpp \
+	utils/catch2/catch_totals.cpp \
+	utils/catch2/catch_totals.hpp \
+	utils/catch2/catch_translate_exception.cpp \
+	utils/catch2/catch_translate_exception.hpp \
+	utils/catch2/catch_user_config.hpp \
+	utils/catch2/catch_version.cpp \
+	utils/catch2/catch_version.hpp \
+	utils/catch2/catch_version_macros.hpp \
+	utils/catch2/generators/catch_generator_exception.cpp \
+	utils/catch2/generators/catch_generator_exception.hpp \
+	utils/catch2/generators/catch_generators.cpp \
+	utils/catch2/generators/catch_generators.hpp \
+	utils/catch2/generators/catch_generators_adapters.hpp \
+	utils/catch2/generators/catch_generators_all.hpp \
+	utils/catch2/generators/catch_generators_random.cpp \
+	utils/catch2/generators/catch_generators_random.hpp \
+	utils/catch2/generators/catch_generators_range.hpp \
+	utils/catch2/interfaces/catch_interfaces_all.hpp \
+	utils/catch2/interfaces/catch_interfaces_capture.cpp \
+	utils/catch2/interfaces/catch_interfaces_capture.hpp \
+	utils/catch2/interfaces/catch_interfaces_config.cpp \
+	utils/catch2/interfaces/catch_interfaces_config.hpp \
+	utils/catch2/interfaces/catch_interfaces_enum_values_registry.hpp \
+	utils/catch2/interfaces/catch_interfaces_exception.cpp \
+	utils/catch2/interfaces/catch_interfaces_exception.hpp \
+	utils/catch2/interfaces/catch_interfaces_generatortracker.cpp \
+	utils/catch2/interfaces/catch_interfaces_generatortracker.hpp \
+	utils/catch2/interfaces/catch_interfaces_registry_hub.cpp \
+	utils/catch2/interfaces/catch_interfaces_registry_hub.hpp \
+	utils/catch2/interfaces/catch_interfaces_reporter.cpp \
+	utils/catch2/interfaces/catch_interfaces_reporter.hpp \
+	utils/catch2/interfaces/catch_interfaces_reporter_factory.cpp \
+	utils/catch2/interfaces/catch_interfaces_reporter_factory.hpp \
+	utils/catch2/interfaces/catch_interfaces_tag_alias_registry.hpp \
+	utils/catch2/interfaces/catch_interfaces_test_invoker.hpp \
+	utils/catch2/interfaces/catch_interfaces_testcase.cpp \
+	utils/catch2/interfaces/catch_interfaces_testcase.hpp \
+	utils/catch2/internal/catch_assertion_handler.cpp \
+	utils/catch2/internal/catch_assertion_handler.hpp \
+	utils/catch2/internal/catch_case_insensitive_comparisons.cpp \
+	utils/catch2/internal/catch_case_insensitive_comparisons.hpp \
+	utils/catch2/internal/catch_clara.cpp \
+	utils/catch2/internal/catch_clara.hpp \
+	utils/catch2/internal/catch_commandline.cpp \
+	utils/catch2/internal/catch_commandline.hpp \
+	utils/catch2/internal/catch_compare_traits.hpp \
+	utils/catch2/internal/catch_compiler_capabilities.hpp \
+	utils/catch2/internal/catch_config_android_logwrite.hpp \
+	utils/catch2/internal/catch_config_counter.hpp \
+	utils/catch2/internal/catch_config_prefix_messages.hpp \
+	utils/catch2/internal/catch_config_static_analysis_support.hpp \
+	utils/catch2/internal/catch_config_uncaught_exceptions.hpp \
+	utils/catch2/internal/catch_config_wchar.hpp \
+	utils/catch2/internal/catch_console_colour.cpp \
+	utils/catch2/internal/catch_console_colour.hpp \
+	utils/catch2/internal/catch_console_width.hpp \
+	utils/catch2/internal/catch_container_nonmembers.hpp \
+	utils/catch2/internal/catch_context.cpp \
+	utils/catch2/internal/catch_context.hpp \
+	utils/catch2/internal/catch_debug_console.cpp \
+	utils/catch2/internal/catch_debug_console.hpp \
+	utils/catch2/internal/catch_debugger.cpp \
+	utils/catch2/internal/catch_debugger.hpp \
+	utils/catch2/internal/catch_decomposer.cpp \
+	utils/catch2/internal/catch_decomposer.hpp \
+	utils/catch2/internal/catch_deprecation_macro.hpp \
+	utils/catch2/internal/catch_enforce.cpp \
+	utils/catch2/internal/catch_enforce.hpp \
+	utils/catch2/internal/catch_enum_values_registry.cpp \
+	utils/catch2/internal/catch_enum_values_registry.hpp \
+	utils/catch2/internal/catch_errno_guard.cpp \
+	utils/catch2/internal/catch_errno_guard.hpp \
+	utils/catch2/internal/catch_exception_translator_registry.cpp \
+	utils/catch2/internal/catch_exception_translator_registry.hpp \
+	utils/catch2/internal/catch_fatal_condition_handler.cpp \
+	utils/catch2/internal/catch_fatal_condition_handler.hpp \
+	utils/catch2/internal/catch_floating_point_helpers.cpp \
+	utils/catch2/internal/catch_floating_point_helpers.hpp \
+	utils/catch2/internal/catch_getenv.cpp \
+	utils/catch2/internal/catch_getenv.hpp \
+	utils/catch2/internal/catch_is_permutation.hpp \
+	utils/catch2/internal/catch_istream.cpp \
+	utils/catch2/internal/catch_istream.hpp \
+	utils/catch2/internal/catch_jsonwriter.cpp \
+	utils/catch2/internal/catch_jsonwriter.hpp \
+	utils/catch2/internal/catch_lazy_expr.cpp \
+	utils/catch2/internal/catch_lazy_expr.hpp \
+	utils/catch2/internal/catch_leak_detector.cpp \
+	utils/catch2/internal/catch_leak_detector.hpp \
+	utils/catch2/internal/catch_lifetimebound.hpp \
+	utils/catch2/internal/catch_list.cpp \
+	utils/catch2/internal/catch_list.hpp \
+	utils/catch2/internal/catch_logical_traits.hpp \
+	utils/catch2/internal/catch_main.cpp \
+	utils/catch2/internal/catch_message_info.cpp \
+	utils/catch2/internal/catch_message_info.hpp \
+	utils/catch2/internal/catch_meta.hpp \
+	utils/catch2/internal/catch_move_and_forward.hpp \
+	utils/catch2/internal/catch_noncopyable.hpp \
+	utils/catch2/internal/catch_optional.hpp \
+	utils/catch2/internal/catch_output_redirect.cpp \
+	utils/catch2/internal/catch_output_redirect.hpp \
+	utils/catch2/internal/catch_parse_numbers.cpp \
+	utils/catch2/internal/catch_parse_numbers.hpp \
+	utils/catch2/internal/catch_platform.hpp \
+	utils/catch2/internal/catch_polyfills.cpp \
+	utils/catch2/internal/catch_polyfills.hpp \
+	utils/catch2/internal/catch_preprocessor.hpp \
+	utils/catch2/internal/catch_preprocessor_internal_stringify.hpp \
+	utils/catch2/internal/catch_preprocessor_remove_parens.hpp \
+	utils/catch2/internal/catch_random_floating_point_helpers.hpp \
+	utils/catch2/internal/catch_random_integer_helpers.hpp \
+	utils/catch2/internal/catch_random_number_generator.cpp \
+	utils/catch2/internal/catch_random_number_generator.hpp \
+	utils/catch2/internal/catch_random_seed_generation.cpp \
+	utils/catch2/internal/catch_random_seed_generation.hpp \
+	utils/catch2/internal/catch_reporter_registry.cpp \
+	utils/catch2/internal/catch_reporter_registry.hpp \
+	utils/catch2/internal/catch_reporter_spec_parser.cpp \
+	utils/catch2/internal/catch_reporter_spec_parser.hpp \
+	utils/catch2/internal/catch_result_type.hpp \
+	utils/catch2/internal/catch_reusable_string_stream.cpp \
+	utils/catch2/internal/catch_reusable_string_stream.hpp \
+	utils/catch2/internal/catch_run_context.cpp \
+	utils/catch2/internal/catch_run_context.hpp \
+	utils/catch2/internal/catch_section.cpp \
+	utils/catch2/internal/catch_section.hpp \
+	utils/catch2/internal/catch_sharding.hpp \
+	utils/catch2/internal/catch_singletons.cpp \
+	utils/catch2/internal/catch_singletons.hpp \
+	utils/catch2/internal/catch_source_line_info.cpp \
+	utils/catch2/internal/catch_source_line_info.hpp \
+	utils/catch2/internal/catch_startup_exception_registry.cpp \
+	utils/catch2/internal/catch_startup_exception_registry.hpp \
+	utils/catch2/internal/catch_stdstreams.cpp \
+	utils/catch2/internal/catch_stdstreams.hpp \
+	utils/catch2/internal/catch_stream_end_stop.hpp \
+	utils/catch2/internal/catch_string_manip.cpp \
+	utils/catch2/internal/catch_string_manip.hpp \
+	utils/catch2/internal/catch_stringref.cpp \
+	utils/catch2/internal/catch_stringref.hpp \
+	utils/catch2/internal/catch_tag_alias_registry.cpp \
+	utils/catch2/internal/catch_tag_alias_registry.hpp \
+	utils/catch2/internal/catch_template_test_registry.hpp \
+	utils/catch2/internal/catch_test_case_info_hasher.cpp \
+	utils/catch2/internal/catch_test_case_info_hasher.hpp \
+	utils/catch2/internal/catch_test_case_registry_impl.cpp \
+	utils/catch2/internal/catch_test_case_registry_impl.hpp \
+	utils/catch2/internal/catch_test_case_tracker.cpp \
+	utils/catch2/internal/catch_test_case_tracker.hpp \
+	utils/catch2/internal/catch_test_failure_exception.cpp \
+	utils/catch2/internal/catch_test_failure_exception.hpp \
+	utils/catch2/internal/catch_test_macro_impl.hpp \
+	utils/catch2/internal/catch_test_registry.cpp \
+	utils/catch2/internal/catch_test_registry.hpp \
+	utils/catch2/internal/catch_test_spec_parser.cpp \
+	utils/catch2/internal/catch_test_spec_parser.hpp \
+	utils/catch2/internal/catch_textflow.cpp \
+	utils/catch2/internal/catch_textflow.hpp \
+	utils/catch2/internal/catch_thread_local.hpp \
+	utils/catch2/internal/catch_thread_support.hpp \
+	utils/catch2/internal/catch_to_string.hpp \
+	utils/catch2/internal/catch_uncaught_exceptions.cpp \
+	utils/catch2/internal/catch_uncaught_exceptions.hpp \
+	utils/catch2/internal/catch_uniform_floating_point_distribution.hpp \
+	utils/catch2/internal/catch_uniform_integer_distribution.hpp \
+	utils/catch2/internal/catch_unique_name.hpp \
+	utils/catch2/internal/catch_unique_ptr.hpp \
+	utils/catch2/internal/catch_unreachable.hpp \
+	utils/catch2/internal/catch_void_type.hpp \
+	utils/catch2/internal/catch_wildcard_pattern.cpp \
+	utils/catch2/internal/catch_wildcard_pattern.hpp \
+	utils/catch2/internal/catch_windows_h_proxy.hpp \
+	utils/catch2/internal/catch_xmlwriter.cpp \
+	utils/catch2/internal/catch_xmlwriter.hpp \
+	utils/catch2/matchers/catch_matchers.cpp \
+	utils/catch2/matchers/catch_matchers.hpp \
+	utils/catch2/matchers/catch_matchers_all.hpp \
+	utils/catch2/matchers/catch_matchers_container_properties.cpp \
+	utils/catch2/matchers/catch_matchers_container_properties.hpp \
+	utils/catch2/matchers/catch_matchers_contains.hpp \
+	utils/catch2/matchers/catch_matchers_exception.cpp \
+	utils/catch2/matchers/catch_matchers_exception.hpp \
+	utils/catch2/matchers/catch_matchers_floating_point.cpp \
+	utils/catch2/matchers/catch_matchers_floating_point.hpp \
+	utils/catch2/matchers/catch_matchers_predicate.cpp \
+	utils/catch2/matchers/catch_matchers_predicate.hpp \
+	utils/catch2/matchers/catch_matchers_quantifiers.cpp \
+	utils/catch2/matchers/catch_matchers_quantifiers.hpp \
+	utils/catch2/matchers/catch_matchers_range_equals.hpp \
+	utils/catch2/matchers/catch_matchers_string.cpp \
+	utils/catch2/matchers/catch_matchers_string.hpp \
+	utils/catch2/matchers/catch_matchers_templated.cpp \
+	utils/catch2/matchers/catch_matchers_templated.hpp \
+	utils/catch2/matchers/catch_matchers_vector.hpp \
+	utils/catch2/matchers/internal/catch_matchers_impl.cpp \
+	utils/catch2/matchers/internal/catch_matchers_impl.hpp \
+	utils/catch2/reporters/catch_reporter_automake.cpp \
+	utils/catch2/reporters/catch_reporter_automake.hpp \
+	utils/catch2/reporters/catch_reporter_common_base.cpp \
+	utils/catch2/reporters/catch_reporter_common_base.hpp \
+	utils/catch2/reporters/catch_reporter_compact.cpp \
+	utils/catch2/reporters/catch_reporter_compact.hpp \
+	utils/catch2/reporters/catch_reporter_console.cpp \
+	utils/catch2/reporters/catch_reporter_console.hpp \
+	utils/catch2/reporters/catch_reporter_cumulative_base.cpp \
+	utils/catch2/reporters/catch_reporter_cumulative_base.hpp \
+	utils/catch2/reporters/catch_reporter_event_listener.cpp \
+	utils/catch2/reporters/catch_reporter_event_listener.hpp \
+	utils/catch2/reporters/catch_reporter_helpers.cpp \
+	utils/catch2/reporters/catch_reporter_helpers.hpp \
+	utils/catch2/reporters/catch_reporter_json.cpp \
+	utils/catch2/reporters/catch_reporter_json.hpp \
+	utils/catch2/reporters/catch_reporter_junit.cpp \
+	utils/catch2/reporters/catch_reporter_junit.hpp \
+	utils/catch2/reporters/catch_reporter_multi.cpp \
+	utils/catch2/reporters/catch_reporter_multi.hpp \
+	utils/catch2/reporters/catch_reporter_registrars.cpp \
+	utils/catch2/reporters/catch_reporter_registrars.hpp \
+	utils/catch2/reporters/catch_reporter_sonarqube.cpp \
+	utils/catch2/reporters/catch_reporter_sonarqube.hpp \
+	utils/catch2/reporters/catch_reporter_streaming_base.cpp \
+	utils/catch2/reporters/catch_reporter_streaming_base.hpp \
+	utils/catch2/reporters/catch_reporter_tap.cpp \
+	utils/catch2/reporters/catch_reporter_tap.hpp \
+	utils/catch2/reporters/catch_reporter_teamcity.cpp \
+	utils/catch2/reporters/catch_reporter_teamcity.hpp \
+	utils/catch2/reporters/catch_reporter_xml.cpp \
+	utils/catch2/reporters/catch_reporter_xml.hpp \
+	utils/catch2/reporters/catch_reporters_all.hpp
+
 noinst_LTLIBRARIES += utils/libtestcommon.la
 utils_libtestcommon_la_SOURCES = \
 	utils/common.c \
 	utils/common.h \
-	utils/common.hpp \
-	utils/catch.hpp
+	utils/common.hpp
 
 noinst_PROGRAMS += cpp-common/test-c-string-view
 cpp_common_test_c_string_view_SOURCES = cpp-common/test-c-string-view.cpp
@@ -395,11 +687,13 @@ endif # DEV_MODE
 
 noinst_PROGRAMS += bitfield/test-bitfield
 bitfield_test_bitfield_SOURCES = bitfield/test-bitfield.cpp
+bitfield_test_bitfield_LDADD = $(COMMON_TEST_LDADD)
 
 noinst_PROGRAMS += ctf-writer/test-ctf-writer
 ctf_writer_test_ctf_writer_SOURCES = ctf-writer/test-ctf-writer.cpp
 ctf_writer_test_ctf_writer_LDADD = \
 	utils/libtestcommon.la \
+	utils/catch2/libcatch2.la \
 	$(top_builddir)/src/ctf-writer/libbabeltrace2-ctf-writer.la \
 	$(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/logging/liblogging.la
@@ -407,6 +701,7 @@ ctf_writer_test_ctf_writer_LDADD = \
 noinst_PROGRAMS += param-validation/test-param-validation
 param_validation_test_param_validation_SOURCES = param-validation/test-param-validation.cpp
 param_validation_test_param_validation_LDADD = \
+	utils/catch2/libcatch2.la \
 	$(top_builddir)/src/param-parse/libparam-parse.la \
 	$(top_builddir)/src/plugins/common/param-validation/libparam-validation.la \
 	$(top_builddir)/src/lib/libbabeltrace2.la \
@@ -434,6 +729,7 @@ plugins_flt_lttng_utils_debug_info_dwarf_test_bin_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	-I$(top_srcdir)/src/plugins
 plugins_flt_lttng_utils_debug_info_dwarf_test_bin_LDADD = \
+	utils/catch2/libcatch2.la \
 	$(top_builddir)/src/plugins/lttng-utils/debug-info/libdebug-info.la \
 	$(top_builddir)/src/fd-cache/libfd-cache.la \
 	$(top_builddir)/src/logging/liblogging.la \
@@ -446,6 +742,7 @@ plugins_flt_lttng_utils_debug_info_bin_info_test_bin_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	-I$(top_srcdir)/src/plugins
 plugins_flt_lttng_utils_debug_info_bin_info_test_bin_LDADD = \
+	utils/catch2/libcatch2.la \
 	$(top_builddir)/src/plugins/lttng-utils/debug-info/libdebug-info.la \
 	$(top_builddir)/src/fd-cache/libfd-cache.la \
 	$(top_builddir)/src/logging/liblogging.la \

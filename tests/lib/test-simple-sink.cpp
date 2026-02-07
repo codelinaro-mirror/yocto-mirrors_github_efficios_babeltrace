@@ -9,9 +9,7 @@
 #include "cpp-common/bt2/component-class-dev.hpp"
 #include "cpp-common/bt2/graph.hpp"
 
-#define CATCH_CONFIG_MAIN
-
-#include "catch.hpp"
+#include "catch2/catch_test_macros.hpp"
 
 namespace {
 

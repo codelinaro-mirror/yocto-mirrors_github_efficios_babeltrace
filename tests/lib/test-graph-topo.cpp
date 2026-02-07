@@ -12,9 +12,7 @@
 #include "cpp-common/bt2/component-port.hpp"
 #include "cpp-common/bt2/graph.hpp"
 
-#define CATCH_CONFIG_MAIN
-
-#include "catch.hpp"
+#include "catch2/catch_test_macros.hpp"
 
 namespace {
 
