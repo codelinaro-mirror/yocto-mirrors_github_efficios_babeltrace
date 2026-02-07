@@ -41,44 +41,58 @@ TEST_CASE("Remove destruction listener in destruction listener")
                             traceClsData1.called = true;
                         },
                         nullptr, &id) == BT_TRACE_CLASS_ADD_LISTENER_STATUS_OK);
+
             traceClsData3.idToRemove = id;
 
-            REQUIRE(bt_trace_class_add_destruction_listener(
-                        traceCls->libObjPtr(),
-                        [](const bt_trace_class * const tc, void *) {
-                            traceClsData2.called = true;
+            {
+                const auto addListenerStatus = bt_trace_class_add_destruction_listener(
+                    traceCls->libObjPtr(),
+                    [](const bt_trace_class * const tc, void *) {
+                        traceClsData2.called = true;
 
-                            /* Remove self */
-                            REQUIRE(bt_trace_class_remove_destruction_listener(
-                                        tc, traceClsData2.idToRemove) ==
-                                    BT_TRACE_CLASS_REMOVE_LISTENER_STATUS_OK);
-                        },
-                        nullptr, &id) == BT_TRACE_CLASS_ADD_LISTENER_STATUS_OK);
+                        /* Remove self */
+                        REQUIRE(bt_trace_class_remove_destruction_listener(
+                                    tc, traceClsData2.idToRemove) ==
+                                BT_TRACE_CLASS_REMOVE_LISTENER_STATUS_OK);
+                    },
+                    nullptr, &id);
+
+                REQUIRE(addListenerStatus == BT_TRACE_CLASS_ADD_LISTENER_STATUS_OK);
+            }
+
             traceClsData2.idToRemove = id;
 
-            REQUIRE(bt_trace_class_add_destruction_listener(
-                        traceCls->libObjPtr(),
-                        [](const bt_trace_class * const tc, void *) {
-                            traceClsData3.called = true;
+            {
+                const auto addListenerStatus = bt_trace_class_add_destruction_listener(
+                    traceCls->libObjPtr(),
+                    [](const bt_trace_class * const tc, void *) {
+                        traceClsData3.called = true;
 
-                            /* Remove an already called listener */
-                            REQUIRE(bt_trace_class_remove_destruction_listener(
-                                        tc, traceClsData3.idToRemove) ==
-                                    BT_TRACE_CLASS_REMOVE_LISTENER_STATUS_OK);
-                        },
-                        nullptr, &id) == BT_TRACE_CLASS_ADD_LISTENER_STATUS_OK);
+                        /* Remove an already called listener */
+                        REQUIRE(bt_trace_class_remove_destruction_listener(
+                                    tc, traceClsData3.idToRemove) ==
+                                BT_TRACE_CLASS_REMOVE_LISTENER_STATUS_OK);
+                    },
+                    nullptr, &id);
 
-            REQUIRE(bt_trace_class_add_destruction_listener(
-                        traceCls->libObjPtr(),
-                        [](const bt_trace_class * const tc, void *) {
-                            traceClsData4.called = true;
+                REQUIRE(addListenerStatus == BT_TRACE_CLASS_ADD_LISTENER_STATUS_OK);
+            }
 
-                            /* Remove a not-yet called listener */
-                            REQUIRE(bt_trace_class_remove_destruction_listener(
-                                        tc, traceClsData4.idToRemove) ==
-                                    BT_TRACE_CLASS_REMOVE_LISTENER_STATUS_OK);
-                        },
-                        nullptr, &id) == BT_TRACE_CLASS_ADD_LISTENER_STATUS_OK);
+            {
+                const auto addListenerStatus = bt_trace_class_add_destruction_listener(
+                    traceCls->libObjPtr(),
+                    [](const bt_trace_class * const tc, void *) {
+                        traceClsData4.called = true;
+
+                        /* Remove a not-yet called listener */
+                        REQUIRE(bt_trace_class_remove_destruction_listener(
+                                    tc, traceClsData4.idToRemove) ==
+                                BT_TRACE_CLASS_REMOVE_LISTENER_STATUS_OK);
+                    },
+                    nullptr, &id);
+
+                REQUIRE(addListenerStatus == BT_TRACE_CLASS_ADD_LISTENER_STATUS_OK);
+            }
 
             REQUIRE(bt_trace_class_add_destruction_listener(
                         traceCls->libObjPtr(),
@@ -86,6 +100,7 @@ TEST_CASE("Remove destruction listener in destruction listener")
                             traceClsData5.called = true;
                         },
                         nullptr, &id) == BT_TRACE_CLASS_ADD_LISTENER_STATUS_OK);
+
             traceClsData4.idToRemove = id;
 
             const auto trace = traceCls->instantiate();
@@ -96,44 +111,55 @@ TEST_CASE("Remove destruction listener in destruction listener")
                             traceData1.called = true;
                         },
                         nullptr, &id) == BT_TRACE_ADD_LISTENER_STATUS_OK);
+
             traceData3.idToRemove = id;
 
-            REQUIRE(bt_trace_add_destruction_listener(
-                        trace->libObjPtr(),
-                        [](const bt_trace * const t, void *) {
-                            traceData2.called = true;
+            {
+                const auto addListenerStatus = bt_trace_add_destruction_listener(
+                    trace->libObjPtr(),
+                    [](const bt_trace * const t, void *) {
+                        traceData2.called = true;
 
-                            /* Remove self */
-                            REQUIRE(
-                                bt_trace_remove_destruction_listener(t, traceData2.idToRemove) ==
+                        /* Remove self */
+                        REQUIRE(bt_trace_remove_destruction_listener(t, traceData2.idToRemove) ==
                                 BT_TRACE_REMOVE_LISTENER_STATUS_OK);
-                        },
-                        nullptr, &id) == BT_TRACE_ADD_LISTENER_STATUS_OK);
+                    },
+                    nullptr, &id);
+
+                REQUIRE(addListenerStatus == BT_TRACE_ADD_LISTENER_STATUS_OK);
+            }
+
             traceData2.idToRemove = id;
 
-            REQUIRE(bt_trace_add_destruction_listener(
-                        trace->libObjPtr(),
-                        [](const bt_trace * const t, void *) {
-                            traceData3.called = true;
+            {
+                const auto addListenerStatus = bt_trace_add_destruction_listener(
+                    trace->libObjPtr(),
+                    [](const bt_trace * const t, void *) {
+                        traceData3.called = true;
 
-                            /* Remove an already called listener */
-                            REQUIRE(
-                                bt_trace_remove_destruction_listener(t, traceData3.idToRemove) ==
+                        /* Remove an already called listener */
+                        REQUIRE(bt_trace_remove_destruction_listener(t, traceData3.idToRemove) ==
                                 BT_TRACE_REMOVE_LISTENER_STATUS_OK);
-                        },
-                        nullptr, &id) == BT_TRACE_ADD_LISTENER_STATUS_OK);
+                    },
+                    nullptr, &id);
 
-            REQUIRE(bt_trace_add_destruction_listener(
-                        trace->libObjPtr(),
-                        [](const bt_trace * const t, void *) {
-                            traceData4.called = true;
+                REQUIRE(addListenerStatus == BT_TRACE_ADD_LISTENER_STATUS_OK);
+            }
 
-                            /* Remove a not-yet called listener */
-                            REQUIRE(
-                                bt_trace_remove_destruction_listener(t, traceData4.idToRemove) ==
+            {
+                const auto addListenerStatus = bt_trace_add_destruction_listener(
+                    trace->libObjPtr(),
+                    [](const bt_trace * const t, void *) {
+                        traceData4.called = true;
+
+                        /* Remove a not-yet called listener */
+                        REQUIRE(bt_trace_remove_destruction_listener(t, traceData4.idToRemove) ==
                                 BT_TRACE_REMOVE_LISTENER_STATUS_OK);
-                        },
-                        nullptr, &id) == BT_TRACE_ADD_LISTENER_STATUS_OK);
+                    },
+                    nullptr, &id);
+
+                REQUIRE(addListenerStatus == BT_TRACE_ADD_LISTENER_STATUS_OK);
+            }
 
             REQUIRE(bt_trace_add_destruction_listener(
                         trace->libObjPtr(),
@@ -141,6 +167,7 @@ TEST_CASE("Remove destruction listener in destruction listener")
                             traceData5.called = true;
                         },
                         nullptr, &id) == BT_TRACE_ADD_LISTENER_STATUS_OK);
+
             traceData4.idToRemove = id;
         }
     };
