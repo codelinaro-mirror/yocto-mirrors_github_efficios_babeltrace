@@ -37,10 +37,8 @@ Ctf2MetadataStreamParser::Ctf2MetadataStreamParser(
     _mDefClkOffsetVal {std::invoke([] {
         bt2c::JsonObjVal::Container entries;
 
-        entries.insert(
-            std::make_pair(jsonstr::seconds, bt2c::createJsonVal(0LL, bt2c::TextLoc {})));
-        entries.insert(
-            std::make_pair(jsonstr::cycles, bt2c::createJsonVal(0ULL, bt2c::TextLoc {})));
+        entries.insert(std::pair {jsonstr::seconds, bt2c::createJsonVal(0LL, bt2c::TextLoc {})});
+        entries.insert(std::pair {jsonstr::cycles, bt2c::createJsonVal(0ULL, bt2c::TextLoc {})});
         return bt2c::createJsonVal(std::move(entries), bt2c::TextLoc {});
     })},
     _mFcBuilder {_mLogger}
@@ -427,7 +425,7 @@ void Ctf2MetadataStreamParser::_handleClkClsFragment(const bt2c::JsonObjVal& jso
         attrsOfObj(jsonFragment));
 
     /* Add to map of clock classes */
-    _mClkClasses.emplace(std::make_pair(std::move(id), std::move(clkCls)));
+    _mClkClasses.emplace(std::pair {std::move(id), std::move(clkCls)});
 }
 
 namespace {

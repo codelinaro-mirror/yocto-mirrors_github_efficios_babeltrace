@@ -137,7 +137,7 @@ private:
              * only used once.
              */
             this->_stackTop().objValCont.insert(
-                std::make_pair(std::move(this->_stackTop().lastObjKey), std::move(jsonVal)));
+                std::pair {std::move(this->_stackTop().lastObjKey), std::move(jsonVal)});
             break;
 
         default:

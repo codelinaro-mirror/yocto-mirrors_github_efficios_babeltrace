@@ -368,7 +368,7 @@ void addToPropReqs(bt2c::JsonObjValReq::PropReqs& propReqs, std::string&& key,
                    bt2c::JsonValReq::SP valReq, const bool isRequired = false)
 {
     propReqs.emplace(
-        std::make_pair(std::move(key), bt2c::JsonObjValPropReq {std::move(valReq), isRequired}));
+        std::pair {std::move(key), bt2c::JsonObjValPropReq {std::move(valReq), isRequired}});
 }
 
 /*
@@ -1906,7 +1906,7 @@ private:
         const auto typeStr = JsonValReqT::typeStr();
 
         BT_ASSERT(!bt2c::contains(_mFcValReqs, typeStr));
-        _mFcValReqs.insert(std::make_pair(typeStr, &valReq));
+        _mFcValReqs.insert(std::pair {typeStr, &valReq});
     }
 
     void _validate(const bt2c::JsonVal& jsonVal) const override
@@ -2483,7 +2483,7 @@ private:
         const auto typeStr = JsonValReqT::typeStr();
 
         BT_ASSERT(!bt2c::contains(_fragValReqs, typeStr));
-        _fragValReqs.insert(std::make_pair(typeStr, &valReq));
+        _fragValReqs.insert(std::pair {typeStr, &valReq});
     }
 
     void _validate(const bt2c::JsonVal& jsonVal) const override

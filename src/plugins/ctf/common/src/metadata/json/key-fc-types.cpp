@@ -200,7 +200,7 @@ private:
     {
         auto keyFcs = this->_findKeyFcs(fc, fieldLoc);
 
-        _mKeyFcTypes.emplace(std::make_pair(&fc, this->_keyFcType(**keyFcs.begin())));
+        _mKeyFcTypes.emplace(std::pair {&fc, this->_keyFcType(**keyFcs.begin())});
         return keyFcs;
     }
 
@@ -482,7 +482,7 @@ private:
     void _withinCompoundFc(const Fc& fc, const std::size_t index, FuncT&& func)
     {
         BT_ASSERT(!bt2c::contains(_mCompoundFcIndexes, &fc));
-        _mCompoundFcIndexes.emplace(std::make_pair(&fc, index));
+        _mCompoundFcIndexes.emplace(std::pair {&fc, index});
         func();
         _mCompoundFcIndexes.erase(&fc);
     }

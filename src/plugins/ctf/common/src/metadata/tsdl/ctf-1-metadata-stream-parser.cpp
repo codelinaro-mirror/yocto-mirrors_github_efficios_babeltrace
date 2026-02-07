@@ -315,23 +315,22 @@ FieldLoc Ctf1MetadataStreamParser::_fieldLocFromOrigFieldPath(const ctf_field_pa
     auto [origFc, scope] = std::invoke([this, &origFieldPath] {
         switch (origFieldPath.root) {
         case CTF_SCOPE_PACKET_HEADER:
-            return std::make_pair(_mFcTranslationCtx.origTraceCls->packet_header_fc,
-                                  Scope::PktHeader);
+            return std::pair {_mFcTranslationCtx.origTraceCls->packet_header_fc, Scope::PktHeader};
         case CTF_SCOPE_PACKET_CONTEXT:
-            return std::make_pair(_mFcTranslationCtx.origDataStreamCls->packet_context_fc,
-                                  Scope::PktCtx);
+            return std::pair {_mFcTranslationCtx.origDataStreamCls->packet_context_fc,
+                              Scope::PktCtx};
         case CTF_SCOPE_EVENT_HEADER:
-            return std::make_pair(_mFcTranslationCtx.origDataStreamCls->event_header_fc,
-                                  Scope::EventRecordHeader);
+            return std::pair {_mFcTranslationCtx.origDataStreamCls->event_header_fc,
+                              Scope::EventRecordHeader};
         case CTF_SCOPE_EVENT_COMMON_CONTEXT:
-            return std::make_pair(_mFcTranslationCtx.origDataStreamCls->event_common_context_fc,
-                                  Scope::CommonEventRecordCtx);
+            return std::pair {_mFcTranslationCtx.origDataStreamCls->event_common_context_fc,
+                              Scope::CommonEventRecordCtx};
         case CTF_SCOPE_EVENT_SPECIFIC_CONTEXT:
-            return std::make_pair(_mFcTranslationCtx.origEventRecordCls->spec_context_fc,
-                                  Scope::SpecEventRecordCtx);
+            return std::pair {_mFcTranslationCtx.origEventRecordCls->spec_context_fc,
+                              Scope::SpecEventRecordCtx};
         case CTF_SCOPE_EVENT_PAYLOAD:
-            return std::make_pair(_mFcTranslationCtx.origEventRecordCls->payload_fc,
-                                  Scope::EventRecordPayload);
+            return std::pair {_mFcTranslationCtx.origEventRecordCls->payload_fc,
+                              Scope::EventRecordPayload};
         default:
             bt_common_abort();
         }

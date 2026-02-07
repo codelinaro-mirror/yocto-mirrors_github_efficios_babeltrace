@@ -96,9 +96,8 @@ typename IntFcT::Mappings intFcMappingsOfJsonIntFc(const bt2c::JsonObjVal& jsonF
     if (const auto jsonMappings = jsonFc[jsonstr::mappings]) {
         /* At least one mapping */
         for (auto& [key, jsonIntRanges] : jsonMappings->asObj()) {
-            mappings.insert(std::make_pair(
-                key,
-                intRangeSetFromJsonIntRangeSet<typename IntFcT::Val>(jsonIntRanges->asArray())));
+            mappings.insert(std::pair {key, intRangeSetFromJsonIntRangeSet<typename IntFcT::Val>(
+                                                jsonIntRanges->asArray())});
         }
     }
 
@@ -160,7 +159,7 @@ FixedLenBitMapFc::Flags fixedLenBitMapFlagsOfJsonFixedLenBitMapFc(const bt2c::Js
 
     for (auto& [key, jsonIntRanges] : jsonFlags->asObj()) {
         flags.insert(
-            std::make_pair(key, intRangeSetFromJsonIntRangeSet<Val>(jsonIntRanges->asArray())));
+            std::pair {key, intRangeSetFromJsonIntRangeSet<Val>(jsonIntRanges->asArray())});
     }
 
     return flags;

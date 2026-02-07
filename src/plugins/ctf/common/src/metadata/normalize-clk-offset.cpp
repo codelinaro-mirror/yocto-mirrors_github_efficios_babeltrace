@@ -20,7 +20,7 @@ std::pair<long long, unsigned long long> normalizeClkOffset(long long offsetSeco
         offsetCycles -= secInOffsetCycles * freq;
     }
 
-    return std::make_pair(offsetSeconds, offsetCycles);
+    return std::pair {offsetSeconds, offsetCycles};
 }
 
 } /* namespace src */

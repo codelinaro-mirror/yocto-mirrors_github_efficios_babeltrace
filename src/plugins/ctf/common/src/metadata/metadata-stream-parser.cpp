@@ -363,7 +363,7 @@ private:
              * class, then visit the field class of the option, then
              * finally unmark this option.
              */
-            _mCurVariantOptIndexes.insert(std::make_pair(&variantFc, i));
+            _mCurVariantOptIndexes.insert(std::pair {&variantFc, i});
             variantFc[i].fc().accept(*this);
             _mCurVariantOptIndexes.erase(&variantFc);
         }
