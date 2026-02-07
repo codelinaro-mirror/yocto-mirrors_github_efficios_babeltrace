@@ -312,7 +312,7 @@ Fc::UP Ctf1MetadataStreamParser::_fcFromOrigFc(const ctf_field_class_array& orig
 FieldLoc Ctf1MetadataStreamParser::_fieldLocFromOrigFieldPath(const ctf_field_path& origFieldPath)
 {
     /* Get original CTF IR root field class and CTF IR scope */
-    const auto origFcAndScope = std::invoke([this, &origFieldPath] {
+    auto [origFc, scope] = std::invoke([this, &origFieldPath] {
         switch (origFieldPath.root) {
         case CTF_SCOPE_PACKET_HEADER:
             return std::make_pair(_mFcTranslationCtx.origTraceCls->packet_header_fc,
@@ -339,7 +339,6 @@ FieldLoc Ctf1MetadataStreamParser::_fieldLocFromOrigFieldPath(const ctf_field_pa
 
     /* Translate field path to field scope */
     FieldLoc::Items items;
-    auto origFc = origFcAndScope.first;
 
     for (std::size_t i = 0; i < origFieldPath.path->len; ++i) {
         switch (origFc->type) {
@@ -381,7 +380,7 @@ FieldLoc Ctf1MetadataStreamParser::_fieldLocFromOrigFieldPath(const ctf_field_pa
         }
     }
 
-    return createFieldLoc(origFcAndScope.second, std::move(items));
+    return createFieldLoc(scope, std::move(items));
 }
 
 Fc::UP Ctf1MetadataStreamParser::_fcFromOrigFc(const ctf_field_class_sequence& origFc)

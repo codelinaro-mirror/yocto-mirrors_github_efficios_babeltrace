@@ -78,9 +78,9 @@ public:
          */
         auto bt2MapVal = bt2::MapValue::create();
 
-        for (auto& keyJsonValPair : jsonVal) {
-            keyJsonValPair.second->accept(*this);
-            bt2MapVal->insert(keyJsonValPair.first, *_mCurBt2Val);
+        for (auto& [key, jsonElem] : jsonVal) {
+            jsonElem->accept(*this);
+            bt2MapVal->insert(key, *_mCurBt2Val);
         }
 
         _mCurBt2Val = bt2MapVal;

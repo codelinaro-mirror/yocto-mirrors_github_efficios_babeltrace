@@ -744,9 +744,9 @@ public:
         this->_setLibFc(fc, _mTraceCls->libCls()->createBitArrayFieldClass(*fc.len()));
 
         /* Set flags */
-        for (auto& flag : fc.flags()) {
-            _mLastTranslatedLibFc->asBitArray().addFlag(
-                flag.first, *libIntRangeSetFromIntRangeSet(flag.second));
+        for (auto& [name, ranges] : fc.flags()) {
+            _mLastTranslatedLibFc->asBitArray().addFlag(name,
+                                                        *libIntRangeSetFromIntRangeSet(ranges));
         }
     }
 
@@ -1156,8 +1156,8 @@ private:
     {
         BT_ASSERT(!fc.mappings().empty());
 
-        for (auto& mapping : fc.mappings()) {
-            libFc.addMapping(mapping.first, *libIntRangeSetFromIntRangeSet(mapping.second));
+        for (auto& [name, ranges] : fc.mappings()) {
+            libFc.addMapping(name, *libIntRangeSetFromIntRangeSet(ranges));
         }
     }
 
@@ -1980,10 +1980,10 @@ unsigned long long cyclesFromNs(const unsigned long long freq, const unsigned lo
  */
 void normalizeClkClsOffsetFromOrigin(ClkCls& clkCls) noexcept
 {
-    const auto offsetParts = normalizeClkOffset(clkCls.offsetFromOrigin().seconds(),
-                                                clkCls.offsetFromOrigin().cycles(), clkCls.freq());
+    const auto [offsetSeconds, offsetCycles] = normalizeClkOffset(
+        clkCls.offsetFromOrigin().seconds(), clkCls.offsetFromOrigin().cycles(), clkCls.freq());
 
-    clkCls.offsetFromOrigin(ClkOffset {offsetParts.first, offsetParts.second});
+    clkCls.offsetFromOrigin(ClkOffset {offsetSeconds, offsetCycles});
 }
 
 } /* namespace */

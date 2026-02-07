@@ -312,7 +312,7 @@ bool JsonParser<ListenerT>::_tryParseObjKey()
         BT_ASSERT(!_mKeys.empty());
 
         /* Insert, checking for duplicate key */
-        if (!_mKeys.back().insert(std::string {str}).second) {
+        if (auto [it, inserted] = _mKeys.back().emplace(str); !inserted) {
             BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW(Error, _mSs.loc(),
                                                        "Duplicate JSON object key `{}`.", str);
         }

@@ -1562,9 +1562,8 @@ protected:
         auto& objVal = ValOpsT::asObj(val);
         const auto objValTypeStr = ValOpsT::typeStr(ValType::Obj);
 
-        for (auto& keyPropReqPair : _mPropReqs) {
-            if (auto& key = keyPropReqPair.first;
-                keyPropReqPair.second.isRequired() && !ValOpsT::objValVal(objVal, key)) {
+        for (auto& [key, propReq] : _mPropReqs) {
+            if (propReq.isRequired() && !ValOpsT::objValVal(objVal, key)) {
                 BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW_SPEC(
                     this->_logger(), Error, this->_loc(objVal), "Missing mandatory {} {} `{}`.",
                     objValTypeStr, ValOpsT::objValPropName, key);

@@ -8,6 +8,7 @@
  */
 
 #include <memory>
+#include <tuple>
 
 #include <stdio.h>
 #include <string.h>
@@ -4203,10 +4204,8 @@ static int visit_clock_decl(struct ctf_visitor_generate_ir *ctx, struct ctf_node
     {
         offsetSecLL = offset_seconds;
         offsetCyclesULL = offset_cycles;
-        const auto normalized =
+        std::tie(offsetSecLL, offsetCyclesULL) =
             ctf::src::normalizeClkOffset(offsetSecLL, offsetCyclesULL, clock->frequency);
-        offsetSecLL = normalized.first;
-        offsetCyclesULL = normalized.second;
         BT_ASSERT(offsetCyclesULL < clock->frequency);
         clock->offset_seconds = offsetSecLL;
         clock->offset_cycles = offsetCyclesULL;

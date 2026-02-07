@@ -276,12 +276,11 @@ private:
             bt2c::JsonObjValReq::_validate(jsonVal);
 
             /* Validate types of entries */
-            for (auto& keyJsonValPair : jsonVal.asObj()) {
-                if (auto& jsonEntry = keyJsonValPair.second;
-                    !jsonEntry->isUInt() && !jsonEntry->isSInt() && !jsonEntry->isStr()) {
+            for (auto& [key, jsonEntry] : jsonVal.asObj()) {
+                if (!jsonEntry->isUInt() && !jsonEntry->isSInt() && !jsonEntry->isStr()) {
                     BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW_SPEC(
                         this->_logger(), bt2c::Error, jsonEntry->loc(),
-                        "Entry `{}`: expecting an integer or a string.", keyJsonValPair.first);
+                        "Entry `{}`: expecting an integer or a string.", key);
                 }
             }
         } catch (const bt2c::Error&) {
@@ -539,12 +538,12 @@ private:
             }
 
             /* Validate range sets */
-            for (auto& keyJsonValPair : jsonVal.asObj()) {
+            for (auto& [key, jsonEntry] : jsonVal.asObj()) {
                 try {
-                    _mRangeSetReq.validate(*keyJsonValPair.second);
+                    _mRangeSetReq.validate(*jsonEntry);
                 } catch (const bt2c::Error&) {
                     BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_RETHROW_SPEC(
-                        this->_logger(), jsonVal.loc(), "Invalid flag `{}`.", keyJsonValPair.first);
+                        this->_logger(), jsonVal.loc(), "Invalid flag `{}`.", key);
                 }
             }
         } catch (const bt2c::Error&) {
@@ -593,15 +592,15 @@ private:
              */
             const auto len = jsonVal.asObj().rawUIntVal(jsonstr::len);
 
-            for (auto& keyJsonValPair : jsonVal.asObj()[jsonstr::flags]->asObj()) {
-                for (auto& jsonRange : keyJsonValPair.second->asArray()) {
+            for (auto& [key, jsonRanges] : jsonVal.asObj()[jsonstr::flags]->asObj()) {
+                for (auto& jsonRange : jsonRanges->asArray()) {
                     if (auto& jsonRangeUpper = jsonRange->asArray()[1].asUInt();
                         *jsonRangeUpper >= len) {
                         BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW_SPEC(
                             this->_logger(), bt2c::Error, jsonRangeUpper.loc(),
                             "Flag `{}`: bit index {} is greater than or equal to "
                             "the value of the `{}` property ({} bits).",
-                            keyJsonValPair.first, *jsonRangeUpper, jsonstr::len, len);
+                            key, *jsonRangeUpper, jsonstr::len, len);
                     }
                 }
             }
@@ -736,13 +735,12 @@ private:
             bt2c::JsonObjValReq::_validate(jsonVal);
 
             /* Validate range sets */
-            for (auto& keyJsonValPair : jsonVal.asObj()) {
+            for (auto& [key, jsonEntry] : jsonVal.asObj()) {
                 try {
-                    _mRangeSetReq.validate(*keyJsonValPair.second);
+                    _mRangeSetReq.validate(*jsonEntry);
                 } catch (const bt2c::Error&) {
                     BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_RETHROW_SPEC(
-                        this->_logger(), jsonVal.loc(), "Invalid mapping `{}`.",
-                        keyJsonValPair.first);
+                        this->_logger(), jsonVal.loc(), "Invalid mapping `{}`.", key);
                 }
             }
         } catch (const bt2c::Error&) {

@@ -95,10 +95,10 @@ typename IntFcT::Mappings intFcMappingsOfJsonIntFc(const bt2c::JsonObjVal& jsonF
 
     if (const auto jsonMappings = jsonFc[jsonstr::mappings]) {
         /* At least one mapping */
-        for (auto& keyJsonIntRangesPair : jsonMappings->asObj()) {
-            mappings.insert(std::make_pair(keyJsonIntRangesPair.first,
-                                           intRangeSetFromJsonIntRangeSet<typename IntFcT::Val>(
-                                               keyJsonIntRangesPair.second->asArray())));
+        for (auto& [key, jsonIntRanges] : jsonMappings->asObj()) {
+            mappings.insert(std::make_pair(
+                key,
+                intRangeSetFromJsonIntRangeSet<typename IntFcT::Val>(jsonIntRanges->asArray())));
         }
     }
 
@@ -158,10 +158,9 @@ FixedLenBitMapFc::Flags fixedLenBitMapFlagsOfJsonFixedLenBitMapFc(const bt2c::Js
     FixedLenBitMapFc::Flags flags;
     const auto jsonFlags = jsonFc[jsonstr::flags];
 
-    for (auto& keyJsonIntRangesPair : jsonFlags->asObj()) {
-        flags.insert(std::make_pair(
-            keyJsonIntRangesPair.first,
-            intRangeSetFromJsonIntRangeSet<Val>(keyJsonIntRangesPair.second->asArray())));
+    for (auto& [key, jsonIntRanges] : jsonFlags->asObj()) {
+        flags.insert(
+            std::make_pair(key, intRangeSetFromJsonIntRangeSet<Val>(jsonIntRanges->asArray())));
     }
 
     return flags;
