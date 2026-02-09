@@ -480,7 +480,7 @@ template <typename ListenerT>
 void parseJson(const std::string_view str, ListenerT& listener, const std::size_t baseOffset,
                const Logger& parentLogger)
 {
-    internal::JsonParser<ListenerT> {str, listener, baseOffset, parentLogger};
+    internal::JsonParser {str, listener, baseOffset, parentLogger};
 }
 
 /*!

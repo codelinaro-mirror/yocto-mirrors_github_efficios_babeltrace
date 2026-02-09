@@ -207,7 +207,7 @@ public:
 
     CommonValueRawValueProxy<CommonValue> operator*() const noexcept
     {
-        return CommonValueRawValueProxy<CommonValue> {*this};
+        return CommonValueRawValueProxy {*this};
     }
 
     SharedValue<CommonValue<bt_value>, bt_value> copy() const
@@ -506,7 +506,7 @@ public:
 
     RawValueProxy<CommonBoolValue> operator*() const noexcept
     {
-        return RawValueProxy<CommonBoolValue> {*this};
+        return RawValueProxy {*this};
     }
 
     Value value() const noexcept
@@ -597,7 +597,7 @@ public:
 
     RawValueProxy<CommonUnsignedIntegerValue> operator*() const noexcept
     {
-        return RawValueProxy<CommonUnsignedIntegerValue> {*this};
+        return RawValueProxy {*this};
     }
 
     CommonUnsignedIntegerValue value(const Value val) const noexcept
@@ -689,7 +689,7 @@ public:
 
     RawValueProxy<CommonSignedIntegerValue> operator*() const noexcept
     {
-        return RawValueProxy<CommonSignedIntegerValue> {*this};
+        return RawValueProxy {*this};
     }
 
     CommonSignedIntegerValue value(const Value val) const noexcept
@@ -778,7 +778,7 @@ public:
 
     RawValueProxy<CommonRealValue> operator*() const noexcept
     {
-        return RawValueProxy<CommonRealValue> {*this};
+        return RawValueProxy {*this};
     }
 
     CommonRealValue value(const Value val) const noexcept
@@ -866,7 +866,7 @@ public:
 
     RawValueProxy<CommonStringValue> operator*() const noexcept
     {
-        return RawValueProxy<CommonStringValue> {*this};
+        return RawValueProxy {*this};
     }
 
     CommonStringValue value(const Value val) const

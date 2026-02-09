@@ -304,7 +304,7 @@ public:
 
     RawValueProxy<CommonBoolField> operator*() const noexcept
     {
-        return RawValueProxy<CommonBoolField> {*this};
+        return RawValueProxy {*this};
     }
 
     CommonBoolField value(const Value val) const noexcept
@@ -435,7 +435,7 @@ public:
             throw MemoryError {};
         }
 
-        return Labels<bt_field_class_bit_array_flag_label_array> {labelArray, count};
+        return Labels {labelArray, count};
     }
 };
 
@@ -508,7 +508,7 @@ public:
 
     RawValueProxy<CommonUnsignedIntegerField> operator*() const noexcept
     {
-        return RawValueProxy<CommonUnsignedIntegerField> {*this};
+        return RawValueProxy {*this};
     }
 
     CommonUnsignedIntegerField value(const Value val) const noexcept
@@ -595,7 +595,7 @@ public:
 
     RawValueProxy<CommonSignedIntegerField> operator*() const noexcept
     {
-        return RawValueProxy<CommonSignedIntegerField> {*this};
+        return RawValueProxy {*this};
     }
 
     CommonSignedIntegerField value(const Value val) const noexcept
@@ -689,7 +689,7 @@ public:
             throw MemoryError {};
         }
 
-        return Labels<bt_field_class_enumeration_mapping_label_array> {labelArray, count};
+        return Labels {labelArray, count};
     }
 };
 
@@ -769,7 +769,7 @@ public:
             throw MemoryError {};
         }
 
-        return Labels<bt_field_class_enumeration_mapping_label_array> {labelArray, count};
+        return Labels {labelArray, count};
     }
 };
 
@@ -833,7 +833,7 @@ public:
 
     RawValueProxy<CommonSinglePrecisionRealField> operator*() const noexcept
     {
-        return RawValueProxy<CommonSinglePrecisionRealField> {*this};
+        return RawValueProxy {*this};
     }
 
     CommonSinglePrecisionRealField value(const Value val) const noexcept
@@ -911,7 +911,7 @@ public:
 
     RawValueProxy<CommonDoublePrecisionRealField> operator*() const noexcept
     {
-        return RawValueProxy<CommonDoublePrecisionRealField> {*this};
+        return RawValueProxy {*this};
     }
 
     CommonDoublePrecisionRealField value(const Value val) const noexcept
@@ -986,7 +986,7 @@ public:
 
     RawValueProxy<CommonStringField> operator*() const noexcept
     {
-        return RawValueProxy<CommonStringField> {*this};
+        return RawValueProxy {*this};
     }
 
     CommonStringField value(const Value val) const

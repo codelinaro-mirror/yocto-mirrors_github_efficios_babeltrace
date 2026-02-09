@@ -81,7 +81,7 @@ IntRangeSet<ValT> intRangeSetFromJsonIntRangeSet(const bt2c::JsonArrayVal& jsonI
                                                rawIntValFromJsonIntVal<ValT>(jsonRangeArray[1])));
     }
 
-    return IntRangeSet<ValT> {std::move(ranges)};
+    return IntRangeSet {std::move(ranges)};
 }
 
 /*
