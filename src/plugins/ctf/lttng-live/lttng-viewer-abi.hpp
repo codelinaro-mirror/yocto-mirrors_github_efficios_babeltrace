@@ -9,11 +9,11 @@
 #ifndef BABELTRACE_PLUGINS_CTF_LTTNG_LIVE_LTTNG_VIEWER_ABI_HPP
 #define BABELTRACE_PLUGINS_CTF_LTTNG_LIVE_LTTNG_VIEWER_ABI_HPP
 
+#include <fmt/format.h> /* IWYU pragma: keep */
 #include <stdint.h>
 
 #include "common/common.h"
-#include "compat/limits.h"                /* IWYU pragma: keep  */
-#include "cpp-common/vendor/fmt/format.h" /* IWYU pragma: keep */
+#include "compat/limits.h" /* IWYU pragma: keep  */
 
 #define LTTNG_VIEWER_PATH_MAX      4096
 #define LTTNG_VIEWER_NAME_MAX      255

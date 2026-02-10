@@ -4,6 +4,7 @@
  * Copyright 2019 Philippe Proulx <pproulx@efficios.com>
  */
 
+#include <fmt/format.h>
 #include <glib.h>
 #include <stdio.h>
 
@@ -12,7 +13,6 @@
 #include "common/assert.h"
 #include "cpp-common/bt2/wrap.hpp"
 #include "cpp-common/bt2c/logging.hpp"
-#include "cpp-common/vendor/fmt/format.h"
 #include "ctfser/ctfser.h"
 
 #include "plugins/common/param-validation/param-validation.h"

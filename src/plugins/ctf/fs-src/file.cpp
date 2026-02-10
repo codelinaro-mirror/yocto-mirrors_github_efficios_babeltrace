@@ -4,11 +4,10 @@
  * Copyright 2016 Philippe Proulx <pproulx@efficios.com>
  */
 
+#include <fmt/format.h>
 #include <glib.h>
 #include <stdio.h>
 #include <sys/stat.h>
-
-#include "cpp-common/vendor/fmt/format.h"
 
 #include "file.hpp"
 

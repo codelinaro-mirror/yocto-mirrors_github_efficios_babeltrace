@@ -9,11 +9,11 @@
 
 #include <cstdint>
 
+#include <fmt/core.h>
 #include <glib.h>
 
 #include "cpp-common/bt2c/c-string-view.hpp"
 #include "cpp-common/bt2c/logging.hpp"
-#include "cpp-common/vendor/fmt/core.h"
 
 #include "component-class.hpp"
 #include "exc.hpp"

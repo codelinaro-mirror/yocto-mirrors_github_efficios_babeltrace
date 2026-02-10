@@ -8,10 +8,11 @@
 #include <sstream>
 #include <string>
 
+#include <fmt/format.h>
+
 #include "common/assert.h"
 #include "common/common.h"
 #include "cpp-common/bt2c/fmt.hpp"
-#include "cpp-common/vendor/fmt/format.h"
 
 #include "item.hpp"
 #include "logging-item-visitor.hpp"

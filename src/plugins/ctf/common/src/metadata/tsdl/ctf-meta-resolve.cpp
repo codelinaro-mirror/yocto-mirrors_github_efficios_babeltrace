@@ -5,12 +5,13 @@
  * Copyright 2015 Jérémie Galarneau <jeremie.galarneau@efficios.com>
  */
 
+#include <fmt/format.h>
+
 #include <babeltrace2/babeltrace.h>
 
 #include "common/assert.h"
 #include "common/common.h"
 #include "cpp-common/bt2c/logging.hpp"
-#include "cpp-common/vendor/fmt/format.h"
 
 #include "ctf-meta-visitors.hpp"
 

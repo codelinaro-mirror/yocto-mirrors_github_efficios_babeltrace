@@ -7,9 +7,10 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 #include "cpp-common/bt2c/aliases.hpp"
 #include "cpp-common/bt2c/read-fixed-len-int.hpp"
-#include "cpp-common/vendor/fmt/format.h"
 
 #include "metadata-stream-decoder.hpp"
 

@@ -30,8 +30,9 @@ and equalOrBothNull().
 #include <string>
 #include <string_view>
 
+#include <fmt/format.h> /* IWYU pragma: keep */
+
 #include "common/assert.h"
-#include "cpp-common/vendor/fmt/format.h" /* IWYU pragma: keep */
 
 #include "type-traits.hpp"
 

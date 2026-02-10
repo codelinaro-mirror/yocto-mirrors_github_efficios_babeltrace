@@ -11,13 +11,13 @@
 #ifndef BABELTRACE_PLUGINS_CTF_LTTNG_LIVE_LTTNG_LIVE_HPP
 #define BABELTRACE_PLUGINS_CTF_LTTNG_LIVE_LTTNG_LIVE_HPP
 
+#include <fmt/format.h> /* IWYU pragma: keep */
 #include <glib.h>
 #include <stdint.h>
 
 #include <babeltrace2/babeltrace.h>
 
 #include "cpp-common/bt2/message.hpp"
-#include "cpp-common/vendor/fmt/format.h" /* IWYU pragma: keep */
 
 #include "plugins/common/muxing/muxing.hpp"
 

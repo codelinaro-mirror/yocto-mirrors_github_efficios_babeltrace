@@ -886,7 +886,7 @@ AC_SUBST(AM_CFLAGS)
 AC_SUBST(AM_LDFLAGS)
 
 # Set global CPPFLAGS in AM_CPPFLAGS
-AM_CPPFLAGS="-I\$(top_srcdir)/include -I\$(top_builddir)/src -I\$(top_srcdir)/src -include common/config.h"
+AM_CPPFLAGS="-I\$(top_srcdir)/include -I\$(top_builddir)/src -I\$(top_srcdir)/src -I\$(top_srcdir)/src/cpp-common/vendor -include common/config.h"
 AC_SUBST(AM_CPPFLAGS)
 
 # Add glib to global link libs

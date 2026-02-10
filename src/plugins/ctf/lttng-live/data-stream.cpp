@@ -10,11 +10,12 @@
 #include <memory>
 #include <sstream>
 
+#include <fmt/format.h>
+
 #include <babeltrace2/babeltrace.h>
 
 #include "common/assert.h"
 #include "compat/mman.h" /* IWYU pragma: keep  */
-#include "cpp-common/vendor/fmt/format.h"
 
 #include "../common/src/pkt-props.hpp"
 #include "data-stream.hpp"

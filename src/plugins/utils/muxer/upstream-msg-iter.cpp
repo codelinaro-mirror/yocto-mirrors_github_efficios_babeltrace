@@ -4,12 +4,12 @@
  * Copyright 2017-2023 Philippe Proulx <pproulx@efficios.com>
  */
 
+#include <fmt/core.h>
+#include <fmt/format.h>
 #include <glib.h>
 
 #include "cpp-common/bt2/optional-borrowed-object.hpp"
 #include "cpp-common/bt2c/logging.hpp"
-#include "cpp-common/vendor/fmt/core.h"
-#include "cpp-common/vendor/fmt/format.h"
 
 #include "upstream-msg-iter.hpp"
 

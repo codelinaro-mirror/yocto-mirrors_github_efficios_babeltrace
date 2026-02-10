@@ -10,11 +10,12 @@
 #include <cstdint>
 #include <memory>
 
+#include <fmt/format.h> /* IWYU pragma: keep */
+
 #include <babeltrace2/babeltrace.h>
 
 #include "common/assert.h"
 #include "cpp-common/bt2c/c-string-view.hpp"
-#include "cpp-common/vendor/fmt/format.h" /* IWYU pragma: keep */
 
 #include "borrowed-object.hpp"
 #include "component-class.hpp"

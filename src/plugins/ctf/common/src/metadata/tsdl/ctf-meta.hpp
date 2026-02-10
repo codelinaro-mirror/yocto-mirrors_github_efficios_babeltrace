@@ -7,6 +7,7 @@
 #ifndef BABELTRACE_PLUGINS_CTF_COMMON_SRC_METADATA_TSDL_CTF_META_HPP
 #define BABELTRACE_PLUGINS_CTF_COMMON_SRC_METADATA_TSDL_CTF_META_HPP
 
+#include <fmt/format.h> /* IWYU pragma: keep */
 #include <glib.h>
 #include <stdint.h>
 #include <string.h>
@@ -16,7 +17,6 @@
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/uuid.h"
-#include "cpp-common/vendor/fmt/format.h" /* IWYU pragma: keep */
 
 enum ctf_field_class_type
 {

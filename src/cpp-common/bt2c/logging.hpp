@@ -13,6 +13,7 @@
 #include <utility>
 #include <vector>
 
+#include <fmt/core.h>
 #include <glib.h>
 
 #include <babeltrace2/babeltrace.h>
@@ -22,7 +23,6 @@
 #include "cpp-common/bt2/self-component-class.hpp"
 #include "cpp-common/bt2/self-component-port.hpp"
 #include "cpp-common/bt2/self-message-iterator.hpp"
-#include "cpp-common/vendor/fmt/core.h"
 #include "cpp-common/vendor/wise-enum/wise_enum.h"
 #include "logging/log-api.h"
 

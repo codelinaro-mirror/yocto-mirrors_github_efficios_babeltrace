@@ -4,7 +4,7 @@
  * Copyright 2017-2023 Philippe Proulx <pproulx@efficios.com>
  */
 
-#include "cpp-common/vendor/fmt/core.h"
+#include <fmt/core.h>
 
 #include "comp.hpp"
 

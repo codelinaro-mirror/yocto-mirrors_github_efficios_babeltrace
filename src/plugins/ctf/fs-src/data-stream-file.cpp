@@ -6,6 +6,7 @@
  * Copyright 2010-2011 EfficiOS Inc. and Linux Foundation
  */
 
+#include <fmt/format.h>
 #include <glib.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -14,7 +15,6 @@
 #include "compat/endian.h" /* IWYU pragma: keep  */
 #include "compat/mman.h"   /* IWYU: pragma keep  */
 #include "cpp-common/bt2c/glib-up.hpp"
-#include "cpp-common/vendor/fmt/format.h"
 
 #include "../common/src/pkt-props.hpp"
 #include "data-stream-file.hpp"

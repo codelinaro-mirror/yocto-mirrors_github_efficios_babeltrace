@@ -6,7 +6,7 @@
 
 #include <memory>
 
-#include "cpp-common/vendor/fmt/format.h" /* IWYU pragma: keep */
+#include <fmt/format.h> /* IWYU pragma: keep */
 
 #include "../utils/run-in.hpp"
 #include "clk-cls-compat-postconds-triggers.hpp"

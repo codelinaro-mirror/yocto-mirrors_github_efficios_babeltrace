@@ -4,8 +4,9 @@
  * Copyright (C) 2024 EfficiOS, Inc.
  */
 
+#include <fmt/format.h>
+
 #include "cpp-common/bt2c/uuid.hpp"
-#include "cpp-common/vendor/fmt/format.h"
 
 #include "catch2/catch_test_macros.hpp"
 

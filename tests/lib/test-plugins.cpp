@@ -7,6 +7,7 @@
 #include <functional>
 #include <string>
 
+#include <fmt/core.h>
 #include <glib.h>
 
 #include <babeltrace2/babeltrace.h>
@@ -17,7 +18,6 @@
 #include "cpp-common/bt2/query-executor.hpp"
 #include "cpp-common/bt2/value.hpp"
 #include "cpp-common/bt2c/fmt.hpp" /* IWYU pragma: keep */
-#include "cpp-common/vendor/fmt/core.h"
 
 #include "catch2/catch_test_macros.hpp"
 

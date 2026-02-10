@@ -9,6 +9,7 @@
 
 #include <memory>
 
+#include <fmt/format.h> /* IWYU pragma: keep */
 #include <glib.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -18,7 +19,6 @@
 #include "common/assert.h"
 #include "common/list.h"
 #include "cpp-common/bt2c/logging.hpp"
-#include "cpp-common/vendor/fmt/format.h" /* IWYU pragma: keep */
 
 #include "ctf-meta.hpp"
 

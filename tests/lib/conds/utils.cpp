@@ -6,13 +6,13 @@
 
 #include <unordered_set>
 
+#include <fmt/core.h>
 #include <glib.h>
 #include <string.h>
 
 #include <babeltrace2/babeltrace.h>
 
 #include "common/assert.h"
-#include "cpp-common/vendor/fmt/core.h"
 #include "cpp-common/vendor/nlohmann/json.hpp"
 
 #include "utils.hpp"

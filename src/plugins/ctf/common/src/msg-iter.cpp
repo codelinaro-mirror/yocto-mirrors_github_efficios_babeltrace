@@ -8,13 +8,14 @@
 #include <algorithm>
 #include <functional>
 
+#include <fmt/format.h>
+
 #include "common/assert.h"
 #include "common/common.h"
 #include "cpp-common/bt2/message.hpp"
 #include "cpp-common/bt2/trace-ir.hpp"
 #include "cpp-common/bt2c/aliases.hpp"
 #include "cpp-common/bt2c/fmt.hpp" /* IWYU pragma: keep */
-#include "cpp-common/vendor/fmt/format.h"
 
 #include "item-seq/item.hpp"
 #include "metadata/ctf-ir.hpp"

@@ -25,8 +25,9 @@ When you include this file, you get custom {fmt} formatting of:
 - A bt2c::UuidView instance.
 */
 
+#include <fmt/format.h> /* IWYU pragma: keep */
+
 #include "cpp-common/bt2/value.hpp"
-#include "cpp-common/vendor/fmt/format.h" /* IWYU pragma: keep */
 #include "cpp-common/vendor/wise-enum/wise_enum.h"
 
 #include "uuid.hpp"
