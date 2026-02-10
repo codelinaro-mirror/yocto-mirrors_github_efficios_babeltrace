@@ -73,7 +73,7 @@ static ds_file_status ds_file_munmap(struct ctf_fs_ds_file *ds_file)
                               ": address={}, size={}, file_path=\"{}\", file={}",
                               fmt::ptr(ds_file->mmap_addr), ds_file->mmap_len,
                               ds_file->file ? ds_file->file->path : "NULL",
-                              ds_file->file ? fmt::ptr(ds_file->file->fp) : nullptr);
+                              ds_file->file ? fmt::ptr(ds_file->file->fp.get()) : nullptr);
         return DS_FILE_STATUS_ERROR;
     }
 
@@ -128,7 +128,7 @@ static ds_file_status ds_file_mmap(struct ctf_fs_ds_file *ds_file, off_t request
     if (ds_file->mmap_addr == MAP_FAILED) {
         BT_CPPLOGE_SPEC(ds_file->logger,
                         "Cannot memory-map address (size {}) of file \"{}\" ({}) at offset {}: {}",
-                        ds_file->mmap_len, ds_file->file->path, fmt::ptr(ds_file->file->fp),
+                        ds_file->mmap_len, ds_file->file->path, fmt::ptr(ds_file->file->fp.get()),
                         (intmax_t) ds_file->mmap_offset_in_file, strerror(errno));
         return DS_FILE_STATUS_ERROR;
     }

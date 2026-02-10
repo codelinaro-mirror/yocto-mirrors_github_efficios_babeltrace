@@ -218,6 +218,7 @@ cpp_common_libcpp_common_la_SOURCES = \
 
 cpp_common_vendor_fmt_libfmt_la_SOURCES = \
 	cpp-common/vendor/fmt/args.h \
+	cpp-common/vendor/fmt/base.h \
 	cpp-common/vendor/fmt/chrono.h \
 	cpp-common/vendor/fmt/color.h \
 	cpp-common/vendor/fmt/compile.h \

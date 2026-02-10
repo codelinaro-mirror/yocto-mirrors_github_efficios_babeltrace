@@ -25,7 +25,7 @@ int ctf_fs_file_open(struct ctf_fs_file *file, const char *mode)
         goto error;
     }
 
-    BT_CPPLOGI_SPEC(file->logger, "Opened file: {}", fmt::ptr(file->fp));
+    BT_CPPLOGI_SPEC(file->logger, "Opened file: {}", fmt::ptr(file->fp.get()));
 
     if (fstat(fileno(file->fp.get()), &stat)) {
         BT_CPPLOGE_ERRNO_APPEND_CAUSE_SPEC(file->logger, "Cannot get file information", ": path={}",
