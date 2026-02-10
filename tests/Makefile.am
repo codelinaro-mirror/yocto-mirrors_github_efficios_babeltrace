@@ -243,6 +243,13 @@ AM_CPPFLAGS += $(CATCH2_CFLAGS)
 CATCH2_LDADD = $(CATCH2_LIBS)
 endif
 
+if ENABLE_VENDOR_FMT
+FMT_LDADD = $(top_builddir)/src/cpp-common/vendor/fmt/libfmt.la
+else
+AM_CPPFLAGS += $(FMT_CFLAGS)
+FMT_LDADD = $(FMT_LIBS)
+endif
+
 COMMON_TEST_LDADD = \
 	$(CATCH2_LDADD) \
 	$(top_builddir)/src/common/libcommon.la \
@@ -254,7 +261,7 @@ LIB_COMMON_TEST_LDADD = \
 	$(CATCH2_LDADD) \
 	$(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/logging/liblogging.la \
-	$(top_builddir)/src/cpp-common/vendor/fmt/libfmt.la
+	$(FMT_LDADD)
 
 # CTF trace generators common link flags
 GEN_TRACE_LDADD = \
@@ -572,13 +579,13 @@ noinst_PROGRAMS += cpp-common/test-uuid
 cpp_common_test_uuid_SOURCES = cpp-common/test-uuid.cpp
 cpp_common_test_uuid_LDADD = \
 	$(COMMON_TEST_LDADD) \
-	$(top_builddir)/src/cpp-common/vendor/fmt/libfmt.la
+	$(FMT_LDADD)
 
 noinst_PROGRAMS += cpp-common/test-unicode-conv
 cpp_common_test_unicode_conv_SOURCES = cpp-common/test-unicode-conv.cpp
 cpp_common_test_unicode_conv_LDADD = \
 	$(top_builddir)/src/cpp-common/libcpp-common.la \
-	$(top_builddir)/src/cpp-common/vendor/fmt/libfmt.la \
+	$(FMT_LDADD) \
 	$(top_builddir)/src/lib/libbabeltrace2.la \
 	$(COMMON_TEST_LDADD)
 
@@ -716,7 +723,7 @@ param_validation_test_param_validation_LDADD = \
 	$(top_builddir)/src/lib/libbabeltrace2.la \
 	$(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/logging/liblogging.la \
-	$(top_builddir)/src/cpp-common/vendor/fmt/libfmt.la
+	$(FMT_LDADD)
 
 noinst_PROGRAMS += plugins/src.ctf.fs/succeed/gen-trace-simple.bin
 plugins_src_ctf_fs_succeed_gen_trace_simple_bin_SOURCES = plugins/src.ctf.fs/succeed/gen-trace-simple.c

@@ -21,6 +21,13 @@ PLUGINS_PATH = $(abs_top_builddir)/src/plugins
 # no plugins found (plugins are effectively not embedded).
 plugin_archive_builtin = $(LD_WHOLE_ARCHIVE)$(PLUGINS_PATH)/$(1)/.libs/libbabeltrace-plugin-$(1)-builtin.a$(LD_NO_WHOLE_ARCHIVE)
 
+if ENABLE_VENDOR_FMT
+FMT_LDADD = $(top_builddir)/src/cpp-common/vendor/fmt/libfmt.la
+else
+AM_CPPFLAGS += $(FMT_CFLAGS)
+FMT_LDADD = $(FMT_LIBS)
+endif
+
 bin_PROGRAMS = babeltrace2
 
 babeltrace2_SOURCES = \
@@ -87,7 +94,7 @@ babeltrace2_LDADD += \
 	$(top_builddir)/src/plugins/common/muxing/libmuxing.la \
 	$(top_builddir)/src/clock-correlation-validator/libclock-correlation-validator.la \
 	$(top_builddir)/src/cpp-common/libcpp-common.la \
-	$(top_builddir)/src/cpp-common/vendor/fmt/libfmt.la \
+	$(FMT_LDADD) \
 	$(top_builddir)/src/ctfser/libctfser.la \
 	$(top_builddir)/src/compat/libcompat.la
 

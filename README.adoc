@@ -100,8 +100,15 @@ Libraries::
     * A C library (for example,
       https://www.gnu.org/software/libc/[GNU{nbsp}C Library],
       https://www.musl-libc.org/[musl libc])
+
     * https://developer.gnome.org/glib/[GLib]{nbsp}≥{nbsp}2.28
       (Debian/Ubuntu: `libglib2.0-dev`; Fedora: `glib2-devel`)
+
+    * https://fmt.dev/[pass:[{fmt}]]{nbsp}≥{nbsp}10.1.1
+      (Debian/Ubuntu: `libfmt-dev`; Fedora: `fmt-devel`)
++
+Use an in-tree pass:[{fmt}] with `--enable-vendor-fmt` if you can't
+install it.
 
 _**If you need the `bt2` Python bindings**_::
     * https://www.python.org[Python]{nbsp}≥{nbsp}3.5 (development
@@ -162,7 +169,7 @@ We'd like to thank the authors of the following projects which are
 embedded into the {bt2} source tree:
 
 * https://github.com/catchorg/Catch2[Catch2] (with `--enable-vendor-catch2`)
-* https://github.com/fmtlib/fmt[\{fmt}]
+* https://github.com/fmtlib/fmt[pass:[{fmt}]] (with `--enable-vendor-fmt`)
 * https://github.com/nlohmann/json[JSON for Modern {cpp}]
 * https://github.com/martinmoene/span-lite[span lite]
 * https://github.com/quicknir/wise_enum[wise_enum]

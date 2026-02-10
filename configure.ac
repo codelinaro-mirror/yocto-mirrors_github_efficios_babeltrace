@@ -466,6 +466,11 @@ AE_FEATURE([vendor-pytest],[Use the in-tree pytest instead of an installed one])
 AE_FEATURE_DEFAULT_DISABLE
 AE_FEATURE([vendor-catch2],[Use the in-tree Catch2 v3 instead of an installed one])
 
+# Vendor {fmt}
+# Disabled by default
+AE_FEATURE_DEFAULT_DISABLE
+AE_FEATURE([vendor-fmt],[Use the in-tree {fmt} instead of an installed one])
+
 # When given, add -Werror to WARN_CFLAGS and WARN_CXXFLAGS.
 # Disabled by default
 AE_FEATURE_DEFAULT_DISABLE
@@ -543,6 +548,7 @@ AM_CONDITIONAL([ENABLE_PYTHON_COMMON_DEPS], AE_IS_FEATURE_ENABLED([python-bindin
 AM_CONDITIONAL([ENABLE_ASAN], AE_IS_FEATURE_ENABLED([asan]))
 AM_CONDITIONAL([ENABLE_TESTS], AE_IS_FEATURE_ENABLED([tests]))
 AM_CONDITIONAL([ENABLE_VENDOR_CATCH2], AE_IS_FEATURE_ENABLED([vendor-catch2]))
+AM_CONDITIONAL([ENABLE_VENDOR_FMT], AE_IS_FEATURE_ENABLED([vendor-fmt]))
 
 
 ##                                                                    ##
@@ -632,6 +638,14 @@ AE_IF_FEATURE_ENABLED([tests], [
 ])
 
 AC_SUBST([HAVE_VENDOR_PYTEST])
+
+# {fmt} library
+AE_IF_FEATURE_ENABLED([vendor-fmt], [
+  AC_MSG_NOTICE([using in-tree {fmt}])
+], [
+  PKG_CHECK_MODULES([FMT], [fmt >= 10.1.1], [],
+    [AC_MSG_ERROR([{fmt} >= 10.1.1 is required. Use ‘--enable-vendor-fmt’ to build and use the in-tree {fmt}.])])
+])
 
 AS_IF([AE_IS_FEATURE_ENABLED([python-bindings]) || AE_IS_FEATURE_ENABLED([python-plugins])], [
   AS_IF([test "x$have_python_dev" = xno], [
@@ -886,7 +900,12 @@ AC_SUBST(AM_CFLAGS)
 AC_SUBST(AM_LDFLAGS)
 
 # Set global CPPFLAGS in AM_CPPFLAGS
-AM_CPPFLAGS="-I\$(top_srcdir)/include -I\$(top_builddir)/src -I\$(top_srcdir)/src -I\$(top_srcdir)/src/cpp-common/vendor -include common/config.h"
+AM_CPPFLAGS="-I\$(top_srcdir)/include -I\$(top_builddir)/src -I\$(top_srcdir)/src -include common/config.h"
+
+AE_IF_FEATURE_ENABLED([vendor-fmt], [
+  AM_CPPFLAGS="${AM_CPPFLAGS} -I\$(top_srcdir)/src/cpp-common/vendor"
+])
+
 AC_SUBST(AM_CPPFLAGS)
 
 # Add glib to global link libs
@@ -966,6 +985,11 @@ done
 ]
 
 AE_PPRINT_PROP_STRING([Target architecture], $target_arch)
+
+AS_ECHO
+AE_PPRINT_SUBTITLE([Dependencies])
+test \"x$enable_vendor_fmt\" = \"xyes\" && value=1 || value=0
+AE_PPRINT_PROP_BOOL([Use in-tree {fmt}], $value)
 
 AS_ECHO
 AE_PPRINT_SUBTITLE([Python 3 language support])

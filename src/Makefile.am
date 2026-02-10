@@ -61,7 +61,6 @@ noinst_LTLIBRARIES = \
 	common/libcommon.la \
 	compat/libcompat.la \
 	cpp-common/libcpp-common.la \
-	cpp-common/vendor/fmt/libfmt.la \
 	ctfser/libctfser.la \
 	fd-cache/libfd-cache.la \
 	logging/liblogging.la \
@@ -71,6 +70,36 @@ noinst_LTLIBRARIES = \
 	plugins/ctf/common/metadata/libctf-ast.la \
 	plugins/ctf/common/metadata/libctf-parser.la \
 	string-format/libstring-format.la
+
+if ENABLE_VENDOR_FMT
+noinst_LTLIBRARIES += cpp-common/vendor/fmt/libfmt.la
+
+cpp_common_vendor_fmt_libfmt_la_SOURCES = \
+	cpp-common/vendor/fmt/args.h \
+	cpp-common/vendor/fmt/base.h \
+	cpp-common/vendor/fmt/chrono.h \
+	cpp-common/vendor/fmt/color.h \
+	cpp-common/vendor/fmt/compile.h \
+	cpp-common/vendor/fmt/core.h \
+	cpp-common/vendor/fmt/format-inl.h \
+	cpp-common/vendor/fmt/format.cc \
+	cpp-common/vendor/fmt/format.h \
+	cpp-common/vendor/fmt/os.cc \
+	cpp-common/vendor/fmt/os.h \
+	cpp-common/vendor/fmt/ostream.h \
+	cpp-common/vendor/fmt/printf.h \
+	cpp-common/vendor/fmt/ranges.h \
+	cpp-common/vendor/fmt/std.h \
+	cpp-common/vendor/fmt/xchar.h
+
+cpp_common_vendor_fmt_libfmt_la_CXXFLAGS = \
+	$(AM_CXXFLAGS) -Wno-missing-noreturn
+
+FMT_LDADD = cpp-common/vendor/fmt/libfmt.la
+else
+AM_CPPFLAGS += $(FMT_CFLAGS)
+FMT_LDADD = $(FMT_LIBS)
+endif
 
 
 argpar_libargpar_la_SOURCES = \
@@ -215,27 +244,6 @@ cpp_common_libcpp_common_la_SOURCES = \
 	cpp-common/vendor/wise-enum/wise_enum.h \
 	cpp-common/vendor/wise-enum/wise_enum_detail.h \
 	cpp-common/vendor/wise-enum/wise_enum_generated.h
-
-cpp_common_vendor_fmt_libfmt_la_SOURCES = \
-	cpp-common/vendor/fmt/args.h \
-	cpp-common/vendor/fmt/base.h \
-	cpp-common/vendor/fmt/chrono.h \
-	cpp-common/vendor/fmt/color.h \
-	cpp-common/vendor/fmt/compile.h \
-	cpp-common/vendor/fmt/core.h \
-	cpp-common/vendor/fmt/format-inl.h \
-	cpp-common/vendor/fmt/format.cc \
-	cpp-common/vendor/fmt/format.h \
-	cpp-common/vendor/fmt/os.cc \
-	cpp-common/vendor/fmt/os.h \
-	cpp-common/vendor/fmt/ostream.h \
-	cpp-common/vendor/fmt/printf.h \
-	cpp-common/vendor/fmt/ranges.h \
-	cpp-common/vendor/fmt/std.h \
-	cpp-common/vendor/fmt/xchar.h
-
-cpp_common_vendor_fmt_libfmt_la_CXXFLAGS = \
-	$(AM_CXXFLAGS) -Wno-missing-noreturn
 
 ctfser_libctfser_la_SOURCES = \
 	ctfser/ctfser.c \
@@ -699,7 +707,7 @@ plugins_utils_babeltrace_plugin_utils_la_LIBADD = \
 	plugins/common/muxing/libmuxing.la \
 	lib/libbabeltrace2.la \
 	common/libcommon.la \
-	cpp-common/vendor/fmt/libfmt.la \
+	$(FMT_LDADD) \
 	logging/liblogging.la \
 	plugins/common/param-validation/libparam-validation.la \
 	clock-correlation-validator/libclock-correlation-validator.la
@@ -809,7 +817,7 @@ plugins_ctf_babeltrace_plugin_ctf_la_LIBADD = \
 	plugins/common/muxing/libmuxing.la \
 	common/libcommon.la \
 	ctfser/libctfser.la \
-	cpp-common/vendor/fmt/libfmt.la
+	$(FMT_LDADD)
 
 if BABELTRACE_BUILD_WITH_MINGW
 plugins_ctf_babeltrace_plugin_ctf_la_LIBADD += -lws2_32
