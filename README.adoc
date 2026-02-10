@@ -5,7 +5,7 @@
 // Render with Asciidoctor
 
 = Babeltrace 2
-4 February 2026
+10 February 2026
 :btversion: 2.1
 :bt2: Babeltrace{nbsp}2
 ifdef::env-github[]
@@ -132,6 +132,7 @@ _**If you need to build and run the tests**_:: {empty}
 * https://www.python.org[Python]{nbsp}≥{nbsp}3.5 (development
   libraries and `python3-config`)
   (Debian/Ubuntu: `python3-dev`; Fedora: `python3-devel`)
+
 * https://docs.pytest.org/[pytest]{nbsp}≥{nbsp}6.1.0
   (Debian/Ubuntu/Fedora: `python3-pytest`)
 +
@@ -139,6 +140,12 @@ Use an in-tree pytest with `--enable-vendor-pytest` if you can't
 install it.
 
 * http://www.swig.org[SWIG]{nbsp}≥{nbsp}3.0
+
+* https://github.com/catchorg/Catch2[Catch2]{nbsp}≥{nbsp}3.7.1
+  (Debian/Ubuntu: `libcatch2-dev`)
++
+Use an in-tree Catch2{nbsp}v3 with `--enable-vendor-catch2` if you can't
+install it.
 --
 +
 Disable test building with `--disable-tests` at configuration time.
@@ -154,7 +161,7 @@ endif::[]
 We'd like to thank the authors of the following projects which are
 embedded into the {bt2} source tree:
 
-* https://github.com/catchorg/Catch2[Catch2]
+* https://github.com/catchorg/Catch2[Catch2] (with `--enable-vendor-catch2`)
 * https://github.com/fmtlib/fmt[\{fmt}]
 * https://github.com/nlohmann/json[JSON for Modern {cpp}]
 * https://github.com/martinmoene/span-lite[span lite]

@@ -236,15 +236,22 @@ EXTRA_DIST = \
 
 AM_CPPFLAGS += -I$(top_srcdir)/tests/utils
 
+if ENABLE_VENDOR_CATCH2
+CATCH2_LDADD = utils/catch2/libcatch2.la
+else
+AM_CPPFLAGS += $(CATCH2_CFLAGS)
+CATCH2_LDADD = $(CATCH2_LIBS)
+endif
+
 COMMON_TEST_LDADD = \
-	utils/catch2/libcatch2.la \
+	$(CATCH2_LDADD) \
 	$(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/logging/liblogging.la
 
 LIB_COMMON_TEST_LDADD = \
 	utils/libtestcommon.la \
 	lib/utils/liblib-utils.la \
-	utils/catch2/libcatch2.la \
+	$(CATCH2_LDADD) \
 	$(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/logging/liblogging.la \
 	$(top_builddir)/src/cpp-common/vendor/fmt/libfmt.la
@@ -258,6 +265,7 @@ GEN_TRACE_LDADD = \
 noinst_LTLIBRARIES =
 noinst_PROGRAMS =
 
+if ENABLE_VENDOR_CATCH2
 noinst_LTLIBRARIES += utils/catch2/libcatch2.la
 utils_catch2_libcatch2_la_SOURCES = \
 	utils/catch2/benchmark/catch_benchmark.hpp \
@@ -548,6 +556,7 @@ utils_catch2_libcatch2_la_SOURCES = \
 	utils/catch2/reporters/catch_reporter_xml.cpp \
 	utils/catch2/reporters/catch_reporter_xml.hpp \
 	utils/catch2/reporters/catch_reporters_all.hpp
+endif # ENABLE_VENDOR_CATCH2
 
 noinst_LTLIBRARIES += utils/libtestcommon.la
 utils_libtestcommon_la_SOURCES = \
@@ -693,7 +702,7 @@ noinst_PROGRAMS += ctf-writer/test-ctf-writer
 ctf_writer_test_ctf_writer_SOURCES = ctf-writer/test-ctf-writer.cpp
 ctf_writer_test_ctf_writer_LDADD = \
 	utils/libtestcommon.la \
-	utils/catch2/libcatch2.la \
+	$(CATCH2_LDADD) \
 	$(top_builddir)/src/ctf-writer/libbabeltrace2-ctf-writer.la \
 	$(top_builddir)/src/common/libcommon.la \
 	$(top_builddir)/src/logging/liblogging.la
@@ -701,7 +710,7 @@ ctf_writer_test_ctf_writer_LDADD = \
 noinst_PROGRAMS += param-validation/test-param-validation
 param_validation_test_param_validation_SOURCES = param-validation/test-param-validation.cpp
 param_validation_test_param_validation_LDADD = \
-	utils/catch2/libcatch2.la \
+	$(CATCH2_LDADD) \
 	$(top_builddir)/src/param-parse/libparam-parse.la \
 	$(top_builddir)/src/plugins/common/param-validation/libparam-validation.la \
 	$(top_builddir)/src/lib/libbabeltrace2.la \
@@ -729,7 +738,7 @@ plugins_flt_lttng_utils_debug_info_dwarf_test_bin_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	-I$(top_srcdir)/src/plugins
 plugins_flt_lttng_utils_debug_info_dwarf_test_bin_LDADD = \
-	utils/catch2/libcatch2.la \
+	$(CATCH2_LDADD) \
 	$(top_builddir)/src/plugins/lttng-utils/debug-info/libdebug-info.la \
 	$(top_builddir)/src/fd-cache/libfd-cache.la \
 	$(top_builddir)/src/logging/liblogging.la \
@@ -742,7 +751,7 @@ plugins_flt_lttng_utils_debug_info_bin_info_test_bin_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	-I$(top_srcdir)/src/plugins
 plugins_flt_lttng_utils_debug_info_bin_info_test_bin_LDADD = \
-	utils/catch2/libcatch2.la \
+	$(CATCH2_LDADD) \
 	$(top_builddir)/src/plugins/lttng-utils/debug-info/libdebug-info.la \
 	$(top_builddir)/src/fd-cache/libfd-cache.la \
 	$(top_builddir)/src/logging/liblogging.la \

@@ -461,6 +461,11 @@ AE_FEATURE([tests],[Do not build tests])
 AE_FEATURE_DEFAULT_DISABLE
 AE_FEATURE([vendor-pytest],[Use the in-tree pytest instead of an installed one])
 
+# Vendor Catch2 v3
+# Disabled by default
+AE_FEATURE_DEFAULT_DISABLE
+AE_FEATURE([vendor-catch2],[Use the in-tree Catch2 v3 instead of an installed one])
+
 # When given, add -Werror to WARN_CFLAGS and WARN_CXXFLAGS.
 # Disabled by default
 AE_FEATURE_DEFAULT_DISABLE
@@ -537,6 +542,7 @@ AM_CONDITIONAL([ENABLE_MAN_PAGES], AE_IS_FEATURE_ENABLED([man-pages]))
 AM_CONDITIONAL([ENABLE_PYTHON_COMMON_DEPS], AE_IS_FEATURE_ENABLED([python-bindings]) || AE_IS_FEATURE_ENABLED([python-plugins]))
 AM_CONDITIONAL([ENABLE_ASAN], AE_IS_FEATURE_ENABLED([asan]))
 AM_CONDITIONAL([ENABLE_TESTS], AE_IS_FEATURE_ENABLED([tests]))
+AM_CONDITIONAL([ENABLE_VENDOR_CATCH2], AE_IS_FEATURE_ENABLED([vendor-catch2]))
 
 
 ##                                                                    ##
@@ -603,6 +609,15 @@ AE_IF_FEATURE_ENABLED([tests], [
       AC_MSG_RESULT([no])
       AC_MSG_ERROR([pytest >= 6.1.0 is required to build tests. Use ‘--disable-tests’  to disable building tests or use ‘--enable-vendor-pytest’ to use the in-tree pytest.])
     ])
+  ])
+
+  AE_IF_FEATURE_ENABLED([vendor-catch2], [
+    # Use in-tree Catch2
+    AC_MSG_NOTICE([using in-tree Catch2 v3])
+  ], [
+    # Check for Catch2 >= 3.7.1, < 4.0.0
+    PKG_CHECK_MODULES([CATCH2], [catch2-with-main >= 3.7.1 catch2-with-main < 4.0.0], [],
+      [AC_MSG_ERROR([Catch2 v3 is required to build tests. Use ‘--disable-tests’ to disable building tests or use ‘--enable-vendor-catch2’ to build and use the in-tree Catch2 v3.])])
   ])
 
   # Check for Python bindings
@@ -1031,6 +1046,8 @@ test \"x$enable_tests\" = \"xyes\" && value=1 || value=0
 AE_PPRINT_PROP_BOOL([Build tests], $value)
 test \"x$enable_vendor_pytest\" = \"xyes\" && value=1 || value=0
 AE_PPRINT_PROP_BOOL([Use in-tree pytest], $value)
+test \"x$enable_vendor_catch2\" = \"xyes\" && value=1 || value=0
+AE_PPRINT_PROP_BOOL([Use in-tree Catch2 v3], $value)
 
 AS_ECHO
 AE_PPRINT_SUBTITLE([Special build modes])
