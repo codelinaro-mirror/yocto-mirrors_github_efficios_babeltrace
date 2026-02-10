@@ -322,7 +322,7 @@ def test_compare_to_ctf_fs(
         text_plugin = bt2.find_plugin("text")
         sink_spec = btu.SinkComponentSpec(
             text_plugin.sink_component_classes["details"],
-            {"path": str(output_path), **details_params},
+            {"path": str(output_path), "color": "never", **details_params},
         )
         btu.convert(
             ctf_traces_dir / "1/succeed/multi-domains", sink_spec, mip_version=0
@@ -418,7 +418,9 @@ def test_invalid_metadata(live_comp_cls, ctf_traces_dir, test_data_dir):
             },
         )
         text_plugin = bt2.find_plugin("text")
-        sink_spec = btu.SinkComponentSpec(text_plugin.sink_component_classes["details"])
+        sink_spec = btu.SinkComponentSpec(
+            text_plugin.sink_component_classes["details"], {"color": "never"}
+        )
 
         with pytest.raises(bt2._Error) as exc_info:
             btu.convert(src_spec, sink_spec)

@@ -701,6 +701,10 @@ def convert(
 # • A `pathlib.Path` object (expectation file path).
 # • A string (dedented before comparison).
 #
+# The `sink.text.details` component receives its `color` initialization
+# parameter set to `never`, therefore the expectation string must not
+# contain terminal color codes.
+#
 # `details_params` is an optional dictionary of initialization
 # parameters to pass to the `sink.text.details` component.
 #
@@ -744,6 +748,7 @@ def convert_sink_text_details_test(
         # Add the path to the details params
         full_params = dict(details_params)
         full_params["path"] = str(temp_path)
+        full_params["color"] = "never"
 
         # Create sink component spec
         sink_spec = SinkComponentSpec(

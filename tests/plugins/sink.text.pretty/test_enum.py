@@ -354,7 +354,7 @@ def test_enum(capfd, pretty_comp_cls, enum_mappings, is_signed, value, expected)
             ),
             btu.SinkComponentSpec(
                 pretty_comp_cls,
-                {"print-enum-flags": True, "path": str(out_path)},
+                {"print-enum-flags": True, "path": str(out_path), "color": "never"},
             ),
         )
 

@@ -120,6 +120,10 @@ def run_cli(
 # • A `pathlib.Path` object (expectation file path).
 # • A string (dedented before comparison).
 #
+# The `sink.text.details` component receives its `color` initialization
+# parameter set to `never`, therefore the expectation string must not
+# contain terminal color codes.
+#
 # `plugin_paths` is an optional list of plugin paths to pass to the CLI.
 #
 # This function asserts that the CLI output matches the expectation
@@ -133,7 +137,11 @@ def run_cli_sink_text_details_test(
     expect: Union[pathlib.Path, str],
     plugin_paths: Optional[List[pathlib.Path]] = None,
 ) -> "subprocess.CompletedProcess[str]":
-    full_cli_args = list(cli_args) + ["-c", "sink.text.details"]
+    full_cli_args = list(cli_args) + [
+        "-c",
+        "sink.text.details",
+        CliParams({"color": "never"}),
+    ]
 
     if details_params:
         full_cli_args.append(CliParams(details_params))

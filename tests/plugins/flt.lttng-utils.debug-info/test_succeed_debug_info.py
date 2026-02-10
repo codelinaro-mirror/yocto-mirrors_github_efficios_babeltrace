@@ -35,6 +35,7 @@ def _run_convert_with_details(
                     "with-uuid": False,
                     "with-uid": False,
                     "path": str(temp_path),
+                    "color": "never",
                 },
             ),
             filter_component_specs,

@@ -158,6 +158,7 @@ def test_packet_end(
                     "with-stream-name": False,
                     "with-metadata": False,
                     "compact": True,
+                    "color": "never",
                 },
             ),
             mip_version=mip_version,

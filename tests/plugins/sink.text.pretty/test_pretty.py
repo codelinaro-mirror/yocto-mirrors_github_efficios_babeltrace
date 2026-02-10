@@ -32,7 +32,7 @@ def test_basic_bit_array_fields_with_flags(ctf_traces_dir, data_dir, pretty_comp
             ctf_traces_dir / "2/succeed/fl-bm",
             btu.SinkComponentSpec(
                 pretty_comp_cls,
-                {"path": str(temp_path)},
+                {"path": str(temp_path), "color": "never"},
             ),
         )
 
