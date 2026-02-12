@@ -80,9 +80,24 @@ enum class BitOrder
 };
 
 /*
- * Provides the static read() method to read a fixed-length integer
- * having the signedness `SignednessV`, the length `LenBitsV`, the byte
- * order `ByteOrderV`, and the bit order `BitOrderV` from some buffer.
+ * Reverses `*len` bits of `val` if `BitOrderV` is `BitOrder::Natural`;
+ * no op otherwise.
+ */
+template <bt2c::Signedness SignednessV, BitOrder BitOrderV>
+auto reverseFixedLenIntBitsIfNeeded(const ReadFixedLenIntFuncRet<SignednessV> val,
+                                    const bt2c::DataLen len) noexcept
+{
+    if constexpr (BitOrderV == BitOrder::Natural) {
+        return val;
+    } else {
+        return bt2c::reverseFixedLenIntBits(val, len);
+    }
+}
+
+/*
+ * Reads a fixed-length integer having the signedness `SignednessV`, the
+ * length `LenBitsV`, the byte order `ByteOrderV`, and the bit order
+ * `BitOrderV` from some buffer.
  *
  * `LenBitsV` must be one of:
  *
@@ -94,36 +109,26 @@ enum class BitOrder
  *
  *     The alignment of the field must be a multiple of 8.
  *
- * Declared here because explicit specialization in non-namespace scope
- * isn't allowed. Specializations are after the `ItemSeqIter` class
- * definition because they need to know it.
+ * Declared here; defined after the `ItemSeqIter` class definition
+ * because it needs to know it.
  */
 template <bt2c::Signedness SignednessV, std::size_t LenBitsV, ByteOrder ByteOrderV,
           BitOrder BitOrderV>
-struct ReadFixedLenIntFunc;
+ReadFixedLenIntFuncRet<SignednessV> readFixedLenInt(const ItemSeqIter& iter,
+                                                    const FixedLenBitArrayFc& fc);
 
 /*
- * Provides the static val() method to get the value (of which the
- * signedness is `SignednessV`) of a variable-length integer field from
- * some LEB128-decoded unsigned value of a given length.
+ * Returns the value (of which the signedness is `SignednessV`) of a
+ * variable-length integer field from some LEB128-decoded unsigned value
+ * of a given length.
  */
 template <bt2c::Signedness SignednessV>
-struct VarLenIntFieldVal;
-
-template <>
-struct VarLenIntFieldVal<bt2c::Signedness::Unsigned> final
+unsigned long long varLenIntFieldVal(const bt2c::DataLen len, unsigned long long v) noexcept
 {
-    static unsigned long long val(const bt2c::DataLen, const unsigned long long v) noexcept
-    {
+    if constexpr (SignednessV == bt2c::Signedness::Unsigned) {
+        static_cast<void>(len);
         return v;
-    }
-};
-
-template <>
-struct VarLenIntFieldVal<bt2c::Signedness::Signed> final
-{
-    static unsigned long long val(const bt2c::DataLen len, unsigned long long v) noexcept
-    {
+    } else {
         using namespace bt2c::literals::datalen;
 
         BT_ASSERT_DBG(len <= 64_bits);
@@ -142,7 +147,7 @@ struct VarLenIntFieldVal<bt2c::Signedness::Signed> final
         /* Return equivalent unsigned value */
         return v;
     }
-};
+}
 
 } /* namespace internal */
 
@@ -724,8 +729,9 @@ struct VarLenIntFieldVal<bt2c::Signedness::Signed> final
  */
 class ItemSeqIter final
 {
-    template <bt2c::Signedness, std::size_t, ByteOrder, internal::BitOrder>
-    friend struct internal::ReadFixedLenIntFunc;
+    template <bt2c::Signedness SignednessV, std::size_t, ByteOrder, internal::BitOrder>
+    friend internal::ReadFixedLenIntFuncRet<SignednessV>
+    internal::readFixedLenInt(const ItemSeqIter&, const FixedLenBitArrayFc&);
 
 public:
     /*
@@ -1451,7 +1457,7 @@ private:
 
         while (_mRemainingLenToSkip != 0_bytes) {
             /* Require at least one bit of data */
-            if (IsContentDataV) {
+            if constexpr (IsContentDataV) {
                 this->_requireContentData(1_bits);
             } else {
                 this->_requireData(1_bits);
@@ -3492,8 +3498,7 @@ private:
      */
     template <bt2c::Signedness SignednessV, std::size_t LenBitsV, ByteOrder ByteOrderV,
               internal::BitOrder BitOrderV>
-    internal::ReadFixedLenIntFuncRet<SignednessV>
-    _readFixedLenIntField(const FixedLenBitArrayFc& fc)
+    auto _readFixedLenIntField(const FixedLenBitArrayFc& fc)
     {
         static_assert(LenBitsV == 0 || LenBitsV == 8 || LenBitsV == 16 || LenBitsV == 32 ||
                           LenBitsV == 64,
@@ -3514,8 +3519,7 @@ private:
 
         /* Read the field */
         const auto val =
-            internal::ReadFixedLenIntFunc<SignednessV, LenBitsV, ByteOrderV, BitOrderV>::read(*this,
-                                                                                              fc);
+            internal::readFixedLenInt<SignednessV, LenBitsV, ByteOrderV, BitOrderV>(*this, fc);
 
         /* Set last fixed-length bit array field byte order */
         _mLastFixedLenBitArrayFieldByteOrder = fc.byteOrder();
@@ -3541,8 +3545,7 @@ private:
      */
     template <bt2c::Signedness SignednessV, std::size_t LenBitsV, ByteOrder ByteOrderV,
               internal::BitOrder BitOrderV, typename ItemT>
-    internal::ReadFixedLenIntFuncRet<SignednessV>
-    _handleCommonReadFixedLenIntFieldState(ItemT& item)
+    auto _handleCommonReadFixedLenIntFieldState(ItemT& item)
     {
         /* Read the fixed-length integer field */
         const auto val = this->_readFixedLenIntField<SignednessV, LenBitsV, ByteOrderV, BitOrderV>(
@@ -3560,8 +3563,7 @@ private:
      */
     template <bt2c::Signedness SignednessV, std::size_t LenBitsV, ByteOrder ByteOrderV,
               internal::BitOrder BitOrderV, typename ItemT>
-    internal::ReadFixedLenIntFuncRet<SignednessV>
-    _handleCommonReadFixedLenIntFieldStateAndPrepareToReadNextField(ItemT& item)
+    auto _handleCommonReadFixedLenIntFieldStateAndPrepareToReadNextField(ItemT& item)
     {
         const auto val = this->_handleCommonReadFixedLenIntFieldState<SignednessV, LenBitsV,
                                                                       ByteOrderV, BitOrderV>(item);
@@ -3687,12 +3689,12 @@ private:
          * May be a length/selector of some upcoming dynamic length,
          * optional, or variant field.
          */
-        if (SaveValV == _SaveVal::Yes) {
+        if constexpr (SaveValV == _SaveVal::Yes) {
             this->_saveKeyVal(intFc.keyValSavingIndexes(), val);
         }
 
         /* Role? */
-        if (WithRoleV == _WithRole::Yes) {
+        if constexpr (WithRoleV == _WithRole::Yes) {
             /* Keep the current state to detect a change */
             const auto prevState = _mState;
 
@@ -3772,7 +3774,7 @@ private:
         _mItems.fixedLenSIntField._val(val);
 
         /* May be a selector of some upcoming optional/variant field */
-        if (SaveValV == _SaveVal::Yes) {
+        if constexpr (SaveValV == _SaveVal::Yes) {
             this->_saveKeyVal(static_cast<const FcT&>(*_mCurScalarFc).keyValSavingIndexes(), val);
         }
 
@@ -3801,7 +3803,7 @@ private:
         item._val(val);
 
         /* May be a selector of some upcoming optional field */
-        if (SaveValV == _SaveVal::Yes) {
+        if constexpr (SaveValV == _SaveVal::Yes) {
             this->_saveKeyVal(_mCurScalarFc->asFixedLenBool().keyValSavingIndexes(), val);
         }
 
@@ -3910,12 +3912,15 @@ private:
              *       (negative).
              */
             const auto isLastByte = (byte & 0x80) == 0;
-            const auto hasValidValAsSigned = byteVal == 0 || byteVal == 0x7f;
-            const auto hasValidValAsUnsigned = byteVal == 1;
-            constexpr auto isSigned = SignednessV == bt2c::Signedness::Signed;
+            const auto hasValidVal = std::invoke([byteVal] {
+                if constexpr (SignednessV == bt2c::Signedness::Signed) {
+                    return byteVal == 0 || byteVal == 0x7f;
+                } else {
+                    return byteVal == 1;
+                }
+            });
 
-            if (!isLastByte || (isSigned && !hasValidValAsSigned) ||
-                (!isSigned && !hasValidValAsUnsigned)) {
+            if (!isLastByte || !hasValidVal) {
                 CTF_SRC_ITEM_SEQ_ITER_CPPLOGE_APPEND_CAUSE_AND_THROW(
                     "unsupported oversized (more than 64 bits of data) variable-length integer field.");
             }
@@ -3979,8 +3984,8 @@ private:
                  * the _end_ of the variable-length integer; the
                  * iterator user expects its beginning offset.
                  */
-                item._val(internal::VarLenIntFieldVal<SignednessV>::val(_mCurVarLenInt.len,
-                                                                        _mCurVarLenInt.val));
+                item._val(internal::varLenIntFieldVal<SignednessV>(_mCurVarLenInt.len,
+                                                                   _mCurVarLenInt.val));
                 item._mLen = _mCurVarLenInt.len;
                 this->_setFieldItemFc(item, *_mCurScalarFc);
                 this->_updateForUser(item, this->_headOffsetInItemSeq() - item.fieldLen());
@@ -4057,7 +4062,7 @@ private:
         this->_handleCommonVarLenIntFieldState<bt2c::Signedness::Signed>(item);
 
         /* May be a selector of some upcoming optional/variant field */
-        if (SaveValV == _SaveVal::Yes) {
+        if constexpr (SaveValV == _SaveVal::Yes) {
             /*
              * We can't use `_mCurVarLenInt.val` here because the
              * successful _handleCommonVarLenIntFieldState() call above
@@ -4260,91 +4265,45 @@ private:
 
 namespace internal {
 
-/*
- * Reverses `*len` bits of `val` if `BitOrderV` is `BitOrder::Natural`;
- * no op otherwise.
- */
-template <bt2c::Signedness SignednessV, BitOrder BitOrderV>
-ReadFixedLenIntFuncRet<SignednessV>
-reverseFixedLenIntBitsIfNeeded(const ReadFixedLenIntFuncRet<SignednessV> val,
-                               const bt2c::DataLen len) noexcept
+template <bt2c::Signedness SignednessV, std::size_t LenBitsV, ByteOrder ByteOrderV,
+          BitOrder BitOrderV>
+ReadFixedLenIntFuncRet<SignednessV> readFixedLenInt(const ItemSeqIter& iter,
+                                                    const FixedLenBitArrayFc& fc)
 {
-    if (BitOrderV == BitOrder::Natural) {
-        return val;
+    if constexpr (LenBitsV != 0) {
+        /* Byte-aligned, byte-sized: use bt2c::readFixedLenInt{Be,Le}() */
+        static_cast<void>(fc);
+
+        if constexpr (ByteOrderV == ByteOrder::Big) {
+            return reverseFixedLenIntBitsIfNeeded<SignednessV, BitOrderV>(
+                static_cast<ReadFixedLenIntFuncRet<SignednessV>>(
+                    bt2c::readFixedLenIntBe<bt2c::StdIntT<LenBitsV, SignednessV>>(
+                        iter._bufAtHead())),
+                bt2c::DataLen::fromBits(LenBitsV));
+        } else {
+            return reverseFixedLenIntBitsIfNeeded<SignednessV, BitOrderV>(
+                static_cast<ReadFixedLenIntFuncRet<SignednessV>>(
+                    bt2c::readFixedLenIntLe<bt2c::StdIntT<LenBitsV, SignednessV>>(
+                        iter._bufAtHead())),
+                bt2c::DataLen::fromBits(LenBitsV));
+        }
     } else {
-        return bt2c::reverseFixedLenIntBits(val, len);
+        /* Any alignment, any length: use bt_bitfield_read_{be,le}() */
+        iter._checkLastFixedLenBitArrayFieldByteOrder(fc);
+
+        ReadFixedLenIntFuncRet<SignednessV> val;
+
+        if constexpr (ByteOrderV == ByteOrder::Big) {
+            bt_bitfield_read_be(iter._bufAtHead(), std::uint8_t,
+                                iter._mHeadOffsetInCurPkt.extraBitCount(), *fc.len(), &val);
+        } else {
+            bt_bitfield_read_le(iter._bufAtHead(), std::uint8_t,
+                                iter._mHeadOffsetInCurPkt.extraBitCount(), *fc.len(), &val);
+        }
+
+        return reverseFixedLenIntBitsIfNeeded<SignednessV, BitOrderV>(val, fc.len());
     }
 }
-
-/*
- * Byte-aligned, byte-sized, big-endian specialization.
- */
-template <bt2c::Signedness SignednessV, std::size_t LenBitsV, BitOrder BitOrderV>
-struct ReadFixedLenIntFunc<SignednessV, LenBitsV, ByteOrder::Big, BitOrderV> final
-{
-    static ReadFixedLenIntFuncRet<SignednessV> read(const ItemSeqIter& iter,
-                                                    const FixedLenBitArrayFc&) noexcept
-    {
-        return reverseFixedLenIntBitsIfNeeded<SignednessV, BitOrderV>(
-            static_cast<ReadFixedLenIntFuncRet<SignednessV>>(
-                bt2c::readFixedLenIntBe<bt2c::StdIntT<LenBitsV, SignednessV>>(iter._bufAtHead())),
-            bt2c::DataLen::fromBits(LenBitsV));
-    }
-};
-
-/*
- * Byte-aligned, byte-sized, little-endian specialization.
- */
-template <bt2c::Signedness SignednessV, std::size_t LenBitsV, BitOrder BitOrderV>
-struct ReadFixedLenIntFunc<SignednessV, LenBitsV, ByteOrder::Little, BitOrderV> final
-{
-    static ReadFixedLenIntFuncRet<SignednessV> read(const ItemSeqIter& iter,
-                                                    const FixedLenBitArrayFc&) noexcept
-    {
-        return reverseFixedLenIntBitsIfNeeded<SignednessV, BitOrderV>(
-            static_cast<ReadFixedLenIntFuncRet<SignednessV>>(
-                bt2c::readFixedLenIntLe<bt2c::StdIntT<LenBitsV, SignednessV>>(iter._bufAtHead())),
-            bt2c::DataLen::fromBits(LenBitsV));
-    }
-};
-
-/*
- * Any alignment, any length, big-endian specialization.
- */
-template <bt2c::Signedness SignednessV, BitOrder BitOrderV>
-struct ReadFixedLenIntFunc<SignednessV, 0, ByteOrder::Big, BitOrderV> final
-{
-    static ReadFixedLenIntFuncRet<SignednessV> read(const ItemSeqIter& iter,
-                                                    const FixedLenBitArrayFc& fc)
-    {
-        iter._checkLastFixedLenBitArrayFieldByteOrder(fc);
-
-        ReadFixedLenIntFuncRet<SignednessV> val;
-
-        bt_bitfield_read_be(iter._bufAtHead(), std::uint8_t,
-                            iter._mHeadOffsetInCurPkt.extraBitCount(), *fc.len(), &val);
-        return reverseFixedLenIntBitsIfNeeded<SignednessV, BitOrderV>(val, fc.len());
-    }
-};
-
-/*
- * Any alignment, any length, little-endian specialization.
- */
-template <bt2c::Signedness SignednessV, BitOrder BitOrderV>
-struct ReadFixedLenIntFunc<SignednessV, 0, ByteOrder::Little, BitOrderV> final
-{
-    static ReadFixedLenIntFuncRet<SignednessV> read(const ItemSeqIter& iter,
-                                                    const FixedLenBitArrayFc& fc)
-    {
-        iter._checkLastFixedLenBitArrayFieldByteOrder(fc);
-
-        ReadFixedLenIntFuncRet<SignednessV> val;
-
-        bt_bitfield_read_le(iter._bufAtHead(), std::uint8_t,
-                            iter._mHeadOffsetInCurPkt.extraBitCount(), *fc.len(), &val);
-        return reverseFixedLenIntBitsIfNeeded<SignednessV, BitOrderV>(val, fc.len());
-    }
-};
 
 } /* namespace internal */
 } /* namespace src */

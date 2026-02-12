@@ -1591,59 +1591,30 @@ bt_component_class_sink *createSinkCompCls()
 
 /*!
 @brief
-    Creates a libbabeltrace2 source component class
-    from the C++ source component class \bt_p{UserComponentT}.
+    Creates a libbabeltrace2 component class
+    from the C++ component class \bt_p{UserComponentT}.
 
 @tparam UserComponentT
-    Source component class which inherits bt2::UserSourceComponent.
+    Component class which inherits bt2::UserSourceComponent,
+    bt2::UserFilterComponent, or bt2::UserSinkComponent.
 
 @returns
-    Source component class wrapper.
+    Component class wrapper.
 */
 template <typename UserComponentT>
-std::enable_if_t<UserComponentT::type() == ComponentClassType::Source, SourceComponentClass::Shared>
-createComponentClass()
+auto createComponentClass()
 {
-    return SourceComponentClass::Shared::createWithoutRef(
-        internal::createSourceCompCls<UserComponentT>());
-}
-
-/*!
-@brief
-    Creates a libbabeltrace2 filter component class
-    from the C++ filter component class \bt_p{UserComponentT}.
-
-@tparam UserComponentT
-    Filter component class which inherits bt2::UserFilterComponent.
-
-@returns
-    Filter component class wrapper.
-*/
-template <typename UserComponentT>
-std::enable_if_t<UserComponentT::type() == ComponentClassType::Filter, FilterComponentClass::Shared>
-createComponentClass()
-{
-    return FilterComponentClass::Shared::createWithoutRef(
-        internal::createFilterCompCls<UserComponentT>());
-}
-
-/*!
-@brief
-    Creates a libbabeltrace2 sink component class
-    from the C++ sink component class \bt_p{UserComponentT}.
-
-@tparam UserComponentT
-    Sink component class which inherits bt2::UserSinkComponent.
-
-@returns
-    Sink component class wrapper.
-*/
-template <typename UserComponentT>
-std::enable_if_t<UserComponentT::type() == ComponentClassType::Sink, SinkComponentClass::Shared>
-createComponentClass()
-{
-    return SinkComponentClass::Shared::createWithoutRef(
-        internal::createSinkCompCls<UserComponentT>());
+    if constexpr (UserComponentT::type() == ComponentClassType::Source) {
+        return SourceComponentClass::Shared::createWithoutRef(
+            internal::createSourceCompCls<UserComponentT>());
+    } else if constexpr (UserComponentT::type() == ComponentClassType::Filter) {
+        return FilterComponentClass::Shared::createWithoutRef(
+            internal::createFilterCompCls<UserComponentT>());
+    } else {
+        static_assert(UserComponentT::type() == ComponentClassType::Sink);
+        return SinkComponentClass::Shared::createWithoutRef(
+            internal::createSinkCompCls<UserComponentT>());
+    }
 }
 
 } /* namespace bt2 */
