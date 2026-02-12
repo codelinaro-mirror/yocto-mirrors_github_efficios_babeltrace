@@ -2006,7 +2006,7 @@ public:
     }
 };
 
-extern const char * const defaultBlobMediaType;
+inline constexpr auto defaultBlobMediaType = "application/octet-stream";
 
 /*
  * BLOB field class base.
@@ -3654,9 +3654,9 @@ public:
 
 private:
     /* Internal Unix epoch origin namespace, name, and unique ID */
-    static const char * const _unixEpochNs;
-    static const char * const _unixEpochName;
-    static const char * const _unixEpochUid;
+    static constexpr auto _unixEpochNs = "babeltrace.org,2020";
+    static constexpr auto _unixEpochName = "unix-epoch";
+    static constexpr auto _unixEpochUid = "";
 
     /* Namespace */
     std::optional<std::string> _mNs;

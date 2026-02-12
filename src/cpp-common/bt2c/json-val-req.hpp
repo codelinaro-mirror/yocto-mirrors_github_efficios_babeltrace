@@ -104,7 +104,7 @@ struct JsonValOps final
         }
     }
 
-    static constexpr const char *objValPropName = "property";
+    static constexpr auto objValPropName = "property";
 
     static const TextLoc& valLoc(const JsonVal& jsonVal) noexcept
     {

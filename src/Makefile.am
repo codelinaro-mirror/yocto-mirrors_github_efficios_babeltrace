@@ -209,7 +209,6 @@ cpp_common_libcpp_common_la_SOURCES = \
 	cpp-common/bt2c/join.hpp \
 	cpp-common/bt2c/json-val.cpp \
 	cpp-common/bt2c/json-val.hpp \
-	cpp-common/bt2c/json-val-req.cpp \
 	cpp-common/bt2c/json-val-req.hpp \
 	cpp-common/bt2c/libc-up.hpp \
 	cpp-common/bt2c/logging.hpp \
@@ -715,11 +714,9 @@ plugins_utils_babeltrace_plugin_utils_la_LIBADD = \
 # ctf plugin
 plugin_ctf_sources = \
 	plugins/ctf/common/metadata/ctf-ir.hpp \
-	plugins/ctf/common/metadata/ctf-ir.cpp \
 	plugins/ctf/common/metadata/int-range.hpp \
 	plugins/ctf/common/metadata/int-range-set.hpp \
 	plugins/ctf/common/metadata/json-strings.hpp \
-	plugins/ctf/common/metadata/json-strings.cpp \
 	plugins/ctf/common/src/clk-cls-cfg.hpp \
 	plugins/ctf/common/src/item-seq/item.cpp \
 	plugins/ctf/common/src/item-seq/item.hpp \
