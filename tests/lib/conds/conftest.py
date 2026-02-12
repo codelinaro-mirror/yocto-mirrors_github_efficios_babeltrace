@@ -117,89 +117,31 @@ class _CondTriggerTestItem(btu.PytestItem):
                 timeout=timeout,
             )
         except subprocess.TimeoutExpired:
-            _logger.error(
+            pytest.fail(
                 "Condition trigger `{}` hung for {} seconds".format(
                     self._descriptor.trigger_name, timeout
                 )
             )
-            raise _CondTriggerTestException(
-                self._descriptor, "Process hung for {} seconds".format(timeout)
-            )
-
-        _logger.debug(result.stderr)
 
         # Assert that the program aborted (only available on POSIX)
         if os.name == "posix":
-            _logger.debug("Return code: {}".format(result.returncode))
-
             if result.returncode != -int(signal.SIGABRT):
-                raise _CondTriggerTestException(
-                    self._descriptor,
+                pytest.fail(
                     "Expected return code {} (SIGABRT); got {}".format(
                         -int(signal.SIGABRT), result.returncode
-                    ),
-                    result,
+                    )
                 )
 
         # Assert that the standard error text contains the condition ID
         if "Condition ID: `{}`".format(self._descriptor.cond_id) not in result.stderr:
-            raise _CondTriggerTestException(
-                self._descriptor,
+            pytest.fail(
                 "Expected condition ID `{}` not found in standard error stream".format(
                     self._descriptor.cond_id
-                ),
-                result,
+                )
             )
 
     def reportinfo(self) -> Tuple[pathlib.Path, None, str]:
         return self.path, None, self.name
-
-    def repr_failure(
-        self,
-        excinfo: "pytest.ExceptionInfo[BaseException]",
-        style: Any = None,
-    ) -> Any:
-        if isinstance(excinfo.value, _CondTriggerTestException):
-            return excinfo.value.format_output()
-
-        return super().repr_failure(excinfo, style)
-
-
-class _CondTriggerTestException(Exception):
-    def __init__(
-        self,
-        descriptor: _CondTriggerDescriptor,
-        message: str,
-        result: Optional["subprocess.CompletedProcess[str]"] = None,
-    ):
-        message = message.strip()
-
-        super().__init__(
-            "Condition trigger test failed for `{}`: {}".format(
-                descriptor.trigger_name, message
-            )
-        )
-        self._descriptor = descriptor
-        self._message = message
-        self._result = result
-
-    def format_output(self) -> str:
-        output = [
-            "Trigger: `{}`".format(self._descriptor.trigger_name),
-            "Condition ID: `{}`".format(self._descriptor.cond_id),
-            "Error: {}".format(self._message),
-        ]
-
-        if self._result is not None:
-            if self._result.stdout:
-                output.append("\n⚠️ Standard output:")
-                output.append(self._result.stdout)
-
-            if self._result.stderr:
-                output.append("\n⚠️ Standard error:")
-                output.append(self._result.stderr)
-
-        return "\n".join(output).strip()
 
 
 class _CondTriggersTestFile(btu.PytestFile):
