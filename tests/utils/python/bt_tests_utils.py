@@ -331,14 +331,20 @@ def run(
 
     _log_run_cmd(env, exec_path, args, extra_env)
 
-    res = subprocess.run(  # type: subprocess.CompletedProcess[Any]
-        [str(exec_path)] + args,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        env=env,
-        timeout=timeout,
-        universal_newlines=text,
-    )
+    try:
+        res = subprocess.run(  # type: subprocess.CompletedProcess[Any]
+            [str(exec_path)] + args,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            env=env,
+            timeout=timeout,
+            universal_newlines=text,
+        )
+    except subprocess.TimeoutExpired as exc:
+        if exc.stderr is not None:
+            sys.stderr.buffer.write(exc.stderr)
+
+        raise
 
     # Write captured standard error so that pytest includes it in the
     # test report on failure.
