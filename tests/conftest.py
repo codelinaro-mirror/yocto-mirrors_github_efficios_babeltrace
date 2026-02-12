@@ -298,6 +298,7 @@ class _Catch2TestFile(btu.PytestFile):
             build_root_dir,
             test_binary,
             ["--list-tests", "-v", "quiet", "--order", "decl"],
+            check=True,
         )
         _logger.debug(result.stdout)
 
