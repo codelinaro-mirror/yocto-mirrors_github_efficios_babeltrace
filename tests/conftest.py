@@ -9,7 +9,6 @@ import sys
 import typing
 import logging
 import pathlib
-import subprocess
 from typing import Any, List, Optional
 
 import pytest
@@ -257,45 +256,17 @@ class _Catch2TestItem(btu.PytestItem):
         result = btu.run(
             self._build_root_dir,
             self._test_binary,
-            [self._escaped_catch2_test_name],
+            [self._escaped_catch2_test_name, "-s", "--colour-mode", "none"],
+            text=False,
         )
 
+        sys.stdout.buffer.write(result.stdout)
+
         if result.returncode != 0:
-            raise _Catch2TestException(self._catch2_test_name, result)
+            pytest.fail("Catch2 test failed: `{}`".format(self._catch2_test_name))
 
     def reportinfo(self):
         return self.path, None, self.name
-
-    def repr_failure(
-        self,
-        excinfo: "pytest.ExceptionInfo[BaseException]",
-        style: Any = None,
-    ):
-        if isinstance(excinfo.value, _Catch2TestException):
-            return excinfo.value.format_output()
-
-        return super().repr_failure(excinfo, style)
-
-
-class _Catch2TestException(Exception):
-    def __init__(
-        self, catch2_test_name: str, result: "subprocess.CompletedProcess[str]"
-    ):
-        super().__init__("Catch2 test failed: `{}`".format(catch2_test_name))
-        self._result = result
-
-    def format_output(self) -> str:
-        output = []  # type: List[str]
-
-        if self._result.stdout:
-            output.append("⚠️ Standard output:")
-            output.append(self._result.stdout)
-
-        if self._result.stderr:
-            output.append("\n⚠️ Standard error:")
-            output.append(self._result.stderr)
-
-        return "\n".join(output).strip()
 
 
 class _Catch2TestFile(btu.PytestFile):

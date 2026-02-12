@@ -17,7 +17,21 @@ import tempfile
 import textwrap
 import itertools
 import subprocess
-from typing import Any, Dict, List, Type, Tuple, Union, Callable, Iterable, Optional
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Dict,
+    List,
+    Type,
+    Tuple,
+    Union,
+    Callable,
+    Iterable,
+    Optional,
+)
+
+if TYPE_CHECKING:
+    from typing import Literal
 
 import bt2
 import pytest
@@ -256,6 +270,33 @@ def _log_run_cmd(
     _logger.info("Running: {}".format(" ".join(cmd_parts)))
 
 
+@typing.overload
+def run(
+    build_root_dir: pathlib.Path,
+    exec_path: pathlib.Path,
+    args: List[str],
+    check: bool = ...,
+    text: "Literal[True]" = ...,
+    timeout: Optional[float] = ...,
+    windows_safe: bool = ...,
+    extra_env: Optional[Dict[str, str]] = ...,
+) -> "subprocess.CompletedProcess[str]": ...
+
+
+@typing.overload
+def run(
+    build_root_dir: pathlib.Path,
+    exec_path: pathlib.Path,
+    args: List[str],
+    check: bool = ...,
+    *,
+    text: "Literal[False]",
+    timeout: Optional[float] = ...,
+    windows_safe: bool = ...,
+    extra_env: Optional[Dict[str, str]] = ...,
+) -> "subprocess.CompletedProcess[bytes]": ...
+
+
 # Like subprocess.run(), but always captures the standard streams.
 #
 # `exec_path` is the path to the executable to use: don't include it in
@@ -278,7 +319,7 @@ def run(
     timeout: Optional[float] = None,
     windows_safe: bool = True,
     extra_env: Optional[Dict[str, str]] = None,
-) -> "subprocess.CompletedProcess[str]":
+) -> "subprocess.CompletedProcess[Any]":
     # Add `.exe` suffix on Windows (MinGW)
     if windows_safe:
         exec_path = exe_path(exec_path)
@@ -290,7 +331,7 @@ def run(
 
     _log_run_cmd(env, exec_path, args, extra_env)
 
-    res = subprocess.run(  # type: subprocess.CompletedProcess[str]
+    res = subprocess.run(  # type: subprocess.CompletedProcess[Any]
         [str(exec_path)] + args,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
