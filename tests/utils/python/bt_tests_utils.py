@@ -4,6 +4,7 @@
 # pyright: strict, reportTypeCommentUsage=false, reportMissingTypeStubs=false, reportPrivateUsage=false
 
 import os
+import sys
 import enum
 import time
 import shlex
@@ -293,11 +294,20 @@ def run(
         [str(exec_path)] + args,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        check=check,
         env=env,
         timeout=timeout,
         universal_newlines=text,
     )
+
+    # Write captured standard error so that pytest includes it in the
+    # test report on failure.
+    if text:
+        sys.stderr.write(res.stderr)
+    else:
+        sys.stderr.buffer.write(res.stderr)
+
+    if check:
+        res.check_returncode()
 
     _logger.info("  Exit status: {}".format(res.returncode))
     return res
