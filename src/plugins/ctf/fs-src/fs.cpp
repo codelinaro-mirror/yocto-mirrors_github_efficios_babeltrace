@@ -20,10 +20,12 @@
 #include "cpp-common/bt2/wrap.hpp"
 #include "cpp-common/bt2c/file-utils.hpp"
 #include "cpp-common/bt2c/glib-up.hpp"
+#include "cpp-common/bt2c/logging.hpp"
 
 #include "plugins/common/param-validation/param-validation.h"
 
 #include "../common/src/metadata/ctf-ir.hpp"
+#include "../common/src/metadata/metadata-stream-parser-utils.hpp"
 #include "../common/src/metadata/tsdl/ctf-meta-configure-ir-trace.hpp"
 #include "../common/src/msg-iter.hpp"
 #include "../common/src/pkt-props.hpp"
@@ -497,9 +499,19 @@ ctf_fs_trace_create(const char *path, const char *name, const ctf::src::ClkClsCf
 {
     auto ctf_fs_trace = std::make_unique<struct ctf_fs_trace>(clkClsCfg, selfComp, logger);
     const auto metadataPath = fmt::format("{}" G_DIR_SEPARATOR_S CTF_FS_METADATA_FILENAME, path);
+    const auto metadataBuf = bt2c::dataFromFile(metadataPath, logger, true);
+
+    if (getMetadataStreamMajorVersion(metadataBuf) == MetadataStreamMajorVersion::V2 && selfComp &&
+        selfComp->graphMipVersion() == 0) {
+        BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(logger, bt2c::Error,
+                                               "CTF 2 traces are not supported with MIP version 0; "
+                                               "consider creating the graph with MIP version 1: "
+                                               "path=\"{}\", name=\"{}\"",
+                                               path, bt2c::maybeNull(name));
+    }
 
     ctf_fs_trace->path = path;
-    ctf_fs_trace->parseMetadata(bt2c::dataFromFile(metadataPath, logger, true));
+    ctf_fs_trace->parseMetadata(metadataBuf);
 
     BT_ASSERT(ctf_fs_trace->cls());
 
