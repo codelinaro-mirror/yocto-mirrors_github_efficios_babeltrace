@@ -50,7 +50,14 @@ bt2::Value::Shared metadata_info_query(const bt2::ConstValue params, const bt2c:
     const auto path = params["path"]->asString().value();
 
     try {
-        const auto buffer = bt2c::dataFromFile(fmt::format("{}/metadata", path), logger, true);
+        const auto metadataPath = fmt::format("{}/metadata", path);
+        const auto buffer = bt2c::dataFromFile(metadataPath, logger, true);
+
+        if (buffer.empty()) {
+            BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(
+                logger, bt2c::Error, "Metadata stream is empty: path=\"{}\"", metadataPath);
+        }
+
         ctf::src::MetadataStreamDecoder decoder {logger};
         auto plainText = decoder.decode(buffer);
         const auto result = bt2::MapValue::create();
@@ -203,6 +210,13 @@ bt2::Value::Shared support_info_query(const bt2::ConstValue params, const bt2c::
     const auto result = bt2::MapValue::create();
     try {
         const auto buffer = bt2c::dataFromFile(fmt::format("{}/metadata", input), logger, false);
+
+        if (buffer.empty()) {
+            BT_CPPLOGD_SPEC(logger, "Metadata stream is empty: input=\"{}\"", input);
+            result->insert("weight", 0.0f);
+            return result;
+        }
+
         const auto parseRet = ctf::src::parseMetadataStream({}, {}, buffer, logger);
 
         BT_ASSERT(parseRet.traceCls);

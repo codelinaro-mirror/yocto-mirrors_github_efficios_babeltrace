@@ -501,6 +501,11 @@ ctf_fs_trace_create(const char *path, const char *name, const ctf::src::ClkClsCf
     const auto metadataPath = fmt::format("{}" G_DIR_SEPARATOR_S CTF_FS_METADATA_FILENAME, path);
     const auto metadataBuf = bt2c::dataFromFile(metadataPath, logger, true);
 
+    if (metadataBuf.empty()) {
+        BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(
+            logger, bt2c::Error, "Metadata stream is empty: path=\"{}\"", metadataPath);
+    }
+
     if (getMetadataStreamMajorVersion(metadataBuf) == MetadataStreamMajorVersion::V2 && selfComp &&
         selfComp->graphMipVersion() == 0) {
         BT_CPPLOGE_APPEND_CAUSE_AND_THROW_SPEC(logger, bt2c::Error,

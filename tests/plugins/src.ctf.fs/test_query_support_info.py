@@ -75,3 +75,16 @@ def test_with_uuid(
         },
     ).query()
     assert result["group"] == expected_group
+
+
+def test_empty_metadata(ctf_fs_comp_cls, ctf_traces_dir):
+    result = bt2.QueryExecutor(
+        ctf_fs_comp_cls,
+        "babeltrace.support-info",
+        {
+            "input": str(ctf_traces_dir / "1/fail/empty-metadata"),
+            "type": "directory",
+        },
+    ).query()
+
+    assert result["weight"] == 0.0

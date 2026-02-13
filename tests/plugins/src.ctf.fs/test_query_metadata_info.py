@@ -48,3 +48,14 @@ def test_non_existent_trace_dir(ctf_fs_comp_cls):
             ).query()
 
         assert "No such file or directory" in exc_info.value[0].message
+
+
+def test_empty_metadata(ctf_fs_comp_cls, ctf_traces_dir):
+    with pytest.raises(bt2._Error) as exc_info:
+        bt2.QueryExecutor(
+            ctf_fs_comp_cls,
+            "metadata-info",
+            {"path": str(ctf_traces_dir / "1/fail/empty-metadata")},
+        ).query()
+
+    assert "Metadata stream is empty" in exc_info.value[0].message

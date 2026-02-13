@@ -59,6 +59,12 @@ import bt_tests_utils as btu
             "At 0 bits: Invalid empty event record.",
             id="empty-event-record",
         ),
+        pytest.param(
+            "empty-metadata",
+            1,
+            "Metadata stream is empty",
+            id="empty-metadata",
+        ),
     ],
 )
 def test_fail(
