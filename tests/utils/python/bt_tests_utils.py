@@ -472,22 +472,14 @@ def _fmt_comp_cls_spec(comp_cls: _AnyCompClsT) -> str:
         )
         type_prefix = "sink"
 
-    # Get the plugin name if available
-    plugin_name = getattr(comp_cls, "plugin_name", None) or "<none>"
-
-    # Create string
-    return "{}.{}.{}".format(type_prefix, plugin_name, comp_cls.name)
+    return "{}.?.{}".format(type_prefix, comp_cls.name)
 
 
 # Returns a string representation of a component spec for logging.
-def _fmt_comp_spec(
-    comp_spec: Union[bt2.ComponentSpec, SinkComponentSpec], indent: int
-) -> str:
-    return "{ind}`{cc_spec}`:\n{ind}  Params: {params}".format(
-        ind=" " * indent,
-        cc_spec=_fmt_comp_cls_spec(comp_spec.component_class),
-        params=repr(comp_spec.params),
-    )
+def _log_comp_spec(comp_spec: Union[bt2.ComponentSpec, SinkComponentSpec], indent: int):
+    ind = " " * indent
+    _logger.info("%s`%s`:", ind, _fmt_comp_cls_spec(comp_spec.component_class))
+    _logger.info("%s  Params: %r", ind, comp_spec.params)
 
 
 # Returns a unique component name for a component class and the updated
@@ -647,17 +639,17 @@ def convert(
     _logger.info("  Source component specs ({})".format(len(all_src_component_specs)))
 
     for comp_spec in all_src_component_specs:
-        _logger.info(_fmt_comp_spec(comp_spec, 4))
+        _log_comp_spec(comp_spec, 4)
 
     # Log filter component specs
     _logger.info("  Filter component specs ({})".format(len(flt_component_specs)))
 
     for comp_spec in flt_component_specs:
-        _logger.info(_fmt_comp_spec(comp_spec, 4))
+        _log_comp_spec(comp_spec, 4)
 
     # Log sink component spec
     _logger.info("  Sink component spec:")
-    _logger.info(_fmt_comp_spec(sink_component_spec, 4))
+    _log_comp_spec(sink_component_spec, 4)
 
     # State for unique component naming
     next_suffix = 1
@@ -698,7 +690,7 @@ def convert(
     if "muxer" not in plugin.filter_component_classes:
         raise RuntimeError("cannot find `flt.utils.muxer` within the `utils` plugin")
 
-    _logger.info("  Creating component `muxer` (utils.muxer)")
+    _logger.info("  Instantiating `flt.utils.muxer` as component `muxer`")
     muxer_comp = graph.add_component(plugin.filter_component_classes["muxer"], "muxer")
     all_comps.append(muxer_comp)
 
