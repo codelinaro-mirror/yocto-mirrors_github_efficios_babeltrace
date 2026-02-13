@@ -652,7 +652,7 @@ enum bt_cmd_status cmd_query(struct bt_config *cfg)
 	if (ret) {
 		BT_CLI_LOGE_APPEND_CAUSE(
 			"Failed to query component class: %s: plugin-name=\"%s\", "
-			"comp-cls-name=\"%s\", comp-cls-type=%s "
+			"comp-cls-name=\"%s\", comp-cls-type=%s, "
 			"object=\"%s\"", fail_reason,
 			cfg->cmd_data.query.cfg_component->plugin_name->str,
 			cfg->cmd_data.query.cfg_component->comp_cls_name->str,
