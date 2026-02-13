@@ -57,7 +57,7 @@ def test_non_map_params(ctf_fs_comp_cls, ctf_version):
         ),
     ],
 )
-def test_support_info_with_uuid(
+def test_with_uuid(
     ctf_fs_comp_cls, ctf_traces_dir, ctf_version, trace_subpath, expected_group
 ):
     # Test that the right group is reported for each trace
