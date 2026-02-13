@@ -89,7 +89,7 @@ $ babeltrace2 query src.ctf.lttng-live sessions \
 [role="term"]
 ----
 $ babeltrace2 query src.ctf.fs metadata-info \
-                    --params='inputs=["/path/to/trace"]'
+                    --params='path="/path/to/trace"'
 ----
 ====
 
