@@ -7,9 +7,10 @@
 #ifndef BABELTRACE_PY_COMMON_PY_COMMON_HPP
 #define BABELTRACE_PY_COMMON_PY_COMMON_HPP
 
-#include <vector>
-
+/* `Python.h` needs to be included before any system header. */
 #include <Python.h>
+
+#include <vector>
 
 /*
  * Convert `py_str_list` a `PyList` of `PyUnicode`s, to an array of
