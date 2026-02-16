@@ -18,8 +18,7 @@ def _make_ctf_1_metadata(payload_fc: str):
     else:
         payload_fc += " root"
 
-    return string.Template(
-        """\
+    return string.Template("""\
 /* CTF 1.8 */
 
 trace {
@@ -66,13 +65,11 @@ event {
         ${payload_fc};
     };
 };
-"""
-    ).substitute(payload_fc=payload_fc)
+""").substitute(payload_fc=payload_fc)
 
 
 def _make_ctf_2_metadata(payload_fc: str):
-    return string.Template(
-        """\
+    return string.Template("""\
 \x1e{
   "type": "preamble",
   "version": "2"
@@ -329,8 +326,7 @@ def _make_ctf_2_metadata(payload_fc: str):
     ]
   }
 }
-"""
-    ).substitute(payload_fc=payload_fc)
+""").substitute(payload_fc=payload_fc)
 
 
 def _make_ctf_metadata(payload_fc: str):

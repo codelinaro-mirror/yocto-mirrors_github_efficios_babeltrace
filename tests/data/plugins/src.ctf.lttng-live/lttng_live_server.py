@@ -818,16 +818,16 @@ class _LttngDataStreamIndex(Sequence[_LttngIndexEntryT]):
         self._entries.sort(key=sort_key)
 
     @overload
-    def __getitem__(self, index: int) -> _LttngIndexEntryT:
-        ...
+    def __getitem__(self, index: int) -> _LttngIndexEntryT: ...
 
     @overload
     def __getitem__(self, index: slice) -> Sequence[_LttngIndexEntryT]:  # noqa: F811
         ...
 
-    def __getitem__(
-        self, index: Union[int, slice]
-    ) -> Union[_LttngIndexEntryT, Sequence[_LttngIndexEntryT],]:  # noqa: F811
+    def __getitem__(self, index: Union[int, slice]) -> Union[
+        _LttngIndexEntryT,
+        Sequence[_LttngIndexEntryT],
+    ]:  # noqa: F811
         return self._entries[index]
 
     def __len__(self):
@@ -1154,8 +1154,7 @@ class LttngTrace(Sequence[_LttngDataStream]):
         return self._creation_timestamp
 
     @overload
-    def __getitem__(self, index: int) -> _LttngDataStream:
-        ...
+    def __getitem__(self, index: int) -> _LttngDataStream: ...
 
     @overload
     def __getitem__(self, index: slice) -> Sequence[_LttngDataStream]:  # noqa: F811
@@ -1382,10 +1381,10 @@ class _LttngLiveViewerSessionTracingSessionState:
             )
 
             trace_stream_infos.append(info)
-            self._ms_states[
-                self._last_allocated_stream_id
-            ] = _LttngLiveViewerSessionMetadataStreamState(
-                self, info, trace.metadata_stream
+            self._ms_states[self._last_allocated_stream_id] = (
+                _LttngLiveViewerSessionMetadataStreamState(
+                    self, info, trace.metadata_stream
+                )
             )
             metadata_stream_id = self._last_allocated_stream_id
             self._last_allocated_stream_id += 1
@@ -1400,10 +1399,10 @@ class _LttngLiveViewerSessionTracingSessionState:
                     data_stream.channel_name,
                 )
                 trace_stream_infos.append(info)
-                self._ds_states[
-                    self._last_allocated_stream_id
-                ] = _LttngLiveViewerSessionDataStreamState(
-                    self, info, data_stream, metadata_stream_id
+                self._ds_states[self._last_allocated_stream_id] = (
+                    _LttngLiveViewerSessionDataStreamState(
+                        self, info, data_stream, metadata_stream_id
+                    )
                 )
                 self._last_allocated_stream_id += 1
 
@@ -1479,7 +1478,7 @@ class _LttngLiveViewerSession:
         self._viewer_session_id = viewer_session_id
         self._ts_states = (
             {}
-        )  # type:  dict[int, _LttngLiveViewerSessionTracingSessionState]
+        )  # type: dict[int, _LttngLiveViewerSessionTracingSessionState]
         self._stream_states = (
             {}
         )  # type: dict[int, _LttngLiveViewerSessionDataStreamState | _LttngLiveViewerSessionMetadataStreamState]

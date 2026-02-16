@@ -68,8 +68,7 @@ class Graph(bt2_object._SharedObject):
         params: bt2_component._ComponentParams = None,
         obj: object = None,
         logging_level: bt2_logging.LoggingLevel = bt2_logging.LoggingLevel.NONE,
-    ) -> bt2_component._GenericSourceComponentConst:
-        ...
+    ) -> bt2_component._GenericSourceComponentConst: ...
 
     @typing.overload
     def add_component(  # noqa: F811
@@ -82,8 +81,7 @@ class Graph(bt2_object._SharedObject):
         params: bt2_component._ComponentParams = None,
         obj: object = None,
         logging_level: bt2_logging.LoggingLevel = bt2_logging.LoggingLevel.NONE,
-    ) -> bt2_component._GenericFilterComponentConst:
-        ...
+    ) -> bt2_component._GenericFilterComponentConst: ...
 
     @typing.overload
     def add_component(  # noqa: F811
@@ -96,8 +94,7 @@ class Graph(bt2_object._SharedObject):
         params: bt2_component._ComponentParams = None,
         obj: object = None,
         logging_level: bt2_logging.LoggingLevel = bt2_logging.LoggingLevel.NONE,
-    ) -> bt2_component._GenericSinkComponentConst:
-        ...
+    ) -> bt2_component._GenericSinkComponentConst: ...
 
     def add_component(  # noqa: F811
         self,
