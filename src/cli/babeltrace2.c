@@ -1007,14 +1007,12 @@ enum bt_cmd_status cmd_print_lttng_live_sessions(struct bt_config *cfg)
 		}
 		text = bt_value_string_get(v);
 
-		const char *trace_fmt;
-
 		if (strcmp(text, "ctf-1.8") == 0) {
 			fprintf(out_stream, "CTF 1.8)");
 		} else if (strcmp(text, "ctf-2.0") == 0) {
 			fprintf(out_stream, "CTF 2)");
 		} else {
-			fprintf(out_stream, "unknown trace format [`%s`])", trace_fmt);
+			fprintf(out_stream, "unknown trace format [`%s`])", text);
 		}
 
 		fprintf(out_stream, "\n");
