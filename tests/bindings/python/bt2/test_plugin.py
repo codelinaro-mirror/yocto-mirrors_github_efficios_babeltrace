@@ -20,7 +20,6 @@ import unittest
 import bt2
 import os
 
-
 _TEST_PLUGIN_PLUGINS_PATH = os.environ['BT_PLUGINS_PATH']
 _TEST_PLUGIN_PLUGIN_EXTENSION_BY_OS = {'cygwin': 'dll', 'mingw': 'dll'}
 

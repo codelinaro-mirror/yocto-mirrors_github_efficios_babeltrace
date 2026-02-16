@@ -25,7 +25,6 @@ import unittest
 import sys
 import argparse
 
-
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
     argparser.add_argument(

@@ -32,7 +32,6 @@ import datetime
 from collections import namedtuple
 import numbers
 
-
 # a pair of component and ComponentSpec
 _ComponentAndSpec = namedtuple('_ComponentAndSpec', ['comp', 'spec'])
 

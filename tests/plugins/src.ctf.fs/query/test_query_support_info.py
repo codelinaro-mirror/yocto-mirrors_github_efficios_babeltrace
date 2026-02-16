@@ -18,7 +18,6 @@ import unittest
 import bt2
 import os
 
-
 session_rotation_trace_path = os.path.join(
     os.environ['BT_CTF_TRACES_PATH'], 'succeed', 'session-rotation'
 )

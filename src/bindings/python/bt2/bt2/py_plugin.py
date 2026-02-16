@@ -24,7 +24,6 @@ from bt2 import utils
 from bt2 import component as bt2_component
 import sys
 
-
 # Python plugin path to `_PluginInfo` (cache)
 _plugin_infos = {}
 

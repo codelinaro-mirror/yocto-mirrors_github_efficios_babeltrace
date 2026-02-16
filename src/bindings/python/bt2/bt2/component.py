@@ -31,7 +31,6 @@ from bt2 import port as bt2_port
 import sys
 import bt2
 
-
 # This class wraps a component class pointer. This component class could
 # have been created by Python code, but since we only have the pointer,
 # we can only wrap it in a generic way and lose the original Python

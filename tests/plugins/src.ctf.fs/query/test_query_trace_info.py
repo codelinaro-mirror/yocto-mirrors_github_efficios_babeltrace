@@ -19,7 +19,6 @@ import bt2
 import os
 import re
 
-
 test_ctf_traces_path = os.environ['BT_CTF_TRACES_PATH']
 
 

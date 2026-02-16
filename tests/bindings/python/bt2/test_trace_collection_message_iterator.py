@@ -22,7 +22,6 @@ import bt2
 import os
 import os.path
 
-
 _BT_TESTS_DATADIR = os.environ['BT_TESTS_DATADIR']
 _BT_CTF_TRACES_PATH = os.environ['BT_CTF_TRACES_PATH']
 _3EVENTS_INTERSECT_TRACE_PATH = os.path.join(
