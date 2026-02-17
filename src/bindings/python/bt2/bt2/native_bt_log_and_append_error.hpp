@@ -7,11 +7,12 @@
 #ifndef BABELTRACE_BINDINGS_PYTHON_BT2_BT2_NATIVE_BT_LOG_AND_APPEND_ERROR_HPP
 #define BABELTRACE_BINDINGS_PYTHON_BT2_BT2_NATIVE_BT_LOG_AND_APPEND_ERROR_HPP
 
+/* `Python.h` needs to be included before any system header. */
+#include "py-common/py-common.h"
+
 #include <stdbool.h>
 
 #include "logging/comp-logging.h"
-
-#include "py-common/py-common.h"
 
 static void restore_current_thread_error_and_append_exception_chain_recursive(
     int active_log_level, PyObject *py_exc_value, bt_self_component_class *self_component_class,

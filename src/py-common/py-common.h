@@ -9,8 +9,10 @@
 #ifndef BABELTRACE_PY_COMMON_PY_COMMON_H
 #define BABELTRACE_PY_COMMON_PY_COMMON_H
 
-#include <glib.h>
+/* `Python.h` needs to be included before any system header. */
 #include <Python.h>
+
+#include <glib.h>
 #include <stdbool.h>
 
 #ifdef __cplusplus

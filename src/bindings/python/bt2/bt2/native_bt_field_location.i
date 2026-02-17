@@ -5,6 +5,7 @@
  */
 
 %{
+/* `Python.h` needs to be included before any system header. */
 #include "py-common/py-common.hpp"
 %}
 

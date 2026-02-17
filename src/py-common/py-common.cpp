@@ -6,17 +6,19 @@
  * Copyright (c) 2019 Simon Marchi <simon.marchi@efficios.com>
  */
 
+/* `Python.h` needs to be included before any system header. */
+#include <Python.h>
+
+#include "py-common.h"
+#include "py-common.hpp"
+
 #define BT_LOG_OUTPUT_LEVEL log_level
 #define BT_LOG_TAG          "PY-COMMON"
-#include <Python.h>
 #include <stdbool.h>
 
 #include "logging/log.h"
 
 #include "common/assert.h"
-
-#include "py-common.h"
-#include "py-common.hpp"
 
 /*
  * Concatenate strings in list `py_str_list`, returning the result as a
