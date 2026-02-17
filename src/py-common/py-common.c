@@ -22,16 +22,17 @@
  * SOFTWARE.
  */
 
+/* `Python.h` needs to be included before any system header. */
+#include <Python.h>
+#include "py-common.h"
+
 #define BT_LOG_OUTPUT_LEVEL log_level
 #define BT_LOG_TAG "PY-COMMON"
 #include "logging/log.h"
 
 #include <stdbool.h>
 
-#include <Python.h>
-
 #include "common/assert.h"
-#include "py-common.h"
 
 /*
  * Concatenate strings in list `py_str_list`, returning the result as a

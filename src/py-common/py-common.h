@@ -25,8 +25,10 @@
  * SOFTWARE.
  */
 
-#include <glib.h>
+/* `Python.h` needs to be included before any system header. */
 #include <Python.h>
+
+#include <glib.h>
 #include <stdbool.h>
 
 #include "common/macros.h"

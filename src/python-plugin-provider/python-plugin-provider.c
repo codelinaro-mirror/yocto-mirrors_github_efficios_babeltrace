@@ -24,6 +24,10 @@
  * SOFTWARE.
  */
 
+/* `Python.h` needs to be included before any system header. */
+#include <Python.h>
+#include "py-common/py-common.h"
+
 #define BT_LOG_TAG "LIB/PLUGIN-PY"
 #include "lib/logging.h"
 
@@ -36,11 +40,9 @@
 #include <babeltrace2/graph/component-class.h>
 #include <babeltrace2/error-reporting.h>
 #include "lib/graph/component-class.h"
-#include "py-common/py-common.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <Python.h>
 #include <glib.h>
 #include <gmodule.h>
 
