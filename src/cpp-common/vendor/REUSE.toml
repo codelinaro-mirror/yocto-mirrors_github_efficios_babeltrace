@@ -1,0 +1,13 @@
+version = 1
+
+[[annotations]]
+path = ["fmt/*.h", "fmt/*.cc"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2012 - present, Victor Zverovich"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "wise-enum/*.h"
+precedence = "closest"
+SPDX-FileCopyrightText = "2017 - present, Nir Friedman"
+SPDX-License-Identifier = "BSL-1.0"

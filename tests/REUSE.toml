@@ -1,0 +1,25 @@
+version = 1
+
+[[annotations]]
+path = "common-data/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2011-2026 EfficiOS Inc."
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "plugins/flt.lttng-utils.debug-info/bins/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2011-2026 EfficiOS Inc."
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = ["**.expect", "**.mp", "**.mctf"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2011-2026 EfficiOS Inc."
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = ["plugins/**.json"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2011-2026 EfficiOS Inc."
+SPDX-License-Identifier = "CC0-1.0"

@@ -232,7 +232,8 @@ EXTRA_DIST = \
 	plugins/src.ctf.lttng-live/test_query_live.py \
 	python-plugin-provider/bt_plugin_test_python_plugin_provider.py \
 	python-plugin-provider/test_python_plugin_provider.py \
-	utils/python
+	utils/python \
+	REUSE.toml
 
 AM_CPPFLAGS += -I$(top_srcdir)/tests/utils
 

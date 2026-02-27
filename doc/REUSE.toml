@@ -1,0 +1,19 @@
+version = 1
+
+[[annotations]]
+path = "api/libbabeltrace2/examples/*.c"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2019-2025 Philippe Proulx <pproulx@efficios.com>"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "api/libbabeltrace2/examples/dust"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2019 Philippe Proulx <pproulx@efficios.com>"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = ["api/libbabeltrace2/images/*.png", "impl-details-images/*.png", "bindings/python/source/images/*.png"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2017-2025 Philippe Proulx <pproulx@efficios.com>"
+SPDX-License-Identifier = "CC-BY-SA-4.0"

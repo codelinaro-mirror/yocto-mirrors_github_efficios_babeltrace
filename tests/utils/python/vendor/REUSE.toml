@@ -1,0 +1,97 @@
+version = 1
+
+[[annotations]]
+path = ["pytest-6.1.2/pytest/**", "pytest-6.1.2/_pytest/**", "pytest-6.1.2/pytest-6.1.2.dist-info/**", "pytest-7.4.3/pytest/**", "pytest-7.4.3/_pytest/**", "pytest-7.4.3/pytest-7.4.3.dist-info/**"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2004 - present, Holger Krekel and others"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["pytest-6.1.2/attr/**", "pytest-6.1.2/attrs/**", "pytest-6.1.2/attrs-22.1.0.dist-info/**"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2015 - present, Hynek Schlawack and contributors"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["pytest-6.1.2/iniconfig/**", "pytest-6.1.2/iniconfig-1.1.1.dist-info/**", "pytest-7.4.3/iniconfig/**", "pytest-7.4.3/iniconfig-2.0.0.dist-info/**"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2010 - present, Ronny Pfannschmidt and Holger Krekel"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["pytest-6.1.2/pluggy/**", "pytest-6.1.2/pluggy-0.13.1.dist-info/**", "pytest-7.4.3/pluggy/**", "pytest-7.4.3/pluggy-1.2.0.dist-info/**"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2015 - present, Holger Krekel and contributors"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["pytest-6.1.2/py/**", "pytest-6.1.2/py-1.11.0.dist-info/**"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2004 - present, Holger Krekel and others"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "pytest-6.1.2/toml/**"
+precedence = "closest"
+SPDX-FileCopyrightText = "2013 - present, William Pearson and contributors"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "pytest-6.1.2/pathlib2/**"
+precedence = "closest"
+SPDX-FileCopyrightText = "2014 - present, Matthias C. M. Troffaes and contributors"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "pytest-6.1.2/pyparsing.py"
+precedence = "closest"
+SPDX-FileCopyrightText = "2003 - present, Paul McGuire"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "pytest-6.1.2/six.py"
+precedence = "closest"
+SPDX-FileCopyrightText = "2010 - present, Benjamin Peterson"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["pytest-6.1.2/zipp.py", "pytest-6.1.2/zipp-1.2.0.dist-info/**", "pytest-7.4.3/zipp/**", "pytest-7.4.3/zipp-3.15.0.dist-info/**"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2017 - present, Jason R. Coombs"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["pytest-7.4.3/exceptiongroup/**", "pytest-7.4.3/exceptiongroup-1.3.1.dist-info/**"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2021 - present, Alex Grönholm"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["pytest-7.4.3/tomli/**", "pytest-7.4.3/tomli-2.0.1.dist-info/**"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2021 - present, Taneli Hukkinen"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "pytest-7.4.3/py.py"
+precedence = "closest"
+SPDX-FileCopyrightText = "2004 - present, Holger Krekel and others"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["pytest-6.1.2/importlib_metadata/**", "pytest-6.1.2/importlib_metadata-2.1.3.dist-info/**", "pytest-7.4.3/importlib_metadata/**", "pytest-7.4.3/importlib_metadata-6.7.0.dist-info/**"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2017 - present, Jason R. Coombs"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = ["pytest-6.1.2/packaging/**", "pytest-6.1.2/packaging-20.9.dist-info/**", "pytest-7.4.3/packaging/**", "pytest-7.4.3/packaging-24.0.dist-info/**"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2014 - present, Donald Stufft and contributors"
+SPDX-License-Identifier = "BSD-2-Clause OR Apache-2.0"
+
+[[annotations]]
+path = ["pytest-7.4.3/typing_extensions.py", "pytest-7.4.3/typing_extensions-4.7.1.dist-info/**"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2001 - present, Python Software Foundation"
+SPDX-License-Identifier = "PSF-2.0"

@@ -945,4 +945,5 @@ nodist_EXTRA_lib_libbabeltrace2_builtin_la_SOURCES = dummy.cpp
 endif # ENABLE_BUILT_IN_PLUGINS
 
 EXTRA_DIST = \
-	cpp-common/vendor/span-lite/span.hpp.license
+	cpp-common/vendor/span-lite/span.hpp.license \
+	cpp-common/vendor/REUSE.toml

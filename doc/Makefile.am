@@ -30,4 +30,5 @@ EXTRA_DIST = \
 	impl-details-images/bt-ref10.png \
 	impl-details-images/bt-ref11.png \
 	impl-details-images/bt-ref12.png \
-	impl-details-images/bt-ref13.png
+	impl-details-images/bt-ref13.png \
+	REUSE.toml
