@@ -384,10 +384,9 @@ bt_stream_class_set_packet_context_field_class(
 	bt_object_put_ref(stream_class->packet_context_fc);
 
 	/* Install new packet context field class */
-	bt_field_class_make_part_of_trace_class(field_class);
 	bt_field_class_struct_mark_scope_root(struct_fc,
 		BT_FIELD_LOCATION_SCOPE_PACKET_CONTEXT,
-		stream_class, NULL);
+		stream_class, NULL, __func__);
 
 	stream_class->packet_context_fc = struct_fc;
 	bt_object_get_ref_no_null_check(stream_class->packet_context_fc);
@@ -465,10 +464,9 @@ bt_stream_class_set_event_common_context_field_class(
 	bt_object_put_ref(stream_class->event_common_context_fc);
 
 	/* Install new event common context field class */
-	bt_field_class_make_part_of_trace_class(field_class);
 	bt_field_class_struct_mark_scope_root(struct_fc,
 		BT_FIELD_LOCATION_SCOPE_EVENT_COMMON_CONTEXT,
-		stream_class, NULL);
+		stream_class, NULL, __func__);
 
 	stream_class->event_common_context_fc = struct_fc;
 	bt_object_get_ref_no_null_check(stream_class->event_common_context_fc);

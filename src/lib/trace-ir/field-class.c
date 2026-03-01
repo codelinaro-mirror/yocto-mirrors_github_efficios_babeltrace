@@ -1307,6 +1307,34 @@ end:
 	return opt;
 }
 
+/*
+ * Return true if `fc` is part of something. I.e., one of:
+ *
+ *  ‣ used as a structure member, variant option, option content or array
+ *    element type
+ *  ‣ used as a stream class or event class scope root
+ */
+static
+bool field_class_is_part_of_something(const struct bt_field_class *fc)
+{
+	bool is_part;
+
+	if (fc->type == BT_FIELD_CLASS_TYPE_STRUCTURE) {
+		struct bt_field_class_structure *struct_fc =
+			(struct bt_field_class_structure *) fc;
+
+		if (struct_fc->scope != BT_FIELD_LOCATION_SCOPE_INVALID) {
+			is_part = true;
+			goto end;
+		}
+	}
+
+	is_part = fc->parent != NULL;
+
+end:
+	return is_part;
+}
+
 static
 int append_named_field_class_to_container_field_class(
 		struct bt_field_class *gen_container_fc,
@@ -1329,6 +1357,8 @@ int append_named_field_class_to_container_field_class(
 		"Duplicate member/option name in structure/variant field class: "
 		"%![container-fc-]+F, name=\"%s\"", container_fc,
 		named_fc->name->str);
+	BT_ASSERT_PRE_FC_IS_NOT_PART_OF_SOMETHING_FROM_FUNC(api_func,
+		named_fc->fc);
 
 	/*
 	 * Freeze the contained field class, but not the named field
@@ -1576,6 +1606,8 @@ struct bt_field_class *create_option_field_class(
 		content_fc, "Content field class");
 	BT_ASSERT_PRE_FC_HAS_TRACE_CLASS_FROM_FUNC(api_func, content_fc,
 		trace_class);
+	BT_ASSERT_PRE_FC_IS_NOT_PART_OF_SOMETHING_FROM_FUNC(api_func,
+		content_fc);
 
 	BT_ASSERT(!(selector_fc && selector_fl));
 
@@ -2673,6 +2705,8 @@ int init_array_field_class(struct bt_field_class_array *fc,
 		element_fc, "Element field class");
 	BT_ASSERT_PRE_FC_HAS_TRACE_CLASS_FROM_FUNC(api_func, element_fc,
 		trace_class);
+	BT_ASSERT_PRE_FC_IS_NOT_PART_OF_SOMETHING_FROM_FUNC(api_func,
+		element_fc);
 
 	ret = init_field_class((void *) fc, type, release_func,
 		trace_class);
@@ -3066,37 +3100,6 @@ void _bt_named_field_class_freeze(const struct bt_named_field_class *named_fc)
 	((struct bt_named_field_class *) named_fc)->frozen = true;
 }
 
-void bt_field_class_make_part_of_trace_class(const struct bt_field_class *c_fc)
-{
-	struct bt_field_class *fc = (void *) c_fc;
-
-	BT_ASSERT(fc);
-	BT_ASSERT_PRE("field-class-is-not-part-of-trace-class",
-		!fc->part_of_trace_class,
-		"Field class is already part of a trace class: %!+F", fc);
-	fc->part_of_trace_class = true;
-
-	if (fc->type == BT_FIELD_CLASS_TYPE_STRUCTURE ||
-			bt_field_class_type_is(fc->type,
-				BT_FIELD_CLASS_TYPE_VARIANT)) {
-		struct bt_field_class_named_field_class_container *container_fc =
-			(void *) fc;
-		uint64_t i;
-
-		for (i = 0; i < container_fc->named_fcs->len; i++) {
-			struct bt_named_field_class *named_fc =
-				container_fc->named_fcs->pdata[i];
-
-			bt_field_class_make_part_of_trace_class(named_fc->fc);
-		}
-	} else if (bt_field_class_type_is(fc->type,
-			BT_FIELD_CLASS_TYPE_ARRAY)) {
-		struct bt_field_class_array *array_fc = (void *) fc;
-
-		bt_field_class_make_part_of_trace_class(array_fc->element_fc);
-	}
-}
-
 /*
  * Marks `c_struct_fc`, a structure field class, as being the root of a
  * a stream class or event class scope.
@@ -3110,8 +3113,12 @@ void bt_field_class_struct_mark_scope_root(
 		struct bt_field_class_structure *struct_fc,
 		enum bt_field_location_scope scope,
 		const struct bt_stream_class *stream_class,
-		const struct bt_event_class *event_class)
+		const struct bt_event_class *event_class,
+		const char *api_func)
 {
+	BT_ASSERT_PRE_FC_IS_NOT_PART_OF_SOMETHING_FROM_FUNC(api_func,
+		&struct_fc->common.common);
+
 	struct_fc->scope = scope;
 
 	switch (scope) {

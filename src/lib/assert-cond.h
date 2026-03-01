@@ -1143,6 +1143,21 @@
 	BT_ASSERT_PRE_FCS_HAVE_SAME_TRACE_CLASS_FROM_FUNC(__func__,	\
 		(_fc_a), (_fc_b))
 
+/*
+ * Asserts that a field class is not already part of a field class, event class,
+ * or stream class.
+ */
+#define BT_ASSERT_PRE_FC_IS_NOT_PART_OF_SOMETHING_FROM_FUNC(_func, _fc) \
+	BT_ASSERT_PRE_FROM_FUNC(_func,					\
+		"field-class-is-not-part-of-something",			\
+		!field_class_is_part_of_something(_fc),			\
+		"Field class is already part of a field class, "	\
+		"event class, or stream class: %!+F", (_fc))
+
+#define BT_ASSERT_PRE_FC_IS_NOT_PART_OF_SOMETHING(_fc)			\
+	BT_ASSERT_PRE_FC_IS_NOT_PART_OF_SOMETHING_FROM_FUNC(		\
+		__func__, (_fc))
+
 #define _BT_ASSERT_PRE_INTR_NAME	"Interrupter"
 #define _BT_ASSERT_PRE_INTR_ID		"interrupter"
 

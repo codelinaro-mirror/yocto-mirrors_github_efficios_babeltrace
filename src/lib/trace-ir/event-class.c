@@ -381,10 +381,9 @@ bt_event_class_set_specific_context_field_class(
 	bt_object_put_ref(event_class->specific_context_fc);
 
 	/* Install new specific context field class */
-	bt_field_class_make_part_of_trace_class(field_class);
 	bt_field_class_struct_mark_scope_root(struct_fc,
 		BT_FIELD_LOCATION_SCOPE_EVENT_SPECIFIC_CONTEXT,
-		NULL, event_class);
+		NULL, event_class, __func__);
 
 
 	event_class->specific_context_fc = struct_fc;
@@ -463,10 +462,9 @@ bt_event_class_set_payload_field_class(
 	bt_object_put_ref(event_class->payload_fc);
 
 	/* Install new payload field class */
-	bt_field_class_make_part_of_trace_class(field_class);
 	bt_field_class_struct_mark_scope_root(struct_fc,
 		BT_FIELD_LOCATION_SCOPE_EVENT_PAYLOAD,
-		NULL, event_class);
+		NULL, event_class, __func__);
 
 	event_class->payload_fc = struct_fc;
 	bt_object_get_ref_no_null_check(event_class->payload_fc);

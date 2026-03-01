@@ -62,12 +62,6 @@ struct bt_field_class {
 	const struct bt_field_class *parent;
 	uint64_t index_in_parent;
 
-	/*
-	 * This flag indicates whether or not this field class is part
-	 * of a trace class.
-	 */
-	bool part_of_trace_class;
-
 	/* Effective MIP version for this field class */
 	uint64_t mip_version;
 
@@ -381,20 +375,12 @@ void _bt_named_field_class_freeze(const struct bt_named_field_class *named_fc);
 # define bt_named_field_class_freeze(_named_fc)	((void) _named_fc)
 #endif
 
-/*
- * This function recursively marks `field_class` and its children as
- * being part of a trace. This is used to validate that all field classes
- * are used at a single location within trace objects even if they are
- * shared objects for other purposes.
- */
-void bt_field_class_make_part_of_trace_class(
-		const struct bt_field_class *field_class);
-
 void bt_field_class_struct_mark_scope_root(
 		struct bt_field_class_structure *struct_fc,
 		enum bt_field_location_scope scope,
 		const struct bt_stream_class *stream_class,
-		const struct bt_event_class *event_class);
+		const struct bt_event_class *event_class,
+		const char *api_func);
 
 const char *field_class_name_in_parent(const struct bt_field_class *fc);
 
