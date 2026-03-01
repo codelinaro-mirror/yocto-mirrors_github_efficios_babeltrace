@@ -569,9 +569,157 @@ static inline void format_field_integer_extended(char **buf_ch,
 #pragma GCC diagnostic pop
 }
 
+static
+void trace_trace_ir_path(const struct bt_trace *trace, GString *str)
+{
+	g_string_append(str, "<trace");
+
+	if (trace->class->mip_version >= 1) {
+		append_ns_name_uid(str, trace->ns, trace->name,
+			trace->uid_or_uuid.uid);
+	} else {
+		if (trace->name) {
+			g_string_append_printf(str, ", name: `%s`", trace->name);
+		}
+
+		if (trace->uid_or_uuid.uuid.value) {
+			g_string_append_printf(str,
+				", UUID: " BT_UUID_FMT,
+				BT_UUID_FMT_VALUES(
+					trace->uid_or_uuid.uuid.value));
+		}
+	}
+
+	g_string_append_c(str, '>');
+}
+
+static
+void stream_trace_ir_path(const struct bt_stream *stream, GString *str)
+{
+	/* This happens during destruction of pool objects */
+	if (!stream) {
+		g_string_append(str, "<NULL stream>");
+		return;
+	}
+
+	trace_trace_ir_path(bt_stream_borrow_trace_inline(stream), str);
+
+	g_string_append_printf(str, "/<stream %" PRIu64, stream->id);
+
+	if (stream->name) {
+		g_string_append_printf(str, ", name: `%s`", stream->name);
+	}
+
+	g_string_append_c(str, '>');
+}
+
+static
+void event_trace_ir_path(const struct bt_event *event, GString *str)
+{
+	stream_trace_ir_path(event->stream, str);
+	g_string_append(str, "/<event>");
+}
+
+/*
+ * Like `append_scope_root_trace_ir_path`, but for fields: also shows
+ * the owning event or stream instance.
+ */
+static
+bool append_field_scope_root_trace_ir_path(
+		const struct bt_field *field, GString *str)
+{
+	const struct bt_field_structure *struct_field;
+
+	if (!bt_field_class_type_is(field->class->type,
+			BT_FIELD_CLASS_TYPE_STRUCTURE)) {
+		return false;
+	}
+
+	struct_field = (const struct bt_field_structure *) field;
+
+	if (struct_field->scope == BT_FIELD_LOCATION_SCOPE_INVALID) {
+		return false;
+	}
+
+	switch (struct_field->scope) {
+	case BT_FIELD_LOCATION_SCOPE_PACKET_CONTEXT:
+		stream_trace_ir_path(struct_field->packet->stream, str);
+		g_string_append(str, "/<packet context>");
+		break;
+	case BT_FIELD_LOCATION_SCOPE_EVENT_COMMON_CONTEXT:
+		event_trace_ir_path(struct_field->event, str);
+		g_string_append(str, "/<common event context>");
+		break;
+	case BT_FIELD_LOCATION_SCOPE_EVENT_SPECIFIC_CONTEXT:
+		event_trace_ir_path(struct_field->event, str);
+		g_string_append(str, "/<specific context>");
+		break;
+	case BT_FIELD_LOCATION_SCOPE_EVENT_PAYLOAD:
+		event_trace_ir_path(struct_field->event, str);
+		g_string_append(str, "/<payload>");
+		break;
+	default:
+		bt_common_abort();
+	}
+
+	return true;
+}
+
+static
+void field_trace_ir_path_recursive(const struct bt_field *field, GString *str)
+{
+	/* Is this field part of a composite field? */
+	if (field->parent != NULL) {
+		field_trace_ir_path_recursive(field->parent, str);
+
+		if (is_named_container_field_class(field->class->parent)) {
+			const char *name_in_parent =
+				field_class_name_in_parent(field->class);
+
+			if (name_in_parent) {
+				g_string_append_printf(str, "/%s", name_in_parent);
+			} else {
+				g_string_append_printf(str, "/<option %" PRIu64 ">",
+					field->class->index_in_parent);
+			}
+		} else if (bt_field_class_type_is(field->class->parent->type,
+				BT_FIELD_CLASS_TYPE_ARRAY)) {
+			g_string_append_printf(str, "[%" PRIu64 "]",
+				field->index_in_array);
+		} else {
+			BT_ASSERT(bt_field_class_type_is(
+				field->class->parent->type,
+				BT_FIELD_CLASS_TYPE_OPTION));
+			g_string_append(str, "/<content>");
+		}
+
+		return;
+	}
+
+	/* Is this field the root of a scope? */
+	if (append_field_scope_root_trace_ir_path(field, str)) {
+		return;
+	}
+
+	/* The field is still dangling. */
+	g_string_append(str, "<unconnected>");
+}
+
+static
+gchar *field_trace_ir_path(const struct bt_field *field)
+{
+	GString *str = g_string_new(NULL);
+
+	BT_ASSERT(str);
+	field_trace_ir_path_recursive(field, str);
+	return g_string_free(str, FALSE);
+}
+
 static inline void format_field(char **buf_ch, bool extended,
 		const char *prefix, const struct bt_field *field)
 {
+	gchar *trace_ir_path;
+
 	BUF_APPEND(", %sis-set=%d", PRFIELD(field->is_set));
 
 	if (extended) {
@@ -586,6 +734,10 @@ static inline void format_field(char **buf_ch, bool extended,
 
 	BUF_APPEND(", %sclass-type=%s",
 		PRFIELD(bt_common_field_class_type_string(field->class->type)));
+
+	trace_ir_path = field_trace_ir_path(field);
+	BUF_APPEND(", %strace-ir-path=\"%s\"", PRFIELD(trace_ir_path));
+	g_free(trace_ir_path);
 
 	if (!extended || !field->is_set) {
 		return;

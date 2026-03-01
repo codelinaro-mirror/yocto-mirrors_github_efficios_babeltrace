@@ -83,6 +83,10 @@ struct bt_event *bt_event_new(struct bt_event_class *event_class)
 			/* bt_field_create() logs errors */
 			goto error;
 		}
+
+		event->common_context_field->scope =
+			BT_FIELD_LOCATION_SCOPE_EVENT_COMMON_CONTEXT;
+		event->common_context_field->event = event;
 	}
 
 	fc = event_class->specific_context_fc;
@@ -93,6 +97,10 @@ struct bt_event *bt_event_new(struct bt_event_class *event_class)
 			/* bt_field_create() logs errors */
 			goto error;
 		}
+
+		event->specific_context_field->scope =
+			BT_FIELD_LOCATION_SCOPE_EVENT_SPECIFIC_CONTEXT;
+		event->specific_context_field->event = event;
 	}
 
 	fc = event_class->payload_fc;
@@ -103,6 +111,10 @@ struct bt_event *bt_event_new(struct bt_event_class *event_class)
 			/* bt_field_create() logs errors */
 			goto error;
 		}
+
+		event->payload_field->scope =
+			BT_FIELD_LOCATION_SCOPE_EVENT_PAYLOAD;
+		event->payload_field->event = event;
 	}
 
 	goto end;

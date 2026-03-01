@@ -167,6 +167,10 @@ struct bt_packet *bt_packet_new(struct bt_stream *stream)
 				"Cannot create packet context field.");
 			goto error;
 		}
+
+		packet->context_field->scope =
+			BT_FIELD_LOCATION_SCOPE_PACKET_CONTEXT;
+		packet->context_field->packet = packet;
 	}
 
 	BT_LIB_LOGD("Created packet object: %!+a", packet);

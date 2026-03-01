@@ -416,11 +416,18 @@ end:
 
 static inline
 int create_fields_from_named_field_classes(
-		struct bt_field_class_named_field_class_container *fc,
+		struct bt_field *parent_field,
 		GPtrArray **fields)
 {
 	int ret = 0;
 	uint64_t i;
+	struct bt_field_class_named_field_class_container *parent_fc;
+
+	BT_ASSERT_DBG(is_named_container_field_class(parent_field->class));
+
+	parent_fc =
+		(struct bt_field_class_named_field_class_container *)
+		parent_field->class;
 
 	*fields = g_ptr_array_new_with_free_func(
 		(GDestroyNotify) bt_field_destroy);
@@ -430,11 +437,12 @@ int create_fields_from_named_field_classes(
 		goto end;
 	}
 
-	g_ptr_array_set_size(*fields, fc->named_fcs->len);
+	g_ptr_array_set_size(*fields, parent_fc->named_fcs->len);
 
-	for (i = 0; i < fc->named_fcs->len; i++) {
+	for (i = 0; i < parent_fc->named_fcs->len; i++) {
 		struct bt_field *field;
-		struct bt_named_field_class *named_fc = fc->named_fcs->pdata[i];
+		struct bt_named_field_class *named_fc =
+			parent_fc->named_fcs->pdata[i];
 
 		field = bt_field_create(named_fc->fc);
 		if (!field) {
@@ -446,6 +454,7 @@ int create_fields_from_named_field_classes(
 			goto end;
 		}
 
+		field->parent = parent_field;
 		g_ptr_array_index(*fields, i) = field;
 	}
 
@@ -467,8 +476,9 @@ struct bt_field *create_structure_field(struct bt_field_class *fc)
 	}
 
 	init_field((void *) struct_field, fc, &structure_field_methods);
+	struct_field->scope = BT_FIELD_LOCATION_SCOPE_INVALID;
 
-	if (create_fields_from_named_field_classes((void *) fc,
+	if (create_fields_from_named_field_classes(&struct_field->common,
 			&struct_field->fields)) {
 		BT_LIB_LOGE_APPEND_CAUSE(
 			"Cannot create structure member fields: %![fc-]+F", fc);
@@ -509,6 +519,8 @@ struct bt_field *create_option_field(struct bt_field_class *fc)
 		goto end;
 	}
 
+	opt_field->content_field->parent = &opt_field->common;
+
 	BT_LIB_LOGD("Created option field object: %!+f", opt_field);
 
 end:
@@ -530,7 +542,7 @@ struct bt_field *create_variant_field(struct bt_field_class *fc)
 
 	init_field((void *) var_field, fc, &variant_field_methods);
 
-	if (create_fields_from_named_field_classes((void *) fc,
+	if (create_fields_from_named_field_classes(&var_field->common,
 			&var_field->fields)) {
 		BT_LIB_LOGE_APPEND_CAUSE("Cannot create variant member fields: "
 			"%![fc-]+F", fc);
@@ -603,15 +615,20 @@ int init_array_field_fields(struct bt_field_array *array_field)
 	g_ptr_array_set_size(array_field->fields, array_field->length);
 
 	for (i = 0; i < array_field->length; i++) {
-		array_field->fields->pdata[i] = bt_field_create(
-			array_fc->element_fc);
-		if (!array_field->fields->pdata[i]) {
+		struct bt_field *elem_field =
+			bt_field_create(array_fc->element_fc);
+
+		if (!elem_field) {
 			BT_LIB_LOGE_APPEND_CAUSE(
 				"Cannot create array field's element field: "
 				"index=%" PRIu64 ", %![fc-]+F", i, array_fc);
 			ret = -1;
 			goto end;
 		}
+
+		elem_field->parent = &array_field->common;
+		elem_field->index_in_array = i;
+		array_field->fields->pdata[i] = elem_field;
 	}
 
 end:
@@ -1086,6 +1103,8 @@ enum bt_field_array_dynamic_set_length_status bt_field_array_dynamic_set_length(
 			}
 
 			BT_ASSERT_DBG(!array_field->fields->pdata[i]);
+			elem_field->parent = &array_field->common;
+			elem_field->index_in_array = i;
 			array_field->fields->pdata[i] = elem_field;
 		}
 	}

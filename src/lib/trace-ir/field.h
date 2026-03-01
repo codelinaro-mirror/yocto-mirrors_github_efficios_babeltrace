@@ -38,6 +38,22 @@ struct bt_field {
 	/* Virtual table for slow path (dev mode) operations */
 	struct bt_field_methods *methods;
 
+	/*
+	 * If this field is a child of a structure or variant field:
+	 *
+	 *  ‣ `parent` is the structure or variant field
+	 *  ‣ `index_in_array` is unspecified
+	 *
+	 * Otherwise, if this field is an element of an array field:
+	 *
+	 *  ‣ `parent` is the array field
+	 *  ‣ `index_in_array` is the index of this field in its parent
+	 *
+	 * Otherwise, `parent` is `NULL` and `index_in_array` is unspecified.
+	 */
+	struct bt_field *parent;
+	uint64_t index_in_array;
+
 	bool is_set;
 	bool frozen;
 };
@@ -71,6 +87,25 @@ struct bt_field_structure {
 
 	/* Array of `struct bt_field *`, owned by this */
 	GPtrArray *fields;
+
+	/*
+	 * `BT_FIELD_LOCATION_SCOPE_INVALID` if this structure field is not
+	 * used as the root of a scope, else indicates which scope it is
+	 * the root of.
+	 *
+	 * When valid, the union below points back to the owning event or
+	 * packet:
+	 *
+	 *  ‣ `event` for event common context, event specific context
+	 *    and event payload scopes
+	 *  ‣ `packet` for the packet context scope
+	 */
+	enum bt_field_location_scope scope;
+
+	union {
+		const struct bt_event *event;
+		const struct bt_packet *packet;
+	};
 };
 
 struct bt_field_option {
