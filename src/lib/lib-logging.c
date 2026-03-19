@@ -163,6 +163,161 @@ static inline void format_blob_field_class(char **buf_ch, const char *prefix,
 		PRFIELD(field_class->media_type->str));
 }
 
+static
+void append_ns_name_uid(GString *str, const gchar *ns, const gchar *name,
+		const gchar *uid)
+{
+	if (!ns && !name && !uid) {
+		return;
+	}
+
+	if (ns) {
+		g_string_append_printf(str, ", namespace: `%s`", ns);
+	}
+
+	if (name) {
+		g_string_append_printf(str, ", name: `%s`", name);
+	}
+
+	if (uid) {
+		g_string_append_printf(str, ", UID: `%s`", uid);
+	}
+}
+
+static
+void trace_class_trace_ir_path(
+		const struct bt_trace_class *trace_class __attribute__((unused)),
+		GString *str)
+{
+	g_string_append(str, "<trace class>");
+}
+
+static
+void stream_class_trace_ir_path(const struct bt_stream_class *stream_class,
+		GString *str)
+{
+	trace_class_trace_ir_path(
+		bt_stream_class_borrow_trace_class_inline(stream_class), str);
+
+	g_string_append_printf(str, "/<stream class %" PRIu64,
+		stream_class->id);
+	append_ns_name_uid(str, stream_class->ns, stream_class->name,
+		stream_class->uid);
+	g_string_append_c(str, '>');
+}
+
+static
+void event_class_trace_ir_path(const struct bt_event_class *event_class,
+		GString *str)
+{
+	stream_class_trace_ir_path(
+		bt_event_class_borrow_stream_class_inline(event_class), str);
+
+	g_string_append_printf(str, "/<event class %" PRIu64, event_class->id);
+	append_ns_name_uid(str, event_class->ns, event_class->name,
+		event_class->uid);
+	g_string_append_c(str, '>');
+}
+
+/*
+ * If `field_class` is a structure field class used as the root of a scope,
+ * append the scope's trace IR path prefix to `str` and return `true`.
+ * Otherwise, return `false`.
+ */
+static
+bool append_field_class_scope_root_trace_ir_path(
+		const struct bt_field_class *field_class, GString *str)
+{
+	const struct bt_field_class_structure *struct_fc;
+
+	if (!bt_field_class_type_is(field_class->type,
+			BT_FIELD_CLASS_TYPE_STRUCTURE)) {
+		return false;
+	}
+
+	struct_fc = (const struct bt_field_class_structure *) field_class;
+
+	if (struct_fc->scope == BT_FIELD_LOCATION_SCOPE_INVALID) {
+		return false;
+	}
+
+	switch (struct_fc->scope) {
+	case BT_FIELD_LOCATION_SCOPE_PACKET_CONTEXT:
+		stream_class_trace_ir_path(struct_fc->stream_class, str);
+		g_string_append(str, "/<packet context>");
+		break;
+
+	case BT_FIELD_LOCATION_SCOPE_EVENT_COMMON_CONTEXT:
+		stream_class_trace_ir_path(struct_fc->stream_class, str);
+		g_string_append(str, "/<common event context>");
+		break;
+
+	case BT_FIELD_LOCATION_SCOPE_EVENT_SPECIFIC_CONTEXT:
+		event_class_trace_ir_path(struct_fc->event_class, str);
+		g_string_append(str, "/<specific context>");
+		break;
+
+	case BT_FIELD_LOCATION_SCOPE_EVENT_PAYLOAD:
+		event_class_trace_ir_path(struct_fc->event_class, str);
+		g_string_append(str, "/<payload>");
+		break;
+
+	default:
+		bt_common_abort();
+	}
+
+	return true;
+}
+
+static
+void field_class_trace_ir_path_recursive(
+		const struct bt_field_class *field_class, GString *str)
+{
+	/* Is this field class part of a composite field class? */
+	if (field_class->parent != NULL) {
+		field_class_trace_ir_path_recursive(field_class->parent, str);
+
+		if (is_named_container_field_class(field_class->parent)) {
+			const char *name_in_parent =
+				field_class_name_in_parent(field_class);
+
+			if (name_in_parent) {
+				g_string_append_printf(str, "/%s", name_in_parent);
+			} else {
+				g_string_append_printf(str, "/<option %" PRIu64 ">",
+					field_class->index_in_parent);
+			}
+		} else if (bt_field_class_type_is(field_class->parent->type,
+				BT_FIELD_CLASS_TYPE_ARRAY)) {
+			g_string_append(str, "/<element>");
+		} else {
+			BT_ASSERT(bt_field_class_type_is(field_class->parent->type,
+				BT_FIELD_CLASS_TYPE_OPTION));
+			g_string_append(str, "/<content>");
+		}
+
+		return;
+	}
+
+	/* Is this field class the root of a scope? */
+	if (append_field_class_scope_root_trace_ir_path(field_class, str)) {
+		return;
+	}
+
+	/* The field class is still dangling. */
+	g_string_append(str, "<unconnected>");
+}
+
+static
+gchar *field_class_trace_ir_path(const struct bt_field_class *field_class)
+{
+	GString *str = g_string_new(NULL);
+
+	BT_ASSERT(str);
+	field_class_trace_ir_path_recursive(field_class, str);
+	return g_string_free(str, FALSE);
+}
+
 static inline void format_field_class(char **buf_ch, bool extended,
 		const char *prefix, const struct bt_field_class *field_class)
 {
@@ -172,9 +327,13 @@ static inline void format_field_class(char **buf_ch, bool extended,
 		PRFIELD(bt_common_field_class_type_string(field_class->type)));
 
 	if (extended) {
+		gchar *trace_ir_path = field_class_trace_ir_path(field_class);
+
 		BUF_APPEND(", %sis-frozen=%d", PRFIELD(field_class->frozen));
 		BUF_APPEND(", %sis-part-of-trace-class=%d",
 			PRFIELD(field_class->part_of_trace_class));
+		BUF_APPEND(", %strace-ir-path=\"%s\"", PRFIELD(trace_ir_path));
+		g_free(trace_ir_path);
 	} else {
 		return;
 	}

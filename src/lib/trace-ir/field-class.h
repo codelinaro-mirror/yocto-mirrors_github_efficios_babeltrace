@@ -10,6 +10,7 @@
 
 #include <babeltrace2/trace-ir/clock-class.h>
 #include <babeltrace2/trace-ir/field-class.h>
+#include <babeltrace2/trace-ir/field-location.h>
 #include "common/macros.h"
 #include "lib/object.h"
 #include <babeltrace2/types.h>
@@ -24,6 +25,8 @@
 #define BT_FIELD_CLASS_ENUM_MAPPING_RANGE_AT_INDEX(_mapping, _index)	\
 	(&bt_g_array_index((_mapping)->ranges,				\
 		struct bt_field_class_enumeration_mapping_range, (_index)))
+
+#define BT_FIELD_LOCATION_SCOPE_INVALID -1
 
 enum field_xref_kind {
 	/*
@@ -41,6 +44,23 @@ struct bt_field_class {
 
 	/* Owned by this */
 	struct bt_value *user_attributes;
+
+	/*
+	 * If this field class is a child of a structure or variant field class:
+	 *
+	 *  ‣ `parent` is the structure or variant field class
+	 *  ‣ `index_in_parent` is the index of this field class in its parent
+	 *
+	 * Otherwise, if this field class is used as the element field class of
+	 * an array field class or the content field class of an option field class:
+	 *
+	 *  ‣ `parent` is the array or option field class
+	 *  ‣ `index_in_parent` is unspecified
+	 *
+	 * Otherwise, `parent` is `NULL` and `index_in_parent` is unspecified.
+	 */
+	const struct bt_field_class *parent;
+	uint64_t index_in_parent;
 
 	/*
 	 * This flag indicates whether or not this field class is part
@@ -183,6 +203,31 @@ struct bt_field_class_named_field_class_container {
 
 struct bt_field_class_structure {
 	struct bt_field_class_named_field_class_container common;
+
+	/*
+	 * Set to a valid enumeration value if this structure field class
+	 * is used as the root of a scope, else
+	 * `BT_FIELD_LOCATION_SCOPE_INVALID`.
+	 */
+	enum bt_field_location_scope scope;
+
+	union {
+		/*
+		 * Used if `scope` is one of:
+		 *
+		 *  ‣ `BT_FIELD_LOCATION_SCOPE_PACKET_CONTEXT`
+		 *  ‣ `BT_FIELD_LOCATION_SCOPE_EVENT_COMMON_CONTEXT`
+		 */
+		const struct bt_stream_class *stream_class;
+
+		/*
+		 * Used if `scope` is one of:
+		 *
+		 *  ‣ `BT_FIELD_LOCATION_SCOPE_EVENT_SPECIFIC_CONTEXT`
+		 *  ‣ `BT_FIELD_LOCATION_SCOPE_EVENT_PAYLOAD`
+		 */
+		const struct bt_event_class *event_class;
+	};
 };
 
 struct bt_field_class_array {
@@ -344,5 +389,15 @@ void _bt_named_field_class_freeze(const struct bt_named_field_class *named_fc);
  */
 void bt_field_class_make_part_of_trace_class(
 		const struct bt_field_class *field_class);
+
+void bt_field_class_struct_mark_scope_root(
+		struct bt_field_class_structure *struct_fc,
+		enum bt_field_location_scope scope,
+		const struct bt_stream_class *stream_class,
+		const struct bt_event_class *event_class);
+
+const char *field_class_name_in_parent(const struct bt_field_class *fc);
+
+bool is_named_container_field_class(const struct bt_field_class *field_class);
 
 #endif /* BABELTRACE_LIB_TRACE_IR_FIELD_CLASS_H */

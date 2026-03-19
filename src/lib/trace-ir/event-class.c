@@ -45,10 +45,21 @@ void destroy_event_class(struct bt_object *obj)
 	g_free(event_class->name);
 	g_free(event_class->uid);
 	g_free(event_class->emf_uri);
-	BT_LOGD_STR("Putting context field class.");
-	BT_OBJECT_PUT_REF_AND_RESET(event_class->specific_context_fc);
-	BT_LOGD_STR("Putting payload field class.");
-	BT_OBJECT_PUT_REF_AND_RESET(event_class->payload_fc);
+
+	if (event_class->specific_context_fc) {
+		BT_LOGD_STR("Putting context field class.");
+		event_class->specific_context_fc->scope = BT_FIELD_LOCATION_SCOPE_INVALID;
+		event_class->specific_context_fc->event_class = NULL;
+		BT_OBJECT_PUT_REF_AND_RESET(event_class->specific_context_fc);
+	}
+
+	if (event_class->payload_fc) {
+		BT_LOGD_STR("Putting payload field class.");
+		event_class->payload_fc->scope = BT_FIELD_LOCATION_SCOPE_INVALID;
+		event_class->payload_fc->event_class = NULL;
+		BT_OBJECT_PUT_REF_AND_RESET(event_class->payload_fc);
+	}
+
 	bt_object_pool_finalize(&event_class->event_pool);
 	g_free(obj);
 }
@@ -361,8 +372,21 @@ bt_event_class_set_specific_context_field_class(
 		goto end;
 	}
 
-	bt_field_class_make_part_of_trace_class(field_class);
+	/* Clear previous specific context field class */
+	if (event_class->specific_context_fc) {
+		event_class->specific_context_fc->scope = BT_FIELD_LOCATION_SCOPE_INVALID;
+		event_class->specific_context_fc->event_class = NULL;
+	}
+
 	bt_object_put_ref(event_class->specific_context_fc);
+
+	/* Install new specific context field class */
+	bt_field_class_make_part_of_trace_class(field_class);
+	bt_field_class_struct_mark_scope_root(struct_fc,
+		BT_FIELD_LOCATION_SCOPE_EVENT_SPECIFIC_CONTEXT,
+		NULL, event_class);
+
+
 	event_class->specific_context_fc = struct_fc;
 	bt_object_get_ref_no_null_check(event_class->specific_context_fc);
 	bt_field_class_freeze(field_class);
@@ -430,8 +454,20 @@ bt_event_class_set_payload_field_class(
 		goto end;
 	}
 
-	bt_field_class_make_part_of_trace_class(field_class);
+	/* Clear previous payload field class */
+	if (event_class->payload_fc) {
+		event_class->payload_fc->scope = BT_FIELD_LOCATION_SCOPE_INVALID;
+		event_class->payload_fc->event_class = NULL;
+	}
+
 	bt_object_put_ref(event_class->payload_fc);
+
+	/* Install new payload field class */
+	bt_field_class_make_part_of_trace_class(field_class);
+	bt_field_class_struct_mark_scope_root(struct_fc,
+		BT_FIELD_LOCATION_SCOPE_EVENT_PAYLOAD,
+		NULL, event_class);
+
 	event_class->payload_fc = struct_fc;
 	bt_object_get_ref_no_null_check(event_class->payload_fc);
 	bt_field_class_freeze(field_class);

@@ -49,10 +49,21 @@ void destroy_stream_class(struct bt_object *obj)
 	g_free(stream_class->ns);
 	g_free(stream_class->name);
 	g_free(stream_class->uid);
-	BT_LOGD_STR("Putting packet context field class.");
-	BT_OBJECT_PUT_REF_AND_RESET(stream_class->packet_context_fc);
-	BT_LOGD_STR("Putting event common context field class.");
-	BT_OBJECT_PUT_REF_AND_RESET(stream_class->event_common_context_fc);
+
+	if (stream_class->packet_context_fc) {
+		BT_LOGD_STR("Putting packet context field class.");
+		stream_class->packet_context_fc->scope = BT_FIELD_LOCATION_SCOPE_INVALID;
+		stream_class->packet_context_fc->stream_class = NULL;
+		BT_OBJECT_PUT_REF_AND_RESET(stream_class->packet_context_fc);
+	}
+
+	if (stream_class->event_common_context_fc) {
+		BT_LOGD_STR("Putting event common context field class.");
+		stream_class->event_common_context_fc->scope = BT_FIELD_LOCATION_SCOPE_INVALID;
+		stream_class->event_common_context_fc->stream_class = NULL;
+		BT_OBJECT_PUT_REF_AND_RESET(stream_class->event_common_context_fc);
+	}
+
 	g_free(stream_class);
 }
 
@@ -364,8 +375,20 @@ bt_stream_class_set_packet_context_field_class(
 		goto end;
 	}
 
-	bt_field_class_make_part_of_trace_class(field_class);
+	/* Clear previous packet context field class */
+	if (stream_class->packet_context_fc) {
+		stream_class->packet_context_fc->scope = BT_FIELD_LOCATION_SCOPE_INVALID;
+		stream_class->packet_context_fc->stream_class = NULL;
+	}
+
 	bt_object_put_ref(stream_class->packet_context_fc);
+
+	/* Install new packet context field class */
+	bt_field_class_make_part_of_trace_class(field_class);
+	bt_field_class_struct_mark_scope_root(struct_fc,
+		BT_FIELD_LOCATION_SCOPE_PACKET_CONTEXT,
+		stream_class, NULL);
+
 	stream_class->packet_context_fc = struct_fc;
 	bt_object_get_ref_no_null_check(stream_class->packet_context_fc);
 	bt_field_class_freeze(field_class);
@@ -433,8 +456,20 @@ bt_stream_class_set_event_common_context_field_class(
 		goto end;
 	}
 
-	bt_field_class_make_part_of_trace_class(field_class);
+	/* Clear previous event common context field class */
+	if (stream_class->event_common_context_fc) {
+		stream_class->event_common_context_fc->scope = BT_FIELD_LOCATION_SCOPE_INVALID;
+		stream_class->event_common_context_fc->stream_class = NULL;
+	}
+
 	bt_object_put_ref(stream_class->event_common_context_fc);
+
+	/* Install new event common context field class */
+	bt_field_class_make_part_of_trace_class(field_class);
+	bt_field_class_struct_mark_scope_root(struct_fc,
+		BT_FIELD_LOCATION_SCOPE_EVENT_COMMON_CONTEXT,
+		stream_class, NULL);
+
 	stream_class->event_common_context_fc = struct_fc;
 	bt_object_get_ref_no_null_check(stream_class->event_common_context_fc);
 	bt_field_class_freeze(field_class);
