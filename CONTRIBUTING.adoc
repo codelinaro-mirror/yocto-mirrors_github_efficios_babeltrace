@@ -1332,9 +1332,28 @@ This script sets up the required environment variables (library search
 paths, AddressSanitizer options, in-tree pytest path if applicable,
 Python module search path, Babeltrace plugin path, and more).
 +
-It also defines the `bt-pytest` shell function which wraps `pytest` to
-use the configured Python interpreter and adds an option to set the
-pytest cache directory to be within the build directory.
+It also defines the following shell functions:
++
+`bt-pytest`::
+    Wraps `pytest` to use the configured Python interpreter
+    (`$BT_TESTS_PYTHON_BIN`) and adds an option to set the pytest cache
+    directory to be within the build directory.
+
+`bt-python`::
+    Calls `bt-python-env` with the configured Python interpreter
+    (`$BT_TESTS_PYTHON_BIN`), forwarding any extra arguments.
+
+`bt-python-env`::
+    Runs a given command (``"$@"``) with the `LD_PRELOAD` and
+    `ASAN_OPTIONS` environment variables needed for sanitizers
+    (ASan/UBSan) to work correctly with Python.
++
+Example:
++
+----
+$ bt-python-env gdb --args "$BT_TESTS_PYTHON_BIN" -m pytest -sv \
+                tests/bindings/python/bt2/test_clock_snapshot.py
+----
 
 . Run `bt-pytest` or `pytest` in the _source_ directory (that's where
   all the test files are).
