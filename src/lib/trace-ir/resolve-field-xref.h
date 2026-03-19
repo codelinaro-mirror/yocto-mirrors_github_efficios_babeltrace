@@ -15,10 +15,10 @@ enum bt_resolve_field_xref_status {
 };
 
 struct bt_resolve_field_xref_context {
-	struct bt_field_class *packet_context;
-	struct bt_field_class *event_common_context;
-	struct bt_field_class *event_specific_context;
-	struct bt_field_class *event_payload;
+	struct bt_field_class_structure *packet_context;
+	struct bt_field_class_structure *event_common_context;
+	struct bt_field_class_structure *event_specific_context;
+	struct bt_field_class_structure *event_payload;
 };
 
 #endif /* BABELTRACE_LIB_TRACE_IR_RESOLVE_FIELD_XREF_H */

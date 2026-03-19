@@ -23,8 +23,8 @@
 
 struct bt_event_class {
 	struct bt_object base;
-	struct bt_field_class *specific_context_fc;
-	struct bt_field_class *payload_fc;
+	struct bt_field_class_structure *specific_context_fc;
+	struct bt_field_class_structure *payload_fc;
 
 	/* Owned by this */
 	struct bt_value *user_attributes;

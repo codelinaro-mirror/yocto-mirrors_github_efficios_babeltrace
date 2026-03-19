@@ -310,8 +310,8 @@ const struct bt_field_class *
 bt_stream_class_borrow_packet_context_field_class_const(
 		const struct bt_stream_class *stream_class)
 {
-	BT_ASSERT_PRE_DEV_SC_NON_NULL(stream_class);
-	return stream_class->packet_context_fc;
+	return bt_stream_class_borrow_packet_context_field_class(
+		(void *) stream_class);
 }
 
 BT_EXPORT
@@ -320,7 +320,12 @@ bt_stream_class_borrow_packet_context_field_class(
 		struct bt_stream_class *stream_class)
 {
 	BT_ASSERT_PRE_DEV_SC_NON_NULL(stream_class);
-	return stream_class->packet_context_fc;
+
+	if (!stream_class->packet_context_fc) {
+		return NULL;
+	}
+
+	return &stream_class->packet_context_fc->common.common;
 }
 
 BT_EXPORT
@@ -331,12 +336,8 @@ bt_stream_class_set_packet_context_field_class(
 {
 	enum bt_stream_class_set_field_class_status status;
 	enum bt_resolve_field_xref_status resolve_status;
-	struct bt_resolve_field_xref_context resolve_ctx = {
-		.packet_context = field_class,
-		.event_common_context = NULL,
-		.event_specific_context = NULL,
-		.event_payload = NULL,
-	};
+	struct bt_resolve_field_xref_context resolve_ctx;
+	struct bt_field_class_structure *struct_fc;
 
 	BT_ASSERT_PRE_NO_ERROR();
 	BT_ASSERT_PRE_SC_NON_NULL(stream_class);
@@ -348,6 +349,15 @@ bt_stream_class_set_packet_context_field_class(
 	BT_ASSERT_PRE_DEV_STREAM_CLASS_HOT(stream_class);
 	BT_ASSERT_PRE_FC_IS_STRUCT("field-class", field_class,
 		"Packet context field class");
+
+	struct_fc = (struct bt_field_class_structure *) field_class;
+	resolve_ctx = (struct bt_resolve_field_xref_context) {
+		.packet_context = struct_fc,
+		.event_common_context = NULL,
+		.event_specific_context = NULL,
+		.event_payload = NULL,
+	};
+
 	resolve_status = bt_resolve_field_paths(field_class, &resolve_ctx, __func__);
 	if (resolve_status != BT_RESOLVE_FIELD_XREF_STATUS_OK) {
 		status = (int) resolve_status;
@@ -356,7 +366,7 @@ bt_stream_class_set_packet_context_field_class(
 
 	bt_field_class_make_part_of_trace_class(field_class);
 	bt_object_put_ref(stream_class->packet_context_fc);
-	stream_class->packet_context_fc = field_class;
+	stream_class->packet_context_fc = struct_fc;
 	bt_object_get_ref_no_null_check(stream_class->packet_context_fc);
 	bt_field_class_freeze(field_class);
 	BT_LIB_LOGD("Set stream class's packet context field class: %!+S",
@@ -373,8 +383,8 @@ const struct bt_field_class *
 bt_stream_class_borrow_event_common_context_field_class_const(
 		const struct bt_stream_class *stream_class)
 {
-	BT_ASSERT_PRE_DEV_SC_NON_NULL(stream_class);
-	return stream_class->event_common_context_fc;
+	return bt_stream_class_borrow_event_common_context_field_class(
+		(void *) stream_class);
 }
 
 BT_EXPORT
@@ -383,7 +393,12 @@ bt_stream_class_borrow_event_common_context_field_class(
 		struct bt_stream_class *stream_class)
 {
 	BT_ASSERT_PRE_DEV_SC_NON_NULL(stream_class);
-	return stream_class->event_common_context_fc;
+
+	if (!stream_class->event_common_context_fc) {
+		return NULL;
+	}
+
+	return &stream_class->event_common_context_fc->common.common;
 }
 
 BT_EXPORT
@@ -394,12 +409,8 @@ bt_stream_class_set_event_common_context_field_class(
 {
 	enum bt_stream_class_set_field_class_status status;
 	enum bt_resolve_field_xref_status resolve_status;
-	struct bt_resolve_field_xref_context resolve_ctx = {
-		.packet_context = NULL,
-		.event_common_context = field_class,
-		.event_specific_context = NULL,
-		.event_payload = NULL,
-	};
+	struct bt_resolve_field_xref_context resolve_ctx;
+	struct bt_field_class_structure *struct_fc;
 
 	BT_ASSERT_PRE_NO_ERROR();
 	BT_ASSERT_PRE_SC_NON_NULL(stream_class);
@@ -407,7 +418,15 @@ bt_stream_class_set_event_common_context_field_class(
 	BT_ASSERT_PRE_DEV_STREAM_CLASS_HOT(stream_class);
 	BT_ASSERT_PRE_FC_IS_STRUCT("field-class", field_class,
 		"Event common context field class");
-	resolve_ctx.packet_context = stream_class->packet_context_fc;
+
+	struct_fc = (struct bt_field_class_structure *) field_class;
+	resolve_ctx = (struct bt_resolve_field_xref_context) {
+		.packet_context = stream_class->packet_context_fc,
+		.event_common_context = struct_fc,
+		.event_specific_context = NULL,
+		.event_payload = NULL,
+	};
+
 	resolve_status = bt_resolve_field_paths(field_class, &resolve_ctx, __func__);
 	if (resolve_status != BT_RESOLVE_FIELD_XREF_STATUS_OK) {
 		status = (int) resolve_status;
@@ -416,7 +435,7 @@ bt_stream_class_set_event_common_context_field_class(
 
 	bt_field_class_make_part_of_trace_class(field_class);
 	bt_object_put_ref(stream_class->event_common_context_fc);
-	stream_class->event_common_context_fc = field_class;
+	stream_class->event_common_context_fc = struct_fc;
 	bt_object_get_ref_no_null_check(stream_class->event_common_context_fc);
 	bt_field_class_freeze(field_class);
 	BT_LIB_LOGD("Set stream class's event common context field class: %!+S",

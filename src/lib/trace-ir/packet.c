@@ -154,7 +154,7 @@ struct bt_packet *bt_packet_new(struct bt_stream *stream)
 	if (stream->class->packet_context_fc) {
 		BT_LOGD_STR("Creating initial packet context field.");
 		packet->context_field = bt_field_create(
-			stream->class->packet_context_fc);
+			&stream->class->packet_context_fc->common.common);
 		if (!packet->context_field) {
 			BT_LIB_LOGE_APPEND_CAUSE(
 				"Cannot create packet context field.");

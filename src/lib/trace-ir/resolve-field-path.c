@@ -92,7 +92,7 @@ end:
 
 static
 enum bt_resolve_field_xref_status find_field_class(
-		struct bt_field_class *root_fc,
+		struct bt_field_class_structure *root_fc,
 		enum bt_field_path_scope root_scope,
 		struct bt_field_class *tgt_fc,
 		struct bt_field_path **ret_field_path)
@@ -112,7 +112,8 @@ enum bt_resolve_field_xref_status find_field_class(
 	}
 
 	field_path->root = root_scope;
-	if (!find_field_class_recursive(root_fc, tgt_fc, field_path)) {
+	if (!find_field_class_recursive(&root_fc->common.common, tgt_fc,
+			field_path)) {
 		/* Not found here */
 		BT_OBJECT_PUT_REF_AND_RESET(field_path);
 	}
@@ -214,13 +215,17 @@ struct bt_field_class *borrow_root_field_class(
 {
 	switch (scope) {
 	case BT_FIELD_PATH_SCOPE_PACKET_CONTEXT:
-		return ctx->packet_context;
+		BT_ASSERT(ctx->packet_context);
+		return &ctx->packet_context->common.common;
 	case BT_FIELD_PATH_SCOPE_EVENT_COMMON_CONTEXT:
-		return ctx->event_common_context;
+		BT_ASSERT(ctx->event_common_context);
+		return &ctx->event_common_context->common.common;
 	case BT_FIELD_PATH_SCOPE_EVENT_SPECIFIC_CONTEXT:
-		return ctx->event_specific_context;
+		BT_ASSERT(ctx->event_specific_context);
+		return &ctx->event_specific_context->common.common;
 	case BT_FIELD_PATH_SCOPE_EVENT_PAYLOAD:
-		return ctx->event_payload;
+		BT_ASSERT(ctx->event_payload);
+		return &ctx->event_payload->common.common;
 	default:
 		bt_common_abort();
 	}
