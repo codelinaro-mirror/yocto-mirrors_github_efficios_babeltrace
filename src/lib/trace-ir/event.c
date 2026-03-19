@@ -36,19 +36,19 @@ void _bt_event_set_is_frozen(const struct bt_event *event, bool is_frozen)
 	if (event->common_context_field) {
 		BT_LOGD_STR("Setting event's common context field's frozen state.");
 		bt_field_set_is_frozen(
-			event->common_context_field, is_frozen);
+			&event->common_context_field->common, is_frozen);
 	}
 
 	if (event->specific_context_field) {
 		BT_LOGD_STR("Setting event's specific context field's frozen state.");
-		bt_field_set_is_frozen(event->specific_context_field,
-			is_frozen);
+		bt_field_set_is_frozen(
+			&event->specific_context_field->common, is_frozen);
 	}
 
 	if (event->payload_field) {
 		BT_LOGD_STR("Setting event's payload field's frozen state.");
-		bt_field_set_is_frozen(event->payload_field,
-			is_frozen);
+		bt_field_set_is_frozen(
+			&event->payload_field->common, is_frozen);
 	}
 
 	((struct bt_event *) event)->frozen = is_frozen;
@@ -77,7 +77,7 @@ struct bt_event *bt_event_new(struct bt_event_class *event_class)
 	BT_ASSERT(stream_class);
 	fc = stream_class->event_common_context_fc;
 	if (fc) {
-		event->common_context_field =
+		event->common_context_field = (struct bt_field_structure *)
 			bt_field_create(&fc->common.common);
 		if (!event->common_context_field) {
 			/* bt_field_create() logs errors */
@@ -87,7 +87,7 @@ struct bt_event *bt_event_new(struct bt_event_class *event_class)
 
 	fc = event_class->specific_context_fc;
 	if (fc) {
-		event->specific_context_field =
+		event->specific_context_field = (struct bt_field_structure *)
 			bt_field_create(&fc->common.common);
 		if (!event->specific_context_field) {
 			/* bt_field_create() logs errors */
@@ -97,7 +97,8 @@ struct bt_event *bt_event_new(struct bt_event_class *event_class)
 
 	fc = event_class->payload_fc;
 	if (fc) {
-		event->payload_field = bt_field_create(&fc->common.common);
+		event->payload_field = (struct bt_field_structure *)
+			bt_field_create(&fc->common.common);
 		if (!event->payload_field) {
 			/* bt_field_create() logs errors */
 			goto error;
@@ -148,45 +149,57 @@ BT_EXPORT
 struct bt_field *bt_event_borrow_common_context_field(struct bt_event *event)
 {
 	BT_ASSERT_PRE_DEV_EVENT_NON_NULL(event);
-	return event->common_context_field;
+
+	if (!event->common_context_field) {
+		return NULL;
+	}
+
+	return &event->common_context_field->common;
 }
 
 BT_EXPORT
 const struct bt_field *bt_event_borrow_common_context_field_const(
 		const struct bt_event *event)
 {
-	BT_ASSERT_PRE_DEV_EVENT_NON_NULL(event);
-	return event->common_context_field;
+	return bt_event_borrow_common_context_field((void *) event);
 }
 
 BT_EXPORT
 struct bt_field *bt_event_borrow_specific_context_field(struct bt_event *event)
 {
 	BT_ASSERT_PRE_DEV_EVENT_NON_NULL(event);
-	return event->specific_context_field;
+
+	if (!event->specific_context_field) {
+		return NULL;
+	}
+
+	return &event->specific_context_field->common;
 }
 
 BT_EXPORT
 const struct bt_field *bt_event_borrow_specific_context_field_const(
 		const struct bt_event *event)
 {
-	BT_ASSERT_PRE_DEV_EVENT_NON_NULL(event);
-	return event->specific_context_field;
+	return bt_event_borrow_specific_context_field((void *) event);
 }
 
 BT_EXPORT
 struct bt_field *bt_event_borrow_payload_field(struct bt_event *event)
 {
 	BT_ASSERT_PRE_DEV_EVENT_NON_NULL(event);
-	return event->payload_field;
+
+	if (!event->payload_field) {
+		return NULL;
+	}
+
+	return &event->payload_field->common;
 }
 
 BT_EXPORT
 const struct bt_field *bt_event_borrow_payload_field_const(
 		const struct bt_event *event)
 {
-	BT_ASSERT_PRE_DEV_EVENT_NON_NULL(event);
-	return event->payload_field;
+	return bt_event_borrow_payload_field((void *) event);
 }
 
 void bt_event_destroy(struct bt_event *event)
@@ -196,19 +209,19 @@ void bt_event_destroy(struct bt_event *event)
 
 	if (event->common_context_field) {
 		BT_LOGD_STR("Destroying event's stream event context field.");
-		bt_field_destroy(event->common_context_field);
+		bt_field_destroy(&event->common_context_field->common);
 		event->common_context_field = NULL;
 	}
 
 	if (event->specific_context_field) {
 		BT_LOGD_STR("Destroying event's context field.");
-		bt_field_destroy(event->specific_context_field);
+		bt_field_destroy(&event->specific_context_field->common);
 		event->specific_context_field = NULL;
 	}
 
 	if (event->payload_field) {
 		BT_LOGD_STR("Destroying event's payload field.");
-		bt_field_destroy(event->payload_field);
+		bt_field_destroy(&event->payload_field->common);
 		event->payload_field = NULL;
 	}
 

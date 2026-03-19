@@ -39,7 +39,12 @@ BT_EXPORT
 struct bt_field *bt_packet_borrow_context_field(struct bt_packet *packet)
 {
 	BT_ASSERT_PRE_DEV_PACKET_NON_NULL(packet);
-	return packet->context_field;
+
+	if (!packet->context_field) {
+		return NULL;
+	}
+
+	return &packet->context_field->common;
 }
 
 BT_EXPORT
@@ -60,7 +65,8 @@ void _bt_packet_set_is_frozen(const struct bt_packet *packet, bool is_frozen)
 
 	if (packet->context_field) {
 		BT_LOGD_STR("Setting packet's context field's frozen state.");
-		bt_field_set_is_frozen(packet->context_field, is_frozen);
+		bt_field_set_is_frozen(&packet->context_field->common,
+			is_frozen);
 	}
 
 	((struct bt_packet *) packet)->frozen = is_frozen;
@@ -74,8 +80,8 @@ void reset_packet(struct bt_packet *packet)
 	bt_packet_set_is_frozen(packet, false);
 
 	if (packet->context_field) {
-		bt_field_set_is_frozen(packet->context_field, false);
-		bt_field_reset(packet->context_field);
+		bt_field_set_is_frozen(&packet->context_field->common, false);
+		bt_field_reset(&packet->context_field->common);
 	}
 }
 
@@ -121,7 +127,7 @@ void bt_packet_destroy(struct bt_packet *packet)
 	BT_LIB_LOGD("Destroying packet: %!+a", packet);
 
 	if (packet->context_field) {
-		bt_field_destroy(packet->context_field);
+		bt_field_destroy(&packet->context_field->common);
 		packet->context_field = NULL;
 	}
 
@@ -153,8 +159,9 @@ struct bt_packet *bt_packet_new(struct bt_stream *stream)
 
 	if (stream->class->packet_context_fc) {
 		BT_LOGD_STR("Creating initial packet context field.");
-		packet->context_field = bt_field_create(
-			&stream->class->packet_context_fc->common.common);
+		packet->context_field = (struct bt_field_structure *)
+			bt_field_create(
+				&stream->class->packet_context_fc->common.common);
 		if (!packet->context_field) {
 			BT_LIB_LOGE_APPEND_CAUSE(
 				"Cannot create packet context field.");

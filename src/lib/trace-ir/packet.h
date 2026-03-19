@@ -18,7 +18,7 @@
 
 struct bt_packet {
 	struct bt_object base;
-	struct bt_field *context_field;
+	struct bt_field_structure *context_field;
 	struct bt_stream *stream;
 	bool frozen;
 };

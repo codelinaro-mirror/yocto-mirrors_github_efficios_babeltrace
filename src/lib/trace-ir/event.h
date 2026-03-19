@@ -45,9 +45,9 @@ struct bt_event {
 	/* Owned by this */
 	struct bt_stream *stream;
 
-	struct bt_field *common_context_field;
-	struct bt_field *specific_context_field;
-	struct bt_field *payload_field;
+	struct bt_field_structure *common_context_field;
+	struct bt_field_structure *specific_context_field;
+	struct bt_field_structure *payload_field;
 	bool frozen;
 };
 
@@ -71,21 +71,21 @@ void _bt_event_reset_dev_mode(struct bt_event *event)
 
 	if (event->common_context_field) {
 		bt_field_set_is_frozen(
-			event->common_context_field, false);
+			&event->common_context_field->common, false);
 		bt_field_reset(
-			event->common_context_field);
+			&event->common_context_field->common);
 	}
 
 	if (event->specific_context_field) {
 		bt_field_set_is_frozen(
-			event->specific_context_field, false);
-		bt_field_reset(event->specific_context_field);
+			&event->specific_context_field->common, false);
+		bt_field_reset(&event->specific_context_field->common);
 	}
 
 	if (event->payload_field) {
 		bt_field_set_is_frozen(
-			event->payload_field, false);
-		bt_field_reset(event->payload_field);
+			&event->payload_field->common, false);
+		bt_field_reset(&event->payload_field->common);
 	}
 }
 
