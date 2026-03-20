@@ -485,8 +485,6 @@ lib_libbabeltrace2_la_SOURCES = \
 	lib/trace-ir/field-location.h \
 	lib/trace-ir/field-path.c \
 	lib/trace-ir/field-path.h \
-	lib/trace-ir/field-wrapper.c \
-	lib/trace-ir/field-wrapper.h \
 	lib/trace-ir/packet.c \
 	lib/trace-ir/packet.h \
 	lib/trace-ir/resolve-field-path.c \

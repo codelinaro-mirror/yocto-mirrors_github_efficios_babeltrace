@@ -692,9 +692,6 @@ static inline void format_stream_class(char **buf_ch, bool extended,
 	BUF_APPEND(", %strace-class-addr=%p", PRFIELD(trace_class));
 	SET_TMP_PREFIX("trace-class-");
 	format_trace_class(buf_ch, false, tmp_prefix, trace_class);
-	SET_TMP_PREFIX("pcf-pool-");
-	format_object_pool(buf_ch, tmp_prefix,
-		&stream_class->packet_context_field_pool);
 }
 
 static inline void format_event_class(char **buf_ch, bool extended,
@@ -815,7 +812,7 @@ static inline void format_packet(char **buf_ch, bool extended,
 
 	BUF_APPEND(", %sis-frozen=%d, %scontext-field-addr=%p",
 		PRFIELD(packet->frozen),
-		PRFIELD(packet->context_field ? packet->context_field->field : NULL));
+		PRFIELD(packet->context_field));
 	stream = bt_packet_borrow_stream_const(packet);
 	if (!stream) {
 		return;

@@ -11,7 +11,6 @@
 #include "common/assert.h"
 #include <babeltrace2/trace-ir/stream-class.h>
 #include "lib/object.h"
-#include "lib/object-pool.h"
 #include <glib.h>
 #include <stdbool.h>
 
@@ -43,9 +42,6 @@ struct bt_stream_class {
 
 	/* Array of `struct bt_event_class *` */
 	GPtrArray *event_classes;
-
-	/* Pool of `struct bt_field_wrapper *` */
-	struct bt_object_pool packet_context_field_pool;
 
 	bool frozen;
 };

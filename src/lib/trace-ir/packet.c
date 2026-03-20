@@ -17,7 +17,6 @@
 #include <stdbool.h>
 
 #include "field.h"
-#include "field-wrapper.h"
 #include "packet.h"
 #include "stream-class.h"
 #include "stream.h"
@@ -40,7 +39,7 @@ BT_EXPORT
 struct bt_field *bt_packet_borrow_context_field(struct bt_packet *packet)
 {
 	BT_ASSERT_PRE_DEV_PACKET_NON_NULL(packet);
-	return packet->context_field ? packet->context_field->field : NULL;
+	return packet->context_field;
 }
 
 BT_EXPORT
@@ -61,8 +60,7 @@ void _bt_packet_set_is_frozen(const struct bt_packet *packet, bool is_frozen)
 
 	if (packet->context_field) {
 		BT_LOGD_STR("Setting packet's context field's frozen state.");
-		bt_field_set_is_frozen(packet->context_field->field,
-			is_frozen);
+		bt_field_set_is_frozen(packet->context_field, is_frozen);
 	}
 
 	((struct bt_packet *) packet)->frozen = is_frozen;
@@ -76,21 +74,9 @@ void reset_packet(struct bt_packet *packet)
 	bt_packet_set_is_frozen(packet, false);
 
 	if (packet->context_field) {
-		bt_field_set_is_frozen(packet->context_field->field, false);
-		bt_field_reset(packet->context_field->field);
+		bt_field_set_is_frozen(packet->context_field, false);
+		bt_field_reset(packet->context_field);
 	}
-}
-
-static
-void recycle_context_field(struct bt_field_wrapper *context_field,
-		struct bt_stream_class *stream_class)
-{
-	BT_ASSERT(context_field);
-	BT_LIB_LOGD("Recycling packet context field: "
-		"addr=%p, %![sc-]+S, %![field-]+f", context_field,
-		stream_class, context_field->field);
-	bt_object_pool_recycle_object(&stream_class->packet_context_field_pool,
-		context_field);
 }
 
 void bt_packet_recycle(struct bt_packet *packet)
@@ -135,14 +121,7 @@ void bt_packet_destroy(struct bt_packet *packet)
 	BT_LIB_LOGD("Destroying packet: %!+a", packet);
 
 	if (packet->context_field) {
-		if (packet->stream) {
-			BT_LOGD_STR("Recycling packet's context field.");
-			recycle_context_field(packet->context_field,
-				packet->stream->class);
-		} else {
-			bt_field_wrapper_destroy(packet->context_field);
-		}
-
+		bt_field_destroy(packet->context_field);
 		packet->context_field = NULL;
 	}
 
@@ -174,12 +153,11 @@ struct bt_packet *bt_packet_new(struct bt_stream *stream)
 
 	if (stream->class->packet_context_fc) {
 		BT_LOGD_STR("Creating initial packet context field.");
-		packet->context_field = bt_field_wrapper_create(
-			&stream->class->packet_context_field_pool,
+		packet->context_field = bt_field_create(
 			stream->class->packet_context_fc);
 		if (!packet->context_field) {
 			BT_LIB_LOGE_APPEND_CAUSE(
-				"Cannot create packet context field wrapper.");
+				"Cannot create packet context field.");
 			goto error;
 		}
 	}

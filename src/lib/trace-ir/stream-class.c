@@ -20,7 +20,6 @@
 #include "clock-class.h"
 #include "event-class.h"
 #include "field-class.h"
-#include "field-wrapper.h"
 #include "resolve-field-path.h"
 #include "stream-class.h"
 #include "lib/value.h"
@@ -54,15 +53,7 @@ void destroy_stream_class(struct bt_object *obj)
 	BT_OBJECT_PUT_REF_AND_RESET(stream_class->packet_context_fc);
 	BT_LOGD_STR("Putting event common context field class.");
 	BT_OBJECT_PUT_REF_AND_RESET(stream_class->event_common_context_fc);
-	bt_object_pool_finalize(&stream_class->packet_context_field_pool);
 	g_free(stream_class);
-}
-
-static
-void free_field_wrapper(struct bt_field_wrapper *field_wrapper,
-		struct bt_stream_class *stream_class __attribute__((unused)))
-{
-	bt_field_wrapper_destroy((void *) field_wrapper);
 }
 
 static
@@ -90,7 +81,6 @@ struct bt_stream_class *create_stream_class_with_id(
 		struct bt_trace_class *tc, uint64_t id)
 {
 	struct bt_stream_class *stream_class = NULL;
-	int ret;
 
 	BT_ASSERT(tc);
 	BT_ASSERT_PRE("stream-class-id-is-unique",
@@ -121,17 +111,6 @@ struct bt_stream_class *create_stream_class_with_id(
 		(GDestroyNotify) bt_object_try_spec_release);
 	if (!stream_class->event_classes) {
 		BT_LIB_LOGE_APPEND_CAUSE("Failed to allocate a GPtrArray.");
-		goto error;
-	}
-
-	ret = bt_object_pool_initialize(&stream_class->packet_context_field_pool,
-		(bt_object_pool_new_object_func) bt_field_wrapper_new,
-		(bt_object_pool_destroy_object_func) free_field_wrapper,
-		stream_class);
-	if (ret) {
-		BT_LIB_LOGE_APPEND_CAUSE(
-			"Failed to initialize packet context field pool: ret=%d",
-			ret);
 		goto error;
 	}
 

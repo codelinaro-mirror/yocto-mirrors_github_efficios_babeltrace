@@ -14,11 +14,11 @@
 #include <babeltrace2/trace-ir/stream.h>
 #include "lib/object.h"
 
-#include "field-wrapper.h"
+#include "field.h"
 
 struct bt_packet {
 	struct bt_object base;
-	struct bt_field_wrapper *context_field;
+	struct bt_field *context_field;
 	struct bt_stream *stream;
 	bool frozen;
 };
