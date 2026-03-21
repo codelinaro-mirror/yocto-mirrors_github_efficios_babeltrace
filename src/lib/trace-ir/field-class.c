@@ -1059,7 +1059,6 @@ int init_named_field_classes_container(
 		struct bt_field_class_named_field_class_container *fc,
 		enum bt_field_class_type type,
 		bt_object_release_func fc_release_func,
-		GDestroyNotify named_fc_destroy_func,
 		const struct bt_trace_class *trace_class)
 {
 	int ret = 0;
@@ -1070,7 +1069,13 @@ int init_named_field_classes_container(
 		goto end;
 	}
 
-	fc->named_fcs = g_ptr_array_new_with_free_func(named_fc_destroy_func);
+	/*
+	 * Not using `g_ptr_array_new_with_free_func()` here: we want the
+	 * `named_fcs` array to remain intact while destroying elements, for
+	 * logging purposes.  With `g_ptr_array_new_with_free_func()`, the
+	 * array is already empty by the time the free func runes.
+	 */
+	fc->named_fcs = g_ptr_array_new();
 	if (!fc->named_fcs) {
 		BT_LIB_LOGE_APPEND_CAUSE("Failed to allocate a GPtrArray.");
 		ret = -1;
@@ -1130,11 +1135,18 @@ void destroy_variant_with_selector_field_option(gpointer ptr)
 
 static
 void finalize_named_field_classes_container(
-		struct bt_field_class_named_field_class_container *fc)
+		struct bt_field_class_named_field_class_container *fc,
+		GDestroyNotify destroy_named_fc)
 {
 	BT_ASSERT(fc);
 
 	if (fc->named_fcs) {
+		uint64_t i;
+
+		for (i = 0; i < fc->named_fcs->len; i++) {
+			destroy_named_fc(fc->named_fcs->pdata[i]);
+		}
+
 		g_ptr_array_free(fc->named_fcs, TRUE);
 		fc->named_fcs = NULL;
 
@@ -1152,7 +1164,8 @@ void destroy_structure_field_class(struct bt_object *obj)
 	BT_ASSERT(obj);
 	BT_LIB_LOGD("Destroying structure field class object: %!+F", obj);
 	finalize_field_class((void *) obj);
-	finalize_named_field_classes_container((void *) obj);
+	finalize_named_field_classes_container((void *) obj,
+		destroy_named_field_class);
 	g_free(obj);
 }
 
@@ -1175,7 +1188,7 @@ struct bt_field_class *bt_field_class_structure_create(
 
 	ret = init_named_field_classes_container((void *) struct_fc,
 		BT_FIELD_CLASS_TYPE_STRUCTURE, destroy_structure_field_class,
-		destroy_named_field_class, trace_class);
+		trace_class);
 	if (ret) {
 		/* init_named_field_classes_container() logs errors */
 		goto error;
@@ -1974,12 +1987,14 @@ bt_field_class_option_with_selector_field_integer_signed_borrow_selector_ranges_
 }
 
 static
-void finalize_variant_field_class(struct bt_field_class_variant *var_fc)
+void finalize_variant_field_class(struct bt_field_class_variant *var_fc,
+		GDestroyNotify destroy_named_fc)
 {
 	BT_ASSERT(var_fc);
 	BT_LIB_LOGD("Finalizing variant field class object: %!+F", var_fc);
 	finalize_field_class((void *) var_fc);
-	finalize_named_field_classes_container((void *) var_fc);
+	finalize_named_field_classes_container((void *) var_fc,
+		destroy_named_fc);
 }
 
 static
@@ -1988,7 +2003,7 @@ void destroy_variant_field_class(struct bt_object *obj)
 	struct bt_field_class_variant *fc = (void *) obj;
 
 	BT_ASSERT(fc);
-	finalize_variant_field_class(fc);
+	finalize_variant_field_class(fc, destroy_named_field_class);
 	g_free(fc);
 }
 
@@ -1998,7 +2013,8 @@ void destroy_variant_with_selector_field_field_class(struct bt_object *obj)
 	struct bt_field_class_variant_with_selector_field *fc = (void *) obj;
 
 	BT_ASSERT(fc);
-	finalize_variant_field_class(&fc->common);
+	finalize_variant_field_class(&fc->common,
+		destroy_variant_with_selector_field_option);
 
 	if (fc->selector_field_xref_kind == FIELD_XREF_KIND_PATH) {
 		BT_LOGD_STR("Putting selector field path.");
@@ -2055,7 +2071,6 @@ struct bt_field_class *create_variant_field_class(
 		ret = init_named_field_classes_container(
 			(void *) var_with_sel_fc, fc_type,
 			destroy_variant_with_selector_field_field_class,
-			destroy_variant_with_selector_field_option,
 			trace_class);
 		if (ret) {
 			/* init_named_field_classes_container() logs errors */
@@ -2091,8 +2106,7 @@ struct bt_field_class *create_variant_field_class(
 		}
 
 		ret = init_named_field_classes_container((void *) var_fc, fc_type,
-			destroy_variant_field_class, destroy_named_field_class,
-			trace_class);
+			destroy_variant_field_class, trace_class);
 		if (ret) {
 			/* init_named_field_classes_container() logs errors */
 			goto error;
