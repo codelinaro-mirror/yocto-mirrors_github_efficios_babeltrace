@@ -1492,13 +1492,13 @@ void destroy_structure_field(struct bt_field *field)
 
 	BT_ASSERT(field);
 	BT_LIB_LOGD("Destroying structure field object: %!+f", field);
-	bt_field_finalize(field);
 
 	if (struct_field->fields) {
 		g_ptr_array_free(struct_field->fields, TRUE);
 		struct_field->fields = NULL;
 	}
 
+	bt_field_finalize(field);
 	g_free(field);
 }
 
@@ -1509,12 +1509,12 @@ void destroy_option_field(struct bt_field *field)
 
 	BT_ASSERT(field);
 	BT_LIB_LOGD("Destroying option field object: %!+f", field);
-	bt_field_finalize(field);
 
 	if (opt_field->content_field) {
 		bt_field_destroy(opt_field->content_field);
 	}
 
+	bt_field_finalize(field);
 	g_free(field);
 }
 
@@ -1525,13 +1525,13 @@ void destroy_variant_field(struct bt_field *field)
 
 	BT_ASSERT(field);
 	BT_LIB_LOGD("Destroying variant field object: %!+f", field);
-	bt_field_finalize(field);
 
 	if (var_field->fields) {
 		g_ptr_array_free(var_field->fields, TRUE);
 		var_field->fields = NULL;
 	}
 
+	bt_field_finalize(field);
 	g_free(field);
 }
 
@@ -1556,13 +1556,13 @@ void destroy_array_field(struct bt_field *field)
 
 	BT_ASSERT(field);
 	BT_LIB_LOGD("Destroying array field object: %!+f", field);
-	bt_field_finalize(field);
 
 	if (array_field->fields) {
 		g_ptr_array_free(array_field->fields, TRUE);
 		array_field->fields = NULL;
 	}
 
+	bt_field_finalize(field);
 	g_free(field);
 }
 
