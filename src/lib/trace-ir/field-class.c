@@ -1110,10 +1110,7 @@ void finalize_named_field_class(struct bt_named_field_class *named_fc)
 static
 void destroy_named_field_class(gpointer ptr)
 {
-	struct bt_named_field_class *named_fc = ptr;
-
 	if (ptr) {
-		BT_OBJECT_PUT_REF_AND_RESET(named_fc->user_attributes);
 		finalize_named_field_class(ptr);
 		g_free(ptr);
 	}
