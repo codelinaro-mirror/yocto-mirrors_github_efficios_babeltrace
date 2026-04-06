@@ -5,8 +5,8 @@
  * Copyright 2015 Jérémie Galarneau <jeremie.galarneau@efficios.com>
  */
 
-#ifndef BABELTRACE_LIB_OBJECT_STRUCT_H
-#define BABELTRACE_LIB_OBJECT_STRUCT_H
+#ifndef BABELTRACE_COMMON_OBJECT_STRUCT_H
+#define BABELTRACE_COMMON_OBJECT_STRUCT_H
 
 #include <stdbool.h>
 
@@ -63,4 +63,4 @@ struct bt_object {
 	struct bt_object *parent;
 };
 
-#endif /* BABELTRACE_LIB_OBJECT_STRUCT_H */
+#endif /* BABELTRACE_COMMON_OBJECT_STRUCT_H */

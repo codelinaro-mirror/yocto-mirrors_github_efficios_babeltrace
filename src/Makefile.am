@@ -123,6 +123,8 @@ common_libcommon_la_SOURCES = \
 	common/common.h \
 	common/func-status.h \
 	common/list.h \
+	common/object-struct.h \
+	common/object.h \
 	common/macros.h \
 	common/mmap-align.h \
 	common/safe.h \
@@ -515,8 +517,6 @@ lib_libbabeltrace2_la_SOURCES = \
 	lib/logging.h \
 	lib/object-pool.c \
 	lib/object-pool.h \
-	lib/object-struct.h \
-	lib/object.h \
 	lib/property.h \
 	lib/util.c \
 	lib/value.c \
