@@ -204,8 +204,8 @@ enum bt_trace_class_add_listener_status bt_trace_class_add_destruction_listener(
 static
 bool has_listener_id(const struct bt_trace_class *tc, uint64_t listener_id)
 {
-	BT_ASSERT(listener_id < tc->destruction_listeners->len);
-	return (&bt_g_array_index(tc->destruction_listeners,
+	return listener_id < tc->destruction_listeners->len &&
+		(&bt_g_array_index(tc->destruction_listeners,
 			struct bt_trace_class_destruction_listener_elem,
 			listener_id))->func;
 }
