@@ -9,7 +9,6 @@
 #define BABELTRACE_LIB_TRACE_IR_STREAM_CLASS_H
 
 #include "common/assert.h"
-#include <babeltrace2/trace-ir/stream-class.h>
 #include "lib/object.h"
 #include <glib.h>
 #include <stdbool.h>

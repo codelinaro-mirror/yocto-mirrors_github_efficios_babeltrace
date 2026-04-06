@@ -17,10 +17,7 @@
 
 #include "common/macros.h"
 #include "compat/compiler.h"
-#include <babeltrace2/plugin/plugin-loading.h>
 #include "lib/plugin/plugin.h"
-#include <babeltrace2/graph/component-class.h>
-#include <babeltrace2/error-reporting.h>
 #include "lib/graph/component-class.h"
 #ifdef __ELF__
 #include <dlfcn.h>
