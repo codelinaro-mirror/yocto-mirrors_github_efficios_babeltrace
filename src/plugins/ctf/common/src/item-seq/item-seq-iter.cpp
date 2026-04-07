@@ -565,7 +565,7 @@ ItemSeqIter::_StateHandlingReaction ItemSeqIter::_handleSetPktInfoItemState()
     }
 
     /* Update for user */
-    if (_mItems.dataStreamInfo._mCls && _mItems.dataStreamInfo._mCls->defClkCls()) {
+    if (_mItems.dataStreamInfo._mCls && _mItems.dataStreamInfo._mCls->pktCtxFcHasDefClkTsRole()) {
         _mItems.pktInfo._mBeginDefClkVal = _mDefClkVal;
     }
 

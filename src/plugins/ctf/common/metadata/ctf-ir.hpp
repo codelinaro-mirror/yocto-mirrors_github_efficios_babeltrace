@@ -4168,7 +4168,9 @@ public:
           _mPktCtxFc {std::move(pktCtxFc)},
           _mEventRecordHeaderFc {std::move(eventRecordHeaderFc)},
           _mCommonEventRecordCtxFc {std::move(commonEventRecordCtxFc)},
-          _mDefClkCls {std::move(defClkCls)}
+          _mDefClkCls {std::move(defClkCls)},
+          _mPktCtxFcHasDefClkTsRole {
+              _mPktCtxFc ? fcContainsUIntFcWithRole(*_mPktCtxFc, UIntFieldRole::DefClkTs) : false}
     {
     }
 
@@ -4274,6 +4276,15 @@ public:
     ClkCls<UserMixinsT> *defClkCls() noexcept
     {
         return _mDefClkCls.get();
+    }
+
+    /*
+     * Whether or not the packet context field class has
+     * a `UIntFieldRole::DefClkTs` role.
+     */
+    bool pktCtxFcHasDefClkTsRole() const noexcept
+    {
+        return _mPktCtxFcHasDefClkTsRole;
     }
 
     /*
@@ -4388,6 +4399,12 @@ private:
      * class.
      */
     typename ClkCls<UserMixinsT>::SP _mDefClkCls;
+
+    /*
+     * Whether or not the packet context field class has
+     * a `UIntFieldRole::DefClkTs` role.
+     */
+    bool _mPktCtxFcHasDefClkTsRole;
 };
 
 /*
