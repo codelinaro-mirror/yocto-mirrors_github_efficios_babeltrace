@@ -103,6 +103,7 @@ def _try_load_plugin_module(path):
 
     import hashlib
     import inspect
+    import importlib.util
     import importlib.machinery
 
     if path is None:
@@ -117,16 +118,11 @@ def _try_load_plugin_module(path):
     assert module_name not in sys.modules
 
     # try loading the module: any raised exception is caught by the caller
-    if sys.version_info < (3, 5):
-        mod = importlib.machinery.SourceFileLoader(module_name, path).load_module()
-    else:
-        import importlib.util
-
-        loader = importlib.machinery.SourceFileLoader(module_name, path)
-        spec = importlib.util.spec_from_file_location(module_name, path, loader=loader)
-        mod = importlib.util.module_from_spec(spec)
-        sys.modules[mod.__name__] = mod
-        loader.exec_module(mod)
+    loader = importlib.machinery.SourceFileLoader(module_name, path)
+    spec = importlib.util.spec_from_file_location(module_name, path, loader=loader)
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[mod.__name__] = mod
+    loader.exec_module(mod)
 
     # we have the module: look for its plugin info first
     if not hasattr(mod, "_bt_plugin_info"):
