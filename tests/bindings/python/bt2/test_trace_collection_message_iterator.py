@@ -516,8 +516,8 @@ def test_ascd_log_level_two_comps_from_one_spec(ascd_params_log_level_env, dir_a
         dir_ab, params={"what": "log-level"}, logging_level=bt2.LoggingLevel.DEBUG
     )
 
-    assert msgs[0].stream.name == "TestSourceA: {}".format(bt2.LoggingLevel.DEBUG)
-    assert msgs[1].stream.name == "TestSourceB: {}".format(bt2.LoggingLevel.DEBUG)
+    assert msgs[0].stream.name == f"TestSourceA: {bt2.LoggingLevel.DEBUG}"
+    assert msgs[1].stream.name == f"TestSourceB: {bt2.LoggingLevel.DEBUG}"
 
 
 def _two_comps_from_two_specs(
@@ -593,8 +593,8 @@ def test_ascd_log_level_two_comps_from_two_specs(
         logging_level_b=bt2.LoggingLevel.TRACE,
     )
 
-    assert msgs[0].stream.name == "TestSourceA: {}".format(bt2.LoggingLevel.DEBUG)
-    assert msgs[1].stream.name == "TestSourceB: {}".format(bt2.LoggingLevel.TRACE)
+    assert msgs[0].stream.name == f"TestSourceA: {bt2.LoggingLevel.DEBUG}"
+    assert msgs[1].stream.name == f"TestSourceB: {bt2.LoggingLevel.TRACE}"
 
 
 def _one_comp_from_one_spec_one_comp_from_both_1(
@@ -678,8 +678,8 @@ def test_ascd_log_level_one_comp_from_one_spec_one_comp_from_both_1(
         logging_level_ab=bt2.LoggingLevel.TRACE,
     )
 
-    assert msgs[0].stream.name == "TestSourceA: {}".format(bt2.LoggingLevel.TRACE)
-    assert msgs[1].stream.name == "TestSourceB: {}".format(bt2.LoggingLevel.TRACE)
+    assert msgs[0].stream.name == f"TestSourceA: {bt2.LoggingLevel.TRACE}"
+    assert msgs[1].stream.name == f"TestSourceB: {bt2.LoggingLevel.TRACE}"
 
 
 def _one_comp_from_one_spec_one_comp_from_both_2(
@@ -770,8 +770,8 @@ def test_ascd_log_level_one_comp_from_one_spec_one_comp_from_both_2(
         logging_level_a=bt2.LoggingLevel.TRACE,
     )
 
-    assert msgs[0].stream.name == "TestSourceA: {}".format(bt2.LoggingLevel.TRACE)
-    assert msgs[1].stream.name == "TestSourceB: {}".format(bt2.LoggingLevel.DEBUG)
+    assert msgs[0].stream.name == f"TestSourceA: {bt2.LoggingLevel.TRACE}"
+    assert msgs[1].stream.name == f"TestSourceB: {bt2.LoggingLevel.DEBUG}"
 
 
 def test_ascd_obj_override_with_none(ascd_params_log_level_env, dir_a, dir_ab):

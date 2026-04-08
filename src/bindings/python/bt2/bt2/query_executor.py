@@ -69,7 +69,7 @@ class QueryExecutor(bt2_object._SharedObject, _QueryExecutorCommon):
 
             if err:
                 o = component_class
-                raise TypeError("'{}' is not a component class object".format(o))
+                raise TypeError(f"'{o}' is not a component class object")
 
         bt2_utils._check_str(object_name)
 

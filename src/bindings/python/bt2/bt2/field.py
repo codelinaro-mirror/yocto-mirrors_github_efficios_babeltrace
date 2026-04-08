@@ -156,9 +156,7 @@ class _NumericFieldConst(_FieldConst):
         if isinstance(other, numbers.Complex):
             return complex(other)
 
-        raise TypeError(
-            "'{}' object is not a number object".format(other.__class__.__name__)
-        )
+        raise TypeError(f"'{other.__class__.__name__}' object is not a number object")
 
     def __int__(self) -> int:
         return int(self._value)
@@ -172,9 +170,7 @@ class _NumericFieldConst(_FieldConst):
     def __lt__(self, other) -> bool:
         if not isinstance(other, numbers.Number):
             raise TypeError(
-                "unorderable types: {}() < {}()".format(
-                    self.__class__.__name__, other.__class__.__name__
-                )
+                f"unorderable types: {self.__class__.__name__}() < {other.__class__.__name__}()"
             )
 
         return self._value < self._extract_value(other)
@@ -253,7 +249,7 @@ class _NumericField(_NumericFieldConst, _Field):
     def __hash__(self) -> int:
         # Non const field are not hashable as their value may be modified
         # without changing the underlying Python object.
-        raise TypeError("unhashable type: '{}'".format(self._NAME))
+        raise TypeError(f"unhashable type: '{self._NAME}'")
 
 
 class _IntegralFieldConst(_NumericFieldConst, numbers.Integral):
@@ -312,9 +308,7 @@ class _BoolFieldConst(_IntegralFieldConst, _FieldConst):
 
         if not isinstance(value, bool):
             raise TypeError(
-                "'{}' object is not a 'bool', '_BoolFieldConst', or '_BoolField' object".format(
-                    value.__class__
-                )
+                f"'{value.__class__}' object is not a 'bool', '_BoolFieldConst', or '_BoolField' object"
             )
 
         return value
@@ -351,9 +345,7 @@ class _IntegerField(_IntegerFieldConst, _IntegralField, _Field):
     def _check_range(self, value):
         if not (value >= self._lower_bound and value <= self._upper_bound):
             raise ValueError(
-                "Value {} is outside valid range [{}, {}]".format(
-                    value, self._lower_bound, self._upper_bound
-                )
+                f"Value {value} is outside valid range [{self._lower_bound}, {self._upper_bound}]"
             )
 
 
@@ -524,7 +516,7 @@ class _EnumerationFieldConst(_IntegerFieldConst):
         return self._cls
 
     def _repr(self):
-        return "{} ({})".format(self._value, ", ".join(self.labels))
+        return f"{self._value} ({', '.join(self.labels)})"
 
     @property
     def labels(self) -> typing.List[str]:
@@ -655,7 +647,7 @@ class _StringField(_StringFieldConst, _Field):
     def __hash__(self) -> int:
         # Non const field are not hashable as their value may be modified
         # without changing the underlying Python object.
-        raise TypeError("unhashable type: '{}'".format(self._NAME))
+        raise TypeError(f"unhashable type: '{self._NAME}'")
 
 
 class _ContainerFieldConst(_FieldConst):
@@ -672,9 +664,7 @@ class _ContainerFieldConst(_FieldConst):
         raise NotImplementedError
 
     def __setitem__(self, index, value):
-        raise TypeError(
-            "'{}' object does not support item assignment".format(self.__class__)
-        )
+        raise TypeError(f"'{self.__class__}' object does not support item assignment")
 
 
 class _ContainerField(_ContainerFieldConst, _Field):
@@ -719,9 +709,7 @@ class _StructureFieldConst(_ContainerFieldConst, collections.abc.Mapping):
         return True
 
     def _repr(self):
-        return "{{{}}}".format(
-            ", ".join(["{}: {}".format(repr(k), repr(v)) for k, v in self.items()])
-        )
+        return f"{{{', '.join([f'{k!r}: {v!r}' for k, v in self.items()])}}}"
 
     def _getitem(self, key):
         bt2_utils._check_str(key)
@@ -944,7 +932,7 @@ class _VariantField(_VariantFieldConst, _ContainerField, _Field):
     @_VariantFieldConst.selected_option_index.setter
     def selected_option_index(self, index: int):
         if index < 0 or index >= len(self):
-            raise IndexError("{} field object index is out of range".format(self._NAME))
+            raise IndexError(f"{self._NAME} field object index is out of range")
 
         native_bt.field_variant_select_option_by_index(self._ptr, index)
 
@@ -1002,15 +990,13 @@ class _ArrayFieldConst(_ContainerFieldConst, _FieldConst, collections.abc.Sequen
     def __getitem__(self, index: int) -> _FieldConst:
         if not isinstance(index, numbers.Integral):
             raise TypeError(
-                "'{}' is not an integral number object: invalid index".format(
-                    index.__class__.__name__
-                )
+                f"'{index.__class__.__name__}' is not an integral number object: invalid index"
             )
 
         index = int(index)
 
         if index < 0 or index >= len(self):
-            raise IndexError("{} field object index is out of range".format(self._NAME))
+            raise IndexError(f"{self._NAME} field object index is out of range")
 
         return self._create_field_from_ptr(
             self._borrow_element_field_ptr_by_index(self._ptr, index),
@@ -1037,7 +1023,7 @@ class _ArrayFieldConst(_ContainerFieldConst, _FieldConst, collections.abc.Sequen
         return True
 
     def _repr(self):
-        return "[{}]".format(", ".join([repr(v) for v in self]))
+        return f"[{', '.join([repr(v) for v in self])}]"
 
 
 class _ArrayField(
@@ -1084,9 +1070,7 @@ class _StaticArrayField(_StaticArrayFieldConst, _ArrayField, _Field):
     def _set_value(self, values):
         if len(self) != len(values):
             raise ValueError(
-                "expected length of value ({}) and array field ({}) to match".format(
-                    len(values), len(self)
-                )
+                f"expected length of value ({len(values)}) and array field ({len(self)}) to match"
             )
 
         for index, value in enumerate(values):

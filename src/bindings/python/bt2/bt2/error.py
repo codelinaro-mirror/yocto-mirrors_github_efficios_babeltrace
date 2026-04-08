@@ -176,7 +176,7 @@ class _Error(Exception, abc.Sequence):
         assert self._ptr is not None
 
         self._msg = msg
-        self._str = msg + "\n" + native_bt.bt2_format_bt_error(self._ptr)
+        self._str = f"{msg}\n{native_bt.bt2_format_bt_error(self._ptr)}"
 
         # Read everything we might need from the error pointer, so we don't
         # depend on it.  It's possible for the user to keep an Error object

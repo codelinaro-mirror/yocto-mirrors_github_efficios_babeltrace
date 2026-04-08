@@ -129,7 +129,7 @@ class _BitArrayFieldClassConst(
         )
         bt2_utils._handle_func_status(
             status,
-            "cannot get active flag labels for value {}".format(value_as_integer),
+            f"cannot get active flag labels for value {value_as_integer}",
         )
         return [self[label] for label in labels]
 
@@ -175,14 +175,12 @@ class _BitArrayFieldClass(_BitArrayFieldClassConst, _FieldClass):
         )
 
         if label in self:
-            raise ValueError("Duplicate flag label '{}'".format(label))
+            raise ValueError(f"Duplicate flag label '{label}'")
 
         for rng in index_ranges:
             if rng.upper >= self.length:
                 raise ValueError(
-                    "Index range's bound ({}) is too large for bit array length ({})".format(
-                        rng.upper, self.length
-                    )
+                    f"Index range's bound ({rng.upper}) is too large for bit array length ({self.length})"
                 )
 
         bt2_utils._handle_func_status(
@@ -218,7 +216,7 @@ class _IntegerFieldClassConst(_FieldClassConst):
 class _IntegerFieldClass(_FieldClass, _IntegerFieldClassConst):
     def _set_field_value_range(self, size):
         if size < 1 or size > 64:
-            raise ValueError("Value is outside valid range [1, 64] ({})".format(size))
+            raise ValueError(f"Value is outside valid range [1, 64] ({size})")
 
         native_bt.field_class_integer_set_field_value_range(self._ptr, size)
 
@@ -327,7 +325,7 @@ class _EnumerationFieldClassConst(
 
         status, labels = self._get_mapping_labels_for_value(self._ptr, value)
         bt2_utils._handle_func_status(
-            status, "cannot get mapping labels for value {}".format(value)
+            status, f"cannot get mapping labels for value {value}"
         )
         return [self[label] for label in labels]
 
@@ -355,7 +353,7 @@ class _EnumerationFieldClass(_EnumerationFieldClassConst, _IntegerFieldClass):
         bt2_utils._check_type(ranges, self._range_set_pycls)
 
         if label in self:
-            raise ValueError("duplicate mapping label '{}'".format(label))
+            raise ValueError(f"duplicate mapping label '{label}'")
 
         bt2_utils._handle_func_status(
             self._add_mapping_ptr(self._ptr, label, ranges._ptr),
@@ -541,7 +539,7 @@ class _StructureFieldClassConst(_FieldClassConst, collections.abc.Mapping):
     def __getitem__(self, key: str) -> _StructureFieldClassMemberConst:
         if not isinstance(key, str):
             raise TypeError(
-                "key must be a 'str' object, got '{}'".format(key.__class__.__name__)
+                f"key must be a 'str' object, got '{key.__class__.__name__}'"
             )
 
         member_ptr = self._borrow_member_ptr_by_name(self._ptr, key)
@@ -588,7 +586,7 @@ class _StructureFieldClass(_StructureFieldClassConst, _FieldClass):
         bt2_utils._check_type(field_class, _FieldClass)
 
         if name in self:
-            raise ValueError("duplicate member name '{}'".format(name))
+            raise ValueError(f"duplicate member name '{name}'")
 
         # check now that user attributes are valid
         user_attributes_value = bt2_value.create_value(user_attributes)
@@ -623,7 +621,7 @@ class _StructureFieldClass(_StructureFieldClassConst, _FieldClass):
             elif len(member) == 3:
                 name, field_class, user_attributes = member
             else:
-                raise ValueError("invalid member tuple length: {}".format(len(member)))
+                raise ValueError(f"invalid member tuple length: {len(member)}")
 
             self.append_member(name, field_class, user_attributes)
 
@@ -1037,7 +1035,7 @@ class _VariantFieldClassWithoutSelectorField(
         bt2_utils._check_type(field_class, _FieldClass)
 
         if name is not None and self._option_with_name(name) is not None:
-            raise ValueError("duplicate option name '{}'".format(name))
+            raise ValueError(f"duplicate option name '{name}'")
 
         # check now that user attributes are valid
         user_attributes_value = bt2_value.create_value(user_attributes)
@@ -1072,7 +1070,7 @@ class _VariantFieldClassWithoutSelectorField(
             elif len(option) == 3:
                 name, field_class, user_attributes = option
             else:
-                raise ValueError("invalid option tuple length: {}".format(len(option)))
+                raise ValueError(f"invalid option tuple length: {len(option)}")
 
             self.append_option(name, field_class, user_attributes)
 
@@ -1182,7 +1180,7 @@ class _VariantFieldClassWithIntegerSelectorField(
         bt2_utils._check_type(ranges, self._variant_option_pycls._range_set_pycls)
 
         if name is not None and self._option_with_name(name) is not None:
-            raise ValueError("duplicate option name '{}'".format(name))
+            raise ValueError(f"duplicate option name '{name}'")
 
         if len(ranges) == 0:
             raise ValueError("range set is empty")
@@ -1225,7 +1223,7 @@ class _VariantFieldClassWithIntegerSelectorField(
             elif len(option) == 4:
                 name, field_class, ranges, user_attributes = option
             else:
-                raise ValueError("invalid option tuple length: {}".format(len(option)))
+                raise ValueError(f"invalid option tuple length: {len(option)}")
 
             self.append_option(name, field_class, ranges, user_attributes)
 

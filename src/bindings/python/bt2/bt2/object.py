@@ -28,9 +28,7 @@ class _BaseObject:
         return int(self._ptr_internal)
 
     def __repr__(self) -> str:
-        return "<{}.{} object @ {}>".format(
-            self.__class__.__module__, self.__class__.__name__, hex(self.addr)
-        )
+        return f"<{self.__class__.__module__}.{self.__class__.__name__} object @ {hex(self.addr)}>"
 
     def __copy__(self):
         raise NotImplementedError

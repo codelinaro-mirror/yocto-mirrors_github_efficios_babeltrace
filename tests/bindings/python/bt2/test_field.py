@@ -528,7 +528,7 @@ class TestSignedEnum(TestSInt):
         # the order in which mappings are enumerated is not explicitly
         # part of the API.
         for p in itertools.permutations(["whole range", "something", "zip"]):
-            candidate = "{} ({})".format(raw_val, ", ".join(p))
+            candidate = f"{raw_val} ({', '.join(p)})"
 
             if candidate == str(field):
                 expected_str_found = True
@@ -567,7 +567,7 @@ class TestUnsignedEnum(TestUInt):
         # the order in which mappings are enumerated is not explicitly
         # part of the API.
         for p in itertools.permutations(["whole range", "something", "zip"]):
-            candidate = "{} ({})".format(raw_val, ", ".join(p))
+            candidate = f"{raw_val} ({', '.join(p)})"
 
             if candidate == str(field):
                 expected_str_found = True
@@ -1057,7 +1057,7 @@ class _TestArrayField:
 
     def test_str_op(self, field, raw_val):
         s = str(field)
-        expected_str = "[{}]".format(", ".join([repr(v) for v in raw_val]))
+        expected_str = f"[{', '.join([repr(v) for v in raw_val])}]"
         assert expected_str == s
 
 
@@ -1436,8 +1436,8 @@ class TestStruct:
         # the order in which mappings are enumerated is not explicitly
         # part of the API.
         for p in itertools.permutations([(k, v) for k, v in field.items()]):
-            items = ["{}: {}".format(repr(k), repr(v)) for k, v in p]
-            candidate = "{{{}}}".format(", ".join(items))
+            items = [f"{k!r}: {v!r}" for k, v in p]
+            candidate = f"{{{', '.join(items)}}}"
 
             if candidate == str(field):
                 expected_str_found = True

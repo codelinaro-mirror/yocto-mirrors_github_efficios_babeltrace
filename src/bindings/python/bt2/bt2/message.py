@@ -249,7 +249,7 @@ class _DiscardedMessage(_DiscardedMessageConst, _Message):
         bt2_utils._check_uint64(count)
 
         if count == 0:
-            raise ValueError("discarded {} count is 0".format(self._item_name))
+            raise ValueError(f"discarded {self._item_name} count is 0")
 
         self._bt_set_count(self._ptr, count)
 

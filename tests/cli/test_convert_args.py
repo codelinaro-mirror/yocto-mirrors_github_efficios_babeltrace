@@ -405,6 +405,4 @@ def test_convert_run_args_failure(
     # Verify expected error message on standard error
     assert (
         expected_error_str in result.stderr
-    ), "Expected error string `{}` not found in standard error:\n{}".format(
-        expected_error_str, result.stderr
-    )
+    ), f"Expected error string `{expected_error_str}` not found in standard error:\n{result.stderr}"

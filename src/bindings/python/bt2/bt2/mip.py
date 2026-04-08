@@ -29,7 +29,7 @@ def get_greatest_operative_mip_version(
     try:
         for descr in component_descriptors:
             if type(descr) is not bt2_component_descriptor.ComponentDescriptor:
-                raise TypeError("'{}' is not a component descriptor".format(descr))
+                raise TypeError(f"'{descr}' is not a component descriptor")
 
             status = native_bt.bt2_component_descriptor_set_add_descriptor_with_initialize_method_data(
                 comp_descr_set_ptr,

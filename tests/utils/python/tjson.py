@@ -59,15 +59,15 @@ class Path:
         for elem in self._elems:
             if type(elem) is str:
                 if re.match(r"[a-zA-Z]\w*$", elem):
-                    s += ".{}".format(elem)
+                    s += f".{elem}"
                 else:
-                    s += '."{}"'.format(elem)
+                    s += f'."{elem}"'
             else:
                 assert type(elem) is int
-                s += "[{}]".format(elem)
+                s += f"[{elem}]"
 
         if not s.startswith("."):
-            s = "." + s
+            s = f".{s}"
 
         return s
 
@@ -153,9 +153,7 @@ class ArrayVal(Val, Sequence[Val]):
         try:
             elem = self._raw_val[index]
         except IndexError:
-            raise IndexError(
-                "`{}`: array index {} out of range".format(self._path, index)
-            )
+            raise IndexError(f"`{self._path}`: array index {index} out of range")
 
         return wrap(elem, self._path / index, expected_elem_type)
 
@@ -199,7 +197,7 @@ class ObjVal(Val, Mapping[str, Val]):
         try:
             val = self._raw_val[key]
         except KeyError:
-            raise KeyError("`{}`: no value has the key `{}`".format(self._path, key))
+            raise KeyError(f"`{self._path}`: no value has the key `{key}`")
 
         return wrap(val, self._path / key, expected_type)
 
@@ -217,11 +215,7 @@ class ObjVal(Val, Mapping[str, Val]):
 def _check_type(val: Val, expected_type: Type[Val]):
     if not isinstance(val, expected_type):
         raise TypeError(
-            "`{}`: expecting {} value, got {}".format(
-                val.path,
-                expected_type._name,
-                type(val)._name,
-            )
+            f"`{val.path}`: expecting {expected_type._name} value, got {type(val)._name}"
         )
 
 

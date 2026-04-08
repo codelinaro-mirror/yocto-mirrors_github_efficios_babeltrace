@@ -34,7 +34,7 @@ def _make_expected_ig_name(filename: pathlib.Path):
 
     expected_ig_name = re.sub(r"[/.-]", "_", str(filename)).upper()
     expected_ig_name = re.sub(r"^SRC_", "", expected_ig_name)
-    return "BABELTRACE_" + expected_ig_name
+    return f"BABELTRACE_{expected_ig_name}"
 
 
 def _check_file(filename: pathlib.Path, fix: bool):

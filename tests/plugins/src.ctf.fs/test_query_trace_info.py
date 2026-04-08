@@ -107,10 +107,7 @@ def test_port_name_trace_uuid_stream_class_id_no_stream_id(
 
     for i, stream in enumerate(streams):
         assert re.match(
-            r"^\{{name: ``, uid: `7afe8fbe-79b8-4f6a-bbc7-d0c782e7ddaf`}} \| 0 \| "
-            r".*[/\\]tests[/\\]common-data[/\\]ctf-traces[/\\]{ctf_v}[/\\]intersection[/\\]3eventsintersect[/\\]test_stream_{i}$".format(
-                ctf_v=ctf_version, i=i
-            ),
+            rf"^\{{name: ``, uid: `7afe8fbe-79b8-4f6a-bbc7-d0c782e7ddaf`}} \| 0 \| .*[/\\]tests[/\\]common-data[/\\]ctf-traces[/\\]{ctf_version}[/\\]intersection[/\\]3eventsintersect[/\\]test_stream_{i}$",
             str(stream["port-name"]),
         )
 

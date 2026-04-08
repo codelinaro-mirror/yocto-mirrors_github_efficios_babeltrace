@@ -27,7 +27,7 @@ def _extract_plugin_section(stdout, plugin_name, num_lines_after=11):
     lines = stdout.split("\n")
 
     for i, line in enumerate(lines):
-        if re.match(r"^{}:$".format(re.escape(plugin_name)), line):
+        if re.match(rf"^{re.escape(plugin_name)}:$", line):
             # Return the plugin header line plus the following lines
             end_idx = min(i + num_lines_after + 1, len(lines))
             return "\n".join(lines[i:end_idx])
@@ -43,9 +43,9 @@ def test_plugin_entry_content(cli_run):
     section = _extract_plugin_section(cli_run.stdout, "this-is-a-plugin")
     assert section is not None, "Entry for `this-is-a-plugin` not found in output"
 
-    expected = textwrap.dedent("""
+    expected = textwrap.dedent(f"""
         this-is-a-plugin:
-          Path: {this_dir}/bt_plugin_list_plugins.py
+          Path: {btu.this_src_dir(__file__)}/bt_plugin_list_plugins.py
           Version: 1.2.3bob
           Description: A plugin
           Author: Jorge Mario Bergoglio
@@ -56,6 +56,6 @@ def test_plugin_entry_content(cli_run):
             'filter.this-is-a-plugin.ThisIsAFilter'
           Sink component classes:
             'sink.this-is-a-plugin.ThisIsASink'
-        """.format(this_dir=btu.this_src_dir(__file__))).strip()
+        """).strip()
 
     assert section == expected

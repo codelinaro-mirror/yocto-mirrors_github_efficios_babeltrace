@@ -12,15 +12,15 @@ def to_string(p):
     # signed integers).
 
     if type(p) is bt2._ArrayValueConst:
-        s = "[{}]".format(", ".join([to_string(x) for x in p]))
+        s = f"[{', '.join([to_string(x) for x in p])}]"
     elif type(p) is bt2._MapValueConst:
         s = "{{{}}}".format(
-            ", ".join([k + "=" + to_string(p[k]) for k in sorted(p.keys())])
+            ", ".join([f"{k}={to_string(p[k])}" for k in sorted(p.keys())])
         )
     elif type(p) is bt2._UnsignedIntegerValueConst:
-        s = str(p) + "u"
+        s = f"{p!s}u"
     elif type(p) is bt2._RealValueConst:
-        s = "{:.7f}".format(float(p))
+        s = f"{float(p):.7f}"
     elif (
         type(p)
         in (

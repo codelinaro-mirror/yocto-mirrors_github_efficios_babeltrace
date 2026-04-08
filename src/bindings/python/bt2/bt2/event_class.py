@@ -241,7 +241,7 @@ class _EventClass(bt2_user_attrs._WithUserAttrs, _EventClassConst):
             )
 
             if log_level not in log_levels:
-                raise ValueError("'{}' is not a valid log level".format(log_level))
+                raise ValueError(f"'{log_level}' is not a valid log level")
 
         if emf_uri is not None:
             bt2_utils._check_str(emf_uri)

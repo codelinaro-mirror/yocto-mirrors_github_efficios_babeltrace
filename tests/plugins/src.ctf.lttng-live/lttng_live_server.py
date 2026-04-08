@@ -520,7 +520,7 @@ class _LttngLiveViewerProtocolCodec:
         self._server_minor_version = None  # type: Optional[int]
 
     def _unpack(self, fmt: str, data: bytes, offset: int = 0):
-        fmt = "!" + fmt
+        fmt = f"!{fmt}"
         return struct.unpack_from(fmt, data, offset)
 
     def _unpack_payload(self, fmt: str, data: bytes):
@@ -545,9 +545,7 @@ class _LttngLiveViewerProtocolCodec:
             self._COMMAND_HEADER_STRUCT_FMT, data
         )
         _logger.info(
-            "Decoded command header: payload-size={}, cmd-type={}, version={}".format(
-                payload_size, cmd_type, version
-            )
+            f"Decoded command header: payload-size={payload_size}, cmd-type={cmd_type}, version={version}"
         )
 
         if len(data) < self._COMMAND_HEADER_SIZE_BYTES + payload_size:
@@ -590,11 +588,11 @@ class _LttngLiveViewerProtocolCodec:
                 version, tracing_session_id
             )
         else:
-            raise RuntimeError("Unknown command type {}".format(cmd_type))
+            raise RuntimeError(f"Unknown command type {cmd_type}")
 
     def _pack(self, fmt: str, *args: Any):
         # Force network byte order
-        return struct.pack("!" + fmt, *args)
+        return struct.pack(f"!{fmt}", *args)
 
     def _encode_zero_padded_str(self, string: str, length: int):
         data = string.encode()
@@ -715,7 +713,7 @@ class _LttngLiveViewerProtocolCodec:
             data = self._pack("I", reply.status)
         else:
             raise ValueError(
-                "Unknown reply object with class `{}`".format(reply.__class__.__name__)
+                f"Unknown reply object with class `{reply.__class__.__name__}`"
             )
 
         return data
@@ -748,9 +746,7 @@ class _LttngDataStreamIndex(Sequence[_LttngIndexEntryT]):
             self._add_beacons(beacons_list)
 
         _logger.info(
-            'Built data stream index entries: path="{}", count={}'.format(
-                path, len(self._entries)
-            )
+            f'Built data stream index entries: path="{path}", count={len(self._entries)}'
         )
 
     def _build(self):
@@ -771,9 +767,7 @@ class _LttngDataStreamIndex(Sequence[_LttngIndexEntryT]):
 
             while True:
                 _logger.debug(
-                    'Decoding data stream index entry: path="{}", offset={}'.format(
-                        self._path, f.tell()
-                    )
+                    f'Decoding data stream index entry: path="{self._path}", offset={f.tell()}'
                 )
                 data = f.read(size)
 
@@ -862,20 +856,16 @@ class _LttngDataStream(_LttngStream):
         filename = os.path.basename(path)
         match = re.match(r"(.*)_\d+", filename)
         if not match:
-            raise RuntimeError(
-                "Unexpected data stream file name pattern: {}".format(filename)
-            )
+            raise RuntimeError(f"Unexpected data stream file name pattern: {filename}")
 
         self._channel_name = match.group(1)
         trace_dir = os.path.dirname(path)
-        index_path = os.path.join(trace_dir, "index", filename + ".idx")
+        index_path = os.path.join(trace_dir, "index", f"{filename}.idx")
         self._index = _LttngDataStreamIndex(index_path, beacons_json)
         assert os.path.isfile(path)
         self._file = open(path, "rb")
         _logger.info(
-            'Built data stream: path="{}", channel-name="{}"'.format(
-                path, self._channel_name
-            )
+            f'Built data stream: path="{path}", channel-name="{self._channel_name}"'
         )
 
     @property
@@ -900,9 +890,7 @@ class _LttngMetadataStreamSection:
         self._timestamp = timestamp
         self._data = data
         _logger.info(
-            "Built metadata stream section: ts={}, data-len={}".format(
-                self._timestamp, len(self._data)
-            )
+            f"Built metadata stream section: ts={self._timestamp}, data-len={len(self._data)}"
         )
 
     @property
@@ -926,9 +914,7 @@ class _LttngMetadataStream(_LttngStream):
         self._path = metadata_file_path
         self._sections = config_sections
         _logger.info(
-            "Built metadata stream: path={}, section-len={}".format(
-                self._path, len(self._sections)
-            )
+            f"Built metadata stream: path={self._path}, section-len={len(self._sections)}"
         )
 
     @property
@@ -981,7 +967,7 @@ def _parse_metadata_sections_config(metadata_sections_json: tjson.ArrayVal):
                 # section at the timestamp of the next concrete section.
                 append_empty_section = True
             else:
-                raise ValueError("Invalid string value at {}.".format(section.path))
+                raise ValueError(f"Invalid string value at {section.path}.")
         elif isinstance(section, tjson.ObjVal):
             line = section.at("line", tjson.IntVal).val
             ts = section.at("timestamp", tjson.IntVal).val
@@ -999,9 +985,7 @@ def _parse_metadata_sections_config(metadata_sections_json: tjson.ArrayVal):
 
             metadata_sections.append(LttngMetadataConfigSection(line, ts, False))
         else:
-            raise TypeError(
-                "`{}`: expecting a string or object value".format(section.path)
-            )
+            raise TypeError(f"`{section.path}`: expecting a string or object value")
 
     return metadata_sections
 
@@ -1088,7 +1072,7 @@ class LttngTrace(Sequence[_LttngDataStream]):
         self._creation_timestamp = creation_timestamp
         self._create_metadata_stream(trace_dir, metadata_sections_json)
         self._create_data_streams(trace_dir, beacons_json)
-        _logger.info('Built trace: path="{}"'.format(trace_dir))
+        _logger.info(f'Built trace: path="{trace_dir}"')
 
     def _create_data_streams(
         self, trace_dir: str, beacons_json: Optional[tjson.ObjVal]
@@ -1517,15 +1501,13 @@ class _LttngLiveViewerSession:
 
     def _get_tracing_session_state(self, tracing_session_id: int):
         if tracing_session_id not in self._ts_states:
-            raise RuntimeError(
-                "Unknown tracing session ID {}".format(tracing_session_id)
-            )
+            raise RuntimeError(f"Unknown tracing session ID {tracing_session_id}")
 
         return self._ts_states[tracing_session_id]
 
     def _get_data_stream_state(self, stream_id: int):
         if stream_id not in self._stream_states:
-            RuntimeError("Unknown stream ID {}".format(stream_id))
+            RuntimeError(f"Unknown stream ID {stream_id}")
 
         stream = self._stream_states[stream_id]
         if type(stream) is not _LttngLiveViewerSessionDataStreamState:
@@ -1535,7 +1517,7 @@ class _LttngLiveViewerSession:
 
     def _get_metadata_stream_state(self, stream_id: int):
         if stream_id not in self._stream_states:
-            RuntimeError("Unknown stream ID {}".format(stream_id))
+            RuntimeError(f"Unknown stream ID {stream_id}")
 
         stream = self._stream_states[stream_id]
         if type(stream) is not _LttngLiveViewerSessionMetadataStreamState:
@@ -1545,15 +1527,13 @@ class _LttngLiveViewerSession:
 
     def handle_command(self, cmd: _LttngLiveViewerCommand):
         _logger.info(
-            "Handling command in viewer session: cmd-cls-name={}".format(
-                cmd.__class__.__name__
-            )
+            f"Handling command in viewer session: cmd-cls-name={cmd.__class__.__name__}"
         )
         cmd_type = type(cmd)
 
         if cmd_type not in self._command_handlers:
             raise RuntimeError(
-                "Unexpected command: cmd-cls-name={}".format(cmd.__class__.__name__)
+                f"Unexpected command: cmd-cls-name={cmd.__class__.__name__}"
             )
 
         return self._command_handlers[cmd_type](cmd)
@@ -1568,9 +1548,7 @@ class _LttngLiveViewerSession:
 
         if ts_state.is_attached:
             raise RuntimeError(
-                "Cannot attach to tracing session `{}`: viewer is already attached".format(
-                    info.name
-                )
+                f"Cannot attach to tracing session `{info.name}`: viewer is already attached"
             )
 
         ts_state.is_attached = True
@@ -1599,9 +1577,7 @@ class _LttngLiveViewerSession:
 
         if not ts_state.is_attached:
             raise RuntimeError(
-                "Cannot detach to tracing session `{}`: viewer is not attached".format(
-                    info.name
-                )
+                f"Cannot detach to tracing session `{info.name}`: viewer is not attached"
             )
 
         ts_state.is_attached = False
@@ -1812,13 +1788,11 @@ class LttngLiveServer:
         port: Optional[int] = None,
     ):
         _logger.info("Server configuration:")
-        _logger.info("  Maximum minor version: {}".format(max_minor_version))
+        _logger.info(f"  Maximum minor version: {max_minor_version}")
 
         if max_query_data_response_size is not None:
             _logger.info(
-                "  Maximum response data query size: `{}`".format(
-                    max_query_data_response_size
-                )
+                f"  Maximum response data query size: `{max_query_data_response_size}`"
             )
 
         for ts_descr in tracing_session_descriptors:
@@ -1837,7 +1811,7 @@ class LttngLiveServer:
             )
 
             for trace in ts_descr.traces:
-                _logger.info('    Trace: path="{}"'.format(trace.path))
+                _logger.info(f'    Trace: path="{trace.path}"')
 
         self._ts_descriptors = list(tracing_session_descriptors)
         self._max_query_data_response_size = max_query_data_response_size
@@ -1863,7 +1837,7 @@ class LttngLiveServer:
         # the parent (or its client) could attempt to connect before
         # serve() calls listen(), causing the connection to be refused.
         self._sock.listen(128)
-        _logger.info("LttngLiveServer: listening on port {}".format(self.port))
+        _logger.info(f"LttngLiveServer: listening on port {self.port}")
 
     @property
     def port(self) -> int:
@@ -1872,7 +1846,7 @@ class LttngLiveServer:
     # URL for listing sessions.
     @property
     def base_url(self) -> str:
-        return "net://localhost:{}".format(self.port)
+        return f"net://localhost:{self.port}"
 
     # Dictionary mapping session name to full session URL.
     @property
@@ -1881,8 +1855,8 @@ class LttngLiveServer:
 
         for descr in self._ts_descriptors:
             info = descr.info
-            urls[info.name] = "net://localhost:{}/host/{}/{}".format(
-                self.port, info.hostname, info.name
+            urls[info.name] = (
+                f"net://localhost:{self.port}/host/{info.hostname}/{info.name}"
             )
 
         return urls
@@ -1913,36 +1887,30 @@ class LttngLiveServer:
 
                 if data:
                     raise RuntimeError(
-                        "Client closed connection after having sent {} command bytes.".format(
-                            len(data)
-                        )
+                        f"Client closed connection after having sent {len(data)} command bytes."
                     )
 
                 return
 
-            _logger.info("Received data from viewer: length={}".format(len(buf)))
+            _logger.info(f"Received data from viewer: length={len(buf)}")
 
             data += buf
 
             try:
                 cmd = self._codec.decode(data)
             except struct.error as exc:
-                raise RuntimeError("Malformed command: {}".format(exc)) from exc
+                raise RuntimeError(f"Malformed command: {exc}") from exc
 
             if cmd is not None:
                 _logger.info(
-                    "Received command from viewer: cmd-cls-name={}".format(
-                        cmd.__class__.__name__
-                    )
+                    f"Received command from viewer: cmd-cls-name={cmd.__class__.__name__}"
                 )
                 return cmd
 
     def _send_reply(self, reply: _LttngLiveViewerReply):
         data = self._codec.encode(reply)
         _logger.info(
-            "Sending reply to viewer: reply-cls-name={}, length={}".format(
-                reply.__class__.__name__, len(data)
-            )
+            f"Sending reply to viewer: reply-cls-name={reply.__class__.__name__}, length={len(data)}"
         )
         self._conn.sendall(data)
 
@@ -1952,15 +1920,11 @@ class LttngLiveServer:
 
         if type(cmd) is not _LttngLiveViewerConnectCommand:
             raise RuntimeError(
-                'First command is not "connect": cmd-cls-name={}'.format(
-                    cmd.__class__.__name__
-                )
+                f'First command is not "connect": cmd-cls-name={cmd.__class__.__name__}'
             )
 
         # Create viewer session (arbitrary ID 23)
-        _logger.info(
-            "LTTng live viewer connected: version={}.{}".format(cmd.major, cmd.minor)
-        )
+        _logger.info(f"LTTng live viewer connected: version={cmd.major}.{cmd.minor}")
         viewer_session = _LttngLiveViewerSession(
             23, self._ts_descriptors, self._max_query_data_response_size
         )
@@ -1968,9 +1932,7 @@ class LttngLiveServer:
         # Set our effective minor version
         self._minor_version = min([self._max_minor_version, cmd.minor])
         _logger.info(
-            "Effective server version is available: version={}.{}".format(
-                2, self._minor_version
-            )
+            f"Effective server version is available: version={2}.{self._minor_version}"
         )
         self._codec.server_minor_version = self._minor_version
 
@@ -1993,11 +1955,9 @@ class LttngLiveServer:
             self._send_reply(viewer_session.handle_command(cmd))
 
     def _listen(self):
-        _logger.info("Waiting for viewer connection: port={}".format(self.port))
+        _logger.info(f"Waiting for viewer connection: port={self.port}")
         self._conn, viewer_addr = self._sock.accept()
-        _logger.info(
-            "Accepted viewer: addr={}:{}".format(viewer_addr[0], viewer_addr[1])
-        )
+        _logger.info(f"Accepted viewer: addr={viewer_addr[0]}:{viewer_addr[1]}")
 
         try:
             self._handle_connection()
@@ -2061,16 +2021,12 @@ def _write_port_to_file(port: int, port_filename: str):
         try:
             os.replace(tmp_port_file.name, port_filename)
             _logger.info(
-                'Renamed port file: src-path="{}", dst-path="{}"'.format(
-                    tmp_port_file.name, port_filename
-                )
+                f'Renamed port file: src-path="{tmp_port_file.name}", dst-path="{port_filename}"'
             )
             return
         except PermissionError:
             _logger.info(
-                'Permission error while attempting to rename port file; retrying in {} s: src-path="{}", dst-path="{}"'.format(
-                    retry_delay_s, tmp_port_file.name, port_filename
-                )
+                f'Permission error while attempting to rename port file; retrying in {retry_delay_s} s: src-path="{tmp_port_file.name}", dst-path="{port_filename}"'
             )
 
             if attempt == 0:
@@ -2143,7 +2099,7 @@ class LttngLiveServerProcess:
 
     @property
     def base_url(self) -> str:
-        return "net://localhost:{}".format(self.port)
+        return f"net://localhost:{self.port}"
 
     @property
     def session_urls(self) -> Dict[str, str]:
@@ -2192,7 +2148,7 @@ class LttngLiveServerProcess:
 
         # Wait for the server to send its info
         self._server_port, self._session_urls = info_queue.get()
-        _logger.info("Background server ready on port {}".format(self._server_port))
+        _logger.info(f"Background server ready on port {self._server_port}")
 
     # Waits for the server process to finish.
     def wait(self, timeout: Optional[float] = None):
@@ -2201,9 +2157,7 @@ class LttngLiveServerProcess:
 
         if timeout is not None and self._process.is_alive():
             _logger.warning(
-                "Background server process still running after {} s timeout".format(
-                    timeout
-                )
+                f"Background server process still running after {timeout} s timeout"
             )
 
     # Terminates the server process and waits for it to finish.
@@ -2327,7 +2281,7 @@ def _session_descriptors_from_path(
 def _loglevel_parser(string: str):
     loglevels = {"info": logging.INFO, "warning": logging.WARNING}
     if string not in loglevels:
-        msg = "{} is not a valid loglevel".format(string)
+        msg = f"{string} is not a valid loglevel"
         raise argparse.ArgumentTypeError(msg)
     return loglevels[string]
 
@@ -2399,11 +2353,11 @@ if __name__ == "__main__":
     if args.port_filename is not None:
         _write_port_to_file(server.port, args.port_filename)
 
-    print("Listening on port: {}".format(server.port))
-    print("Listing URL: `{}`".format(server.base_url))
+    print(f"Listening on port: {server.port}")
+    print(f"Listing URL: `{server.base_url}`")
     print("Available session URLs:")
 
     for url in server.session_urls.values():
-        print("  - `{}`".format(url))
+        print(f"  - `{url}`")
 
     server.serve()

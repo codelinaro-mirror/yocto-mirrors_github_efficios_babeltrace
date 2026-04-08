@@ -530,9 +530,7 @@ class _UserComponentType(type):
         elif _UserSinkComponent in bases:
             if not hasattr(cls, "_user_consume"):
                 raise _IncompleteUserClass(
-                    "cannot create component class '{}': missing a _user_consume() method".format(
-                        class_name
-                    )
+                    f"cannot create component class '{class_name}': missing a _user_consume() method"
                 )
 
             cc_ptr = native_bt.bt2_component_class_sink_create(
@@ -540,14 +538,12 @@ class _UserComponentType(type):
             )
         else:
             raise _IncompleteUserClass(
-                "cannot find a known component class base in the bases of '{}'".format(
-                    class_name
-                )
+                f"cannot find a known component class base in the bases of '{class_name}'"
             )
 
         if cc_ptr is None:
             raise bt2_error._MemoryError(
-                "cannot create component class '{}'".format(class_name)
+                f"cannot create component class '{class_name}'"
             )
 
         cls._bt_cc_ptr = cc_ptr
@@ -577,41 +573,31 @@ class _UserComponentType(type):
     def _bt_set_iterator_class(cls, iter_cls):
         if iter_cls is None:
             raise _IncompleteUserClass(
-                "cannot create component class '{}': missing message iterator class".format(
-                    cls.__name__
-                )
+                f"cannot create component class '{cls.__name__}': missing message iterator class"
             )
 
         if not issubclass(iter_cls, bt2_message_iterator._UserMessageIterator):
             raise _IncompleteUserClass(
-                "cannot create component class '{}': message iterator class does not inherit bt2._UserMessageIterator".format(
-                    cls.__name__
-                )
+                f"cannot create component class '{cls.__name__}': message iterator class does not inherit bt2._UserMessageIterator"
             )
 
         if not hasattr(iter_cls, "__next__"):
             raise _IncompleteUserClass(
-                "cannot create component class '{}': message iterator class is missing a __next__() method".format(
-                    cls.__name__
-                )
+                f"cannot create component class '{cls.__name__}': message iterator class is missing a __next__() method"
             )
 
         if hasattr(iter_cls, "_user_can_seek_ns_from_origin") and not hasattr(
             iter_cls, "_user_seek_ns_from_origin"
         ):
             raise _IncompleteUserClass(
-                "cannot create component class '{}': message iterator class implements _user_can_seek_ns_from_origin but not _user_seek_ns_from_origin".format(
-                    cls.__name__
-                )
+                f"cannot create component class '{cls.__name__}': message iterator class implements _user_can_seek_ns_from_origin but not _user_seek_ns_from_origin"
             )
 
         if hasattr(iter_cls, "_user_can_seek_beginning") and not hasattr(
             iter_cls, "_user_seek_beginning"
         ):
             raise _IncompleteUserClass(
-                "cannot create component class '{}': message iterator class implements _user_can_seek_beginning but not _user_seek_beginning".format(
-                    cls.__name__
-                )
+                f"cannot create component class '{cls.__name__}': message iterator class implements _user_can_seek_beginning but not _user_seek_beginning"
             )
 
         cls._iter_cls = iter_cls
@@ -928,9 +914,7 @@ class _UserSourceComponent(_UserComponent, _SourceComponentConst):
 
         if name in self._output_ports:
             raise ValueError(
-                "source component `{}` already contains an output port named `{}`".format(
-                    self.name, name
-                )
+                f"source component `{self.name}` already contains an output port named `{name}`"
             )
 
         comp_status, self_port_ptr = native_bt.self_component_source_add_output_port(
@@ -990,9 +974,7 @@ class _UserFilterComponent(_UserComponent, _FilterComponentConst):
 
         if name in self._output_ports:
             raise ValueError(
-                "filter component `{}` already contains an output port named `{}`".format(
-                    self.name, name
-                )
+                f"filter component `{self.name}` already contains an output port named `{name}`"
             )
 
         comp_status, self_port_ptr = native_bt.self_component_filter_add_output_port(
@@ -1012,9 +994,7 @@ class _UserFilterComponent(_UserComponent, _FilterComponentConst):
 
         if name in self._input_ports:
             raise ValueError(
-                "filter component `{}` already contains an input port named `{}`".format(
-                    self.name, name
-                )
+                f"filter component `{self.name}` already contains an input port named `{name}`"
             )
 
         comp_status, self_port_ptr = native_bt.self_component_filter_add_input_port(
@@ -1065,9 +1045,7 @@ class _UserSinkComponent(_UserComponent, _SinkComponentConst):
 
         if name in self._input_ports:
             raise ValueError(
-                "sink component `{}` already contains an input port named `{}`".format(
-                    self.name, name
-                )
+                f"sink component `{self.name}` already contains an input port named `{name}`"
             )
 
         comp_status, self_port_ptr = native_bt.self_component_sink_add_input_port(

@@ -10,11 +10,10 @@ import bt_tests_utils as btu
 def _find_expect_file(expect_dir, test_name, ctf_version, mip_version):
     # Try different naming patterns in order of specificity
     candidates = [
-        expect_dir
-        / "{}-ctf{}-mip{}.expect".format(test_name, ctf_version, mip_version),
-        expect_dir / "{}-ctf{}.expect".format(test_name, ctf_version),
-        expect_dir / "{}-mip{}.expect".format(test_name, mip_version),
-        expect_dir / "{}.expect".format(test_name),
+        expect_dir / f"{test_name}-ctf{ctf_version}-mip{mip_version}.expect",
+        expect_dir / f"{test_name}-ctf{ctf_version}.expect",
+        expect_dir / f"{test_name}-mip{mip_version}.expect",
+        expect_dir / f"{test_name}.expect",
     ]
 
     for candidate in candidates:
@@ -22,9 +21,7 @@ def _find_expect_file(expect_dir, test_name, ctf_version, mip_version):
             return candidate
 
     raise FileNotFoundError(
-        "Could not find expectation file for test `{}`, CTF `{}`, MIP `{}`".format(
-            test_name, ctf_version, mip_version
-        )
+        f"Could not find expectation file for test `{test_name}`, CTF `{ctf_version}`, MIP `{mip_version}`"
     )
 
 

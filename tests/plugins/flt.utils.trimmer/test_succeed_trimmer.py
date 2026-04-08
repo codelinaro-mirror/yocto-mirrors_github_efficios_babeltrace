@@ -579,9 +579,7 @@ _STREAM_PACKET_IDS = {
             packets,
             begin,
             end,
-            id="{}-{}-to-{}".format(
-                _STREAM_PACKET_IDS[(stream_cs, packets)], begin, end
-            ),
+            id=f"{_STREAM_PACKET_IDS[stream_cs, packets]}-{begin}-to-{end}",
         )
         for (stream_cs, packets), times in _EXPECTED.items()
         for (begin, end) in times.keys()

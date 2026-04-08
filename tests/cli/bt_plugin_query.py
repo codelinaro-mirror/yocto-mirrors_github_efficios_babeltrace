@@ -16,7 +16,7 @@ class SourceWithQueryThatPrintsParams(
         if obj == "please-fail":
             raise ValueError("catastrophic failure")
 
-        return obj + ":" + to_string(params)
+        return f"{obj}:{to_string(params)}"
 
 
 bt2.register_plugin(__name__, "query")

@@ -41,9 +41,7 @@ class Part:
         return self._first_content_line_no
 
     def __repr__(self):
-        return "Part({}, {}, {})".format(
-            repr(self.header_info), repr(self.content), self.first_content_line_no
-        )
+        return f"Part({self.header_info!r}, {self.content!r}, {self.first_content_line_no})"
 
 
 def _try_parse_header(line: str):
@@ -100,10 +98,9 @@ def parse(in_file: TextIO):
     cur_part_header_info = _try_parse_header(line)
 
     if cur_part_header_info is None:
+        stripped_line = line.strip("\n")
         raise RuntimeError(
-            "Expecting header line starting with `---`, got `{}`".format(
-                line.strip("\n")
-            )
+            f"Expecting header line starting with `---`, got `{stripped_line}`"
         )
 
     for line in in_file:

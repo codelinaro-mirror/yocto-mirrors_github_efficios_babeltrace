@@ -28,11 +28,7 @@ class TestIter(bt2._UserMessageIterator):
 
     def _make_stream_name(self, inputs):
         comp_cls_name = self._component.__class__.__name__
-        return (
-            comp_cls_name
-            + ": "
-            + ", ".join(sorted([os.path.basename(str(x)) for x in inputs]))
-        )
+        return f"{comp_cls_name}: {', '.join(sorted([os.path.basename(str(x)) for x in inputs]))}"
 
     def __next__(self):
         if len(self._msgs) == 0:

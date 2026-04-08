@@ -195,9 +195,7 @@ def install_pytest_collect_file(
 
         setattr(module, "pytest_collect_file", pytest_7_hook)
         _logger.info(
-            "Installed pytest 7+ pytest_collect_file() hook into module `{}`".format(
-                module.__name__
-            )
+            f"Installed pytest 7+ pytest_collect_file() hook into module `{module.__name__}`"
         )
     else:
         # pytest 6: expect a `py.path.local` path
@@ -209,9 +207,7 @@ def install_pytest_collect_file(
 
         setattr(module, "pytest_collect_file", pytest_6_hook)
         _logger.info(
-            "Installed pytest 6 pytest_collect_file() hook into module `{}`".format(
-                module.__name__
-            )
+            f"Installed pytest 6 pytest_collect_file() hook into module `{module.__name__}`"
         )
 
 
@@ -219,7 +215,7 @@ def install_pytest_collect_file(
 # on MinGW if not already present.
 def exe_path(path: pathlib.Path) -> pathlib.Path:
     if os_type() == OsType.MINGW and not path.name.endswith(".exe"):
-        return path.with_suffix(path.suffix + ".exe")
+        return path.with_suffix(f"{path.suffix}.exe")
 
     return path
 
@@ -261,13 +257,13 @@ def _log_run_cmd(
     cmd_parts = []  # type: List[str]
 
     for var_name in sorted(env_to_log.keys()):
-        cmd_parts.append("{}={}".format(var_name, shlex.quote(env_to_log[var_name])))
+        cmd_parts.append(f"{var_name}={shlex.quote(env_to_log[var_name])}")
 
     cmd_parts.append(shlex.quote(str(exec_path)))
     cmd_parts.extend(shlex.quote(arg) for arg in args)
 
     # Log
-    _logger.info("Running: {}".format(" ".join(cmd_parts)))
+    _logger.info(f"Running: {' '.join(cmd_parts)}")
 
 
 @typing.overload
@@ -356,7 +352,7 @@ def run(
     if check:
         res.check_returncode()
 
-    _logger.info("  Exit status: {}".format(res.returncode))
+    _logger.info(f"  Exit status: {res.returncode}")
     return res
 
 
@@ -376,20 +372,16 @@ def cli_params_from_obj(obj: Any, is_root: bool = True) -> str:
     elif isinstance(obj, float):
         return str(obj)
     elif isinstance(obj, str):
-        return '"{}"'.format(obj)
+        return f'"{obj}"'
     elif isinstance(obj, list):
-        return "[{}]".format(
-            ", ".join(
-                cli_params_from_obj(item, False) for item in typing.cast(List[Any], obj)
-            )
-        )
+        return f"[{', '.join((cli_params_from_obj(item, False) for item in typing.cast(List[Any], obj)))}]"
     elif isinstance(obj, dict):
         items = ", ".join(
-            "{}={}".format(k, cli_params_from_obj(v, False))
+            f"{k}={cli_params_from_obj(v, False)}"
             for k, v in typing.cast(Dict[str, Any], obj).items()
         )
 
-        return items if is_root else "{{{}}}".format(items)
+        return items if is_root else f"{{{items}}}"
     else:
         assert False
 
@@ -472,7 +464,7 @@ def _fmt_comp_cls_spec(comp_cls: _AnyCompClsT) -> str:
         )
         type_prefix = "sink"
 
-    return "{}.?.{}".format(type_prefix, comp_cls.name)
+    return f"{type_prefix}.?.{comp_cls.name}"
 
 
 # Returns a string representation of a component spec for logging.
@@ -496,7 +488,7 @@ def _get_unique_comp_name(
     name = comp_cls.name
 
     if name in [comp.name for comp in all_comps]:
-        name += "-{}".format(next_suffix)
+        name += f"-{next_suffix}"
         next_suffix += 1
 
     return name, next_suffix
@@ -518,9 +510,7 @@ def _create_comp(
     comp_cls = comp_spec.component_class
     comp_name, next_suffix = _get_unique_comp_name(comp_cls, all_comps, next_suffix)
     _logger.info(
-        "  Instantiating `{}` as component `{}`".format(
-            _fmt_comp_cls_spec(comp_cls), comp_name
-        )
+        f"  Instantiating `{_fmt_comp_cls_spec(comp_cls)}` as component `{comp_name}`"
     )
     comp = graph.add_component(
         comp_cls,
@@ -557,9 +547,7 @@ def _connect_ports(
     in_comp: _AnyCompT,
 ) -> None:
     _logger.info(
-        "  Connecting ports: `{}` of `{}` → `{}` of `{}`".format(
-            out_port.name, out_comp.name, in_port.name, in_comp.name
-        )
+        f"  Connecting ports: `{out_port.name}` of `{out_comp.name}` → `{in_port.name}` of `{in_comp.name}`"
     )
     graph.connect_ports(out_port, in_port)
 
@@ -636,13 +624,13 @@ def convert(
         assert isinstance(comp_spec, bt2.ComponentSpec)
 
     # Log source component specs
-    _logger.info("  Source component specs ({})".format(len(all_src_component_specs)))
+    _logger.info(f"  Source component specs ({len(all_src_component_specs)})")
 
     for comp_spec in all_src_component_specs:
         _log_comp_spec(comp_spec, 4)
 
     # Log filter component specs
-    _logger.info("  Filter component specs ({})".format(len(flt_component_specs)))
+    _logger.info(f"  Filter component specs ({len(flt_component_specs)})")
 
     for comp_spec in flt_component_specs:
         _log_comp_spec(comp_spec, 4)
@@ -676,7 +664,7 @@ def convert(
             raise RuntimeError("failed to find an operative MIP version")
 
     # Build graph
-    _logger.info("  Creating graph with MIP {}".format(mip_version))
+    _logger.info(f"  Creating graph with MIP {mip_version}")
     graph = bt2.Graph(mip_version)
 
     # Create muxer
@@ -838,7 +826,7 @@ def convert_sink_text_details_test(
                 isinstance(expect, pathlib.Path)
                 and os.environ.get("BT_TESTS_WRITE_EXPECTED") == "1"
             ):
-                expect.write_text(output + "\n")
+                expect.write_text(f"{output}\n")
 
             assert output == old_expected
 
@@ -903,14 +891,12 @@ def find_comp_cls_in_path(
     comp_cls_name: str,
 ) -> _AnyCompClsT:
     _logger.info(
-        "Finding `{}.{}.{}` in `{}`".format(
-            comp_cls_type.value, plugin_name, comp_cls_name, plugin_path
-        )
+        f"Finding `{comp_cls_type.value}.{plugin_name}.{comp_cls_name}` in `{plugin_path}`"
     )
     plugins = bt2.find_plugins_in_path(str(plugin_path))
 
     if plugins is None:
-        raise RuntimeError("Cannot find any plugin in path `{}`".format(plugin_path))
+        raise RuntimeError(f"Cannot find any plugin in path `{plugin_path}`")
 
     for plugin in typing.cast(Iterable[Any], plugins):
         if plugin.name == plugin_name:
@@ -923,13 +909,9 @@ def find_comp_cls_in_path(
 
             if comp_cls_name not in comp_classes:
                 raise RuntimeError(
-                    "Cannot find component class `{}` in plugin `{}` from `{}`".format(
-                        comp_cls_name, plugin_name, plugin_path
-                    )
+                    f"Cannot find component class `{comp_cls_name}` in plugin `{plugin_name}` from `{plugin_path}`"
                 )
 
             return typing.cast("_AnyCompClsT", comp_classes[comp_cls_name])
 
-    raise RuntimeError(
-        "Cannot find plugin `{}` in path `{}`".format(plugin_name, plugin_path)
-    )
+    raise RuntimeError(f"Cannot find plugin `{plugin_name}` in path `{plugin_path}`")

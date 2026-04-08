@@ -43,14 +43,14 @@ def _field_to_str(
     if intro is _ARRAY_ELEM:
         intro_str = "- "
     elif intro is not None:
-        intro_str = "{}: ".format(intro)
+        intro_str = f"{intro}: "
 
     if isinstance(field, bt2._StringFieldConst):
-        return '{}{}"{}"'.format(indent_str, intro_str, field)
+        return f'{indent_str}{intro_str}"{field}"'
     elif isinstance(field, bt2._StructureFieldConst):
         if len(field) == 0:
             # Special case for an empty structure field
-            return indent_str + intro_str + "{}"
+            return f"{indent_str}{intro_str}{{}}"
         else:
             if intro is _ARRAY_ELEM:
                 # Structure field is an array field element itself:
@@ -58,9 +58,7 @@ def _field_to_str(
                 # remaining ones indented.
                 sub_field_names = typing.cast(List[str], list(field))
                 lines = [
-                    indent_str
-                    + intro_str
-                    + _field_to_str(sub_field_names[0], field[sub_field_names[0]], 0)
+                    f"{indent_str}{intro_str}{_field_to_str(sub_field_names[0], field[sub_field_names[0]], 0)}"
                 ]
 
                 for sub_field_name in sub_field_names[1:]:
@@ -76,7 +74,7 @@ def _field_to_str(
                     # Structure field has a name: format it and a
                     # newline, and then format all the members indented
                     # (one more level).
-                    lines.append(indent_str + intro_str.rstrip() + ":")
+                    lines.append(f"{indent_str}{intro_str.rstrip()}:")
                     indent += 1
 
                 for sub_field_name in field:
@@ -91,7 +89,7 @@ def _field_to_str(
         if intro is not None:
             # Array field has an intro: format it, then format a newline,
             # and then format all the elements indented (one more level).
-            lines.append(indent_str + intro_str.rstrip())
+            lines.append(f"{indent_str}{intro_str.rstrip()}")
             indent += 1
 
         for sub_field in typing.cast(List[bt2._FieldConst], field):
@@ -104,20 +102,20 @@ def _field_to_str(
         int_val = int(typing.cast(Any, field))
 
         if base == 10:
-            return indent_str + intro_str + str(int_val)
+            return f"{indent_str}{intro_str}{int_val}"
         elif base == 16:
-            return indent_str + intro_str + hex(int_val)
+            return f"{indent_str}{intro_str}{hex(int_val)}"
         elif base == 8:
-            return indent_str + intro_str + oct(int_val)
+            return f"{indent_str}{intro_str}{oct(int_val)}"
         else:
             assert base == 2
-            return indent_str + intro_str + bin(int_val)
+            return f"{indent_str}{intro_str}{bin(int_val)}"
     elif isinstance(field, bt2._BitArrayFieldConst):
-        return indent_str + intro_str + bin(int(typing.cast(Any, field)))
+        return f"{indent_str}{intro_str}{bin(int(typing.cast(Any, field)))}"
     elif isinstance(field, bt2._BoolFieldConst):
-        return indent_str + intro_str + ("yes" if field else "no")
+        return f"{indent_str}{intro_str}{'yes' if field else 'no'}"
     elif isinstance(field, bt2._RealFieldConst):
-        return "{}{}{:.6f}".format(indent_str, intro_str, float(field))
+        return f"{indent_str}{intro_str}{float(field):.6f}"
     elif isinstance(field, bt2._OptionFieldConst):
         if field.has_field:
             return _field_to_str(
@@ -125,11 +123,11 @@ def _field_to_str(
             )
         else:
             # Special case for an option field without a field
-            return "{}{}~".format(indent_str, intro_str)
+            return f"{indent_str}{intro_str}~"
     elif isinstance(field, bt2._VariantFieldConst):
         return _field_to_str(intro, field.selected_option, indent)
     else:
-        return indent_str + intro_str + str(field)
+        return f"{indent_str}{intro_str}{field}"
 
 
 def _make_ctf_1_metadata(payload_fc: str) -> str:
@@ -461,7 +459,7 @@ def _make_ctf_metadata(payload_fc: str) -> str:
 def _make_ctf_data(normand_text: str) -> bytearray:
     # Default to little-endian because that's also the default in
     # _make_ctf_1_metadata() and _make_ctf_2_metadata() above.
-    return normand.parse("!le\n" + normand_text).data
+    return normand.parse(f"!le\n{normand_text}").data
 
 
 class _FieldTestItem(btu.PytestItem):
@@ -497,7 +495,7 @@ class _FieldTestItem(btu.PytestItem):
             payload = events[0].payload_field
             assert "root" in payload
             assert len(payload) == 1
-            actual = _field_to_str(None, payload["root"]) + "\n"
+            actual = f"{_field_to_str(None, payload['root'])}\n"
 
             if actual.strip() != expected.strip():
                 raise _FieldTestException(self._mp_path, expected, actual)
@@ -518,7 +516,7 @@ class _FieldTestItem(btu.PytestItem):
 
 class _FieldTestException(Exception):
     def __init__(self, mp_path: pathlib.Path, expected: str, actual: str) -> None:
-        super().__init__("Field test failed for `{}`".format(mp_path))
+        super().__init__(f"Field test failed for `{mp_path}`")
         self._mp_path = mp_path
         self._expected = expected
         self._actual = actual
@@ -526,7 +524,7 @@ class _FieldTestException(Exception):
     def format_output(self) -> str:
         return "\n".join(
             [
-                "📄 Test file: `{}`".format(self._mp_path),
+                f"📄 Test file: `{self._mp_path}`",
                 "",
                 "✅ Expected:",
                 self._expected,
@@ -539,7 +537,7 @@ class _FieldTestException(Exception):
 
 class _FieldTestFile(btu.PytestFile):
     def collect(self) -> List[_FieldTestItem]:
-        logger.info("Adding field test from `{}`".format(self.path))
+        logger.info(f"Adding field test from `{self.path}`")
 
         item = _FieldTestItem.from_parent(  # pyright: ignore[reportUnknownMemberType]
             name="test",

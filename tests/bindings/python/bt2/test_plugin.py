@@ -50,7 +50,7 @@ class TestFind:
         else:
             extension = "so"
 
-        plugin_name = "babeltrace-plugin-utils.{}".format(extension)
+        plugin_name = f"babeltrace-plugin-utils.{extension}"
         path = plugins_path / "utils/.libs" / plugin_name
         pset = bt2.find_plugins_in_path(str(path))
         assert len(pset) == 1

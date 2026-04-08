@@ -26,9 +26,7 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize(
             "ctf_version,trace_path",
             traces,
-            ids=[
-                "{}-ctf-{}".format(p.name, "1.8" if v == 1 else "2") for v, p in traces
-            ],
+            ids=[f"{p.name}-ctf-{'1.8' if v == 1 else '2'}" for v, p in traces],
         )
 
 
@@ -84,7 +82,7 @@ def test_trace_copy(build_root_dir, ctf_version, trace_path, tmp_path):
 
     # Skip empty trace
     if not orig_lines or (len(orig_lines) == 1 and orig_lines[0] == ""):
-        pytest.skip("Empty trace `{}`: nothing to copy".format(trace_name))
+        pytest.skip(f"Empty trace `{trace_name}`: nothing to copy")
 
     # Check for duplicate timestamps and sort if needed
     needs_sorting = _has_duplicate_timestamps(orig_lines)

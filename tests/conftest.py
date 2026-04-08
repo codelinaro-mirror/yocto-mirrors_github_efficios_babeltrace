@@ -62,22 +62,16 @@ def _set_config_build_root_tests_dirs(config: "pytest.Config") -> None:
 
 
 def _log_env_var(name: str) -> None:
-    _logger.info(
-        "  `{}` environment variable: `{}`".format(name, os.environ.get(name, ""))
-    )
+    _logger.info(f"  `{name}` environment variable: `{os.environ.get(name, '')}`")
 
 
 # pytest hook.
 def pytest_sessionstart(session: "pytest.Session") -> None:
     _logger.info("pytest_sessionstart():")
-    _logger.info("  Root source directory: `{}`".format(_src_root_dir()))
+    _logger.info(f"  Root source directory: `{_src_root_dir()}`")
+    _logger.info(f"  Root build directory: `{_config_build_root_dir(session.config)}`")
     _logger.info(
-        "  Root build directory: `{}`".format(_config_build_root_dir(session.config))
-    )
-    _logger.info(
-        "  `tests` build directory: `{}`".format(
-            _config_build_tests_dir(session.config)
-        )
+        f"  `tests` build directory: `{_config_build_tests_dir(session.config)}`"
     )
     _log_env_var("ASAN_OPTIONS")
     _log_env_var("BABELTRACE_PLUGIN_PATH")
@@ -91,8 +85,8 @@ def pytest_sessionstart(session: "pytest.Session") -> None:
     _log_env_var("LD_PRELOAD")
     _log_env_var("LIBBABELTRACE2_PLUGIN_PROVIDER_DIR")
     _log_env_var("PATH")
-    _logger.info("  `sys.path` value: {}".format(sys.path))
-    _logger.info("  `bt2` package version: {}".format(bt2.__version__))
+    _logger.info(f"  `sys.path` value: {sys.path}")
+    _logger.info(f"  `bt2` package version: {bt2.__version__}")
 
 
 # pytest hook.
@@ -249,9 +243,7 @@ class _Catch2TestItem(btu.PytestItem):
 
     def runtest(self) -> None:
         _logger.info(
-            "Running Catch2 test case `{}` in `{}`".format(
-                self._catch2_test_name, self._test_binary
-            )
+            f"Running Catch2 test case `{self._catch2_test_name}` in `{self._test_binary}`"
         )
         result = btu.run(
             self._build_root_dir,
@@ -263,7 +255,7 @@ class _Catch2TestItem(btu.PytestItem):
         sys.stdout.buffer.write(result.stdout)
 
         if result.returncode != 0:
-            pytest.fail("Catch2 test failed: `{}`".format(self._catch2_test_name))
+            pytest.fail(f"Catch2 test failed: `{self._catch2_test_name}`")
 
     def reportinfo(self):
         return self.path, None, self.name
@@ -276,7 +268,7 @@ class _Catch2TestFile(btu.PytestFile):
         test_name = re.sub(r"[ :-]", "_", test_name)
         test_name = re.sub(r"_{2,}", "_", test_name)
         test_name = re.sub(r"\W", "", test_name)
-        return "test_" + test_name
+        return f"test_{test_name}"
 
     def collect(self) -> List[_Catch2TestItem]:
         # Build the test binary path (remove `.cpp` extension)
@@ -287,12 +279,12 @@ class _Catch2TestFile(btu.PytestFile):
 
         # Skip if the binary doesn't exist
         if not test_binary.exists():
-            pytest.skip("`{}` Catch2 binary doesn't exist".format(test_binary))
+            pytest.skip(f"`{test_binary}` Catch2 binary doesn't exist")
         else:
             assert os.access(test_binary, os.X_OK)
 
         # List test names from Catch2.
-        _logger.info("Listing Catch2 test case names from `{}`".format(test_binary))
+        _logger.info(f"Listing Catch2 test case names from `{test_binary}`")
         build_root_dir = _config_build_root_dir(self.config)
         result = btu.run(
             build_root_dir,
@@ -311,9 +303,7 @@ class _Catch2TestFile(btu.PytestFile):
             if test_name:
                 # Normalize the test name for the pytest node ID
                 _logger.info(
-                    "Adding Catch2 test case `{}` from `{}`".format(
-                        test_name, test_binary
-                    )
+                    f"Adding Catch2 test case `{test_name}` from `{test_binary}`"
                 )
                 items.append(
                     _Catch2TestItem.from_parent(  # pyright: ignore[reportUnknownMemberType]

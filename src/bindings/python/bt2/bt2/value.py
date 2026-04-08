@@ -86,7 +86,7 @@ def create_value(value: "_ConvertibleToValue") -> typing.Optional["_Value"]:
         return MapValue(value)
 
     raise TypeError(
-        "cannot create value object from '{}' object".format(value.__class__.__name__)
+        f"cannot create value object from '{value.__class__.__name__}' object"
     )
 
 
@@ -110,7 +110,7 @@ class _ValueConst(bt2_object._SharedObject, metaclass=abc.ABCMeta):
     def _check_create_status(self, ptr):
         if ptr is None:
             raise bt2_error._MemoryError(
-                "cannot create {} value object".format(self._NAME.lower())
+                f"cannot create {self._NAME.lower()} value object"
             )
 
 
@@ -135,9 +135,7 @@ class _NumericValueConst(_ValueConst):
         if isinstance(other, numbers.Complex):
             return complex(other)
 
-        raise TypeError(
-            "'{}' object is not a number object".format(other.__class__.__name__)
-        )
+        raise TypeError(f"'{other.__class__.__name__}' object is not a number object")
 
     def __int__(self) -> int:
         return int(self._value)
@@ -294,9 +292,7 @@ class BoolValue(_BoolValueConst, _IntegralValue):
 
         if not isinstance(value, bool):
             raise TypeError(
-                "'{}' object is not a 'bool', 'BoolValue', or '_BoolValueConst' object".format(
-                    value.__class__
-                )
+                f"'{value.__class__}' object is not a 'bool', 'BoolValue', or '_BoolValueConst' object"
             )
 
         return value
@@ -506,9 +502,7 @@ class _ArrayValueConst(_ContainerConst, collections.abc.Sequence, _ValueConst):
         # TODO: support slices also
         if not isinstance(index, numbers.Integral):
             raise TypeError(
-                "'{}' object is not an integral number object: invalid index".format(
-                    index.__class__.__name__
-                )
+                f"'{index.__class__.__name__}' object is not an integral number object: invalid index"
             )
 
         index = int(index)
@@ -523,7 +517,7 @@ class _ArrayValueConst(_ContainerConst, collections.abc.Sequence, _ValueConst):
         )
 
     def __repr__(self) -> str:
-        return "[{}]".format(", ".join([repr(v) for v in self]))
+        return f"[{', '.join([repr(v) for v in self])}]"
 
 
 class ArrayValue(_ArrayValueConst, _Container, collections.abc.MutableSequence, _Value):
@@ -648,9 +642,7 @@ class _MapValueConst(_ContainerConst, collections.abc.Mapping, _ValueConst):
         return _MapValueKeyIterator(self)
 
     def __repr__(self) -> str:
-        return "{{{}}}".format(
-            ", ".join(["{}: {}".format(repr(k), repr(v)) for k, v in self.items()])
-        )
+        return f"{{{', '.join([f'{k!r}: {v!r}' for k, v in self.items()])}}}"
 
 
 class MapValue(_MapValueConst, _Container, collections.abc.MutableMapping, _Value):

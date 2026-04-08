@@ -201,7 +201,7 @@ def _run_succeed_test(
         dummy_comp_cls,
     )
 
-    assert error is None, "Unexpected error: {}".format(error)
+    assert error is None, f"Unexpected error: {error}"
 
 
 # Clock class creation functions
@@ -519,9 +519,7 @@ def test_incompat_clk_classes(
 
     assert cause.message.startswith(
         expected_cause_msg
-    ), "Cause message mismatch: expected `{}`, got `{}`".format(
-        expected_cause_msg, cause.message
-    )
+    ), f"Cause message mismatch: expected `{expected_cause_msg}`, got `{cause.message}`"
 
     assert isinstance(cause, bt2._MessageIteratorErrorCause)
     assert cause.component_name == "the-muxer"

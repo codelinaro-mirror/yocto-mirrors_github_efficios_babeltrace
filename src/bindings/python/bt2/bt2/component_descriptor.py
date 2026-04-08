@@ -49,9 +49,7 @@ class ComponentDescriptor:
             and not _is_sink_comp_cls(component_class)
         ):
             raise TypeError(
-                "'{}' is not a component class".format(
-                    component_class.__class__.__name__
-                )
+                f"'{component_class.__class__.__name__}' is not a component class"
             )
 
         base_cc_ptr = component_class._bt_component_class_ptr()

@@ -32,24 +32,24 @@ class Stop(StopIteration):
 
 def _check_bool(o):
     if not isinstance(o, bool):
-        raise TypeError("'{}' is not a 'bool' object".format(o.__class__.__name__))
+        raise TypeError(f"'{o.__class__.__name__}' is not a 'bool' object")
 
 
 def _check_int(o):
     if not isinstance(o, int):
-        raise TypeError("'{}' is not an 'int' object".format(o.__class__.__name__))
+        raise TypeError(f"'{o.__class__.__name__}' is not an 'int' object")
 
     return o
 
 
 def _check_float(o):
     if not isinstance(o, float):
-        raise TypeError("'{}' is not a 'float' object".format(o.__class__.__name__))
+        raise TypeError(f"'{o.__class__.__name__}' is not a 'float' object")
 
 
 def _check_str(o):
     if not isinstance(o, str):
-        raise TypeError("'{}' is not a 'str' object".format(o.__class__.__name__))
+        raise TypeError(f"'{o.__class__.__name__}' is not a 'str' object")
 
     return o
 
@@ -59,9 +59,7 @@ _Type = typing.TypeVar("_Type")
 
 def _check_type(o: typing.Any, expected_type: typing.Type[_Type]) -> _Type:
     if not isinstance(o, expected_type):
-        raise TypeError(
-            "'{}' is not a '{}' object".format(o.__class__.__name__, expected_type)
-        )
+        raise TypeError(f"'{o.__class__.__name__}' is not a '{expected_type}' object")
 
     return o
 
@@ -97,7 +95,7 @@ def _check_int64(v, msg=None):
         if msg is None:
             msg = "expecting a signed 64-bit integral value"
 
-        msg += " (got {})".format(v)
+        msg += f" (got {v})"
         raise ValueError(msg)
 
 
@@ -108,7 +106,7 @@ def _check_uint64(v, msg=None):
         if msg is None:
             msg = "expecting an unsigned 64-bit integral value"
 
-        msg += " (got {})".format(v)
+        msg += f" (got {v})"
         raise ValueError(msg)
 
 
@@ -124,7 +122,7 @@ def _check_alignment(a):
     _check_uint64(a)
 
     if not _is_pow2(a):
-        raise ValueError("{} is not a power of two".format(a))
+        raise ValueError(f"{a} is not a power of two")
 
 
 def _mip_version_from_obj(obj) -> int:
@@ -141,18 +139,14 @@ def _mip_version_from_obj(obj) -> int:
 def _check_mip_ge(obj, what, mip):
     if _mip_version_from_obj(obj) < mip:
         raise ValueError(
-            "{} is only available with MIP version ≥ {} (currently {})".format(
-                what, mip, _mip_version_from_obj(obj)
-            )
+            f"{what} is only available with MIP version ≥ {mip} (currently {_mip_version_from_obj(obj)})"
         )
 
 
 def _check_mip_eq(obj, what, mip):
     if _mip_version_from_obj(obj) != mip:
         raise ValueError(
-            "{} is only available with MIP version {} (currently {})".format(
-                what, mip, _mip_version_from_obj(obj)
-            )
+            f"{what} is only available with MIP version {mip} (currently {_mip_version_from_obj(obj)})"
         )
 
 

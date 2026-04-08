@@ -22,9 +22,7 @@ class _IntegerRangeConst:
 
         if lower > upper:
             raise ValueError(
-                "range's lower bound ({}) is greater than its upper bound ({})".format(
-                    lower, upper
-                )
+                f"range's lower bound ({lower}) is greater than its upper bound ({upper})"
             )
 
         self._lower = lower

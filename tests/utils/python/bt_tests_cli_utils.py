@@ -32,20 +32,16 @@ def cli_params_from_obj(obj: Any, is_root: bool = True) -> str:
     elif isinstance(obj, float):
         return str(obj)
     elif isinstance(obj, str):
-        return '"{}"'.format(obj)
+        return f'"{obj}"'
     elif isinstance(obj, list):
-        return "[{}]".format(
-            ", ".join(
-                cli_params_from_obj(item, False) for item in typing.cast(List[Any], obj)
-            )
-        )
+        return f"[{', '.join((cli_params_from_obj(item, False) for item in typing.cast(List[Any], obj)))}]"
     elif isinstance(obj, dict):
         items = ", ".join(
-            "{}={}".format(k, cli_params_from_obj(v, False))
+            f"{k}={cli_params_from_obj(v, False)}"
             for k, v in typing.cast(Dict[str, Any], obj).items()
         )
 
-        return items if is_root else "{{{}}}".format(items)
+        return items if is_root else f"{{{items}}}"
     else:
         assert False
 
@@ -168,7 +164,7 @@ def run_cli_sink_text_details_test(
             isinstance(expect, pathlib.Path)
             and os.environ.get("BT_TESTS_WRITE_EXPECTED") == "1"
         ):
-            expect.write_text(output + "\n")
+            expect.write_text(f"{output}\n")
 
         assert output == old_expected
 

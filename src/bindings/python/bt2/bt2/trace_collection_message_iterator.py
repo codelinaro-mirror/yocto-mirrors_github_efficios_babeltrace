@@ -89,9 +89,7 @@ class ComponentSpec(_BaseComponentSpec):
 
         if not is_cc_object and not is_user_cc_type:
             raise TypeError(
-                "'{}' is not a source or filter component class".format(
-                    component_class.__class__.__name__
-                )
+                f"'{component_class.__class__.__name__}' is not a source or filter component class"
             )
 
         self._component_class = component_class
@@ -119,7 +117,7 @@ class ComponentSpec(_BaseComponentSpec):
         plugin = bt2_plugin.find_plugin(plugin_name)
 
         if plugin is None:
-            raise ValueError("no such plugin: {}".format(plugin_name))
+            raise ValueError(f"no such plugin: {plugin_name}")
 
         if component_class_name in plugin.source_component_classes:
             comp_class = plugin.source_component_classes[component_class_name]
@@ -127,9 +125,7 @@ class ComponentSpec(_BaseComponentSpec):
             comp_class = plugin.filter_component_classes[component_class_name]
         else:
             raise KeyError(
-                "source or filter component class `{}` not found in plugin `{}`".format(
-                    component_class_name, plugin_name
-                )
+                f"source or filter component class `{component_class_name}` not found in plugin `{plugin_name}`"
             )
 
         return cls(comp_class, params, obj, logging_level)
@@ -252,10 +248,7 @@ def source_component_specs_from_auto_source_component_specs(
         unused_input_indices = sorted(unused_input_indices)
         unused_inputs = [str(inputs[x]) for x in unused_input_indices]
 
-        msg = (
-            "Some auto source component specs did not produce any component: "
-            + ", ".join(unused_inputs)
-        )
+        msg = f"Some auto source component specs did not produce any component: {', '.join(unused_inputs)}"
         raise RuntimeError(msg)
 
     return comp_specs
@@ -274,7 +267,7 @@ def _get_ns(obj):
         s = obj.timestamp()
     else:
         raise TypeError(
-            '"{}" is not an integral number or a datetime.datetime object'.format(obj)
+            f'"{obj}" is not an integral number or a datetime.datetime object'
         )
 
     return int(s * 1e9)
@@ -404,17 +397,13 @@ class TraceCollectionMessageIterator(bt2_message_iterator._MessageIterator):
                 and type(comp_spec) is not AutoSourceComponentSpec
             ):
                 raise TypeError(
-                    '"{}" object is not a ComponentSpec or AutoSourceComponentSpec'.format(
-                        type(comp_spec)
-                    )
+                    f'"{type(comp_spec)}" object is not a ComponentSpec or AutoSourceComponentSpec'
                 )
 
     def _validate_filter_component_specs(self, comp_specs):
         for comp_spec in comp_specs:
             if type(comp_spec) is not ComponentSpec:
-                raise TypeError(
-                    '"{}" object is not a ComponentSpec'.format(type(comp_spec))
-                )
+                raise TypeError(f'"{type(comp_spec)}" object is not a ComponentSpec')
 
     def __next__(self) -> bt2_message._MessageConst:
         assert self._msg_list[0] is None
@@ -427,7 +416,7 @@ class TraceCollectionMessageIterator(bt2_message_iterator._MessageIterator):
     def _create_stream_intersection_trimmer(self, component, port):
         key = (component.addr, port.name)
         begin, end = self._stream_inter_port_to_range[key]
-        name = "trimmer-{}-{}".format(component.name, port.name)
+        name = f"trimmer-{component.name}-{port.name}"
         return self._create_trimmer(begin, end, name)
 
     def _create_muxer(self):
@@ -460,7 +449,7 @@ class TraceCollectionMessageIterator(bt2_message_iterator._MessageIterator):
         def ns_to_string(ns):
             s_part = ns // 1000000000
             ns_part = ns % 1000000000
-            return "{}.{:09d}".format(s_part, ns_part)
+            return f"{s_part}.{ns_part:09d}"
 
         if begin_ns is not None:
             params["begin"] = ns_to_string(begin_ns)
@@ -478,7 +467,7 @@ class TraceCollectionMessageIterator(bt2_message_iterator._MessageIterator):
         )
 
         if name in [comp_and_spec.comp.name for comp_and_spec in comps_and_specs]:
-            name += "-{}".format(self._next_suffix)
+            name += f"-{self._next_suffix}"
             self._next_suffix += 1
 
         return name

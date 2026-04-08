@@ -31,9 +31,7 @@ class StatusIter(bt2._UserMessageIterator):
                 time.sleep(0.1)
 
             raise Exception(
-                "{} was not interrupted after {} seconds".format(
-                    self.__class__.__name__, timeout_s
-                )
+                f"{self.__class__.__name__} was not interrupted after {timeout_s} seconds"
             )
 
         elif self.case == "ERROR":

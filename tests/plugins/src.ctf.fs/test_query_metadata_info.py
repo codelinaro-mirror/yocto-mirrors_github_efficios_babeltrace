@@ -30,9 +30,7 @@ def test_query_metadata_info(ctf_fs_comp_cls, ctf_traces_dir, trace_name):
 
     assert not result["is-packetized"]
 
-    expect_file = btu.this_src_dir(__file__) / "metadata-info-{}.expect".format(
-        trace_name
-    )
+    expect_file = btu.this_src_dir(__file__) / f"metadata-info-{trace_name}.expect"
 
     assert (
         str(result["text"]).replace("\r\n", "\n").strip()

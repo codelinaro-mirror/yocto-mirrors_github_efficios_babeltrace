@@ -42,7 +42,7 @@ class Graph(bt2_object._SharedObject):
         bt2_utils._check_uint64(mip_version)
 
         if mip_version > bt2_mip.get_maximal_mip_version():
-            raise ValueError("unknown MIP version {}".format(mip_version))
+            raise ValueError(f"unknown MIP version {mip_version}")
 
         ptr = native_bt.graph_create(mip_version)
 
@@ -131,9 +131,7 @@ class Graph(bt2_object._SharedObject):
             cc_type = native_bt.COMPONENT_CLASS_TYPE_FILTER
         else:
             raise TypeError(
-                "'{}' is not a component class".format(
-                    component_class.__class__.__name__
-                )
+                f"'{component_class.__class__.__name__}' is not a component class"
             )
 
         bt2_utils._check_str(name)

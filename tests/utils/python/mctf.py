@@ -48,7 +48,7 @@ def _write_file(
     path = os.path.join(base_dir, name)
 
     if verbose:
-        print("Writing `{}`.".format(os.path.normpath(path)))
+        print(f"Writing `{os.path.normpath(path)}`.")
 
     os.makedirs(os.path.normpath(os.path.dirname(path)), exist_ok=True)
 
@@ -82,13 +82,13 @@ def _reformat_ctf_2_metadata(content: str):
     json_seq_fragments = []  # type: list[str]
 
     for fragment in json.loads(content):
-        json_seq_fragments.append("\x1e{}".format(json.dumps(fragment, indent=2)))
+        json_seq_fragments.append(f"\x1e{json.dumps(fragment, indent=2)}")
 
     return "\n".join(json_seq_fragments)
 
 
 def _reformat_metadata(content: str):
-    content = content.strip() + "\n"
+    content = f"{content.strip()}\n"
 
     if content.startswith("["):
         # CTF 2: JSON array to JSON text sequence
@@ -161,13 +161,7 @@ def _try_run_cli():
 
         for cause in reversed(exc.causes):
             print(
-                "  {}:{}:{} - {}{}".format(
-                    os.path.abspath(args.input_path),
-                    cause.line_no,
-                    cause.col_no,
-                    cause.what,
-                    "." if cause.what[-1] not in ".:;" else "",
-                ),
+                f"  {os.path.abspath(args.input_path)}:{cause.line_no}:{cause.col_no} - {cause.what}{'.' if cause.what[-1] not in '.:;' else ''}",
                 file=sys.stderr,
             )
 

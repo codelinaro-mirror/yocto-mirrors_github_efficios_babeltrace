@@ -415,9 +415,7 @@ class _UserMessageIterator(_MessageIterator):
 
             if beg_clock_snapshot > end_clock_snapshot:
                 raise ValueError(
-                    "beginning default clock snapshot value ({}) is greater than end default clock snapshot value ({})".format(
-                        beg_clock_snapshot, end_clock_snapshot
-                    )
+                    f"beginning default clock snapshot value ({beg_clock_snapshot}) is greater than end default clock snapshot value ({end_clock_snapshot})"
                 )
 
             ptr = (
@@ -466,9 +464,7 @@ class _UserMessageIterator(_MessageIterator):
 
             if beg_clock_snapshot > end_clock_snapshot:
                 raise ValueError(
-                    "beginning default clock snapshot value ({}) is greater than end default clock snapshot value ({})".format(
-                        beg_clock_snapshot, end_clock_snapshot
-                    )
+                    f"beginning default clock snapshot value ({beg_clock_snapshot}) is greater than end default clock snapshot value ({end_clock_snapshot})"
                 )
 
             ptr = (

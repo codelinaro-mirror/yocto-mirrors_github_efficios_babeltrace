@@ -69,7 +69,7 @@ class _TraceEnvironment(_TraceEnvironmentConst, collections.abc.MutableMapping):
         elif isinstance(value, int):
             set_env_entry_fn = native_bt.trace_set_environment_entry_integer
         else:
-            raise TypeError("expected str or int, got {}".format(type(value)))
+            raise TypeError(f"expected str or int, got {type(value)}")
 
         bt2_utils._handle_func_status(
             set_env_entry_fn(self._trace._ptr, key, value),

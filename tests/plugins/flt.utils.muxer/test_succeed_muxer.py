@@ -438,6 +438,6 @@ _TEST_CASES = [
 def test_muxer_succeed(test_name, src_comp_cls):
     btu.convert_sink_text_details_test(
         bt2.ComponentSpec(src_comp_cls),
-        btu.this_src_dir(__file__) / "{}.expect".format(test_name),
+        btu.this_src_dir(__file__) / f"{test_name}.expect",
         details_params={"compact": False, "with-metadata": False},
     )

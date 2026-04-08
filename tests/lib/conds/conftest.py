@@ -66,9 +66,7 @@ def _cond_trigger_descriptors_from_json(
         trigger_name = json_descr.at("name", tjson.StrVal).val
 
         if trigger_name in descriptor_names:
-            raise ValueError(
-                "Duplicate condition trigger name `{}`".format(trigger_name)
-            )
+            raise ValueError(f"Duplicate condition trigger name `{trigger_name}`")
 
         cond_id = json_descr.at("cond-id", tjson.StrVal).val
 
@@ -77,7 +75,7 @@ def _cond_trigger_descriptors_from_json(
         elif cond_id.startswith("post"):
             cond_type = _PostCondTriggerDescriptor
         else:
-            raise ValueError("Invalid condition ID `{}`".format(cond_id))
+            raise ValueError(f"Invalid condition ID `{cond_id}`")
 
         descriptors.append(cond_type(trigger_name, cond_id))
         descriptor_names.add(trigger_name)
@@ -105,9 +103,7 @@ class _CondTriggerTestItem(btu.PytestItem):
         #     $ conds-triggers run <trigger-name>
         #
         # where `<trigger-name>` is the descriptor trigger name.
-        _logger.info(
-            "Running the condition trigger `{}`".format(self._descriptor.trigger_name)
-        )
+        _logger.info(f"Running the condition trigger `{self._descriptor.trigger_name}`")
 
         try:
             result = btu.run(
@@ -118,26 +114,20 @@ class _CondTriggerTestItem(btu.PytestItem):
             )
         except subprocess.TimeoutExpired:
             pytest.fail(
-                "Condition trigger `{}` hung for {} seconds".format(
-                    self._descriptor.trigger_name, timeout
-                )
+                f"Condition trigger `{self._descriptor.trigger_name}` hung for {timeout} seconds"
             )
 
         # Assert that the program aborted (only available on POSIX)
         if os.name == "posix":
             if result.returncode != -int(signal.SIGABRT):
                 pytest.fail(
-                    "Expected return code {} (SIGABRT); got {}".format(
-                        -int(signal.SIGABRT), result.returncode
-                    )
+                    f"Expected return code {-int(signal.SIGABRT)} (SIGABRT); got {result.returncode}"
                 )
 
         # Assert that the standard error text contains the condition ID
-        if "Condition ID: `{}`".format(self._descriptor.cond_id) not in result.stderr:
+        if f"Condition ID: `{self._descriptor.cond_id}`" not in result.stderr:
             pytest.fail(
-                "Expected condition ID `{}` not found in standard error stream".format(
-                    self._descriptor.cond_id
-                )
+                f"Expected condition ID `{self._descriptor.cond_id}` not found in standard error stream"
             )
 
     def reportinfo(self) -> Tuple[pathlib.Path, None, str]:
@@ -147,7 +137,8 @@ class _CondTriggerTestItem(btu.PytestItem):
 class _CondTriggersTestFile(btu.PytestFile):
     @staticmethod
     def _normalize_trigger_name(trigger_name: str) -> str:
-        return "test_" + re.sub(r"\W", "_", trigger_name)
+        normalized = re.sub(r"\W", "_", trigger_name)
+        return f"test_{normalized}"
 
     def collect(self) -> List[_CondTriggerTestItem]:
         # Build the path to the `conds-triggers` binary and make sure
@@ -160,7 +151,7 @@ class _CondTriggersTestFile(btu.PytestFile):
         # Skip if the binary doesn't exist
         if not conds_triggers_bin.exists():
             pytest.skip(
-                "`{}` binary doesn't exist".format(conds_triggers_bin),
+                f"`{conds_triggers_bin}` binary doesn't exist",
                 allow_module_level=True,
             )
         else:
@@ -168,7 +159,7 @@ class _CondTriggersTestFile(btu.PytestFile):
 
         # Create test items
         items = []  # type: List[_CondTriggerTestItem]
-        _logger.info("Listing condition triggers from `{}`".format(conds_triggers_bin))
+        _logger.info(f"Listing condition triggers from `{conds_triggers_bin}`")
 
         for descriptor in _cond_trigger_descriptors_from_json(
             tjson.loads(
@@ -181,9 +172,7 @@ class _CondTriggersTestFile(btu.PytestFile):
             )
         ):
             _logger.info(
-                "Adding test item for condition trigger `{}`".format(
-                    descriptor.trigger_name
-                )
+                f"Adding test item for condition trigger `{descriptor.trigger_name}`"
             )
             items.append(
                 _CondTriggerTestItem.from_parent(  # pyright: ignore[reportUnknownMemberType]

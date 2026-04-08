@@ -36,12 +36,7 @@ class _PluginVersion:
         return self._extra
 
     def __str__(self) -> str:
-        return "{}.{}.{}{}".format(
-            self._major,
-            self._minor,
-            self._patch,
-            self._extra if self._extra is not None else "",
-        )
+        return f"{self._major}.{self._minor}.{self._patch}{self._extra if self._extra is not None else ''}"
 
 
 class _PluginComponentClassesIterator(collections.abc.Iterator):
@@ -252,7 +247,7 @@ def find_plugins_in_path(
             path, int(recurse), int(fail_on_load_error)
         )
     else:
-        raise ValueError("invalid path: '{}'".format(path))
+        raise ValueError(f"invalid path: '{path}'")
 
     if status == native_bt.__BT_FUNC_STATUS_NOT_FOUND:
         return

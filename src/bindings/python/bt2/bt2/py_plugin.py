@@ -31,9 +31,7 @@ def register_plugin(
     ] = None,
 ):
     if module_name not in sys.modules:
-        raise RuntimeError(
-            "cannot find module '{}' in loaded modules".format(module_name)
-        )
+        raise RuntimeError(f"cannot find module '{module_name}' in loaded modules")
 
     bt2_utils._check_str(name)
 
@@ -112,7 +110,7 @@ def _try_load_plugin_module(path):
     # and prefix with `bt_plugin_`. This is its key in sys.modules.
     h = hashlib.sha256()
     h.update(path.encode())
-    module_name = "bt_plugin_{}".format(h.hexdigest())
+    module_name = f"bt_plugin_{h.hexdigest()}"
     assert module_name not in sys.modules
 
     # try loading the module: any raised exception is caught by the caller

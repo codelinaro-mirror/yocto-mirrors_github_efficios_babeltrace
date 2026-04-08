@@ -26,13 +26,13 @@ class TestIter(bt2._UserMessageIterator):
 
         if params["what"] == "test-params":
             items = sorted([str(x) for x in params.items() if x[0].startswith("test-")])
-            stream_name = "{}: {}".format(comp_cls_name, ", ".join(items))
+            stream_name = f"{comp_cls_name}: {', '.join(items)}"
         elif params["what"] == "log-level":
             log_level = self._component.logging_level
-            stream_name = "{}: {}".format(comp_cls_name, log_level)
+            stream_name = f"{comp_cls_name}: {log_level}"
         elif params["what"] == "python-obj":
             assert type(obj) is str or obj is None
-            stream_name = "{}: {}".format(comp_cls_name, obj)
+            stream_name = f"{comp_cls_name}: {obj}"
         else:
             assert False
 

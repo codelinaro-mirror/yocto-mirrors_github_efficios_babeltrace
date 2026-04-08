@@ -335,9 +335,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         expected_type: typing.Type[_FieldClassT],
     ) -> _FieldClassT:
         if ptr is None:
-            raise bt2_error._MemoryError(
-                "cannot create {} field class".format(type_name)
-            )
+            raise bt2_error._MemoryError(f"cannot create {type_name} field class")
 
         fc = bt2_field_class._create_field_class_from_ptr(ptr)
         assert type(fc) is expected_type
@@ -374,9 +372,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
 
         if length < 1 or length > 64:
             raise ValueError(
-                "invalid length {}: expecting a value in the [1, 64] range".format(
-                    length
-                )
+                f"invalid length {length}: expecting a value in the [1, 64] range"
             )
 
         fc = self._check_and_wrap_field_class(
@@ -647,9 +643,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
         else:
             if length_fc is not None:
                 raise ValueError(
-                    "length field class is not supported with MIP {}".format(
-                        self.graph_mip_version
-                    )
+                    f"length field class is not supported with MIP {self.graph_mip_version}"
                 )
 
             if length_field_location is None:
@@ -731,9 +725,7 @@ class _TraceClass(bt2_user_attrs._WithUserAttrs, _TraceClassConst):
 
             if selector_fc is not None:
                 raise ValueError(
-                    "selector field class is not supported with MIP {}".format(
-                        self.graph_mip_version
-                    )
+                    f"selector field class is not supported with MIP {self.graph_mip_version}"
                 )
 
             fc_ptr = (

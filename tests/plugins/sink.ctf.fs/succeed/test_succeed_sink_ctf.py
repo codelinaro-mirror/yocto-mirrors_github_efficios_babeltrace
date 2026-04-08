@@ -57,7 +57,7 @@ def test_sink_ctf_fs_succeed(
             build_root_dir,
             (
                 btu.build_dir_of_source_file(build_root_dir, __file__)
-                / "gen-trace-{}.bin".format(name)
+                / f"gen-trace-{name}.bin"
             ),
             [str(gen_trace_dir)],
             check=True,
@@ -80,7 +80,7 @@ def test_sink_ctf_fs_succeed(
     # Read back the converted trace using `sink.text.details` and compare
     btu.convert_sink_text_details_test(
         out_trace_dir,
-        btu.this_src_dir(__file__) / "trace-{}-ctf{}.expect".format(name, ctf_version),
+        btu.this_src_dir(__file__) / f"trace-{name}-ctf{ctf_version}.expect",
         details_params={
             "with-uuid": False,
             "with-uid": False,

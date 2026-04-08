@@ -56,7 +56,7 @@ def test_debug_info_trace(ctf_traces_dir, mip_version, debug_info_comp_cls):
 
     btu.convert_sink_text_details_test(
         ctf_traces_dir / "1/succeed/debug-info",
-        this_src_dir / "trace-debug-info-mip{}.expect".format(mip_version),
+        this_src_dir / f"trace-debug-info-mip{mip_version}.expect",
         bt2.ComponentSpec(
             debug_info_comp_cls,
             params={
