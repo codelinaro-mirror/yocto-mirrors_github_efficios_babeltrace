@@ -4019,7 +4019,119 @@ struct ObjUpIdLt final
     }
 };
 
+/*
+ * Helper to check if a field class contains an unsigned integer field
+ * class with a specific role.
+ */
+template <typename UserMixinsT>
+class FcContainsUIntFcWithRole final : public ConstFcVisitor<UserMixinsT>
+{
+public:
+    explicit FcContainsUIntFcWithRole(const UIntFieldRole role) noexcept
+        : _mRole {role}
+    {
+    }
+
+    bool result() const noexcept
+    {
+        return _mHasRole;
+    }
+
+    void visit(const FixedLenUIntFc<UserMixinsT>& fc) override
+    {
+        this->_updateHasRole(fc);
+    }
+
+    void visit(const VarLenUIntFc<UserMixinsT>& fc) override
+    {
+        this->_updateHasRole(fc);
+    }
+
+    void visit(const StaticLenArrayFc<UserMixinsT>& fc) override
+    {
+        this->_visit(fc);
+    }
+
+    void visit(const DynLenArrayFc<UserMixinsT>& fc) override
+    {
+        this->_visit(fc);
+    }
+
+    void visit(const StructFc<UserMixinsT>& structFc) override
+    {
+        for (auto& memberCls : structFc) {
+            memberCls.fc().accept(*this);
+        }
+    }
+
+    void visit(const OptionalWithBoolSelFc<UserMixinsT>& fc) override
+    {
+        this->_visit(fc);
+    }
+
+    void visit(const OptionalWithUIntSelFc<UserMixinsT>& fc) override
+    {
+        this->_visit(fc);
+    }
+
+    void visit(const OptionalWithSIntSelFc<UserMixinsT>& fc) override
+    {
+        this->_visit(fc);
+    }
+
+    void visit(const VariantWithUIntSelFc<UserMixinsT>& fc) override
+    {
+        this->_visitVariantFc(fc);
+    }
+
+    void visit(const VariantWithSIntSelFc<UserMixinsT>& fc) override
+    {
+        this->_visitVariantFc(fc);
+    }
+
+private:
+    template <typename FcT>
+    void _updateHasRole(const FcT& fc) noexcept
+    {
+        _mHasRole = _mHasRole || fc.hasRole(_mRole);
+    }
+
+    void _visit(const ArrayFc<UserMixinsT>& arrayFc)
+    {
+        arrayFc.elemFc().accept(*this);
+    }
+
+    void _visit(const OptionalFc<UserMixinsT>& optFc)
+    {
+        optFc.fc().accept(*this);
+    }
+
+    template <typename VariantFcT>
+    void _visitVariantFc(const VariantFcT& variantFc)
+    {
+        for (auto& opt : variantFc) {
+            opt.fc().accept(*this);
+        }
+    }
+
+    UIntFieldRole _mRole;
+    bool _mHasRole = false;
+};
+
 } /* namespace internal */
+
+/*
+ * Returns whether or not `fc` contains an unsigned integer field class
+ * having the role `role`.
+ */
+template <typename UserMixinsT>
+bool fcContainsUIntFcWithRole(const Fc<UserMixinsT>& fc, const UIntFieldRole role) noexcept
+{
+    internal::FcContainsUIntFcWithRole<UserMixinsT> visitor {role};
+
+    fc.accept(visitor);
+    return visitor.result();
+}
 
 /*
  * Data stream class.
