@@ -1297,9 +1297,8 @@ backtrace when Valgrind shows errors.
 All {bt2} tests use https://docs.pytest.org/[pytest].
 
 With `--enable-vendor-pytest` at project configuration time, the tests
-use `tests/utils/python/vendor/pytest-6.1.2` for Python{nbsp}3.5 and
-Python{nbsp}3.6 or `tests/utils/python/vendor/pytest-7.4.3` for
-Python{nbsp}3.7+.
+use `tests/utils/python/vendor/pytest-6.1.2` for Python{nbsp}3.6 or
+`tests/utils/python/vendor/pytest-7.4.3` for Python{nbsp}3.7+.
 
 Running the {bt2} tests requires Python, the `bt2` Python bindings, and
 {bt2} Python plugin support.
