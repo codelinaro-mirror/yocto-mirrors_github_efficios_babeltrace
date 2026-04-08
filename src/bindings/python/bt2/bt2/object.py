@@ -4,10 +4,7 @@
 
 
 import abc
-
-from bt2 import typing_mod
-
-typing = typing_mod._typing_mod
+import typing
 
 
 class _BaseObject:

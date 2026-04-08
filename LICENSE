@@ -75,20 +75,6 @@ This applies to:
 
 	doc/api/libbabeltrace2/*
 
-The typing Python module is provided under the terms of the Python Software
-Foundation License 2:
-
-	SPDX-License-Identifier: PSF-2.0
-
-According with:
-
-	LICENSES/PSF-2.0
-
-This applies to:
-
-	src/bindings/python/bt2/bt2/local_typing.py
-	tests/utils/python/vendor/typing/typing.py
-
 The Normand Python module is provided under the terms of the
 MIT License:
 

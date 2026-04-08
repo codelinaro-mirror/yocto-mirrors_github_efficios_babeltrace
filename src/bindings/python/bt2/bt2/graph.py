@@ -2,6 +2,7 @@
 #
 # Copyright (c) 2017 Philippe Proulx <pproulx@efficios.com>
 
+import typing
 import functools
 
 from bt2 import mip as bt2_mip
@@ -14,10 +15,7 @@ from bt2 import logging as bt2_logging
 from bt2 import component as bt2_component
 from bt2 import native_bt
 from bt2 import connection as bt2_connection
-from bt2 import typing_mod
 from bt2 import interrupter as bt2_interrupter
-
-typing = typing_mod._typing_mod
 
 
 def _graph_port_added_listener_from_native(

@@ -2,15 +2,14 @@
 #
 # Copyright (c) 2017 Philippe Proulx <pproulx@efficios.com>
 
+import typing
 import os.path
 import collections.abc
 
 from bt2 import utils as bt2_utils
 from bt2 import object as bt2_object
 from bt2 import component as bt2_component
-from bt2 import native_bt, typing_mod
-
-typing = typing_mod._typing_mod
+from bt2 import native_bt
 
 
 class _PluginVersion:

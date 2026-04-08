@@ -3,11 +3,10 @@
 # Copyright (c) 2024 EfficiOS Inc.
 
 import enum
+import typing
 
 from bt2 import object as bt2_object
-from bt2 import native_bt, typing_mod
-
-typing = typing_mod._typing_mod
+from bt2 import native_bt
 
 
 class FieldLocationScope(enum.Enum):

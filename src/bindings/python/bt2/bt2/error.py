@@ -3,16 +3,10 @@
 # Copyright (c) 2019 Simon Marchi <simon.marchi@efficios.com>
 
 import enum
+import typing
 from collections import abc
 
 from bt2 import native_bt
-
-try:
-    import typing as _typing_mod  # noqa: F401
-except ImportError:
-    from bt2 import local_typing as _typing_mod  # noqa: F401
-
-typing = _typing_mod
 
 
 class ComponentClassType(enum.Enum):

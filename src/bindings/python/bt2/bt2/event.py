@@ -2,6 +2,7 @@
 #
 # Copyright (c) 2016-2017 Philippe Proulx <pproulx@efficios.com>
 
+import typing
 import collections.abc
 
 from bt2 import field as bt2_field
@@ -9,10 +10,8 @@ from bt2 import utils as bt2_utils
 from bt2 import object as bt2_object
 from bt2 import packet as bt2_packet
 from bt2 import stream as bt2_stream
-from bt2 import native_bt, typing_mod
+from bt2 import native_bt
 from bt2 import event_class as bt2_event_class
-
-typing = typing_mod._typing_mod
 
 
 class _EventConst(bt2_object._UniqueObject, collections.abc.Mapping):

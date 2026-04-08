@@ -13,7 +13,6 @@
   (
        src/bindings/python/bt2/build/
      | src/bindings/python/bt2/setup\.py$
-     | src/bindings/python/bt2/bt2/local_typing\.py$
      | src/bindings/python/bt2/bt2/native_bt\.py$
      | src/bindings/python/bt2/bt2/version\.py$
      | tests/utils/python/vendor
@@ -24,7 +23,6 @@
 [tool.isort]
 profile = "black"
 extend_skip_glob = [
-    "src/bindings/python/bt2/bt2/local_typing.py",
     "tests/utils/python/vendor/*",
 ]
 length_sort = true
@@ -54,7 +52,6 @@ omit = [
     "utils.py",
     "logging.py",
     "py_plugin.py",
-    "typing_mod.py",
     "test_*.py",
     "conftest.py",
     "bt_tests_utils.py",

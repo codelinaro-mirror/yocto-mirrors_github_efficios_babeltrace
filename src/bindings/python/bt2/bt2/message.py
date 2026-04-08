@@ -2,15 +2,15 @@
 #
 # Copyright (c) 2017 Philippe Proulx <pproulx@efficios.com>
 
+import typing
+
 from bt2 import event as bt2_event
 from bt2 import utils as bt2_utils
 from bt2 import object as bt2_object
 from bt2 import packet as bt2_packet
 from bt2 import stream as bt2_stream
-from bt2 import native_bt, typing_mod
+from bt2 import native_bt
 from bt2 import clock_snapshot as bt2_clock_snapshot
-
-typing = typing_mod._typing_mod
 
 
 def _create_from_ptr(ptr):

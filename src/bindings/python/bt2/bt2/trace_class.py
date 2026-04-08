@@ -5,6 +5,7 @@
 # Copyright (c) 2019 Simon Marchi <simon.marchi@efficios.com>
 
 import uuid as uuidp
+import typing
 import warnings
 import functools
 import collections.abc
@@ -14,15 +15,13 @@ from bt2 import trace as bt2_trace
 from bt2 import utils as bt2_utils
 from bt2 import value as bt2_value
 from bt2 import object as bt2_object
-from bt2 import native_bt, typing_mod
+from bt2 import native_bt
 from bt2 import clock_class as bt2_clock_class
 from bt2 import field_class as bt2_field_class
 from bt2 import stream_class as bt2_stream_class
 from bt2 import field_location as bt2_field_location
 from bt2 import user_attributes as bt2_user_attrs
 from bt2 import integer_range_set as bt2_integer_range_set
-
-typing = typing_mod._typing_mod
 
 
 def _trace_class_destruction_listener_from_native(

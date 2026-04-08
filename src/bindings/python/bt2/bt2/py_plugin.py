@@ -3,12 +3,10 @@
 # Copyright (c) 2017 Philippe Proulx <pproulx@efficios.com>
 
 import sys
+import typing
 
 from bt2 import utils as bt2_utils
 from bt2 import component as bt2_component
-from bt2 import typing_mod
-
-typing = typing_mod._typing_mod
 
 # Python plugin path to `_PluginInfo` (cache)
 _plugin_infos = {}

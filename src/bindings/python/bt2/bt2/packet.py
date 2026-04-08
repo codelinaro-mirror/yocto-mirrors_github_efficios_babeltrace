@@ -3,11 +3,11 @@
 # Copyright (c) 2016-2017 Philippe Proulx <pproulx@efficios.com>
 
 
+import typing
+
 from bt2 import field as bt2_field
 from bt2 import object as bt2_object
-from bt2 import native_bt, typing_mod
-
-typing = typing_mod._typing_mod
+from bt2 import native_bt
 
 if typing.TYPE_CHECKING:
     from bt2 import stream as bt2_stream

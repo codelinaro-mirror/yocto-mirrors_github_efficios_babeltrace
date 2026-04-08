@@ -3,12 +3,11 @@
 # Copyright (c) 2018 Francis Deslauriers <francis.deslauriers@efficios.com>
 
 import enum
+import typing
 import collections
 
 from bt2 import object as bt2_object
-from bt2 import native_bt, typing_mod
-
-typing = typing_mod._typing_mod
+from bt2 import native_bt
 
 
 class FieldPathScope(enum.Enum):

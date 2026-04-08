@@ -3,10 +3,10 @@
 # Copyright (c) 2017 Philippe Proulx <pproulx@efficios.com>
 
 
-from bt2 import error as bt2_error
-from bt2 import native_bt, typing_mod
+import typing
 
-typing = typing_mod._typing_mod
+from bt2 import error as bt2_error
+from bt2 import native_bt
 
 
 class UnknownObject(Exception):

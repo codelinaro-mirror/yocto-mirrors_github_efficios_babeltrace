@@ -2,10 +2,10 @@
 #
 # Copyright (c) 2017 Philippe Proulx <pproulx@efficios.com>
 
-from bt2 import object as bt2_object
-from bt2 import native_bt, typing_mod
+import typing
 
-typing = typing_mod._typing_mod
+from bt2 import object as bt2_object
+from bt2 import native_bt
 
 if typing.TYPE_CHECKING:
     from bt2 import connection as bt2_connection
