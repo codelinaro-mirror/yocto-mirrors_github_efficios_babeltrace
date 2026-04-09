@@ -16,9 +16,7 @@
 #include "python-plugin-provider.h"
 
 #include "common/macros.h"
-#include "compat/compiler.h"
 #include "lib/plugin/plugin.h"
-#include "lib/graph/component-class.h"
 #ifdef __ELF__
 #include <dlfcn.h>
 #endif
