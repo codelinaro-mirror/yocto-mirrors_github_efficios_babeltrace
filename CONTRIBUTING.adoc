@@ -1332,6 +1332,11 @@ This script sets up the required environment variables (library search
 paths, AddressSanitizer options, in-tree pytest path if applicable,
 Python module search path, Babeltrace plugin path, and more).
 +
+To undo all environment changes, run `bt-deactivate`. Note that
+sourcing the `env.sh` file of another build automatically deactivates the
+previous one first, so you don't need to run `bt-deactivate` manually
+when switching builds.
++
 It also defines the following shell functions:
 +
 `bt-pytest`::
