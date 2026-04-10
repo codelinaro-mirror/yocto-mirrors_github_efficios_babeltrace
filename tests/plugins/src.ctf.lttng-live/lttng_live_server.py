@@ -1507,7 +1507,7 @@ class _LttngLiveViewerSession:
 
     def _get_data_stream_state(self, stream_id: int):
         if stream_id not in self._stream_states:
-            RuntimeError(f"Unknown stream ID {stream_id}")
+            raise RuntimeError(f"Unknown stream ID {stream_id}")
 
         stream = self._stream_states[stream_id]
         if type(stream) is not _LttngLiveViewerSessionDataStreamState:
@@ -1517,7 +1517,7 @@ class _LttngLiveViewerSession:
 
     def _get_metadata_stream_state(self, stream_id: int):
         if stream_id not in self._stream_states:
-            RuntimeError(f"Unknown stream ID {stream_id}")
+            raise RuntimeError(f"Unknown stream ID {stream_id}")
 
         stream = self._stream_states[stream_id]
         if type(stream) is not _LttngLiveViewerSessionMetadataStreamState:
