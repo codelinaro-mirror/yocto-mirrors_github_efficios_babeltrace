@@ -15,19 +15,19 @@ babeltrace2-query - Query an object from a Babeltrace 2 component class
 == SYNOPSIS
 
 [verse]
-*babeltrace2* [<<gen-opts,'GENERAL OPTIONS'>>] *query* [opt:--params='PARAMS']
-            'COMP-CLS-TYPE'.'PLUGIN-NAME'.'COMP-CLS-NAME' 'OBJECT'
+*babeltrace2* [<<gen-opts,_GENERAL OPTIONS_>>] *query* [opt:--params[]=_PARAMS_]
+            _COMP-CLS-TYPE_._PLUGIN-NAME_._COMP-CLS-NAME_ _OBJECT_
 
 
 == DESCRIPTION
 
-The `query` command queries the object named 'OBJECT' from the component
-class named 'COMP-CLS-NAME' of the type 'COMP-CLS-TYPE' found in the
-Babeltrace~2 plugin named 'PLUGIN-NAME' and prints the results.
+The `query` command queries the object named _OBJECT_ from the component
+class named _COMP-CLS-NAME_ of the type _COMP-CLS-TYPE_ found in the
+Babeltrace{nbsp}2 plugin named _PLUGIN-NAME_ and prints the results.
 
 include::common-see-babeltrace2-intro.txt[]
 
-The available values for 'COMP-CLS-TYPE' are:
+The available values for _COMP-CLS-TYPE_ are:
 
 `source`::
 `src`::
@@ -41,16 +41,16 @@ The available values for 'COMP-CLS-TYPE' are:
     Sink component class.
 
 The exact object names and the parameters that a given component class
-expects are described in its own documentation. man:babeltrace2-help(1)
+expects are described in its own documentation. man:babeltrace2-help[1]
 can generally provide this information.
 
-You can use the opt:--params option to pass parameters to the query
+You can use the opt:--params[] option to pass parameters to the query
 operation of the component class.
 
 The output of the `query` command can look like https://yaml.org/[YAML],
 but it's not guaranteed to be YAML-compliant.
 
-See <<examples,``EXAMPLES''>> for usage examples.
+See <<examples>> for usage examples.
 
 
 == OPTIONS
@@ -60,9 +60,9 @@ include::common-gen-options.txt[]
 
 === Query parameters
 
-opt:-p 'PARAMS'::
-opt:--params='PARAMS'::
-    Set the query parameters to 'PARAMS'.
+opt:-p[] _PARAMS_::
+opt:--params[]=_PARAMS_::
+    Set the query parameters to _PARAMS_.
 +
 --
 include::common-cmd-params-format.txt[]
@@ -122,5 +122,5 @@ include::common-cmd-footer.txt[]
 
 == SEE ALSO
 
-man:babeltrace2-intro(7),
-man:babeltrace2(1)
+man:babeltrace2-intro[7],
+man:babeltrace2[1]

@@ -15,7 +15,7 @@ component class
 
 == DESCRIPTION
 
-A Babeltrace~2 compcls:source.ctf.lttng-live message iterator
+A Babeltrace{nbsp}2 compcls:source.ctf.lttng-live[] message iterator
 connects to a local or remote https://lttng.org/[LTTng] relay daemon,
 receives the streams of a specific tracing session, and emits
 corresponding messages.
@@ -36,76 +36,77 @@ https://lttng.org/docs/#doc-lttng-live[LTTng Documentation].
 
 include::common-see-babeltrace2-intro.txt[]
 
-A compcls:source.ctf.lttng-live component has a single output port: its
+A compcls:source.ctf.lttng-live[] component has a single output port: its
 message iterator muxes (sorts) the messages from the various CTF data
 streams internally.
 
-A compcls:source.ctf.lttng-live message iterator handles the messages of
+A compcls:source.ctf.lttng-live[] message iterator handles the messages of
 one, and only one LTTng tracing session. A single LTTng tracing session
 can contain one or more traces, depending on the active tracing domains
 and the configured user space buffering scheme.
 
-The component connects to an LTTng relay daemon using the param:inputs
+The component connects to an LTTng relay daemon using the param:inputs[]
 parameter. This is an array of exactly one string which is the URL of
 the LTTng relay daemon to connect to.
 
 By default, if the remote tracing session name doesn't exist, then the
-message iterator returns "try again later". This default mode makes the
-message iterator never end: even if the remote tracing session is
+message iterator returns "`try again later`". This default mode makes
+the message iterator never end: even if the remote tracing session is
 destroyed, the message iterator keeps on waiting for a tracing session
 with the same name to exist. You can change this behaviour with the
-param:session-not-found-action initialization parameter.
+param:session-not-found-action[] initialization parameter.
 
 NOTE: As of this version, you can only create one message iterator per
-compcls:source.ctf.lttng-live component. This is because the LTTng live
+compcls:source.ctf.lttng-live[] component. This is because the LTTng live
 protocol accepts at most one client per tracing session per LTTng relay
 daemon.
 
-As of this version, a compcls:source.ctf.lttng-live component can
-connect to an LTTng relay daemon using the LTTng~2.4 or
-LTTng~2.15 protocol. The latter is required for
-https://diamon.org/ctf/[CTF~2] support.
+As of this version, a compcls:source.ctf.lttng-live[] component can
+connect to an LTTng relay daemon using the LTTng{nbsp}2.4 or
+LTTng{nbsp}2.15 protocol. The latter is required for
+https://diamon.org/ctf/[CTF{nbsp}2] support.
 
-The "get supported MIP versions" method of compcls:source.ctf.lttng-live
-always reports to support MIP versions~0 and~1. If you attempt
-to make a compcls:source.ctf.lttng-live component read a CTF~2
+The "`get supported MIP versions`" method of
+compcls:source.ctf.lttng-live[] always reports to support MIP
+versions{nbsp}0 and{nbsp}1. If you attempt
+to make a compcls:source.ctf.lttng-live[] component read a CTF{nbsp}2
 recording session within a trace processing graph configured with
-MIP~0, then the message iterator will fail at initialization or
-"next" method call time.
+MIP{nbsp}0, then the message iterator will fail at initialization or
+"`next`" method call time.
 
 == INITIALIZATION PARAMETERS
 
-param:inputs='URL' vtype:[array of one string]::
-    Use 'URL' to connect to the LTTng relay daemon.
+param:inputs[]=_URL_ vtype:[array of one string]::
+    Use _URL_ to connect to the LTTng relay daemon.
 +
-'URL' is an array of exactly one string of which the format is:
+_URL_ is an array of exactly one string of which the format is:
 +
 --
 [verse]
 net[4]://__RDHOST__[:__RDPORT__]/host/__TGTHOST__/__SESSION__
 
-'RDHOST'::
+_RDHOST_::
     Host name or IP address of the LTTng relay daemon.
 
-'RDPORT'::
+_RDPORT_::
     Listening port of the LTTng relay daemon.
 +
 If not specified, then the component uses the default port ({defrdport}).
 
-'TGTHOST'::
+_TGTHOST_::
     Target host name or IP address.
 
-'SESSION'::
+_SESSION_::
     Name of the LTTng tracing session from which to receive data.
 --
 
-param:session-not-found-action=(`continue` | `fail` | `end`) vtype:[optional string]::
+param:session-not-found-action[]=(`continue` | `fail` | `end`) vtype:[optional string]::
     When the message iterator doesn't find the specified remote tracing
-    session ('SESSION' part of the param:inputs parameter), do one of:
+    session (_SESSION_ part of the param:inputs[] parameter), do one of:
 +
 --
 `continue` (default)::
-    Keep on trying, returning "try again later" to the downstream user
+    Keep on trying, returning "`try again later`" to the downstream user
     until the tracing session exists.
 +
 With this action, the message iterator never ends, as the LTTng live
@@ -141,11 +142,11 @@ exist.
 
 === `babeltrace.support-info`
 
-See man:babeltrace2-query-babeltrace.support-info(7) to learn more
+See man:babeltrace2-query-babeltrace.support-info[7] to learn more
 about this query object.
 
 For a string input which honors the LTTng live URL format (see the
-param:inputs parameter), the result object is~0.75.
+param:inputs[] parameter), the result object is{nbsp}0.75.
 
 
 === `sessions`
@@ -155,19 +156,19 @@ tracing sessions for a given LTTng relay daemon URL.
 
 Parameters:
 
-nlparam:url='URL' vtype:[string]::
-    Use 'URL' to connect to the LTTng relay daemon.
+nlparam:url[]=_URL_ vtype:[string]::
+    Use _URL_ to connect to the LTTng relay daemon.
 +
-The format of 'URL' is:
+The format of _URL_ is:
 +
 --
 [verse]
 net[4]://__RDHOST__[:__RDPORT__]
 
-'RDHOST'::
+_RDHOST_::
     Host name or IP address of the LTTng relay daemon.
 
-'RDPORT'::
+_RDPORT_::
     Listening port of the LTTng relay daemon.
 +
 If not specified, then the query operation uses the default port
@@ -177,27 +178,27 @@ If not specified, then the query operation uses the default port
 Result object (array of maps, one element for each available tracing
 session):
 
-qres:client-count vtype:[unsigned integer]::
+qres:client-count[] vtype:[unsigned integer]::
     Current number of LTTng live clients connected to the relay daemon
     to receive data from this tracing session.
 
-qres:session-name vtype:[string]::
+qres:session-name[] vtype:[string]::
     Tracing session name.
 
-qres:stream-count vtype:[unsigned integer]::
+qres:stream-count[] vtype:[unsigned integer]::
     Current number of CTF streams in this tracing sessions, including
     the metadata streams.
 
-qres:target-hostname vtype:[string]::
+qres:target-hostname[] vtype:[string]::
     Hostname of the tracing session.
 +
 This isn't necessarily the hostname of the relay daemon.
 
-qres:timer-us vtype:[unsigned integer]::
+qres:timer-us[] vtype:[unsigned integer]::
     Configured period (µs) of the live timer of the tracing session (see
-    man:lttng-create(1)).
+    man:lttng-create[1]).
 
-qres:trace-format vtype:[string]::
+qres:trace-format[] vtype:[string]::
     Format of the trace(s) of the tracing session amongst:
 +
 --
@@ -205,8 +206,8 @@ qres:trace-format vtype:[string]::
 `ctf-2.0`:: https://diamon.org/ctf/[CTF 2]
 --
 
-qres:url vtype:[string]::
-    URL to use as the first element of the param:inputs parameter to
+qres:url[] vtype:[string]::
+    URL to use as the first element of the param:inputs[] parameter to
     connect to the same LTTng relay daemon and receive data from this
     tracing session.
 
@@ -216,7 +217,7 @@ include::common-footer.txt[]
 
 == SEE ALSO
 
-man:babeltrace2-intro(7),
-man:babeltrace2-plugin-ctf(7),
-man:lttng-relayd(8),
-man:lttng-create(1)
+man:babeltrace2-intro[7],
+man:babeltrace2-plugin-ctf[7],
+man:lttng-relayd[8],
+man:lttng-create[1]

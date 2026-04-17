@@ -15,7 +15,7 @@ component class
 
 == DESCRIPTION
 
-A Babeltrace~2 compcls:sink.text.pretty component pretty-prints the
+A Babeltrace{nbsp}2 compcls:sink.text.pretty[] component pretty-prints the
 events, discarded events, and discarded packets messages it consumes to
 the standard output or to a file.
 
@@ -29,48 +29,48 @@ Messages -->@ in               |    the standard output or a file and
 
 include::common-see-babeltrace2-intro.txt[]
 
-By default, a compcls:sink.text.pretty component pretty-prints to the
-standard output. You can use the param:path parameter to make the
+By default, a compcls:sink.text.pretty[] component pretty-prints to the
+standard output. You can use the param:path[] parameter to make the
 component write to a file instead.
 
 The component prints warnings on the standard error stream when it
 consumes a discarded events or discarded packets message.
 
-If you don't use the param:path parameter and the standard output of the
+If you don't use the param:path[] parameter and the standard output of the
 application is connected to a color-capable terminal, the component
 emits terminal color codes to enhance the text output. You can use the
-param:color parameter to force the color support or to disable it.
+param:color[] parameter to force the color support or to disable it.
 
 This component class is equivalent to the `text` output format of
-man:babeltrace(1) (Babeltrace~1 command-line tool).
+man:babeltrace[1] (Babeltrace{nbsp}1 command-line tool).
 
 
 == INITIALIZATION PARAMETERS
 
-param:clock-cycles='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then print event times in clock cycles instead of
+param:clock-cycles[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is true, then print event times in clock cycles instead of
     hours, minutes, seconds, and nanoseconds.
 +
 Default: false.
 
-param:clock-date='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then print event times _and_ dates.
+param:clock-date[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is true, then print event times _and_ dates.
 +
 Default: false.
 
-param:clock-gmt='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then print event times in the GMT time zone
+param:clock-gmt[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is true, then print event times in the GMT time zone
     instead of the local time zone.
 +
 Default: false.
 
-param:clock-seconds='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then print event times in seconds instead of
+param:clock-seconds[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is true, then print event times in seconds instead of
     hours, minutes, seconds, and nanoseconds.
 +
 Default: false.
 
-param:color=(`never` | `auto` | `always`) vtype:[optional string]::
+param:color[]=(`never` | `auto` | `always`) vtype:[optional string]::
     Force the terminal color support, one of:
 +
 --
@@ -88,14 +88,14 @@ param:color=(`never` | `auto` | `always`) vtype:[optional string]::
 The `BABELTRACE_TERM_COLOR` environment variable overrides this
 parameter.
 
-param:field-default=(`show` | `hide`) vtype:[optional string]::
+param:field-default[]=(`show` | `hide`) vtype:[optional string]::
     By default, show or hide all the fields. This sets the default value
     of all the parameters which start with `field-`.
 
-param:field-emf='VAL' vtype:[optional boolean]::
+param:field-emf[]=_VAL_ vtype:[optional boolean]::
     Show or hide the Eclipse Modeling Framework URI field of the event.
 +
-Default, depending on the param:field-default parameter:
+Default, depending on the param:field-default[] parameter:
 +
 --
 `show`::
@@ -108,10 +108,10 @@ Not set::
     False
 --
 
-param:field-loglevel='VAL' vtype:[optional boolean]::
+param:field-loglevel[]=_VAL_ vtype:[optional boolean]::
     Show or hide the logging level field of the event.
 +
-Default, depending on the param:field-default parameter:
+Default, depending on the param:field-default[] parameter:
 +
 --
 `show`::
@@ -124,10 +124,10 @@ Not set::
     False
 --
 
-param:field-trace='VAL' vtype:[optional boolean]::
+param:field-trace[]=_VAL_ vtype:[optional boolean]::
     Show or hide the trace name field.
 +
-Default, depending on the param:field-default parameter:
+Default, depending on the param:field-default[] parameter:
 +
 --
 `show`::
@@ -140,10 +140,10 @@ Not set::
     False
 --
 
-param:field-trace:domain='VAL' vtype:[optional boolean]::
+param:field-trace:domain[]=_VAL_ vtype:[optional boolean]::
     Show or hide the tracing domain field.
 +
-Default, depending on the param:field-default parameter:
+Default, depending on the param:field-default[] parameter:
 +
 --
 `show`::
@@ -156,10 +156,10 @@ Not set::
     False
 --
 
-param:field-trace:hostname='VAL' vtype:[optional boolean]::
+param:field-trace:hostname[]=_VAL_ vtype:[optional boolean]::
     Show or hide the hostname field.
 +
-Default, depending on the param:field-default parameter:
+Default, depending on the param:field-default[] parameter:
 +
 --
 `show`::
@@ -172,10 +172,10 @@ Not set::
     True
 --
 
-param:field-trace:procname='VAL' vtype:[optional boolean]::
+param:field-trace:procname[]=_VAL_ vtype:[optional boolean]::
     Show or hide the process name field.
 +
-Default, depending on the param:field-default parameter:
+Default, depending on the param:field-default[] parameter:
 +
 --
 `show`::
@@ -188,10 +188,10 @@ Not set::
     True
 --
 
-param:field-trace:vpid='VAL' vtype:[optional boolean]::
+param:field-trace:vpid[]=_VAL_ vtype:[optional boolean]::
     Show or hide the virtual process ID field.
 +
-Default, depending on the param:field-default parameter:
+Default, depending on the param:field-default[] parameter:
 +
 --
 `show`::
@@ -204,14 +204,14 @@ Not set::
     True
 --
 
-param:name-default=(`show` | `hide`) vtype:[optional string]::
+param:name-default[]=(`show` | `hide`) vtype:[optional string]::
     By default, show or hide all the names. This sets the
     default value of all the parameters which start with `name-`.
 
-param:name-header='VAL' vtype:[optional boolean]::
+param:name-header[]=_VAL_ vtype:[optional boolean]::
     Show or hide the field names in the header scopes.
 +
-Default, depending on the param:name-default parameter:
+Default, depending on the param:name-default[] parameter:
 +
 --
 `show`::
@@ -224,10 +224,10 @@ Not set::
     False
 --
 
-param:name-context='VAL' vtype:[optional boolean]::
+param:name-context[]=_VAL_ vtype:[optional boolean]::
     Show or hide the field names in the context scopes.
 +
-Default, depending on the param:name-default parameter:
+Default, depending on the param:name-default[] parameter:
 +
 --
 `show`::
@@ -240,10 +240,10 @@ Not set::
     True
 --
 
-param:name-payload='VAL' vtype:[optional boolean]::
+param:name-payload[]=_VAL_ vtype:[optional boolean]::
     Show or hide the field names in the event payload scopes.
 +
-Default, depending on the param:name-default parameter:
+Default, depending on the param:name-default[] parameter:
 +
 --
 `show`::
@@ -256,10 +256,10 @@ Not set::
     True
 --
 
-param:name-scope='VAL' vtype:[optional boolean]::
+param:name-scope[]=_VAL_ vtype:[optional boolean]::
     Show or hide the scope names.
 +
-Default, depending on the param:name-default parameter:
+Default, depending on the param:name-default[] parameter:
 +
 --
 `show`::
@@ -272,23 +272,23 @@ Not set::
     False
 --
 
-param:no-delta='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then don't print the time delta between
+param:no-delta[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is true, then don't print the time delta between
     consecutive lines.
 +
 Default: false.
 
-param:path='PATH' vtype:[optional string]::
-    Print the text output to the file 'PATH' instead of the standard
+param:path[]=_PATH_ vtype:[optional string]::
+    Print the text output to the file _PATH_ instead of the standard
     output.
 
-param:print-enum-flags='VAL' vtype:[optional boolean]::
-    If 'VAL' if
+param:print-enum-flags[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ if
     true, then try to print enumeration field values as a pipe-delimited
-    (`|`) list of bit flags, if it applies.
+    (“`|`”) list of bit flags, if it applies.
 +
 When printing the value of an enumeration field without any
-corresponding mapping, a compcls:sink.text.pretty component splits the
+corresponding mapping, a compcls:sink.text.pretty[] component splits the
 value into its individual bit values: if each set bit has a
 corresponding mapping, then it considers that those mappings are in fact
 bit flags.
@@ -298,8 +298,8 @@ prints `<unknown>`.
 +
 Default: false.
 
-param:verbose='VAL' vtype:[optional boolean]::
-    If 'VAL' if true, then turn the verbose mode on.
+param:verbose[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is true, then turn the verbose mode on.
 +
 Default: false.
 
@@ -331,5 +331,5 @@ include::common-footer.txt[]
 
 == SEE ALSO
 
-man:babeltrace2-intro(7),
-man:babeltrace2-plugin-text(7)
+man:babeltrace2-intro[7],
+man:babeltrace2-plugin-text[7]

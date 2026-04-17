@@ -15,9 +15,9 @@ component class
 
 == DESCRIPTION
 
-A Babeltrace~2 compcls:source.ctf.fs message iterator reads one or more
-https://diamon.org/ctf/v1.8.3/[CTF~1.8] or
-https://diamon.org/ctf/[CTF~2] data streams on the file system and emits
+A Babeltrace{nbsp}2 compcls:source.ctf.fs[] message iterator reads one or more
+https://diamon.org/ctf/v1.8.3/[CTF{nbsp}1.8] or
+https://diamon.org/ctf/[CTF{nbsp}2] data streams on the file system and emits
 corresponding messages.
 
 ----
@@ -39,13 +39,13 @@ include::common-see-babeltrace2-intro.txt[]
 [[input]]
 === Input
 
-A compcls:source.ctf.fs component opens a single _logical_ CTF trace. A
+A compcls:source.ctf.fs[] component opens a single _logical_ CTF trace. A
 logical CTF trace contains one or more _physical_ CTF traces. A physical
 CTF trace on the file system is a directory which contains:
 
 * One metadata stream file named `metadata`.
 * One or more data stream files, that is, any file with a name that does
-  not start with `.` and which isn't `metadata`.
+  not start with “`.`” and which isn't `metadata`.
 * **Optional**: One https://lttng.org/[LTTng] index directory named
   `index`.
 
@@ -61,21 +61,20 @@ CTF 2::
 
 Opening more than one physical CTF trace to constitute a single logical
 CTF trace is needed to support LTTng's tracing session rotation feature,
-for example (see man:lttng-rotate(1) starting from LTTng~2.11). In that
+for example (see man:lttng-rotate[1] starting from LTTng{nbsp}2.11). In that
 case, the component elects the largest metadata stream, considering the
 total count of data stream classes and event record classes, as the one
 to use to decode the data streams of all the physical traces.
 
 You specify which physical CTF traces to open and read with the
-param:inputs array parameter. Each entry in this array is the path to a
+param:inputs[] array parameter. Each entry in this array is the path to a
 physical CTF trace directory, that is, the directory directly containing
 the stream files.
 
-A compcls:source.ctf.fs component doesn't recurse into directories to
+A compcls:source.ctf.fs[] component doesn't recurse into directories to
 find CTF traces. However, the component class provides the
 `babeltrace.support-info` query object which indicates whether or not a
-given directory looks like a CTF trace directory (see
-<<support-info,```babeltrace.support-info`''>>).
+given directory looks like a CTF trace directory (see <<support-info>>).
 
 The component creates one output port for each logical CTF data stream.
 More than one physical CTF data stream file can support a single logical
@@ -83,47 +82,47 @@ CTF data stream (LTTng's trace file rotation and tracing session
 rotation can cause this).
 
 If two or more data stream files contain the same packets, then a
-compcls:source.ctf.fs message iterator reads each of them only once so
+compcls:source.ctf.fs[] message iterator reads each of them only once so
 that it never emits duplicated messages. This feature makes it possible,
 for example, to open overlapping
 https://lttng.org/docs/#doc-taking-a-snapshot[LTTng snapshots] with a
-single compcls:source.ctf.fs component and silently discard the
+single compcls:source.ctf.fs[] component and silently discard the
 duplicated packets.
 
 
 === Trace quirks
 
-Many tracers produce CTF traces. A compcls:source.ctf.fs component makes
+Many tracers produce CTF traces. A compcls:source.ctf.fs[] component makes
 some effort to support as many CTF traces as possible, even those with
 malformed streams.
 
-In general, for a CTF~1.8 trace:
+In general, for a CTF{nbsp}1.8 trace:
 
 * If the `timestamp_begin` or `timestamp_end` packet context field class
   exists, but it's not mapped to a clock class, and there's only one
   clock class at this point in the metadata stream, then the component
   maps the field class to this unique clock class.
 
-A compcls:source.ctf.fs component has special quirk handling for some
-https://lttng.org/[LTTng] and https://lttng.org/[barectf] traces,
+A compcls:source.ctf.fs[] component has special quirk handling for some
+https://lttng.org/[LTTng] and https://barectf.org/[barectf] traces,
 depending on the tracer version:
 
 All LTTng versions::
 +
 --
-* For CTF~1.8 traces, the component sets the origin of the `monotonic`
+* For CTF{nbsp}1.8 traces, the component sets the origin of the `monotonic`
   clock class to the Unix epoch so that different LTTng traces are
   always correlatable.
 +
 This is the equivalent of setting the
-param:force-clock-class-origin-unix-epoch parameter to true.
+param:force-clock-class-origin-unix-epoch[] parameter to true.
 
 * For a given data stream, for all the contiguous last packets of which
-  the `timestamp_end` context field is~0, the message iterator uses the
+  the `timestamp_end` context field is{nbsp}0, the message iterator uses the
   time of the last event record of the packet as the time of the
   packet end message.
 +
-This is useful for the traces which man:lttng-crash(1) generates.
+This is useful for the traces which man:lttng-crash[1] generates.
 --
 
 LTTng-UST up to, but excluding, 2.11.0::
@@ -147,23 +146,23 @@ barectf up to, but excluding, 2.3.1::
 
 === Message Interchange Protocol (MIP) specifics
 
-A compcls:source.ctf.fs component can open and decode, depending on the
+A compcls:source.ctf.fs[] component can open and decode, depending on the
 effective MIP version:
 
-MIP~0::
-    CTF~1.8 traces.
+MIP{nbsp}0::
+    CTF{nbsp}1.8 traces.
 
-MIP~1::
-    CTF~1.8 and CTF~2 traces.
+MIP{nbsp}1::
+    CTF{nbsp}1.8 and CTF{nbsp}2 traces.
 
-While the CTF~1.8 metadata stream (TSDL) features naturally map to the
-MIP~0 API and the CTF~2 ones to the MIP~1 API, a compcls:source.ctf.fs
-component makes a best effort to represent CTF~1.8 features when working
-with MIP~1. In particular, a compcls:source.ctf.fs component:
+While the CTF{nbsp}1.8 metadata stream (TSDL) features naturally map to the
+MIP{nbsp}0 API and the CTF{nbsp}2 ones to the MIP{nbsp}1 API, a compcls:source.ctf.fs[]
+component makes a best effort to represent CTF{nbsp}1.8 features when working
+with MIP{nbsp}1. In particular, a compcls:source.ctf.fs[] component:
 
 * For an LTTng trace:
 
-** Sets the namespace of any libbabeltrace2 trace to +{lttng_ns}+.
+** Sets the namespace of any libbabeltrace2 trace to `{lttng_ns}`.
 ** Sets the origin of any libbabeltrace2 clock class to the Unix epoch.
 
 * If the UUID of a CTF trace is available, then sets the UID of the
@@ -176,12 +175,12 @@ with MIP~1. In particular, a compcls:source.ctf.fs component:
 
 * Makes the accuracy of any libbabeltrace2 clock class unknown.
 
-When reading a CTF~2 metadata stream (therefore working with MIP~1),
-a compcls:source.ctf.fs component:
+When reading a CTF{nbsp}2 metadata stream (therefore working with MIP{nbsp}1),
+a compcls:source.ctf.fs[] component:
 
 * Sets the log level of a libbabeltrace2 event class from the value of
-  the `log-level` attribute, under either the +{lttng_ns}+ or
-  +{bt_ns}+ namespace, of its corresponding CTF event record
+  the `log-level` attribute, under either the `{lttng_ns}` or
+  `{bt_ns}` namespace, of its corresponding CTF event record
   class as such:
 +
 --
@@ -232,33 +231,33 @@ a compcls:source.ctf.fs component:
 --
 
 * Sets the EMF URI of a libbabeltrace2 event class from the value of
-  the `emf-uri` attribute, under either the +{lttng_ns}+ or
-  +{bt_ns}+ namespace, of its corresponding CTF event record
+  the `emf-uri` attribute, under either the `{lttng_ns}` or
+  `{bt_ns}` namespace, of its corresponding CTF event record
   class.
 
 
 === CTF compliance
 
-A compcls:source.ctf.fs component decodes traces as per
-https://diamon.org/ctf/v1.8.3/[CTF~1.8] or
-https://diamon.org/ctf/[CTF~2], except:
+A compcls:source.ctf.fs[] component decodes traces as per
+https://diamon.org/ctf/v1.8.3/[CTF{nbsp}1.8] or
+https://diamon.org/ctf/[CTF{nbsp}2], except:
 
 * It only supports fixed-length bit array field classes with
-  sizes from 1~to~64~bits.
+  sizes from 1{nbsp}to{nbsp}64{nbsp}bits.
 +
 This includes fixed-length integers and fixed-length floating point
 numbers:
 +
-CTF~1.8 (TSDL)::
+CTF{nbsp}1.8 (TSDL)::
     `integer`, `enum`, and `floating_point` blocks.
 
-CTF~2::
+CTF{nbsp}2::
     `fixed-length-bit-array`, `fixed-length-bit-map`,
     `fixed-length-boolean`,
     `fixed-length-unsigned-integer`, `fixed-length-signed-integer`, and
     `fixed-length-floating-point-number` types.
 
-* It only supports the following CTF~2 variable-length integer field
+* It only supports the following CTF{nbsp}2 variable-length integer field
   values:
 +
 `variable-length-unsigned-integer`::
@@ -271,61 +270,61 @@ CTF~2::
 * It only supports 32-bit and 64-bit fixed-length floating point number
   classes:
 +
-CTF~1.8 (TSDL)::
+CTF{nbsp}1.8 (TSDL)::
     `floating_point` block.
 
-CTF~2::
+CTF{nbsp}2::
     `fixed-length-floating-point-number` type.
 
-* It doesn't support TSDL §~4.1.6 (``GNU/C bitfields'').
+* It doesn't support TSDL §{nbsp}4.1.6 ("`GNU/C bitfields`").
 
-* It doesn't support TSDL `callsite` blocks: the CTF~1.8 parser
+* It doesn't support TSDL `callsite` blocks: the CTF{nbsp}1.8 parser
   simply ignores them.
 
-* It only supports a single clock class (TSDL `clock` block or CTF~2
+* It only supports a single clock class (TSDL `clock` block or CTF{nbsp}2
   `clock-class` fragment) reference per data stream class (TSDL `stream`
-  block or CTF~2 `data-stream-class` fragment).
+  block or CTF{nbsp}2 `data-stream-class` fragment).
 
 * It doesn't support the checksum, compression, and encryption features
-  of CTF~1.8 metadata stream packets.
+  of CTF{nbsp}1.8 metadata stream packets.
 
 
 == INITIALIZATION PARAMETERS
 
-param:clock-class-offset-ns='NS' vtype:[optional signed integer]::
-    Add 'NS' nanoseconds to the offset of all the clock classes that the
+param:clock-class-offset-ns[]=_NS_ vtype:[optional signed integer]::
+    Add _NS_ nanoseconds to the offset of all the clock classes that the
     component creates.
 +
-You can combine this parameter with the param:clock-class-offset-s
+You can combine this parameter with the param:clock-class-offset-s[]
 parameter.
 
-param:clock-class-offset-s='SEC' vtype:[optional signed integer]::
-    Add 'SEC' seconds to the offset of all the clock classes that the
+param:clock-class-offset-s[]=_SEC_ vtype:[optional signed integer]::
+    Add _SEC_ seconds to the offset of all the clock classes that the
     component creates.
 +
-You can combine this parameter with the param:clock-class-offset-ns
+You can combine this parameter with the param:clock-class-offset-ns[]
 parameter.
 
-param:force-clock-class-origin-unix-epoch='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then force the origin of all clock classes that
+param:force-clock-class-origin-unix-epoch[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is true, then force the origin of all clock classes that
     the component creates to have a Unix epoch origin, whatever the
     detected tracer.
 +
 Default: false.
 
-param:inputs='DIRS' vtype:[array of strings]::
-    Open and read the physical CTF traces located in 'DIRS'.
+param:inputs[]=_DIRS_ vtype:[array of strings]::
+    Open and read the physical CTF traces located in _DIRS_.
 +
-Each element of 'DIRS' is the path to a physical CTF trace directory
+Each element of _DIRS_ is the path to a physical CTF trace directory
 containing the trace stream files.
 +
 All the specified physical CTF traces must belong to the same logical
-CTF trace. See <<input,``Input''>> to learn more about logical and
+CTF trace. See <<input>> to learn more about logical and
 physical CTF traces.
 
-param:trace-name='NAME' vtype:[optional string]::
+param:trace-name[]=_NAME_ vtype:[optional string]::
     Set the name of the trace object that the component creates to
-    'NAME'.
+    _NAME_.
 
 
 == PORTS
@@ -342,8 +341,8 @@ param:trace-name='NAME' vtype:[optional string]::
 
 === Output
 
-A compcls:source.ctf.fs component creates one output port for each
-logical CTF data stream. See <<input,``Input''>> to learn more about
+A compcls:source.ctf.fs[] component creates one output port for each
+logical CTF data stream. See <<input>> to learn more about
 logical and physical CTF data streams.
 
 Each output port name has one of the following forms:
@@ -372,7 +371,7 @@ UID `UID` are, then the exact string:
 +
 Otherwise, the absolute directory path of the trace.
 +
-NOTE: The namespace of any LTTng trace is +{lttng_ns}+. If a CTF~1.8
+NOTE: The namespace of any LTTng trace is `{lttng_ns}`. If a CTF{nbsp}1.8
 trace has a UUID, then its corresponding libbabeltrace2 trace always has
 a name and a UID (the textual representation of the UUID).
 
@@ -390,16 +389,16 @@ __STREAM-ID__::
 [[support-info]]
 === `babeltrace.support-info`
 
-See man:babeltrace2-query-babeltrace.support-info(7) to learn more
+See man:babeltrace2-query-babeltrace.support-info[7] to learn more
 about this query object.
 
 For a directory input which is the path to a CTF trace directory,
 the result object contains:
 
-nlqres:weight::
+nlqres:weight[]::
     0.75
 
-nlqres:group::
+nlqres:group[]::
     If the namespace `NS`, name `NAME`, and UID `UID` of the trace are
     available, then the exact string:
 +
@@ -416,22 +415,22 @@ name: NAME, uid: UID
 +
 Otherwise, the entry doesn't exist.
 +
-NOTE: The namespace of any LTTng trace is +{lttng_ns}+. If a CTF~1.8
+NOTE: The namespace of any LTTng trace is `{lttng_ns}`. If a CTF{nbsp}1.8
 trace has a UUID, then its corresponding libbabeltrace2 trace always has
 a name and a UID (the textual representation of the UUID).
 
-You can leverage the nlqres:group entry of this query object to assemble
+You can leverage the nlqres:group[] entry of this query object to assemble
 many physical CTF traces as a single logical CTF trace (see
-<<input,``Input''>> to learn more about logical and physical CTF
-traces). This is how the man:babeltrace2-convert(1) command makes it
+<<input>> to learn more about logical and physical CTF
+traces). This is how the man:babeltrace2-convert[1] command makes it
 possible to specify as non-option arguments the paths to multiple
 physical CTF traces which belong to the same logical CTF trace and
-create a single compcls:source.ctf.fs component.
+create a single compcls:source.ctf.fs[] component.
 
 
 === `babeltrace.trace-infos`
 
-See man:babeltrace2-query-babeltrace.trace-infos(7) to learn more
+See man:babeltrace2-query-babeltrace.trace-infos[7] to learn more
 about this query object.
 
 
@@ -443,22 +442,22 @@ packetized.
 
 Parameters:
 
-nlparam:path='PATH' vtype:[string]::
+nlparam:path[]=_PATH_ vtype:[string]::
     Path to the physical CTF trace directory which contains the
     `metadata` file.
 
 Result object (map):
 
-qres:is-packetized vtype:[boolean]::
+qres:is-packetized[] vtype:[boolean]::
     True if the metadata stream file is packetized.
 +
-This is only relevant for a CTF~1.8 metadata stream. Always false with
-a CTF~2 metadata stream.
+This is only relevant for a CTF{nbsp}1.8 metadata stream. Always false with
+a CTF{nbsp}2 metadata stream.
 
-qres:text vtype:[string]::
+qres:text[] vtype:[string]::
     Plain text metadata stream.
 +
-The exact contents of the metadata stream file for a CTF~2
+The exact contents of the metadata stream file for a CTF{nbsp}2
 metadata stream.
 
 
@@ -467,6 +466,6 @@ include::common-footer.txt[]
 
 == SEE ALSO
 
-man:babeltrace2-intro(7),
-man:babeltrace2-plugin-ctf(7),
-man:lttng-crash(1)
+man:babeltrace2-intro[7],
+man:babeltrace2-plugin-ctf[7],
+man:lttng-crash[1]

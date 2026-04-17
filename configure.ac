@@ -201,8 +201,9 @@ AC_PROG_MKDIR_P
 AC_PROG_LN_S
 AC_PROG_SED
 AC_CHECK_PROGS([FOLD], [fold])
-AC_CHECK_PROGS([ASCIIDOC], [asciidoc])
+AC_CHECK_PROGS([ASCIIDOCTOR], [asciidoctor])
 AC_CHECK_PROGS([XMLTO], [xmlto])
+AC_CHECK_PROGS([XMLCATALOG], [xmlcatalog])
 
 # check for bison
 AC_PROG_YACC
@@ -720,34 +721,76 @@ AS_IF([test x$need_doxygen = xyes], [
   ]
 )
 
-have_asciidoc_xmlto=no
+have_asciidoctor_xmlto=no
 warn_prebuilt_man_pages=no
 
+AE_DOCBOOK_XSL_NS_URL='http://docbook.sourceforge.net/release/xsl-ns/current/manpages/docbook.xsl'
+
 AE_IF_FEATURE_ENABLED([man-pages], [
-  AS_IF([test "x$ASCIIDOC" = "x" || test "x$XMLTO" = "x"], [
+  # The man page build uses the namespaced DocBook XSL manpages
+  # stylesheet (see `doc/man/manpage.xsl` for the rationale).
+  #
+  # Check that the system's XML catalog can resolve its URI to a locally
+  # installed copy.
+  have_docbook_xsl_ns=no
+  AS_IF([test "x$XMLCATALOG" != "x"], [
+    AC_MSG_CHECKING([for namespaced DocBook XSL manpages stylesheet])
+    AS_IF([$XMLCATALOG "" "$AE_DOCBOOK_XSL_NS_URL" >/dev/null 2>&1], [
+      have_docbook_xsl_ns=yes
+      AC_MSG_RESULT([yes])
+    ], [
+      AC_MSG_RESULT([no])
+    ])
+  ])
+
+  # Check Asciidoctor version: >= 2.0.15 required.
+  AS_IF([test "x$ASCIIDOCTOR" != "x"], [
+    AC_MSG_CHECKING([Asciidoctor version])
+    asciidoctor_version=$($ASCIIDOCTOR --version 2>/dev/null | head -n 1 | $SED -n 's/.*\([[0-9]][[0-9]]*\.[[0-9]][[0-9]]*\.[[0-9]][[0-9]]*\).*/\1/p')
+    AC_MSG_RESULT([$asciidoctor_version])
+    AS_VERSION_COMPARE([$asciidoctor_version], [2.0.15], [
+      ASCIIDOCTOR=""
+    ])
+  ])
+
+  # Check xmlto version: >= 0.0.25 required.
+  AS_IF([test "x$XMLTO" != "x"], [
+    AC_MSG_CHECKING([xmlto version])
+    xmlto_version=$($XMLTO --version 2>/dev/null | head -n 1 | $SED -n 's/.*\([[0-9]][[0-9]]*\.[[0-9]][[0-9]]*\.[[0-9]][[0-9]]*\).*/\1/p')
+    AC_MSG_RESULT([$xmlto_version])
+    AS_VERSION_COMPARE([$xmlto_version], [0.0.25], [
+      XMLTO=""
+    ])
+  ])
+
+  AS_IF([test "x$ASCIIDOCTOR" = "x" || test "x$XMLTO" = "x" || \
+         test "x$have_docbook_xsl_ns" != "xyes"], [
     AE_IF_IN_GIT_REPO([
       # this is an error because we're in the Git repo, which
       # means the man pages are not already generated for us,
-      # thus asciixmlto are required because we were asked
-      # to build the man pages
+      # thus Asciidoctor, xmlto, and the namespaced DocBook XSL
+      # stylesheets are required because we were asked to build
+      # the man pages
       AC_MSG_ERROR([
-You need asciidoc and xmlto to build the Babeltrace man pages. Use
-‘--disable-man-pages’ to disable building the man pages, in which case
-they will not be installed.
+You need Asciidoctor 2.0.15+, xmlto 0.0.25+, and the namespaced DocBook
+XSL manpages stylesheet (resolvable through the system's XML catalog
+from the URL ‘$AE_DOCBOOK_XSL_NS_URL’) to build the Babeltrace man
+pages. Use ‘--disable-man-pages’ to disable building the man pages, in
+which case they will not be installed.
       ])
     ], [
       # only warn here: since we're in the tarball, the man
       # pages should already be generated at this point, thus
-      # asciidoc/xmlto are not strictly required
+      # the build tools are not strictly required
       warn_prebuilt_man_pages=yes
     ])
   ], [
-    have_asciidoc_xmlto=yes
+    have_asciidoctor_xmlto=yes
   ])
 ])
 
-# export AsciiDoc and xmlto existence
-AM_CONDITIONAL([HAVE_ASCIIDOC_XMLTO], [test "x$have_asciidoc_xmlto" = "xyes"])
+# export Asciidoctor and xmlto existence
+AM_CONDITIONAL([HAVE_ASCIIDOCTOR_XMLTO], [test "x$have_asciidoctor_xmlto" = "xyes"])
 
 # a wonderful hack that seems necessary because $libdir is
 # literally `${exec_prefix}/lib`, and $exec_prefix is set to `NONE`
@@ -926,7 +969,6 @@ AC_CONFIG_FILES([
   doc/internal/Makefile
   doc/bindings/python/Makefile
   doc/Makefile
-  doc/man/asciidoc-attrs.conf
   doc/man/Makefile
   include/Makefile
   Makefile
@@ -1042,7 +1084,7 @@ AE_IF_FEATURE_ENABLED([man-pages], [
   AE_IF_IN_GIT_REPO([
     AE_PPRINT_PROP_BOOL([build_man_pages_msg], 1)
   ], [
-    AS_IF([test "x$have_asciidoc_xmlto" = "xyes"], [
+    AS_IF([test "x$have_asciidoctor_xmlto" = "xyes"], [
       AE_PPRINT_PROP_BOOL([build_man_pages_msg], 1)
     ], [
       AE_PPRINT_PROP_STRING([build_man_pages_msg],

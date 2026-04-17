@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2017-2025 Philippe Proulx <pproulx@efficios.com>
+// SPDX-FileCopyrightText: 2017-2026 Philippe Proulx <pproulx@efficios.com>
 //
 // SPDX-License-Identifier: CC-BY-SA-4.0
 
@@ -6,20 +6,22 @@
 
 = Babeltrace{nbsp}2 manual pages
 Philippe Proulx
-4 September 2019
+16 April 2026
 :toc:
+:bati: pass:[`]
 
 This directory contains the sources of the Babeltrace{nbsp}2 manual
 pages.
 
 The Babeltrace{nbsp}2 manual pages are written in
-https://www.methods.co.nz/asciidoc/[AsciiDoc], and then converted to
-DocBook (XML) using the `asciidoc` command, and finally to troff using
-the appropriate DocBook XSL stylesheet (using the `xmlto` command).
-
+https://asciidoctor.org/[AsciiDoc], and then converted to
+DocBook (XML) using the `asciidoctor` command, and finally to troff
+using the appropriate DocBook{nbsp}5 XSL stylesheet (using the `xmlto`
+command).
 
 == Naming
 
+[horizontal]
 Main program::
     `__program__.1.txt`
 
@@ -38,132 +40,139 @@ Babeltrace{nbsp}2 component class::
 Babeltrace{nbsp}2 query object::
     `babeltrace2-query-__query-object-name__.7.txt`
 
+== Macros and special processing
 
-== Macros
+The Babeltrace{nbsp}2 manual page sources use a few inline macros
+implemented as an Asciidoctor extension in `bt-asciidoctor-ext.rb`.
 
-AsciiDoc is configured with `bt-asciidoc.conf` which contains a few
-macro definitions used everywhere in the manual page sources:
+All macros follow the standard Asciidoctor inline macro form
+`__name__:__target__[__attrlist__]`. The trailing `[]` is **mandatory**,
+even when empty.
 
-Other manual page::
-+
---
-`man:__page__(__section__)`::
+=== Other manual page
+
+`man:__page__[__section__]`::
     Insert a link to another manual page named `__page__` in section
-    `__section__`. In troff, the manual page's name is rendered in bold.
+    `__section__`. In troff, the name of the manual page is rendered
+    in bold (typical manual page style).
 +
-Example: `man:babeltrace2-convert(1)`
---
+Example: `man:babeltrace2-convert[1]`
 
-Command-line option::
-+
---
-`opt:__name__`::
+=== Command-line option
+
+`opt:__name__[]`::
     Insert a link to the command-line option `__name__` described in the
-    _OPTIONS_ section in the same manual page.
+    "`OPTIONS`" section in the same manual page.
 +
-Examples: `opt:--verbose`, `+opt:--color='WHEN'+`
+Examples:
++
+* `opt:--verbose[]`
+* `opt:--color[]=pass:[__WHEN__]`
 
-`manopt:__page__(__section__):__name__`::
+`manopt:__page__[__section__,__name__]`::
     Insert a link to the command-line option `__name__` described in the
-    _OPTIONS_ section of another Babeltrace{nbsp}2 or LTTng manual page
-    named `__page__` in section `__section__`.
+    "`OPTIONS`" section of another Babeltrace{nbsp}2 or LTTng manual
+    page named `__page__` in section `__section__`.
 +
-Examples: `manopt:babeltrace2(1):--log-level`,
-`+manopt:babeltrace2-convert(1):--component=pass:[`source.ctf.fs`]+`
+Examples:
++
+* `manopt:babeltrace2[1,--log-level]`
+* `manopt:babeltrace2-convert[1,--component]={bati}{bati}source.ctf.fs{bati}{bati}`
 
-`nlopt:__name__`::
+`nlopt:__name__[]`::
     Write a command-line option named `__name__` without inserting a
     link. The option does not need to be described in the same manual
     page.
 +
-Examples: `nlopt:--help`, `+nlopt:--log-level='LEVEL'+`
---
-
-Component initialization or query parameter::
+Examples:
 +
---
-`param:__name__`::
+* `nlopt:--help[]`
+* `nlopt:--log-level[]=pass:[__LEVEL__]`
+
+=== Component initialization or query parameter
+
+`param:__name__[]`::
     Insert a link to the component initialization or query parameter
-    named `__name__` described in an _INITIALIZATION PARAMETERS_ or
-    _PARAMETERS_ section in the same manual page.
+    named `__name__` described in an "`INITIALIZATION PARAMETERS`" or
+    "`PARAMETERS`" section in the same manual page.
 +
-Examples: `param:begin`, `+param:inputs='PATHS'+`
+Examples:
++
+* `param:begin[]`
+* `param:inputs[]=pass:[__PATHS__]`
 
-`manparam:__type__.__plugin-name__.__comp-cls-name__:__param-name__`::
+`manparam:__type__.__plugin-name__.__comp-cls-name__[__param-name__]`::
     Insert a link to the component initialization or query parameter
-    `__param-name__` described in the _INITIALIZATION PARAMETERS_ or
-    _PARAMETERS_ section of the manual page of another Babeltrace{nbsp}2
-    component class. The component class has the type `__type__`, is
-    found in the plugin named `__plugin-name__`, and is named
-    `__comp-cls-name__`.
+    `__param-name__` described in the "`INITIALIZATION PARAMETERS`" or
+    "`PARAMETERS`" section of the manual page of another
+    Babeltrace{nbsp}2 component class.
 +
-Examples: `manparam:filter.utils.trimmer:begin`,
-`manparam:source.ctf.fs:inputs`
+The component class has the type `__type__`, is found in the plugin
+named `__plugin-name__`, and is named `__comp-cls-name__`.
++
+Examples:
++
+* `manparam:filter.utils.trimmer[begin]`
+* `manparam:source.ctf.fs[inputs]`
 
-`nlparam:__name__`::
+`nlparam:__name__[]`::
     Write a component initialization or query parameter named `__name__`
     without inserting a link. The parameter does not need to be
     described in the same manual page.
 +
-Example: `nlparam:end`
+Example: `nlparam:end[]`
 
-`qres:__name__`::
+`qres:__name__[]`::
     Insert a link to the query result object entry named `__name__`
     described in a _RESULT OBJECT_ section in the same manual page.
 +
-Examples: `qres:input`, `+qres:group='GROUP'+`
+Examples:
++
+* `qres:input[]`
+* `qres:group[]=pass:[__GROUP__]`
 
-`nlqres:__name__`::
+`nlqres:__name__[]`::
     Write a query result object entry named `__name__` without inserting
     a link. The entry does not need to be described in the same manual
     page.
 +
-Example: `nlqres:group`
+Example: `nlqres:group[]`
 
 `vtype:[__type__]`::
     Write a value object type `__type__`.
 +
-Examples: `vtype:[optional boolean]`, `vtype:[signed integer or string]`
---
-
-Component class::
+Examples:
 +
---
-`compcls:__type__.__plugin-name__.__comp-cls-name__`::
+* `vtype:[optional boolean]`
+* `vtype:[signed integer or string]`
+
+=== Component class
+
+`compcls:__type__.__plugin-name__.__comp-cls-name__[]`::
     Write a component class specification. The component class has the
     type `__type__`, is found in the plugin named `__plugin-name__`, and
     is named `__comp-cls-name__`.
 +
-Examples: `compcls:source.ctf.fs`, `compcls:filter.utils.muxer`
---
-
-Text emphasis and replacement::
+Examples:
 +
---
-`:all:`::
-    Emphasize "`all`".
+* `compcls:source.ctf.fs[]`
+* `compcls:filter.utils.muxer[]`
 
-`:not:`::
-    Emphasize "`not`".
+=== Text emphasis
 
-`:escstar:`::
-    Insert `+\*+` literally.
+Use AsciiDoc's native strong emphasis for "`not`" and "`all`" to
+emphasize those specific words:
 
-`:esccomma:`::
-    Insert `+\,+` literally.
-
-`:escdot:`::
-    Insert `+\.+` literally.
---
-
+* `pass:[*not*]` renders as a bold *NOT*.
+* `pass:[*all*]` renders as a bold *ALL*.
 
 == Attributes
 
 `manpagetype`::
     Each manual page must set this attribute to the type (lowercase) of
-    the manual page: `program`, `command`, `plugin`, or `component
-    class`. It's used in various included files to output a text that is
-    more targeted.
+    the manual page: `program`, `command`, `plugin`, or
+    `component class`. It's used in various included files to output a
+    text that is more targeted.
 
 `revdate`::
     Each manual page must have its own revision date with the following
@@ -174,35 +183,34 @@ Make sure to update this date when you update a given manual page. We
 are not generating the date automatically because we want the real last
 revision date in the manual page, not the last build date.
 
-Also see `asciidoc-attrs.conf` which is generated by `config.status`
-from `asciidoc-attrs.conf.in`. This file contains fixed and
-configuration-dependent attributes which you can use anywhere in the
-sources.
+The Makefile also passes a handful of Asciidoctor attributes through
+`-a` flags. Manual page sources may reference any of them with the
+usual `{__name__}` substitution.
 
+[horizontal]
+`system_plugin_path`::
+    Default Babeltrace{nbsp}2 plugin directory
+    (`$__libdir__/babeltrace2/plugins`).
 
-== Internal links
+`system_plugin_provider_path`::
+    Default Babeltrace{nbsp}2 plugin-provider directory
+    (`$__libdir__/babeltrace2/plugin-providers`).
 
-Internal links have no special formatting once converted to troff: it
-would look weird as there's no navigation in troff. We use them for
-cross-references since the manual page sources are also used to generate
-parts of the Babeltrace{nbsp}2 website.
+`babeltrace_version`::
+    Current Babeltrace package version.
 
-When an internal link's text is the name of a section (usually following
-"`see`"), put the section name between `pass:[``]` and `+''+` to outline
-it:
+`enable_debug_info`::
+    `1` if the debug information feature is enabled at configure time,
+    or `0` otherwise.
 
-----
-Lorem ipsum dolor sit amet (see <<sect-id,``The section name''>>),
-consectetur adipiscing elit.
-----
+`defrdport`::
+    Default LTTng relay daemon port.
 
-This makes the manual page result look like this:
+`bt_ns`::
+    Babeltrace{nbsp}2 XML namespace (`babeltrace.org,2020`).
 
-----
-       Lorem ipsum dolor sit amet (see “The section name”), consectetur
-       adipiscing elit.
-----
-
+`lttng_ns`::
+    LTTng XML namespace (`lttng.org,2009`).
 
 == Style
 

@@ -14,8 +14,8 @@ class
 
 == DESCRIPTION
 
-A Babeltrace~2 compcls:sink.ctf.fs component writes the messages it
-consumes to one or more https://diamon.org/ctf/[CTF]~1.8 or CTF~2 traces
+A Babeltrace{nbsp}2 compcls:sink.ctf.fs[] component writes the messages it
+consumes to one or more https://diamon.org/ctf/[CTF]{nbsp}1.8 or CTF{nbsp}2 traces
 on the file system.
 
 ----
@@ -28,38 +28,38 @@ Messages -->@ in          |    the file system
 
 include::common-see-babeltrace2-intro.txt[]
 
-The param:ctf-version parameter controls the CTF version of the
+The param:ctf-version[] parameter controls the CTF version of the
 resulting traces.
 
-As of this version, a compcls:sink.ctf.fs component may only write:
+As of this version, a compcls:sink.ctf.fs[] component may only write:
 
-CTF~1.8 traces::
-    When working under version~0 of the Message Interchange Protocol (MIP).
+CTF{nbsp}1.8 traces::
+    When working under version{nbsp}0 of the Message Interchange Protocol (MIP).
 
-CTF~2 traces::
-    When working under version~1 of the MIP.
+CTF{nbsp}2 traces::
+    When working under version{nbsp}1 of the MIP.
 
-Therefore, the "get supported MIP versions" method of a
-compcls:sink.ctf.fs component class reports to support only MIP~0 with
-the param:ctf-version parameter set to~`1` and only MIP~1 with
-param:ctf-version set to~`2`.
+Therefore, the "`get supported MIP versions`" method of a
+compcls:sink.ctf.fs[] component class reports that it supports only
+MIP{nbsp}0 with the param:ctf-version[] parameter set to{nbsp}``1`` and
+only MIP{nbsp}1 with param:ctf-version[] set to{nbsp}``2``.
 
-A compcls:sink.ctf.fs component doesn't merge traces: it writes the
+A compcls:sink.ctf.fs[] component doesn't merge traces: it writes the
 messages of different input traces to different output traces.
 
 
 === Trace IR to CTF 1.8 translation
 
-A compcls:sink.ctf.fs component makes a best effort to write CTF~1.8
+A compcls:sink.ctf.fs[] component makes a best effort to write CTF{nbsp}1.8
 traces that are semantically equivalent to the input traces. As of this
-version, with the param:ctf-version parameter set to `1`, the following
+version, with the param:ctf-version[] parameter set to `1`, the following
 field class translations can occur:
 
 * The component translates a boolean field class to a CTF unsigned 8-bit
   integer field class.
 +
-The value of the unsigned integer field is~0 when the value
-of the boolean field is false and~1 when it's true.
+The value of the unsigned integer field is{nbsp}0 when the value
+of the boolean field is false and{nbsp}1 when it's true.
 
 * The component translates a bit array field to a CTF unsigned
   integer field class having the same length.
@@ -75,26 +75,26 @@ In all the cases above, the component adds a comment in the metadata
 stream, above the field class, to indicate that a special translation
 occurred.
 
-The component doesn't translate any user attribute: a CTF~1.8 metadata
+The component doesn't translate any user attribute: a CTF{nbsp}1.8 metadata
 stream has no way to represent them.
 
 
 === Trace IR to CTF 2 translation
 
-As of this version, with the param:ctf-version parameter set to `2`:
+As of this version, with the param:ctf-version[] parameter set to `2`:
 
-* The component sets the `sink.ctf.fs` attribute, under the +{bt_ns}+
+* The component sets the `sink.ctf.fs` attribute, under the `{bt_ns}`
   namespace, of the preamble fragment to `true`.
 
 * The structure member class names of packet context field classes
-  having a CTF~2 role have the metadata stream UUID as a prefix to avoid
+  having a CTF{nbsp}2 role have the metadata stream UUID as a prefix to avoid
   clashes with user member classes.
 +
 For example, the packet content length member class could be named
 `afe9ed0e-ce73-413f-8956-83663bab2047-content_size`.
 
 * The component translates an event class log level to the
-  `log-level` attribute under the +{bt_ns}+ namespace as such:
+  `log-level` attribute under the `{bt_ns}` namespace as such:
 +
 --
 `BT_EVENT_CLASS_LOG_LEVEL_EMERGENCY`::
@@ -144,7 +144,7 @@ For example, the packet content length member class could be named
 --
 
 * The component translates an event class EMF URI to the
-  `emf-uri` attribute under the +{bt_ns}+ namespace as a JSON string.
+  `emf-uri` attribute under the `{bt_ns}` namespace as a JSON string.
 
 * When the component needs to generate a length/selector field class
   __**F**__ for dynamic field classes without a length/selector
@@ -153,10 +153,10 @@ For example, the packet content length member class could be named
 ** The structure member name of __**F**__ is unspecified.
 
 ** __**F**__ contains the attribute `is-key-only`, under the
-   +{bt_ns}+ namespace, set to `true`.
+   `{bt_ns}` namespace, set to `true`.
 
 * The component doesn't translate trace and stream user attributes:
-  a CTF~2 metadata stream has no way to represent them.
+  a CTF{nbsp}2 metadata stream has no way to represent them.
 
 === Input message constraints
 
@@ -164,7 +164,7 @@ Because of limitations in CTF regarding how discarded events and packets
 are encoded:
 
 * If a stream class supports discarded events and the
-  param:ignore-discarded-events parameter is :not: true:
+  param:ignore-discarded-events[] parameter is *not* true:
 
 ** The stream class must support packets.
 ** Discarded events messages must have times.
@@ -177,7 +177,7 @@ are encoded:
 ** Time ranges of discarded events messages must not overlap.
 
 * If a stream class supports discarded packets and the
-  param:ignore-discarded-packets parameter is :not: true:
+  param:ignore-discarded-packets[] parameter is *not* true:
 
 ** The stream class must support packets.
 ** Discarded packets messages must have times.
@@ -187,19 +187,19 @@ are encoded:
    as the time of the next packet beginning message.
 ** Time ranges of discarded packets messages must not overlap.
 
-The messages which a compcls:source.ctf.fs component creates satisfy all
+The messages which a compcls:source.ctf.fs[] component creates satisfy all
 the requirements above.
 
 If a discarded events or packets message has no events/packets count,
-then the compcls:sink.ctf.fs component adds~1 to the counter of the
+then the compcls:sink.ctf.fs[] component adds{nbsp}1 to the counter of the
 corresponding CTF stream.
 
 
 === Alignment and byte order
 
-A compcls:sink.ctf.fs component always aligns data fields as such:
+A compcls:sink.ctf.fs[] component always aligns data fields as such:
 
-Fixed-length bit array fields with a size which isn't a multiple of~8::
+Fixed-length bit array fields with a size which isn't a multiple of{nbsp}8::
     1-bit.
 
 All other scalar fields (fixed-length bit array, null-terminated string, BLOB)::
@@ -218,14 +218,14 @@ metadata and data stream files.
 The current strategy to build a path in which to write the streams of
 a given input trace is, in this order:
 
-. If the param:assume-single-trace parameter is true, then the output
+. If the param:assume-single-trace[] parameter is true, then the output
   trace path to use for the single input trace is the directory
-  specified by the param:path parameter.
+  specified by the param:path[] parameter.
 
 . If the component recognizes the input trace as an LTTng (2.11 or
   greater) trace, then it checks specific trace environment values to
   build a trace path relative to the directory specified by the
-  param:path parameter:
+  param:path[] parameter:
 +
 --
 
@@ -276,69 +276,69 @@ __PTIME__::
 
 . If the input trace has a name, then the component sanitizes this name
   and uses it as a relative path to the directory specified by the
-  param:path parameter.
+  param:path[] parameter.
 +
 The trace name sanitization operation:
 +
-* Replaces `.` subdirectories with `_`.
-* Replaces `..` subdirectories with `__`.
-* Removes any trailing `/` character.
+* Replaces “`.`” subdirectories with “`_`”.
+* Replaces “`..`” subdirectories with “`__`”.
+* Removes any trailing “`/`” character.
 
 . The component uses the subdirectory `trace` relative to the directory
-  specified by the param:path parameter.
+  specified by the param:path[] parameter.
 
 In all the cases above, if the effective output trace path already
 exists on the file system, then the component appends a numeric suffix
-to the name of the last subdirectory. The suffix starts at~0 and
+to the name of the last subdirectory. The suffix starts at{nbsp}0 and
 increments until the path doesn't exist.
 
 
 == INITIALIZATION PARAMETERS
 
-param:assume-single-trace='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then assume that the component only receives
+param:assume-single-trace[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is true, then assume that the component only receives
     messages related to a single input trace.
 +
 This parameter affects how the component builds the output trace path
-(see <<output-path,``Output path''>>).
+(see <<output-path>>).
 +
 Default: false.
 
-param:ctf-version='VERSION' vtype:[optional string]::
+param:ctf-version[]=_VERSION_ vtype:[optional string]::
 +
-Write traces following version 'VERSION' of CTF, where 'VERSION' is
+Write traces following version _VERSION_ of CTF, where _VERSION_ is
 one of:
 +
 --
 `1`::
 `1.8`::
-    CTF~1.8.
+    CTF{nbsp}1.8.
 
 `2`::
 `2.0`::
-    CTF~2.
+    CTF{nbsp}2.
 --
 +
 Default: `2`.
 
-param:ignore-discarded-events='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then ignore discarded events messages.
+param:ignore-discarded-events[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is true, then ignore discarded events messages.
 +
 Default: false.
 
-param:ignore-discarded-packets='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then ignore discarded packets messages.
+param:ignore-discarded-packets[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is true, then ignore discarded packets messages.
 +
 Default: false.
 
-param:path='PATH' vtype:[string]::
+param:path[]=_PATH_ vtype:[string]::
     Base output path.
 +
-See <<output-path,``Output path''>> to learn how the component uses this
+See <<output-path>> to learn how the component uses this
 parameter to build the output path for a given input trace.
 
-param:quiet='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then don't write anything to the standard output.
+param:quiet[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is true, then don't write anything to the standard output.
 +
 Default: false.
 
@@ -365,5 +365,5 @@ include::common-footer.txt[]
 
 == SEE ALSO
 
-man:babeltrace2-intro(7),
-man:babeltrace2-plugin-ctf(7)
+man:babeltrace2-intro[7],
+man:babeltrace2-plugin-ctf[7]

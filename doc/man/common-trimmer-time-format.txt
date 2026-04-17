@@ -7,26 +7,26 @@ __YYYY__-__MM__-__DD__ __HH__:__II__[:__SS__[.__NANO__]]
 __HH__:__II__[:__SS__[.__NANO__]]
 $$[$$-]__SEC__[.__NANO__]
 
-'YYYY'::
+_YYYY_::
     4-digit year.
 
-'MM'::
+_MM_::
     2-digit month (January is `01`).
 
-'DD'::
+_DD_::
     2-digit day.
 
-'HH'::
+_HH_::
     2-digit hour (24-hour format).
 
-'II'::
+_II_::
     2-digit minute.
 
-'SS'::
+_SS_::
     2-digit second.
 
-'NANO'::
+_NANO_::
     Nanoseconds (up to nine digits).
 
-'SEC'::
+_SEC_::
     Seconds since origin.

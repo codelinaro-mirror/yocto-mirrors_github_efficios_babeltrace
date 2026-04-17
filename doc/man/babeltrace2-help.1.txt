@@ -14,28 +14,28 @@ babeltrace2-help - Get help for a Babeltrace 2 plugin or component class
 
 == SYNOPSIS
 
-Get help for a Babeltrace~2 plugin:
+Get help for a Babeltrace{nbsp}2 plugin:
 
 [verse]
-*babeltrace2* [<<gen-opts,'GENERAL OPTIONS'>>] *help* 'PLUGIN-NAME'
+*babeltrace2* [<<gen-opts,_GENERAL OPTIONS_>>] *help* _PLUGIN-NAME_
 
-Get help for a Babeltrace~2 component class:
+Get help for a Babeltrace{nbsp}2 component class:
 
 [verse]
-*babeltrace2* [<<gen-opts,'GENERAL OPTIONS'>>] *help*
-            'COMP-CLS-TYPE'.'PLUGIN-NAME'.'COMP-CLS-NAME'
+*babeltrace2* [<<gen-opts,_GENERAL OPTIONS_>>] *help*
+            _COMP-CLS-TYPE_._PLUGIN-NAME_._COMP-CLS-NAME_
 
 
 == DESCRIPTION
 
-The `help` command prints the details and help text of either the
-Babeltrace~2 plugin named 'PLUGIN-NAME' or the specific component
-class of type 'COMP-CLS-TYPE' named 'COMP-CLS-NAME' found in the plugin
-named 'PLUGIN-NAME'.
+The `help` command prints the details of either the
+Babeltrace{nbsp}2 plugin named _PLUGIN-NAME_ or the specific component
+class of type _COMP-CLS-TYPE_ named _COMP-CLS-NAME_ found in the plugin
+named _PLUGIN-NAME_.
 
 include::common-see-babeltrace2-intro.txt[]
 
-The available values for 'COMP-CLS-TYPE' are:
+The available values for _COMP-CLS-TYPE_ are:
 
 `source`::
 `src`::
@@ -48,7 +48,7 @@ The available values for 'COMP-CLS-TYPE' are:
 `sink`::
     Sink component class.
 
-See <<examples,``EXAMPLES''>> for usage examples.
+See <<examples>> for usage examples.
 
 
 == OPTIONS
@@ -97,6 +97,6 @@ include::common-cmd-footer.txt[]
 
 == SEE ALSO
 
-man:babeltrace2-intro(7),
-man:babeltrace2(1),
-man:babeltrace2-list-plugins(1)
+man:babeltrace2-intro[7],
+man:babeltrace2[1],
+man:babeltrace2-list-plugins[1]

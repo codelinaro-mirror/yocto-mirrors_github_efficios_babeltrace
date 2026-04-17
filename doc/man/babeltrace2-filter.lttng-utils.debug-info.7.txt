@@ -5,8 +5,8 @@
 = babeltrace2-filter.lttng-utils.debug-info(7)
 :manpagetype: component class
 :revdate: 1 September 2023
-:compcls: compcls:filter.lttng-utils.debug-info
-:defdebuginfoname: `debug_info`
+:compcls: compcls:filter.lttng-utils.debug-info[]
+:defdebuginfoname: debug_info
 
 
 == NAME
@@ -17,7 +17,7 @@ information filter component class for LTTng traces
 
 == DESCRIPTION
 
-A Babeltrace~2 {compcls} message iterator creates and emits copies of
+A Babeltrace{nbsp}2 {compcls} message iterator creates and emits copies of
 upstream messages, augmenting LTTng event messages with debugging
 information when it's available and possible.
 
@@ -43,8 +43,8 @@ containing debugging information which the compiler creates.
 
 The new LTTng events (copies of the original ones with added debugging
 information) contain, when possible, a new event common context
-structure field (besides the `ip` field) named {defdebuginfoname} by
-default (you can use the param:debug-info-field-name parameter to choose
+structure field (besides the `ip` field) named `{defdebuginfoname}` by
+default (you can use the param:debug-info-field-name[] parameter to choose
 another name). This structure field contains the following fields:
 
 `bin` vtype:[string]::
@@ -76,13 +76,13 @@ information was not available for the analyzed original LTTng event.
 A {compcls} message iterator systematically copies the upstream
 messages, but it only augments compatible LTTng event classes. This
 means that the message iterator copies messages of non-LTTng trace (see
-<<lttng-prereq,``LTTng prerequisites''>>) without alteration.
+<<lttng-prereq>>) without alteration.
 
 
 === Compile an executable for debugging information analysis
 
 With GCC or Clang, you need to compile the program or library source
-files in debug mode with the nlopt:-g option. This option makes the
+files in debug mode with the nlopt:-g[] option. This option makes the
 compiler generate debugging information in the native format of the
 operating system. This format is recognized by a {compcls} component: it
 can translate the instruction pointer field of an event common context
@@ -90,12 +90,12 @@ to a source file and line number, along with the name of the surrounding
 function.
 
 IMPORTANT: This component class only supports the debugging information
-in DWARF format, version~2 or later. Use the nlopt:-gdwarf or
-nlopt:-gdwarf-VERSION (where `VERSION` is the DWARF version) compiler
+in DWARF format, version{nbsp}2 or later. Use the nlopt:-gdwarf[] or
+nlopt:-gdwarf-VERSION[] (where `VERSION` is the DWARF version) compiler
 options to explicitly generate DWARF debugging information.
 
 If you don't compile the source files of the executable with the
-nlopt:-g option or with an equivalent option, then no DWARF information
+nlopt:-g[] option or with an equivalent option, then no DWARF information
 is available: the message iterator uses ELF symbols from the executable
 file instead. In this case, the events that the message iterator creates
 don't contain the source file and line number (see the
@@ -113,11 +113,11 @@ without altering them.
 === LTTng prerequisites
 
 A {compcls} message iterator can only analyze user space events which
-https://lttng.org[LTTng]~2.8.0 or later generates.
+https://lttng.org[LTTng]{nbsp}2.8.0 or later generates.
 
 To get debugging information for LTTng-UST events which occur in
 executables and libraries which the system loader loads (what
-you can see with man:ldd(1)):
+you can see with man:ldd[1]):
 
 . Add the `ip` and `vpid` context fields to user space event records:
 +
@@ -128,18 +128,18 @@ $ lttng add-context --userspace --type=ip --type=vpid
 ----
 --
 +
-See man:lttng-add-context(1) for more details.
+See man:lttng-add-context[1] for more details.
 
 . Enable the LTTng-UST state dump events:
 +
 --
 [role="term"]
 ----
-$ lttng enable-event --userspace 'lttng_ust_statedump:*'
+$ lttng enable-event --userspace _lttng_ust_statedump:*_
 ----
 --
 +
-See man:lttng-enable-event(1) and man:lttng-ust(3) for more details.
+See man:lttng-enable-event[1] and man:lttng-ust[3] for more details.
 
 To get debugging information for LTTng-UST events which occur in
 dynamically loaded objects, for example plugins:
@@ -152,11 +152,11 @@ dynamically loaded objects, for example plugins:
 --
 [role="term"]
 ----
-$ lttng enable-event --userspace 'lttng_ust_dl:*'
+$ lttng enable-event --userspace _lttng_ust_dl:*_
 ----
 --
 +
-See man:lttng-ust-dl(3) for more details.
+See man:lttng-ust-dl[3] for more details.
 
 . When you are ready to trace, start your application with the
   `LD_PRELOAD` environment variable set to `liblttng-ust-dl.so`:
@@ -196,7 +196,7 @@ The debugging information lookup order is the same as GDB's, namely:
 The message iterator uses the first debugging information file that it
 finds.
 
-You can use the param:debug-info-dir initialization parameter to
+You can use the param:debug-info-dir[] initialization parameter to
 override the default `/usr/lib/debug` directory used in the build ID and
 debug link methods.
 
@@ -211,7 +211,7 @@ performs uses the paths to the executables as collected during tracing
 as the default mechanism to resolve DWARF and ELF information.
 
 If the trace was recorded on a separate machine, however, then you can
-use the param:target-prefix parameter to specify a prefix directory,
+use the param:target-prefix[] parameter to specify a prefix directory,
 that is, the root of the target file system.
 
 For example, if the path of an instrumented executable is `/usr/bin/foo`
@@ -223,26 +223,26 @@ on the target system, then you can place this file at
 
 == INITIALIZATION PARAMETERS
 
-param:debug-info-dir='DIR' vtype:[optional string]::
-    Use 'DIR' as the directory from which to load debugging information
+param:debug-info-dir[]=_DIR_ vtype:[optional string]::
+    Use _DIR_ as the directory from which to load debugging information
     with the build ID and debug link methods instead of
     `/usr/lib/debug`.
 
-param:debug-info-field-name='NAME' vtype:[optional string]::
+param:debug-info-field-name[]=_NAME_ vtype:[optional string]::
     Name the debugging information structure field in the common context
-    of the created events 'NAME' instead of the default
-    {defdebuginfoname}.
+    of the created events _NAME_ instead of the default
+    `{defdebuginfoname}`.
 
-param:full-path='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then use the full path when writing the executable
+param:full-path[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is true, then use the full path when writing the executable
     name (`bin`) and source file name (`src`) fields in the
-    {defdebuginfoname} context field of the created events.
+    `{defdebuginfoname}` context field of the created events.
 +
 Default: false.
 
-param:target-prefix='DIR' vtype:[optional string]::
-    Use 'DIR' as the root directory of the target file system instead of
-    `/`.
+param:target-prefix[]=_DIR_ vtype:[optional string]::
+    Use _DIR_ as the root directory of the target file system instead of
+    “`/`”.
 
 
 == PORTS
@@ -273,7 +273,7 @@ include::common-footer.txt[]
 
 == SEE ALSO
 
-man:babeltrace2-intro(7),
-man:babeltrace2-plugin-lttng-utils(7),
-man:lttng(1),
-man:lttng-add-context(1)
+man:babeltrace2-intro[7],
+man:babeltrace2-plugin-lttng-utils[7],
+man:lttng[1],
+man:lttng-add-context[1]

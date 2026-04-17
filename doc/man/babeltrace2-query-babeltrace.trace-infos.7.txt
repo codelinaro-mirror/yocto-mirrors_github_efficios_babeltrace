@@ -15,14 +15,14 @@ query object
 
 == DESCRIPTION
 
-The `babeltrace.trace-infos` Babeltrace~2 query object indicates
+The `babeltrace.trace-infos` Babeltrace{nbsp}2 query object indicates
 time range information about specific traces and their streams, and
 which output ports of an eventual source component will serve the
 messages for a given stream.
 
-The man:babeltrace2-convert(1) command queries this object from all the
+The man:babeltrace2-convert[1] command queries this object from all the
 source component classes to support the
-manopt:babeltrace2-convert(1):--stream-intersection feature.
+manopt:babeltrace2-convert[1,--stream-intersection] feature.
 
 
 == PARAMETERS
@@ -35,7 +35,7 @@ the queried component class.
 == RESULT OBJECT
 
 The result object is an array of trace info maps (see
-<<trace-info-map,``Trace info map''>>).
+<<trace-info-map>>).
 
 
 [[trace-info-map]]
@@ -43,8 +43,8 @@ The result object is an array of trace info maps (see
 
 A trace info map contains:
 
-nlqres:stream-infos='STREAM-INFOS' vtype:[array of stream info maps]::
-    Stream info maps (see <<stream-info-map,``Stream info map''>>) for
+nlqres:stream-infos[]=_STREAM-INFOS_ vtype:[array of stream info maps]::
+    Stream info maps (see <<stream-info-map>>) for
     this trace.
 
 
@@ -53,20 +53,20 @@ nlqres:stream-infos='STREAM-INFOS' vtype:[array of stream info maps]::
 
 A stream info map contains:
 
-nlqres:range-ns='RANGE' vtype:[range map]::
+nlqres:range-ns[]=_RANGE_ vtype:[range map]::
     The time range of this stream, a map containing:
 +
 --
-nlqres:begin='NS' vtype:[signed integer]::
+nlqres:begin[]=_NS_ vtype:[signed integer]::
     Beginning time of this stream (nanoseconds since the origin
     of the default clock class of the stream class).
 
-nlqres:end='NS' vtype:[signed integer]::
+nlqres:end[]=_NS_ vtype:[signed integer]::
     End time of this stream (nanoseconds since the origin of the
     default clock class of the stream class).
 --
 
-nlqres:port-name='PORT-NAME' vtype:[string]::
+nlqres:port-name[]=_PORT-NAME_ vtype:[string]::
     For an eventual source component initialized with the same
     parameters: name of the output port which serves the messages of
     this stream.
@@ -112,6 +112,6 @@ include::common-footer.txt[]
 
 == SEE ALSO
 
-man:babeltrace2-intro(7),
-man:babeltrace2-query(1),
-man:babeltrace2-convert(1)
+man:babeltrace2-intro[7],
+man:babeltrace2-query[1],
+man:babeltrace2-convert[1]

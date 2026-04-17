@@ -40,7 +40,6 @@ stamp-h1
 /doc/bindings/python/build/
 /doc/man/*.1
 /doc/man/*.7
-/doc/man/asciidoc-attrs.conf
 
 # Generated Python files
 *.egg-info

@@ -15,12 +15,12 @@ babeltrace2-list-plugins - List Babeltrace 2 plugins and their properties
 == SYNOPSIS
 
 [verse]
-*babeltrace2* [<<gen-opts,'GENERAL OPTIONS'>>] *list-plugins*
+*babeltrace2* [<<gen-opts,_GENERAL OPTIONS_>>] *list-plugins*
 
 
 == DESCRIPTION
 
-The `list-plugins` command prints a list of available Babeltrace~2
+The `list-plugins` command prints a list of available Babeltrace{nbsp}2
 plugins along with their component classes and their properties.
 
 include::common-see-babeltrace2-intro.txt[]
@@ -44,6 +44,6 @@ include::common-cmd-footer.txt[]
 
 == SEE ALSO
 
-man:babeltrace2-intro(7),
-man:babeltrace2(1),
-man:babeltrace2-help(1)
+man:babeltrace2-intro[7],
+man:babeltrace2[1],
+man:babeltrace2-help[1]

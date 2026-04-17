@@ -2,26 +2,26 @@
 //
 // SPDX-License-Identifier: CC-BY-SA-4.0
 
-=== Babeltrace~2 library
+=== Babeltrace{nbsp}2 library
 
 include::common-common-env.txt[]
 
-`BABELTRACE_PLUGIN_PATH`='PATHS'::
+`BABELTRACE_PLUGIN_PATH`=_PATHS_::
     Set the list of directories, in order, in which dynamic plugins can
-    be found before other directories are considered to 'PATHS'
+    be found before other directories are considered to _PATHS_
     (colon-separated, or semicolon on Windows).
 
 `LIBBABELTRACE2_DISABLE_PYTHON_PLUGINS`=`1`::
-    Disable the loading of any Babeltrace~2 Python plugin.
+    Disable the loading of any Babeltrace{nbsp}2 Python plugin.
 
-`LIBBABELTRACE2_FORCE_COMPONENT_LOG_LEVEL`='SPEC'::
+`LIBBABELTRACE2_FORCE_COMPONENT_LOG_LEVEL`=_SPEC_::
     Force the log level of all or specific components added to any
     trace processing graph.
 +
-'SPEC' is one of:
+_SPEC_ is one of:
 +
 --
-* A single log level value 'LVL'.
+* A single log level value _LVL_.
 +
 In this case, libbabeltrace2 overrides the log level specified when
 adding _any_ component to any trace processing graph.
@@ -29,8 +29,9 @@ adding _any_ component to any trace processing graph.
 * A semicolon-delimited list of __PAT__:__LVL__ specifiers.
 +
 __PAT__ is a globbing pattern where only the wildcard
-character, `*`, is special: it matches zero or more characters.
-You must escape the `*`, `?`, `[`, and :bs: characters with :bs:.
+character, “`+*+`”, is special: it matches zero or more characters.
+You must escape the “`+*+`”, “`?`”, “`[`”, and “`\`” characters
+with “`\`”.
 +
 __LVL__ is a log level value.
 +
@@ -41,9 +42,9 @@ processing graph.
 +
 libbabeltrace2 dynamically checks this environment variable before
 adding a component to a trace processing graph, meaning you can modify
-it at any time with man:setenv(3).
+it at any time with man:setenv[3].
 +
-The available values for 'LVL' are:
+The available values for _LVL_ are:
 +
 --
 include::common-log-levels.txt[]
@@ -55,42 +56,42 @@ Example:
 *ctf*:I;my-sink:D;*:W
 ----
 
-`LIBBABELTRACE2_INIT_LOG_LEVEL`='LVL'::
-    Force the initial log level of the Babeltrace~2 library to be 'LVL'.
+`LIBBABELTRACE2_INIT_LOG_LEVEL`=_LVL_::
+    Force the initial log level of the Babeltrace{nbsp}2 library to be _LVL_.
 +
 If this environment variable is set, then it overrides the log level set
-by the manopt:babeltrace2(1):--log-level option for the Babeltrace~2
+by the manopt:babeltrace2[1,--log-level] option for the Babeltrace{nbsp}2
 library logger.
 +
-The available values for 'LVL' are:
+The available values for _LVL_ are:
 +
 --
 include::common-log-levels.txt[]
 --
 
 `LIBBABELTRACE2_NO_DLCLOSE`=`1`::
-    Make the Babeltrace~2 library leave any dynamically loaded
+    Make the Babeltrace{nbsp}2 library leave any dynamically loaded
     modules (plugins and plugin providers) open at exit. This can be
     useful for debugging purposes.
 
-`LIBBABELTRACE2_PLUGIN_PROVIDER_DIR`='DIR'::
-    Set the directory from which the Babeltrace~2 library
-    dynamically loads plugin provider shared objects to 'DIR'.
+`LIBBABELTRACE2_PLUGIN_PROVIDER_DIR`=_DIR_::
+    Set the directory from which the Babeltrace{nbsp}2 library
+    dynamically loads plugin provider shared objects to _DIR_.
 +
 If this environment variable is set, then it overrides the default
 plugin provider directory.
 
 
-=== Babeltrace~2 Python bindings
+=== Babeltrace{nbsp}2 Python bindings
 
-`BABELTRACE_PYTHON_BT2_LOG_LEVEL`='LVL'::
-    Force the Babeltrace~2 Python bindings log level to be 'LVL'.
+`BABELTRACE_PYTHON_BT2_LOG_LEVEL`=_LVL_::
+    Force the Babeltrace{nbsp}2 Python bindings log level to be _LVL_.
 +
 If this environment variable is set, then it overrides the log level set
-by the manopt:babeltrace2(1):--log-level option for the Python bindings
+by the manopt:babeltrace2[1,--log-level] option for the Python bindings
 logger.
 +
-The available values for 'LVL' are:
+The available values for _LVL_ are:
 +
 --
 include::common-log-levels.txt[]

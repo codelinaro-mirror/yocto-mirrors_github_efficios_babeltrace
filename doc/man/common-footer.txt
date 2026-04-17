@@ -26,7 +26,7 @@ https://lttng.org/[LTTng project].
 
 == AUTHORS
 
-The Babeltrace~2 project is the result of hard work by many regular
+The Babeltrace{nbsp}2 project is the result of hard work by many regular
 developers and occasional contributors.
 
 The current project maintainer is
@@ -35,7 +35,7 @@ mailto:jeremie.galarneau@efficios.com[Jérémie Galarneau].
 
 == COPYRIGHT
 
-This {manpagetype} is part of the Babeltrace~2 project.
+This {manpagetype} is part of the Babeltrace{nbsp}2 project.
 
 Babeltrace is distributed under the
 https://opensource.org/licenses/MIT[MIT license].

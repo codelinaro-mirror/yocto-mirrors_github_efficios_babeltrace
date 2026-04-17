@@ -15,8 +15,8 @@ source component class
 
 == DESCRIPTION
 
-A Babeltrace~2 compcls:source.text.dmesg message iterator reads the
-lines of a Linux kernel ring buffer, as printed by the man:dmesg(1)
+A Babeltrace{nbsp}2 compcls:source.text.dmesg[] message iterator reads the
+lines of a Linux kernel ring buffer, as printed by the man:dmesg[1]
 tool, and emits corresponding event messages.
 
 ----
@@ -32,17 +32,17 @@ lines (file or standard input)
 
 include::common-see-babeltrace2-intro.txt[]
 
-A compcls:source.text.dmesg message iterator names the events it creates
-`string`. Each event contain a single payload string field named `str`
+A compcls:source.text.dmesg[] message iterator names the events it creates
+`string`. Each event contains a single payload string field named `str`
 which contains the corresponding ring buffer line.
 
-By default, a compcls:source.text.dmesg message iterator reads the lines
+By default, a compcls:source.text.dmesg[] message iterator reads the lines
 of the standard input stream. You can make the message iterator read the
-lines of a text file instead with the param:path parameter.
+lines of a text file instead with the param:path[] parameter.
 
 By default, the message iterator tries to extract the timestamps of the
 kernel ring buffer lines and use them as the timestamps of the created
-events. A typical man:dmesg(1) line looks like this:
+events. A typical man:dmesg[1] line looks like this:
 
 ----
 [87166.510937] PM: Finishing wakeup.
@@ -50,22 +50,22 @@ events. A typical man:dmesg(1) line looks like this:
 
 The `[87166.510937]` part is the timestamp to extract. When this
 information is available, the component creates a clock class which does
-:not: have the Unix epoch as its origin.
+*not* have the Unix epoch as its origin.
 
 You can make the message iterator not extract timestamps from lines with
-the param:no-extract-timestamp parameter.
+the param:no-extract-timestamp[] parameter.
 
 [NOTE]
 ====
-It's possible that the output of man:dmesg(1) contains unsorted lines,
+It's possible that the output of man:dmesg[1] contains unsorted lines,
 that is, their timestamps go back in time. You can see this with the
-nlopt:--show-delta option of man:dmesg(1): some time differences can be
+nlopt:--show-delta[] option of man:dmesg[1]: some time differences can be
 negative.
 
 This is due to a https://lwn.net/Articles/780556/[2019 change] to the
 API of the kernel ring buffer.
 
-As of this version, a compcls:source.text.dmesg message iterator
+As of this version, a compcls:source.text.dmesg[] message iterator
 requires that the input kernel ring buffer lines be sorted by timestamp
 (when they have timestamps), failing otherwise.
 ====
@@ -73,15 +73,15 @@ requires that the input kernel ring buffer lines be sorted by timestamp
 
 == INITIALIZATION PARAMETERS
 
-param:no-extract-timestamp='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then do :not: extract timestamps from the kernel
+param:no-extract-timestamp[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is true, then do *not* extract timestamps from the kernel
     ring buffer lines: set the `str` payload field of the created event
     to the whole line, including any timestamp prefix.
 +
 Default: false.
 
-param:path='PATH' vtype:[optional string]::
-    Read the kernel ring buffer lines from the file 'PATH' instead of
+param:path[]=_PATH_ vtype:[optional string]::
+    Read the kernel ring buffer lines from the file _PATH_ instead of
     the standard input stream.
 
 
@@ -107,5 +107,5 @@ include::common-footer.txt[]
 
 == SEE ALSO
 
-man:babeltrace2-plugin-text(7),
-man:babeltrace2-intro(7)
+man:babeltrace2-plugin-text[7],
+man:babeltrace2-intro[7]

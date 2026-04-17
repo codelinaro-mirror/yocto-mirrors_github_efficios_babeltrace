@@ -11,11 +11,6 @@ $ babeltrace2 my-ctf-traces
 
 [role="term"]
 ----
-$ babeltrace2 my-ctf-traces
-----
-
-[role="term"]
-----
 $ babeltrace2 my-ctf-trace-1 my-ctf-trace-2 my-ctf-trace-3
 ----
 ====
@@ -70,7 +65,7 @@ $ babeltrace2 net://localhost/host/myhostname/my-session-name
 ----
 ====
 
-.Record LTTng live traces to the file system (as CTF~1.8 traces).
+.Record LTTng live traces to the file system (as CTF{nbsp}1.8 traces).
 ====
 [role="term"]
 ----
@@ -98,7 +93,7 @@ $ babeltrace2 ctf-trace1 ctf-trace2 ctf-trace3 --stream-intersection \
 ----
 ====
 
-.Pretty-print a CTF trace and traces from an explicit source component, with the event times showed in seconds since the Unix epoch.
+.Pretty-print a CTF trace and traces from an explicit source component, with the event times shown in seconds since the Unix epoch.
 ====
 [role="term"]
 ----

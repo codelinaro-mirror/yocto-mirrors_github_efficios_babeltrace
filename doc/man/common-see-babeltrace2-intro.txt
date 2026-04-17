@@ -2,5 +2,5 @@
 //
 // SPDX-License-Identifier: CC-BY-SA-4.0
 
-See man:babeltrace2-intro(7) to learn more about the Babeltrace~2
+See man:babeltrace2-intro[7] to learn more about the Babeltrace{nbsp}2
 project and its core concepts.

@@ -16,47 +16,47 @@ babeltrace2-run - Create a Babeltrace 2 trace processing graph and run it
 == SYNOPSIS
 
 [verse]
-*babeltrace2* [<<gen-opts,'GENERAL OPTIONS'>>] *run* [opt:--retry-duration='TIME-US']
-            [opt:--allowed-mip-versions='VERSION']
-            opt:--connect='CONN-RULE'... 'COMPONENTS'
+*babeltrace2* [<<gen-opts,_GENERAL OPTIONS_>>] *run* [opt:--retry-duration[]=_TIME-US_]
+            [opt:--allowed-mip-versions[]=_VERSION_]
+            opt:--connect[]=_CONN-RULE_... _COMPONENTS_
 
 
 == DESCRIPTION
 
-The `run` command creates a Babeltrace~2 trace processing graph and
+The `run` command creates a Babeltrace{nbsp}2 trace processing graph and
 runs it.
 
 include::common-see-babeltrace2-intro.txt[]
 
-The `run` command dynamically loads Babeltrace~2 plugins which
+The `run` command dynamically loads Babeltrace{nbsp}2 plugins which
 supply component classes. With the `run` command, you specify which
 component classes to instantiate as components and how to connect them.
 
 The steps to write a `babeltrace2 run` command line are:
 
 . Specify which component classes to instantiate as components with many
-  opt:--component options and how to configure them.
+  opt:--component[] options and how to configure them.
 +
-This is the 'COMPONENTS' part of the <<synopsis,synopsis>>. See
-<<create-comps,``Create components''>> to learn more.
+This is the _COMPONENTS_ part of the <<synopsis,synopsis>>. See
+<<create-comps>> to learn more.
 
 . Specify how to connect components together with one or more
-  opt:--connect options.
+  opt:--connect[] options.
 +
-See <<connect-comps,``Connect components''>> to learn more.
+See <<connect-comps>> to learn more.
 
-NOTE: The man:babeltrace2-convert(1) command is a specialization of the
+NOTE: The man:babeltrace2-convert[1] command is a specialization of the
 `run` command for the very common case of converting one or more traces:
 it generates a `run` command line and executes it. You can use its
-manopt:babeltrace2-convert(1):--run-args or
-manopt:babeltrace2-convert(1):--run-args-0 option to make it print the
+manopt:babeltrace2-convert[1,--run-args] or
+manopt:babeltrace2-convert[1,--run-args-0] option to make it print the
 equivalent `run` command line instead.
 
 
 [[create-comps]]
 === Create components
 
-To create a component, use the opt:--component option. This option
+To create a component, use the opt:--component[] option. This option
 specifies:
 
 * The name of the component, unique amongst all the component names of
@@ -70,22 +70,22 @@ specifies:
 
 * The name of the component class to instantiate.
 
-Use the opt:--component option multiple times to create multiple
+Use the opt:--component[] option multiple times to create multiple
 components. You can instantiate the same component class multiple times
 as different components.
 
-At any point in the command line, the opt:--base-params sets the current
-base initialization parameters and the opt:--reset-base-params resets
-them. When you specify a opt:--component option, its initial
+At any point in the command line, the opt:--base-params[] sets the current
+base initialization parameters and the opt:--reset-base-params[] resets
+them. When you specify a opt:--component[] option, its initial
 initialization parameters are a copy of the current base initialization
 parameters.
 
-Immediately following a opt:--component option on the command line, the
+Immediately following a opt:--component[] option on the command line, the
 created component is known as the _current component_ (until the next
-opt:--component option).
+opt:--component[] option).
 
-The opt:--params='PARAMS' option adds parameters to the initialization
-parameters of the current component. If 'PARAMS' contains a key which
+The opt:--params[]=_PARAMS_ option adds parameters to the initialization
+parameters of the current component. If _PARAMS_ contains a key which
 exists in the initialization parameters of the current component, then
 this parameter is replaced.
 
@@ -94,7 +94,7 @@ this parameter is replaced.
 === Connect components
 
 The components which you create from component classes with the
-opt:--component option (see <<create-comps,``Create components''>>) add
+opt:--component[] option (see <<create-comps>>) add
 input and output _ports_ depending on their type. An output port is from
 where messages, like trace events, are sent. An input port is where
 messages are received. For a given component, each port has a unique
@@ -103,23 +103,23 @@ name.
 The purpose of the `run` command is to create a trace processing graph,
 that is, to know which component ports to connect together. The command
 achieves this with the help of the connection rules that you provide
-with one or more opt:--connect='CONN-RULE' options.
+with one or more opt:--connect[]=_CONN-RULE_ options.
 
-The format of 'CONN-RULE' is:
+The format of _CONN-RULE_ is:
 
 [verse]
 __UP-COMP-PAT__[.__UP-PORT-PAT__]:__DOWN-COMP-PAT__[.__DOWN-PORT-PAT__]
 
-'UP-COMP-PAT'::
+_UP-COMP-PAT_::
     Upstream component name pattern.
 
-'UP-PORT-PAT'::
+_UP-PORT-PAT_::
     Upstream (output) port name pattern.
 
-'DOWN-COMP-PAT'::
+_DOWN-COMP-PAT_::
     Downstream component name pattern.
 
-'DOWN-PORT-PAT'::
+_DOWN-PORT-PAT_::
     Downstream (input) port name pattern.
 
 When a source or filter component adds a new output port within the
@@ -140,14 +140,15 @@ No possible connection: fail with no match.
 
 __UP-COMP-PAT__, __UP-PORT-PAT__, __DOWN-COMP-PAT__, and
 __DOWN-PORT-PAT__ are globbing patterns where only the wildcard
-character, `*`, is special: it matches zero or more characters. You must
-escape the `*`, `?`, `[`, `.`, `:`, and :bs: characters with :bs:.
+character, “`+*+`”, is special: it matches zero or more characters. You must
+escape the “`+*+`”, “`?`”, “`[`”, “`.`”, “`:`”, and “`\`”
+characters with “`\`”.
 
 When you don't specify __UP-PORT-PAT__ or __DOWN-PORT-PAT__, they're
-equivalent to `*`.
+equivalent to “`+*+`.”
 
 You can leverage this connection mechanism to specify fallbacks with a
-careful use of wildcards, as the order of the opt:--connect options on
+careful use of wildcards, as the order of the opt:--connect[] options on
 the command line is significant. For example:
 
 ----
@@ -169,7 +170,7 @@ With those connection rules, the `run` command connects:
 The `run` command fails when it cannot find an input port to which to
 connect a given output port using the provided connection rules.
 
-See <<examples,``EXAMPLES''>> for more examples.
+See <<examples>> for more examples.
 
 
 == OPTIONS
@@ -179,24 +180,24 @@ include::common-gen-options.txt[]
 
 === Component creation
 
-See <<create-comps,``Create components''>> for more details.
+See <<create-comps>> for more details.
 
-opt:-b 'PARAMS'::
-opt:--base-params='PARAMS'::
-    Set the current base parameters to 'PARAMS'.
+opt:-b[] _PARAMS_::
+opt:--base-params[]=_PARAMS_::
+    Set the current base parameters to _PARAMS_.
 +
 You can reset the current base parameters with the
-opt:--reset-base-params option.
+opt:--reset-base-params[] option.
 +
-See the opt:--params option for the format of 'PARAMS'.
+See the opt:--params[] option for the format of _PARAMS_.
 
-opt:-c __NAME__:__COMP-CLS-TYPE__.'PLUGIN-NAME'.'COMP-CLS-NAME'::
-opt:--component=__NAME__:__COMP-CLS-TYPE__.'PLUGIN-NAME'.'COMP-CLS-NAME'::
-    Create a component named 'NAME' from the component class of type
-    'COMP-CLS-TYPE' named 'COMP-CLS-NAME' found in the plugin named
-    'PLUGIN-NAME', and set it as the current component.
+opt:-c[] __NAME__:__COMP-CLS-TYPE__._PLUGIN-NAME_._COMP-CLS-NAME_::
+opt:--component[]=__NAME__:__COMP-CLS-TYPE__._PLUGIN-NAME_._COMP-CLS-NAME_::
+    Create a component named _NAME_ from the component class of type
+    _COMP-CLS-TYPE_ named _COMP-CLS-NAME_ found in the plugin named
+    _PLUGIN-NAME_, and set it as the current component.
 +
-The available values for 'TYPE' are:
+The available values for _TYPE_ are:
 +
 --
 `source`::
@@ -212,81 +213,81 @@ The available values for 'TYPE' are:
 --
 +
 The initial initialization parameters of this component are copied from
-the current base initialization parameters (see the opt:--base-params
+the current base initialization parameters (see the opt:--base-params[]
 option).
 
-opt:-l 'LVL'::
-opt:--log-level='LVL'::
-    Set the log level of the current component to 'LVL'.
+opt:-l[] _LVL_::
+opt:--log-level[]=_LVL_::
+    Set the log level of the current component to _LVL_.
 +
-The available values for 'LVL' are:
+The available values for _LVL_ are:
 +
 --
 include::common-log-levels.txt[]
 --
 
-opt:-p 'PARAMS'::
-opt:--params='PARAMS'::
-    Add 'PARAMS' to the initialization parameters of the current
+opt:-p[] _PARAMS_::
+opt:--params[]=_PARAMS_::
+    Add _PARAMS_ to the initialization parameters of the current
     component.
 +
-If 'PARAMS' contains a key which exists in the initialization parameters
+If _PARAMS_ contains a key which exists in the initialization parameters
 of the current component, then replace the parameter.
 +
 --
 include::common-cmd-params-format.txt[]
 --
 
-opt:-r::
-opt:--reset-base-params::
+opt:-r[]::
+opt:--reset-base-params[]::
     Reset the current base parameters.
 +
-You can set the current base parameters with the opt:--base-params
+You can set the current base parameters with the opt:--base-params[]
 option.
 
 
 === Component connection
 
-opt:-x 'CONN-RULE'::
-opt:--connect='CONN-RULE'::
-    Add the connection rule 'CONN-RULE'.
+opt:-x[] _CONN-RULE_::
+opt:--connect[]=_CONN-RULE_::
+    Add the connection rule _CONN-RULE_.
 +
-The format of 'CONN-RULE' is:
+The format of _CONN-RULE_ is:
 +
 [verse]
 __UP-COMP-PAT__[.__UP-PORT-PAT__]:__DOWN-COMP-PAT__[.__DOWN-PORT-PAT__]
 +
 --
-'UP-COMP-PAT'::
+_UP-COMP-PAT_::
     Upstream component name pattern.
 
-'UP-PORT-PAT'::
+_UP-PORT-PAT_::
     Upstream (output) port name pattern.
 
-'DOWN-COMP-PAT'::
+_DOWN-COMP-PAT_::
     Downstream component name pattern.
 
-'DOWN-PORT-PAT'::
+_DOWN-PORT-PAT_::
     Downstream (input) port name pattern.
 --
 +
-See <<connect-comps,``Connect components''>> to learn more.
+See <<connect-comps>> to learn more.
 
 
 === Graph configuration
 
-opt:-m 'VERSION'::
-opt:--allowed-mip-versions='VERSION'::
-    Only allow the graph to honour version 'VERSION' (0 or~1)
+opt:-m[] _VERSION_::
+opt:--allowed-mip-versions[]=_VERSION_::
+    Only allow the graph to honour version _VERSION_ (0 or{nbsp}1)
     of the Message Interchange Protocol (MIP) instead of allowing
     both versions.
 
-opt:--retry-duration='TIME-US'::
-    Set the duration of a single retry to 'TIME-US'~µs when a sink
-    component reports "try again later" (busy network or file system,
+opt:--retry-duration[]=_TIME-US_::
+    Set the duration of a single retry to _TIME-US_{nbsp}µs when a sink
+    component reports "`try again later`" (busy network or file system,
     for example).
 +
-Default: 100000 (100~ms).
+Default: 100000 (100{nbsp}ms).
 
 
 include::common-cmd-info-options.txt[]
@@ -316,9 +317,9 @@ Possible resulting graph:
 ----
 ====
 
-.Use the opt:--params option to set the initialization parameters of the current component.
+.Use the opt:--params[] option to set the initialization parameters of the current component.
 ====
-In this example, the opt:--params option only applies to component
+In this example, the opt:--params[] option only applies to component
 `the-source`.
 
 [role="term"]
@@ -330,7 +331,7 @@ $ babeltrace2 run --component=the-source:src.my-plugin.my-src \
 ----
 ====
 
-.Use the opt:--base-params and opt:--reset-base-params options to set and reset the current base initialization parameters.
+.Use the opt:--base-params[] and opt:--reset-base-params[] options to set and reset the current base initialization parameters.
 ====
 In this example, the effective initialization parameters of the
 created components are:
@@ -364,7 +365,7 @@ In this example, any `A` output port of which the name starts with
 `nin`. Any other `A` output port is connected to a `B` input port of
 which the name starts with `oth`.
 
-The order of the opt:--connect options is important here: the opposite
+The order of the opt:--connect[] options is important here: the opposite
 order would create a system in which the first rule is always satisfied,
 and _any_ `A` output port, whatever its name, would be connected to a
 `B` input port with a name that starts with `oth`.
@@ -403,6 +404,6 @@ include::common-cmd-footer.txt[]
 
 == SEE ALSO
 
-man:babeltrace2-intro(7),
-man:babeltrace2(1),
-man:babeltrace2-convert(1)
+man:babeltrace2-intro[7],
+man:babeltrace2[1],
+man:babeltrace2-convert[1]

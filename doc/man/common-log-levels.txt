@@ -41,10 +41,10 @@ This level can be enabled in production.
     Debugging information, with a higher level of details than the
     `TRACE` level.
 +
-This level should :not: be enabled in production.
+This level should *not* be enabled in production.
 
 `TRACE`::
 `T`::
     Low-level debugging context information.
 +
-This level should :not: be enabled in production.
+This level should *not* be enabled in production.

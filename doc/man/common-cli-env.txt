@@ -9,27 +9,27 @@ include::common-lib-env.txt[]
 
 === CLI
 
-`BABELTRACE_CLI_LOG_LEVEL`='LVL'::
-    Force the log level of the log level `babeltrace2` CLI to be 'LVL'.
+`BABELTRACE_CLI_LOG_LEVEL`=_LVL_::
+    Force the log level of the `babeltrace2` CLI to be _LVL_.
 +
 If this environment variable is set, then it overrides the log level set
-by the manopt:babeltrace2(1):--log-level option for the CLI logger.
+by the manopt:babeltrace2[1,--log-level] option for the CLI logger.
 +
-The available values for 'LVL' are:
+The available values for _LVL_ are:
 +
 --
 include::common-log-levels.txt[]
 --
 
 `BABELTRACE_CLI_WARN_COMMAND_NAME_DIRECTORY_CLASH`=`0`::
-    Disable the warning message which man:babeltrace2-convert(1) prints
+    Disable the warning message which man:babeltrace2-convert[1] prints
     when you convert a trace with a relative path that's also the name
     of a `babeltrace2` command.
 
 `BABELTRACE_DEBUG`=`1`::
-    Legacy variable: equivalent to setting the nlopt:--log-level option
+    Legacy variable: equivalent to setting the nlopt:--log-level[] option
     to `TRACE`.
 
 `BABELTRACE_VERBOSE`=`1`::
-    Legacy variable: equivalent to setting the nlopt:--log-level option
+    Legacy variable: equivalent to setting the nlopt:--log-level[] option
     to `INFO`.

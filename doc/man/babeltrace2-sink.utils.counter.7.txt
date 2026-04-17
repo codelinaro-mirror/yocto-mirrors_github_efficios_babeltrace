@@ -15,7 +15,7 @@ component class
 
 == DESCRIPTION
 
-A Babeltrace~2 compcls:sink.utils.counter component prints to the
+A Babeltrace{nbsp}2 compcls:sink.utils.counter[] component prints to the
 standard output the number of messages it consumes with a count for each
 type.
 
@@ -43,32 +43,32 @@ The output of the component looks like this:
         3843000 messages (TOTAL)
 ----
 
-By default, a compcls:sink.utils.counter component prints a new block of
-statistics every~1000 consumed messages, whatever their types. You can
-use the param:step parameter to override this default period.
+By default, a compcls:sink.utils.counter[] component prints a new block of
+statistics every{nbsp}1000 consumed messages, whatever their types. You can
+use the param:step[] parameter to override this default period.
 
 The component always prints a block of statistics when there's no more
 messages to consume from its upstream message iterator and the last
 block was different.
 
-By default, a compcls:sink.utils.counter component prints the count of
-messages for each type, even if this count is~0. You can make it hide
-the zero counts with the param:hide-zero parameter.
+By default, a compcls:sink.utils.counter[] component prints the count of
+messages for each type, even if this count is{nbsp}0. You can make it hide
+the zero counts with the param:hide-zero[] parameter.
 
 
 == INITIALIZATION PARAMETERS
 
-param:hide-zero='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then don't print the statistics lines where the
+param:hide-zero[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is true, then don't print the statistics lines where the
     count is zero.
 +
 Default: false.
 
-param:step='STEP' vtype:[optional unsigned integer]::
-    Print a new block of statistics every 'STEP' consumed messages
-    instead of~1000.
+param:step[]=_STEP_ vtype:[optional unsigned integer]::
+    Print a new block of statistics every _STEP_ consumed messages
+    instead of{nbsp}1000.
 +
-If 'STEP' is~0, then the component only prints statistics when there's
+If _STEP_ is{nbsp}0, then the component only prints statistics when there's
 no more messages to consume.
 
 
@@ -94,5 +94,5 @@ include::common-footer.txt[]
 
 == SEE ALSO
 
-man:babeltrace2-intro(7),
-man:babeltrace2-plugin-utils(7)
+man:babeltrace2-intro[7],
+man:babeltrace2-plugin-utils[7]

@@ -15,9 +15,9 @@ component class
 
 == DESCRIPTION
 
-A Babeltrace~2 compcls:sink.text.details component
+A Babeltrace{nbsp}2 compcls:sink.text.details[] component
 deterministically prints the messages it consumes, with all the possible
-details, to the standard output. You can use the param:path parameter
+details, to the standard output. You can use the param:path[] parameter
 to make the component write to a file instead.
 
 ----
@@ -30,16 +30,16 @@ Messages -->@ in                |    standard output
 
 include::common-see-babeltrace2-intro.txt[]
 
-The purpose of a compcls:sink.text.details component is to always print
+The purpose of a compcls:sink.text.details[] component is to always print
 the same text for the same sequence of consumed messages, whatever the
-build configuration of the Babeltrace~2 project. This can be
+build configuration of the Babeltrace{nbsp}2 project. This can be
 helpful for testing, debugging, and support.
 
 The output format is optimized for human reading, with colors when the
 terminal supports it. You can control how the component prints color
-codes with the param:color parameter.
+codes with the param:color[] parameter.
 
-To achieve a reproducible output, a compcls:sink.text.details component
+To achieve a reproducible output, a compcls:sink.text.details[] component
 sorts the members of all unordered sets before it prints them. For
 example, the component sorts enumeration field class mappings by label
 and, for each mapping, sorts the contained ranges.
@@ -84,24 +84,24 @@ What follows depend on the specific message type. The component prints
 all the available properties and fields in a human-readable, structured
 format.
 
-When a compcls:sink.text.details component consumes a stream beginning
+When a compcls:sink.text.details[] component consumes a stream beginning
 or an event message, it can print a metadata block for all the metadata
-objects which it did not print yet. You can use the param:with-metadata
+objects which it did not print yet. You can use the param:with-metadata[]
 parameter to disable this.
 
-You can hide specific properties with the param:with-stream-class-name,
-param:with-stream-class-namespace, param:with-stream-name,
-param:with-time, param:with-trace-name, param:with-uid, and
-param:with-uuid parameters.
+You can hide specific properties with the param:with-stream-class-name[],
+param:with-stream-class-namespace[], param:with-stream-name[],
+param:with-time[], param:with-trace-name[], param:with-uid[], and
+param:with-uuid[] parameters.
 
 To make the component hide many message details and print a single
-message per line, you can enable the compact mode with the param:compact
+message per line, you can enable the compact mode with the param:compact[]
 parameter.
 
 
 == INITIALIZATION PARAMETERS
 
-param:color=(`never` | `auto` | `always`) vtype:[optional string]::
+param:color[]=(`never` | `auto` | `always`) vtype:[optional string]::
     Force the terminal color support, one of:
 +
 --
@@ -119,59 +119,59 @@ param:color=(`never` | `auto` | `always`) vtype:[optional string]::
 The `BABELTRACE_TERM_COLOR` environment variable overrides this
 parameter.
 
-param:compact='VAL' vtype:[optional boolean]::
-    If 'VAL' is true, then enable compact mode.
+param:compact[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is true, then enable compact mode.
 +
 In compact mode, the component prints one line per message, omitting
 many details about messages. This is useful if you only need the time,
 type, and very basic information of messages.
 +
 In compact mode, the component still prints the full metadata blocks.
-You can remove such blocks with the param:with-metadata parameter.
+You can remove such blocks with the param:with-metadata[] parameter.
 +
 Default: false.
 
-param:path='PATH' vtype:[optional string]::
-    Print the text output to the file 'PATH' instead of the standard
+param:path[]=_PATH_ vtype:[optional string]::
+    Print the text output to the file _PATH_ instead of the standard
     output.
 
-param:with-metadata='VAL' vtype:[optional boolean]::
-    If 'VAL' is false, then don't print metadata blocks.
+param:with-metadata[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is false, then don't print metadata blocks.
 +
 Default: true.
 
-param:with-stream-class-name='VAL' vtype:[optional boolean]::
-    If 'VAL' is false, then don't print stream class names.
+param:with-stream-class-name[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is false, then don't print stream class names.
 +
 Default: true.
 
-param:with-stream-class-namespace='VAL' vtype:[optional boolean]::
-    If 'VAL' is false, then don't print stream class namespaces.
+param:with-stream-class-namespace[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is false, then don't print stream class namespaces.
 +
 Default: true.
 
-param:with-stream-name='VAL' vtype:[optional boolean]::
-    If 'VAL' is false, then don't print stream names.
+param:with-stream-name[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is false, then don't print stream names.
 +
 Default: true.
 
-param:with-time='VAL' vtype:[optional boolean]::
-    If 'VAL' is false, then don't print timing information.
+param:with-time[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is false, then don't print timing information.
 +
 Default: true.
 
-param:with-trace-name='VAL' vtype:[optional boolean]::
-    If 'VAL' is false, then don't print trace names.
+param:with-trace-name[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is false, then don't print trace names.
 +
 Default: true.
 
-param:with-uid='VAL' vtype:[optional boolean]::
-    If 'VAL' is false, then don't print unique IDs (UIDs).
+param:with-uid[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is false, then don't print unique IDs (UIDs).
 +
 Default: true.
 
-param:with-uuid='VAL' vtype:[optional boolean]::
-    If 'VAL' is false, then don't print UUIDs.
+param:with-uuid[]=_VAL_ vtype:[optional boolean]::
+    If _VAL_ is false, then don't print UUIDs.
 +
 Default: true.
 
@@ -203,5 +203,5 @@ include::common-footer.txt[]
 
 == SEE ALSO
 
-man:babeltrace2-intro(7),
-man:babeltrace2-plugin-text(7)
+man:babeltrace2-intro[7],
+man:babeltrace2-plugin-text[7]

@@ -4,6 +4,6 @@
 
 === Command information
 
-opt:-h::
-opt:--help::
+opt:-h[]::
+opt:--help[]::
     Show the command help and quit.

@@ -14,7 +14,7 @@ babeltrace2-plugin-text - Babeltrace 2: Plain text plugin
 
 == DESCRIPTION
 
-The Babeltrace~2 `text` plugin contains component classes which
+The Babeltrace{nbsp}2 `text` plugin contains component classes which
 read or write plain text data.
 
 include::common-see-babeltrace2-intro.txt[]
@@ -22,26 +22,26 @@ include::common-see-babeltrace2-intro.txt[]
 
 == COMPONENT CLASSES
 
-compcls:source.text.dmesg::
+compcls:source.text.dmesg[]::
     Reads the lines of a Linux kernel ring buffer, that is, the output
-    of the man:dmesg(1) tool, and emits each line as an event message.
+    of the man:dmesg[1] tool, and emits each line as an event message.
 +
-See man:babeltrace2-source.text.dmesg(7).
+See man:babeltrace2-source.text.dmesg[7].
 
-compcls:sink.text.details::
+compcls:sink.text.details[]::
     Deterministically prints the messages it consumes with details to
     the standard output.
 +
-See man:babeltrace2-sink.text.details(7).
+See man:babeltrace2-sink.text.details[7].
 
-compcls:sink.text.pretty::
+compcls:sink.text.pretty[]::
     Pretty-prints the messages it consumes to the standard output or to
     a file.
 +
-This is equivalent to the `text` output format of man:babeltrace(1)
-(Babeltrace~1).
+This is equivalent to the `text` output format of man:babeltrace[1]
+(Babeltrace{nbsp}1).
 +
-See man:babeltrace2-sink.text.pretty(7).
+See man:babeltrace2-sink.text.pretty[7].
 
 
 include::common-footer.txt[]
@@ -49,7 +49,7 @@ include::common-footer.txt[]
 
 == SEE ALSO
 
-man:babeltrace2-intro(7),
-man:babeltrace2-source.text.dmesg(7),
-man:babeltrace2-sink.text.details(7),
-man:babeltrace2-sink.text.pretty(7)
+man:babeltrace2-intro[7],
+man:babeltrace2-source.text.dmesg[7],
+man:babeltrace2-sink.text.details[7],
+man:babeltrace2-sink.text.pretty[7]
