@@ -19,11 +19,11 @@ consumes to one or more https://diamon.org/ctf/[CTF]{nbsp}1.8 or CTF{nbsp}2 trac
 on the file system.
 
 ----
-            +-------------+
-            | sink.ctf.fs |
-            |             +--> CTF trace(s) on
-Messages -->@ in          |    the file system
-            +-------------+
+            ┌─────────────┐
+            │ sink.ctf.fs │
+            │             ├──> CTF trace(s) on
+Messages ──>● in          │    the file system
+            └─────────────┘
 ----
 
 include::common-see-babeltrace2-intro.txt[]
@@ -346,11 +346,11 @@ Default: false.
 == PORTS
 
 ----
-+-------------+
-| sink.ctf.fs |
-|             |
-@ in          |
-+-------------+
+┌─────────────┐
+│ sink.ctf.fs │
+│             │
+● in          │
+└─────────────┘
 ----
 
 

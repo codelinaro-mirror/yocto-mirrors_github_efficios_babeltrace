@@ -24,12 +24,12 @@ information when it's available and possible.
 ----
 Messages without
 debugging information
-  |
-  |  +----------------------------+
-  |  | flt.lttng-utils.debug-info |
-  |  |                            |
-  '->@ in                     out @--> Messages with
-     +----------------------------+    debugging information
+  │
+  │  ┌────────────────────────────┐
+  │  │ flt.lttng-utils.debug-info │
+  │  │                            │
+  ╰─>● in                     out ●──> Messages with
+     └────────────────────────────┘    debugging information
 ----
 
 include::common-see-babeltrace2-intro.txt[]
@@ -248,11 +248,11 @@ param:target-prefix[]=_DIR_ vtype:[optional string]::
 == PORTS
 
 ----
-+----------------------------+
-| flt.lttng-utils.debug-info |
-|                            |
-@ in                     out @
-+----------------------------+
+┌────────────────────────────┐
+│ flt.lttng-utils.debug-info │
+│                            │
+● in                     out ●
+└────────────────────────────┘
 ----
 
 

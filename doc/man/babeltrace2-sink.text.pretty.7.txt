@@ -20,11 +20,11 @@ events, discarded events, and discarded packets messages it consumes to
 the standard output or to a file.
 
 ----
-            +------------------+
-            | sink.text.pretty |
-            |                  +--> Pretty-printed messages to
-Messages -->@ in               |    the standard output or a file and
-            +------------------+    to the standard error
+            ┌──────────────────┐
+            │ sink.text.pretty │
+            │                  ├──> Pretty-printed messages to
+Messages ──>● in               │    the standard output or a file and
+            └──────────────────┘    to the standard error
 ----
 
 include::common-see-babeltrace2-intro.txt[]
@@ -307,11 +307,11 @@ Default: false.
 == PORTS
 
 ----
-+------------------+
-| sink.text.pretty |
-|                  |
-@ in               |
-+------------------+
+┌──────────────────┐
+│ sink.text.pretty │
+│                  │
+● in               │
+└──────────────────┘
 ----
 
 

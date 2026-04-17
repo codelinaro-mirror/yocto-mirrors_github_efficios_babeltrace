@@ -23,14 +23,14 @@ corresponding messages.
 ----
 CTF data streams on
 the file system
-  |
-  |   +---------------------+
-  |   |      src.ctf.fs     |
-  |   |                     |
-  '-->|    ...5c847 | 0 | 0 @--> Stream 0 messages
-      |    ...5c847 | 0 | 1 @--> Stream 1 messages
-      |    ...5c847 | 0 | 2 @--> Stream 2 messages
-      +---------------------+
+  │
+  │   ┌─────────────────────┐
+  │   │      src.ctf.fs     │
+  │   │                     │
+  ╰──>│    ...5c847 │ 0 │ 0 ●──> Stream 0 messages
+      │    ...5c847 │ 0 │ 1 ●──> Stream 1 messages
+      │    ...5c847 │ 0 │ 2 ●──> Stream 2 messages
+      └─────────────────────┘
 ----
 
 include::common-see-babeltrace2-intro.txt[]
@@ -330,12 +330,12 @@ param:trace-name[]=_NAME_ vtype:[optional string]::
 == PORTS
 
 ----
-+--------------------+
-|     src.ctf.fs     |
-|                    |
-|   ...5c847 | 0 | 1 @
-|                ... @
-+--------------------+
+┌────────────────────┐
+│     src.ctf.fs     │
+│                    │
+│   ...5c847 | 0 | 1 ●
+│                ... ●
+└────────────────────┘
 ----
 
 

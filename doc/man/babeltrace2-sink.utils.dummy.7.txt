@@ -18,11 +18,11 @@ A Babeltrace{nbsp}2 compcls:sink.utils.dummy[] component consumes messages
 and discards them (does absolutely nothing with them).
 
 ----
-            +------------------+
-            | sink.utils.dummy |
-            |                  |
-Messages -->@ in               |
-            +------------------+
+            ┌──────────────────┐
+            │ sink.utils.dummy │
+            │                  │
+Messages ──>● in               │
+            └──────────────────┘
 ----
 
 include::common-see-babeltrace2-intro.txt[]
@@ -38,11 +38,11 @@ performs formatting operations.
 == PORTS
 
 ----
-+------------------+
-| sink.utils.dummy |
-|                  |
-@ in               |
-+------------------+
+┌──────────────────┐
+│ sink.utils.dummy │
+│                  │
+● in               │
+└──────────────────┘
 ----
 
 

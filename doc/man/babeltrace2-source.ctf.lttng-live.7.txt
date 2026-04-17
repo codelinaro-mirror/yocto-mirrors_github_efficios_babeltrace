@@ -23,12 +23,12 @@ corresponding messages.
 ----
 CTF streams over
 LTTng live (TCP)
-  |
-  |   +--------------------+
-  |   | src.ctf.lttng-live |
-  '-->|                    |
-      |                out @--> Sorted messages of one
-      +--------------------+    or more streams
+  │
+  │   ┌────────────────────┐
+  │   │ src.ctf.lttng-live │
+  ╰──>│                    │
+      │                out ●──> Sorted messages of one
+      └────────────────────┘    or more streams
 ----
 
 More information about LTTng live is available in the
@@ -124,11 +124,11 @@ exist.
 == PORTS
 
 ----
-+--------------------+
-| src.ctf.lttng-live |
-|                    |
-|                out @
-+--------------------+
+┌────────────────────┐
+│ src.ctf.lttng-live │
+│                    │
+│                out ●
+└────────────────────┘
 ----
 
 

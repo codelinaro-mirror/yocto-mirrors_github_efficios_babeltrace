@@ -20,14 +20,14 @@ the messages that it consumes from one or more upstream message
 iterators into a linear sequence of messages ordered by time.
 
 ----
-            +-----------------+
-            | flt.utils.muxer |
-            |                 |
-Messages -->@ in0         out @--> Sorted messages
-Messages -->@ in1             |
-Messages -->@ in2             |
-            @ in3             |
-            +-----------------+
+            ┌─────────────────┐
+            │ flt.utils.muxer │
+            │                 │
+Messages ──>● in0         out ●──> Sorted messages
+Messages ──>● in1             │
+Messages ──>● in2             │
+            ● in3             │
+            └─────────────────┘
 ----
 
 include::common-see-babeltrace2-intro.txt[]
@@ -48,12 +48,12 @@ frequency which is greater than{nbsp}1{nbsp}GHz.
 == PORTS
 
 ----
-+-----------------+
-| flt.utils.muxer |
-|                 |
-@ in0         out @
-@ ...             |
-+-----------------+
+┌─────────────────┐
+│ flt.utils.muxer │
+│                 │
+● in0         out ●
+● ...             │
+└─────────────────┘
 ----
 
 

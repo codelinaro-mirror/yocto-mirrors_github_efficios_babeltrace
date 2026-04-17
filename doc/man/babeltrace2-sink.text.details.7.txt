@@ -21,11 +21,11 @@ details, to the standard output. You can use the param:path[] parameter
 to make the component write to a file instead.
 
 ----
-            +-------------------+
-            | sink.text.details |
-            |                   +--> Detailed messages to the
-Messages -->@ in                |    standard output
-            +-------------------+
+            ┌───────────────────┐
+            │ sink.text.details │
+            │                   ├──> Detailed messages to the
+Messages ──>● in                │    standard output
+            └───────────────────┘
 ----
 
 include::common-see-babeltrace2-intro.txt[]
@@ -179,11 +179,11 @@ Default: true.
 == PORTS
 
 ----
-+-------------------+
-| sink.text.details |
-|                   |
-@ in                |
-+-------------------+
+┌───────────────────┐
+│ sink.text.details │
+│                   │
+● in                │
+└───────────────────┘
 ----
 
 

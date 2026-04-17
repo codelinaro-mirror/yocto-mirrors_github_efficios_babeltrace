@@ -20,11 +20,11 @@ standard output the number of messages it consumes with a count for each
 type.
 
 ----
-            +--------------------+
-            | sink.utils.counter |
-            |                    +--> Statistics to the
-Messages -->@ in                 |    standard output
-            +--------------------+
+            ┌────────────────────┐
+            │ sink.utils.counter │
+            │                    ├──> Statistics to the
+Messages ──>● in                 │    standard output
+            └────────────────────┘
 ----
 
 include::common-see-babeltrace2-intro.txt[]
@@ -75,11 +75,11 @@ no more messages to consume.
 == PORTS
 
 ----
-+--------------------+
-| sink.utils.counter |
-|                    |
-@ in                 |
-+--------------------+
+┌────────────────────┐
+│ sink.utils.counter │
+│                    │
+● in                 │
+└────────────────────┘
 ----
 
 

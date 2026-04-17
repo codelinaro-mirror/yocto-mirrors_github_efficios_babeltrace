@@ -21,11 +21,11 @@ beginning time and greater than a given end time. It effectively
 "`cuts`", or trims trace streams.
 
 ----
-            +-------------------+
-            | flt.utils.trimmer |
-            |                   |
-Messages -->@ in            out @--> Less messages
-            +-------------------+
+            ┌───────────────────┐
+            │ flt.utils.trimmer │
+            │                   │
+Messages ──>● in            out ●──> Less messages
+            └───────────────────┘
 ----
 
 include::common-see-babeltrace2-intro.txt[]
@@ -89,11 +89,11 @@ Default: false.
 == PORTS
 
 ----
-+-------------------+
-| flt.utils.trimmer |
-|                   |
-@ in            out @
-+-------------------+
+┌───────────────────┐
+│ flt.utils.trimmer │
+│                   │
+● in            out ●
+└───────────────────┘
 ----
 
 

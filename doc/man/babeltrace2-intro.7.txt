@@ -479,7 +479,7 @@ In the Babeltrace{nbsp}2 manual pages, a component is represented with a
 box. The box has the <<comp-cls,component class>> type,
 <<plugin,plugin>> name, and component class name at the top. Just below,
 between square brackets, is its component name within the <<graph,trace
-processing graph>>. Each <<port,port>> is represented with an “`@`”
+processing graph>>. Each <<port,port>> is represented with an “`●`”
 symbol on the border(s) of the component box with its name inside the
 box. Output ports are on the right border of the box while input ports
 are on its left border.
@@ -487,14 +487,14 @@ are on its left border.
 For example, here's a source component box:
 
 ----
-+------------+
-| src.ctf.fs |
-|  [my-src]  |
-|            |
-|    stream0 @
-|    stream1 @
-|    stream2 @
-+------------+
+┌────────────┐
+│ src.ctf.fs │
+│  [my-src]  │
+│            │
+│    stream0 ●
+│    stream1 ●
+│    stream2 ●
+└────────────┘
 ----
 
 This one is an instance of the compcls:source.ctf.fs[] component class
@@ -508,15 +508,15 @@ ports to input ports.
 For example, here's a simple conversion graph:
 
 ----
-+------------+    +-----------------+    +------------------+
-| src.ctf.fs |    | flt.utils.muxer |    | sink.text.pretty |
-|    [ctf]   |    |     [muxer]     |    |      [text]      |
-|            |    |                 |    |                  |
-|    stream0 @--->@ in0         out @--->@ in               |
-|    stream1 @--->@ in1             |    +------------------+
-|    stream2 @--->@ in2             |
-+------------+    @ in3             |
-                  +-----------------+
+┌────────────┐    ┌─────────────────┐    ┌──────────────────┐
+│ src.ctf.fs │    │ flt.utils.muxer │    │ sink.text.pretty │
+│    [ctf]   │    │     [muxer]     │    │      [text]      │
+│            │    │                 │    │                  │
+│    stream0 ●───>● in0         out ●───>● in               │
+│    stream1 ●───>● in1             │    └──────────────────┘
+│    stream2 ●───>● in2             │
+└────────────┘    ● in3             │
+                  └─────────────────┘
 ----
 
 Note that input port `in3` of component `muxer` isn't connected in this
@@ -524,49 +524,49 @@ example.
 
 Sometimes, we symbolically represent other resources which are consumed
 from or produced by components. In this case, arrows are used, but they
-don't go to or from port symbols (“`@`”), except for messages. For
+don't go to or from port symbols (“`●`”), except for messages. For
 example, in the graph above, the `ctf` source component consumes a CTF
 trace and the `text` sink component prints plain text to the terminal,
 so here's a more complete diagram:
 
 ----
 CTF trace
-  |
-  |   +------------+    +-----------------+    +------------------+
-  |   | src.ctf.fs |    | flt.utils.muxer |    | sink.text.pretty |
-  '-->|    [ctf]   |    |     [muxer]     |    |      [text]      |
-      |            |    |                 |    |                  |
-      |    stream0 @--->@ in0         out @--->@ in               |
-      |    stream1 @--->@ in1             |    +-----+------------+
-      |    stream2 @--->@ in2             |          |
-      +------------+    @ in3             |          '--> Terminal
-                        +-----------------+
+  │
+  │   ┌────────────┐    ┌─────────────────┐    ┌──────────────────┐
+  │   │ src.ctf.fs │    │ flt.utils.muxer │    │ sink.text.pretty │
+  ╰──>│    [ctf]   │    │     [muxer]     │    │      [text]      │
+      │            │    │                 │    │                  │
+      │    stream0 ●───>● in0         out ●───>● in               │
+      │    stream1 ●───>● in1             │    └─────┬────────────┘
+      │    stream2 ●───>● in2             │          │
+      └────────────┘    ● in3             │          ╰──> Terminal
+                        └─────────────────┘
 ----
 
 Here's another example of a more complex graph which splits a specific
 stream using some criteria:
 
 ----
-+------------+    +-----------------+    +------------------+
-| src.ctf.fs |    | flt.utils.muxer |    | sink.text.pretty |
-|  [ctf-in]  |    |     [muxer]     |    |      [text]      |
-|            |    |                 |    |                  |
-|    stream0 @--->@ in0         out @--->@ in               |
-|    stream1 @--->@ in1             |    +------------------+
-|    stream2 @-.  @ in2             |
-+------------+ |  +-----------------+      +-------------+
-               |                           | sink.ctf.fs |
-               |                           |  [ctf-out0] |
-               |  +-------------------+    |             |
-               |  | flt.some.splitter | .->@ in          |
-               |  |     [splitter]    | |  +-------------+
-               |  |                   | |
-               '->@ in              A @-'  +-------------+
-                  |                 B @-.  | sink.ctf.fs |
-                  +-------------------+ |  |  [ctf-out1] |
-                                        |  |             |
-                                        '->@ in          |
-                                           +-------------+
+┌────────────┐    ┌─────────────────┐    ┌──────────────────┐
+│ src.ctf.fs │    │ flt.utils.muxer │    │ sink.text.pretty │
+│  [ctf-in]  │    │     [muxer]     │    │      [text]      │
+│            │    │                 │    │                  │
+│    stream0 ●───>● in0         out ●───>● in               │
+│    stream1 ●───>● in1             │    └──────────────────┘
+│    stream2 ●─╮  ● in2             │
+└────────────┘ │  └─────────────────┘      ┌─────────────┐
+               │                           │ sink.ctf.fs │
+               │                           │  [ctf-out0] │
+               │  ┌───────────────────┐    │             │
+               │  │ flt.some.splitter │ ╭─>● in          │
+               │  │     [splitter]    │ │  └─────────────┘
+               │  │                   │ │
+               ╰─>● in              A ●─╯  ┌─────────────┐
+                  │                 B ●─╮  │ sink.ctf.fs │
+                  └───────────────────┘ │  │  [ctf-out1] │
+                                        │  │             │
+                                        ╰─>● in          │
+                                           └─────────────┘
 ----
 
 

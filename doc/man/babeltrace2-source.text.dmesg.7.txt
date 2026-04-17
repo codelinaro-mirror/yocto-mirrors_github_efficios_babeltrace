@@ -22,12 +22,12 @@ tool, and emits corresponding event messages.
 ----
 Linux kernel ring buffer
 lines (file or standard input)
-  |
-  |   +----------------+
-  |   | src.text.dmesg |
-  '-->|                |
-      |            out @--> Messages (single stream)
-      +----------------+
+  │
+  │   ┌────────────────┐
+  │   │ src.text.dmesg │
+  ╰──>│                │
+      │            out ●──> Messages (single stream)
+      └────────────────┘
 ----
 
 include::common-see-babeltrace2-intro.txt[]
@@ -88,11 +88,11 @@ param:path[]=_PATH_ vtype:[optional string]::
 == PORTS
 
 ----
-+----------------+
-| src.text.dmesg |
-|                |
-|            out @
-+----------------+
+┌────────────────┐
+│ src.text.dmesg │
+│                │
+│            out ●
+└────────────────┘
 ----
 
 

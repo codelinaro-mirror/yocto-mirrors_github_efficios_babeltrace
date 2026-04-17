@@ -308,12 +308,12 @@ $ babeltrace2 run --component=A:src.plug.my-src \
 Possible resulting graph:
 
 ----
-+-----------------+    +-------------------+
-| src.plug.my-src |    | sink.plug.my-sink |
-|       [A]       |    |         [B]       |
-|                 |    |                   |
-|             out @--->@ in                |
-+-----------------+    +-------------------+
+┌─────────────────┐    ┌───────────────────┐
+│ src.plug.my-src │    │ sink.plug.my-sink │
+│       [A]       │    │         [B]       │
+│                 │    │                   │
+│             out ●───>● in                │
+└─────────────────┘    └───────────────────┘
 ----
 ====
 
@@ -380,15 +380,15 @@ $ babeltrace2 run --component=A:src.plug.my-src \
 Possible resulting graph:
 
 ----
-+-----------------+    +-------------------+
-| src.plug.my-src |    | sink.plug.my-sink |
-|       [A]       |    |        [B]        |
-|                 |    |                   |
-|            foot @--->@ nine              |
-|         foodies @--->@ ninja             |
-|       some-port @--->@ othello           |
-|           hello @--->@ other             |
-+-----------------+    +-------------------+
+┌─────────────────┐    ┌───────────────────┐
+│ src.plug.my-src │    │ sink.plug.my-sink │
+│       [A]       │    │        [B]        │
+│                 │    │                   │
+│            foot ●───>● nine              │
+│         foodies ●───>● ninja             │
+│       some-port ●───>● othello           │
+│           hello ●───>● other             │
+└─────────────────┘    └───────────────────┘
 ----
 ====
 
