@@ -116,12 +116,14 @@ void destroy_component(struct bt_object *obj)
 	/* Call destroy listeners in reverse registration order */
 	BT_LOGD_STR("Calling destroy listeners.");
 
-	for (i = component->destroy_listeners->len - 1; i >= 0; i--) {
-		struct bt_component_destroy_listener *listener =
-			&bt_g_array_index(component->destroy_listeners,
-				struct bt_component_destroy_listener, i);
+	if (component->destroy_listeners) {
+		for (i = component->destroy_listeners->len - 1; i >= 0; i--) {
+			struct bt_component_destroy_listener *listener =
+				&bt_g_array_index(component->destroy_listeners,
+					struct bt_component_destroy_listener, i);
 
-		listener->func(component, listener->data);
+			listener->func(component, listener->data);
+		}
 	}
 
 	/*
