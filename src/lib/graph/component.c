@@ -200,6 +200,7 @@ enum bt_self_component_add_port_status add_port(
 	struct bt_port *new_port = NULL;
 	struct bt_graph *graph = NULL;
 	enum bt_self_component_add_port_status status;
+	enum bt_graph_listener_func_status listener_status;
 
 	BT_ASSERT_PRE_NO_ERROR_FROM_FUNC(api_func);
 	BT_ASSERT_PRE_COMP_NON_NULL_FROM_FUNC(api_func, component);
@@ -239,16 +240,11 @@ enum bt_self_component_add_port_status add_port(
 	/*
 	 * Notify the graph's creator that a new port was added.
 	 */
-	graph = bt_component_borrow_graph(component);
-	if (graph) {
-		enum bt_graph_listener_func_status listener_status;
-
-		listener_status = bt_graph_notify_port_added(graph, new_port);
-		if (listener_status != BT_FUNC_STATUS_OK) {
-			bt_graph_make_faulty(graph);
-			status = (int) listener_status;
-			goto error;
-		}
+	listener_status = bt_graph_notify_port_added(graph, new_port);
+	if (listener_status != BT_FUNC_STATUS_OK) {
+		bt_graph_make_faulty(graph);
+		status = (int) listener_status;
+		goto error;
 	}
 
 	BT_LIB_LOGI("Created and added port to component: "
