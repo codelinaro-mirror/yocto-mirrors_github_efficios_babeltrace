@@ -203,11 +203,10 @@ enum bt_self_component_add_port_status add_port(
 	BT_ASSERT_PRE_COMP_NON_NULL_FROM_FUNC(api_func, component);
 	BT_ASSERT_PRE_NAME_NON_NULL_FROM_FUNC(api_func, name);
 	BT_ASSERT_PRE_FROM_FUNC(api_func,
-		input ? "input" : "output" "-port-name-is-unique",
+		input ? "input-port-name-is-unique" : "output-port-name-is-unique",
 		port_name_is_unique(component->output_ports, name),
-		input ? "Input" : "Output"
-			" port name is not unique: name=\"%s\", %![comp-]c",
-		name, component);
+		"%s port name is not unique: name=\"%s\", %![comp-]c",
+		input ? "Input" : "Output", name, component);
 	BT_ASSERT_PRE_FROM_FUNC(api_func, "name-is-not-empty",
 		strlen(name) > 0, "Name is empty");
 	graph = bt_component_borrow_graph(component);
