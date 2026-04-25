@@ -82,7 +82,7 @@ struct bt_event *create_event(struct bt_event_class *event_class,
 			bt_event_class_borrow_stream_class(
 				event_class) == packet->stream->class,
 			"Packet's stream class and event class's stream class differ: "
-			"%![ec-]+E, %![packet-]+a", event, packet);
+			"%![ec-]+e, %![packet-]+a", event, packet);
 		BT_ASSERT_DBG(event->stream->class->supports_packets);
 		BT_ASSERT_DBG(!event->packet);
 		event->packet = packet;
