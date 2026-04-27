@@ -1533,11 +1533,6 @@ Component class lookup::
     `CompClsType` enumeration and `find_comp_cls_in_path()` finds a
     component class within a plugin found by searching a given path.
 
-pytest{nbsp}6/7 compatibility::
-    `PytestFile`, `PytestItem`, and `install_pytest_collect_file()`
-    provide a consistent API across pytest versions for custom
-    collectors.
-
 === `bt_tests_cli_utils` module
 
 `tests/utils/python/bt_tests_cli_utils.py` is a common CLI testing

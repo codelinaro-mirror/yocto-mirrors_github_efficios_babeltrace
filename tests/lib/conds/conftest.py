@@ -5,9 +5,7 @@
 
 import os
 import re
-import sys
 import signal
-import typing
 import logging
 import pathlib
 import subprocess
@@ -22,7 +20,7 @@ _logger = logging.getLogger(__name__)
 
 # Helper function to access dynamic `config` attribute while satisfying
 # the type checker.
-def _config_build_root_dir(config: "pytest.Config") -> pathlib.Path:
+def _config_build_root_dir(config: pytest.Config) -> pathlib.Path:
     return getattr(config, "build_root_dir")
 
 
@@ -83,7 +81,7 @@ def _cond_trigger_descriptors_from_json(
     return descriptors
 
 
-class _CondTriggerTestItem(btu.PytestItem):
+class _CondTriggerTestItem(pytest.Item):
     def __init__(
         self,
         *,
@@ -91,7 +89,7 @@ class _CondTriggerTestItem(btu.PytestItem):
         conds_triggers_bin: pathlib.Path,
         **kwargs: Any,
     ):
-        super().__init__(**kwargs)
+        super().__init__(**kwargs)  # pyright: ignore[reportUnknownMemberType]
         self._descriptor = descriptor
         self._conds_triggers_bin = conds_triggers_bin
 
@@ -134,7 +132,7 @@ class _CondTriggerTestItem(btu.PytestItem):
         return self.path, None, self.name
 
 
-class _CondTriggersTestFile(btu.PytestFile):
+class _CondTriggersTestFile(pytest.File):
     @staticmethod
     def _normalize_trigger_name(trigger_name: str) -> str:
         normalized = re.sub(r"\W", "_", trigger_name)
@@ -187,16 +185,10 @@ class _CondTriggersTestFile(btu.PytestFile):
 
 
 # pytest hook.
-def _pytest_collect_file(
-    file_path: pathlib.Path, parent: "pytest.Collector"
+def pytest_collect_file(
+    file_path: pathlib.Path, parent: pytest.Collector
 ) -> Optional[_CondTriggersTestFile]:
     if file_path.name == "conds-triggers.cpp":
-        return typing.cast(
-            _CondTriggersTestFile,
-            _CondTriggersTestFile.from_parent(parent=parent, path=file_path),
+        return _CondTriggersTestFile.from_parent(  # pyright: ignore[reportUnknownMemberType]
+            parent=parent, path=file_path
         )
-
-    return None
-
-
-btu.install_pytest_collect_file(sys.modules[__name__], _pytest_collect_file)

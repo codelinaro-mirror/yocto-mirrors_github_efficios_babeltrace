@@ -6,7 +6,6 @@
 import os
 import re
 import sys
-import typing
 import logging
 import pathlib
 from typing import Any, List, Optional
@@ -26,15 +25,15 @@ _logger = logging.getLogger(__name__)
 
 
 # Helper functions to access/set dynamic config attributes (satisfies type checker)
-def _config_build_root_dir(config: "pytest.Config") -> pathlib.Path:
+def _config_build_root_dir(config: pytest.Config) -> pathlib.Path:
     return getattr(config, "build_root_dir")
 
 
-def _set_config_build_root_dir(config: "pytest.Config", path: pathlib.Path) -> None:
+def _set_config_build_root_dir(config: pytest.Config, path: pathlib.Path) -> None:
     setattr(config, "build_root_dir", path)
 
 
-def _config_build_tests_dir(config: "pytest.Config") -> pathlib.Path:
+def _config_build_tests_dir(config: pytest.Config) -> pathlib.Path:
     return getattr(config, "build_tests_dir")
 
 
@@ -46,7 +45,7 @@ def _src_tests_dir() -> pathlib.Path:
     return pathlib.Path(__file__).resolve().parent
 
 
-def _set_config_build_root_tests_dirs(config: "pytest.Config") -> None:
+def _set_config_build_root_tests_dirs(config: pytest.Config) -> None:
     bt_tests_builddir = os.environ.get("BT_TESTS_BUILDDIR")
 
     if bt_tests_builddir:
@@ -66,7 +65,7 @@ def _log_env_var(name: str) -> None:
 
 
 # pytest hook.
-def pytest_sessionstart(session: "pytest.Session") -> None:
+def pytest_sessionstart(session: pytest.Session) -> None:
     _logger.info("pytest_sessionstart():")
     _logger.info(f"  Root source directory: `{_src_root_dir()}`")
     _logger.info(f"  Root build directory: `{_config_build_root_dir(session.config)}`")
@@ -90,7 +89,7 @@ def pytest_sessionstart(session: "pytest.Session") -> None:
 
 
 # pytest hook.
-def pytest_configure(config: "pytest.Config") -> None:
+def pytest_configure(config: pytest.Config) -> None:
     _set_config_build_root_tests_dirs(config)
     setattr(config, "src_tests_dir", _src_tests_dir())
     setattr(config, "ctf_traces_dir", _src_tests_dir() / "common-data/ctf-traces")
@@ -98,7 +97,7 @@ def pytest_configure(config: "pytest.Config") -> None:
 
 # pytest hook.
 def pytest_collection_modifyitems(
-    config: "pytest.Config", items: List[pytest.Item]
+    config: pytest.Config, items: List[pytest.Item]
 ) -> None:
     # Cache plugin/feature availability once (bt2.find_plugin() can
     # be expensive).
@@ -126,12 +125,12 @@ def src_tests_dir() -> pathlib.Path:
 
 
 @pytest.fixture(scope="session")
-def build_root_dir(request: "pytest.FixtureRequest") -> pathlib.Path:
+def build_root_dir(request: pytest.FixtureRequest) -> pathlib.Path:
     return _config_build_root_dir(request.config)
 
 
 @pytest.fixture(scope="session")
-def build_tests_dir(request: "pytest.FixtureRequest") -> pathlib.Path:
+def build_tests_dir(request: pytest.FixtureRequest) -> pathlib.Path:
     return _config_build_tests_dir(request.config)
 
 
@@ -222,7 +221,7 @@ def os_type() -> btu.OsType:
     return btu.os_type()
 
 
-class _Catch2TestItem(btu.PytestItem):
+class _Catch2TestItem(pytest.Item):
     def __init__(
         self,
         *,
@@ -231,7 +230,7 @@ class _Catch2TestItem(btu.PytestItem):
         build_root_dir: pathlib.Path,
         **kwargs: Any,
     ):
-        super().__init__(**kwargs)
+        super().__init__(**kwargs)  # pyright: ignore[reportUnknownMemberType]
         self._test_binary = test_binary
         self._catch2_test_name = catch2_test_name
         self._build_root_dir = build_root_dir
@@ -261,7 +260,7 @@ class _Catch2TestItem(btu.PytestItem):
         return self.path, None, self.name
 
 
-class _Catch2TestFile(btu.PytestFile):
+class _Catch2TestFile(pytest.File):
     @staticmethod
     def _normalize_catch2_test_name(test_name: str) -> str:
         test_name = test_name.lower()
@@ -320,15 +319,10 @@ class _Catch2TestFile(btu.PytestFile):
 
 
 # pytest hook.
-def _pytest_collect_file(
-    file_path: pathlib.Path, parent: "pytest.Collector"
+def pytest_collect_file(
+    file_path: pathlib.Path, parent: pytest.Collector
 ) -> Optional[_Catch2TestFile]:
     if file_path.suffix == ".cpp" and file_path.name.startswith("test-"):
-        return typing.cast(
-            _Catch2TestFile, _Catch2TestFile.from_parent(parent=parent, path=file_path)
+        return _Catch2TestFile.from_parent(  # pyright: ignore[reportUnknownMemberType]
+            parent=parent, path=file_path
         )
-
-    return
-
-
-btu.install_pytest_collect_file(sys.modules[__name__], _pytest_collect_file)

@@ -3,7 +3,6 @@
 
 # pyright: strict, reportMissingTypeStubs=false, reportTypeCommentUsage=false, reportPrivateUsage=false
 
-import sys
 import string
 import typing
 import logging
@@ -462,9 +461,9 @@ def _make_ctf_data(normand_text: str) -> bytearray:
     return normand.parse(f"!le\n{normand_text}").data
 
 
-class _FieldTestItem(btu.PytestItem):
+class _FieldTestItem(pytest.Item):
     def __init__(self, *, mp_path: pathlib.Path, **kwargs: Any) -> None:
-        super().__init__(**kwargs)
+        super().__init__(**kwargs)  # pyright: ignore[reportUnknownMemberType]
         self._mp_path = mp_path
 
     def runtest(self) -> None:
@@ -535,7 +534,7 @@ class _FieldTestException(Exception):
         )
 
 
-class _FieldTestFile(btu.PytestFile):
+class _FieldTestFile(pytest.File):
     def collect(self) -> List[_FieldTestItem]:
         logger.info(f"Adding field test from `{self.path}`")
 
@@ -548,13 +547,10 @@ class _FieldTestFile(btu.PytestFile):
 
 
 # pytest hook.
-def _pytest_collect_file(
-    file_path: pathlib.Path, parent: Any
+def pytest_collect_file(
+    file_path: pathlib.Path, parent: pytest.Collector
 ) -> Optional[_FieldTestFile]:
     if file_path.suffix == ".mp":
-        return typing.cast(
-            _FieldTestFile, _FieldTestFile.from_parent(parent=parent, path=file_path)
+        return _FieldTestFile.from_parent(  # pyright: ignore[reportUnknownMemberType]
+            parent=parent, path=file_path
         )
-
-
-btu.install_pytest_collect_file(sys.modules[__name__], _pytest_collect_file)
