@@ -65,13 +65,12 @@ class CliParams:
 # `CliParams` instance is converted to `--params` followed by the
 # equivalent parameters value string.
 #
-# `check`, `text`, `timeout`, and `extra_env` are passed to btu.run().
+# `check`, `timeout`, and `extra_env` are passed to btu.run().
 def run_cli(
     build_root_dir: pathlib.Path,
     args: List[Union[str, CliParams]],
     plugin_paths: Optional[List[Any]] = None,
     check: bool = False,
-    text: bool = True,
     timeout: Optional[float] = None,
     extra_env: Optional[Dict[str, str]] = None,
 ) -> "subprocess.CompletedProcess[str]":
@@ -96,7 +95,6 @@ def run_cli(
         build_root_dir / "src/cli/babeltrace2",
         cli_args,
         check=check,
-        text=text,
         timeout=timeout,
         extra_env=extra_env,
     )
