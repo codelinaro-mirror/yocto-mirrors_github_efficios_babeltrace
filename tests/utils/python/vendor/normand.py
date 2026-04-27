@@ -1,9 +1,9 @@
-# SPDX-FileCopyrightText: 2023 Philippe Proulx <eeppeliteloop@gmail.com>
+# SPDX-FileCopyrightText: 2023-2026 Philippe Proulx <eeppeliteloop@gmail.com>
 # SPDX-License-Identifier: MIT
 #
 # The MIT License (MIT)
 #
-# Copyright (c) 2023 Philippe Proulx <eeppeliteloop@gmail.com>
+# Copyright (c) 2023-2026 Philippe Proulx <eeppeliteloop@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -26,14 +26,14 @@
 
 # This module is the portable Normand processor. It offers both the
 # parse() function and the command-line tool (run the module itself)
-# without external dependencies except a `typing` module for Python 3.4.
+# without external dependencies.
 #
 # Feel free to copy this module file to your own project to use Normand.
 #
 # Upstream repository: <https://github.com/efficios/normand>.
 
 __author__ = "Philippe Proulx"
-__version__ = "0.23.0"
+__version__ = "0.24.0"
 __all__ = [
     "__author__",
     "__version__",
@@ -61,16 +61,7 @@ import quopri
 import struct
 import typing
 import functools
-from typing import Any, Set, Dict, List, Union, Pattern, Callable, Optional
-
-# Python 3.6.2 introduced `typing.NoReturn`. Since Normand supports
-# Python 3.4, define `NoReturn` here if it's not available.
-if sys.version_info >= (3, 6, 2):
-    from typing import NoReturn
-else:
-
-    class NoReturn:
-        pass
+from typing import Any, Set, Dict, List, Union, Pattern, Callable, NoReturn, Optional
 
 
 # Text location (line and column numbers).
@@ -99,7 +90,7 @@ class TextLocation:
         return self._col_no
 
     def __repr__(self):
-        return "TextLocation({}, {})".format(self._line_no, self._col_no)
+        return f"TextLocation({self._line_no}, {self._col_no})"
 
 
 # Any item.
@@ -118,8 +109,7 @@ class _ScalarItem(_Item):
     # Returns the size, in bytes, of this item.
     @property
     @abc.abstractmethod
-    def size(self) -> int:
-        ...
+    def size(self) -> int: ...
 
 
 # A repeatable item.
@@ -143,7 +133,7 @@ class _Byte(_ScalarItem, _RepableItem):
         return 1
 
     def __repr__(self):
-        return "_Byte({}, {})".format(hex(self._val), repr(self._text_loc))
+        return f"_Byte({hex(self._val)}, {self._text_loc!r})"
 
 
 # Literal string.
@@ -162,7 +152,7 @@ class _LitStr(_ScalarItem, _RepableItem):
         return len(self._data)
 
     def __repr__(self):
-        return "_LitStr({}, {})".format(repr(self._data), repr(self._text_loc))
+        return f"_LitStr({self._data!r}, {self._text_loc!r})"
 
 
 # Byte order.
@@ -186,7 +176,7 @@ class _SetBo(_Item):
         return self._bo
 
     def __repr__(self):
-        return "_SetBo({}, {})".format(repr(self._bo), repr(self._text_loc))
+        return f"_SetBo({self._bo!r}, {self._text_loc!r})"
 
 
 # Label.
@@ -201,7 +191,7 @@ class _Label(_Item):
         return self._name
 
     def __repr__(self):
-        return "_Label({}, {})".format(repr(self._name), repr(self._text_loc))
+        return f"_Label({self._name!r}, {self._text_loc!r})"
 
 
 # Offset setting.
@@ -216,7 +206,7 @@ class _SetOffset(_Item):
         return self._val
 
     def __repr__(self):
-        return "_SetOffset({}, {})".format(repr(self._val), repr(self._text_loc))
+        return f"_SetOffset({self._val!r}, {self._text_loc!r})"
 
 
 # Offset alignment.
@@ -237,9 +227,7 @@ class _AlignOffset(_Item):
         return self._pad_val
 
     def __repr__(self):
-        return "_AlignOffset({}, {}, {})".format(
-            repr(self._val), repr(self._pad_val), repr(self._text_loc)
-        )
+        return f"_AlignOffset({self._val!r}, {self._pad_val!r}, {self._text_loc!r})"
 
 
 # Mixin of containing an AST expression and its string.
@@ -274,12 +262,7 @@ class _FillUntil(_Item, _ExprMixin):
         return self._pad_val
 
     def __repr__(self):
-        return "_FillUntil({}, {}, {}, {})".format(
-            repr(self._expr_str),
-            repr(self._expr),
-            repr(self._pad_val),
-            repr(self._text_loc),
-        )
+        return f"_FillUntil({self._expr_str!r}, {self._expr!r}, {self._pad_val!r}, {self._text_loc!r})"
 
 
 # Variable assignment.
@@ -297,12 +280,7 @@ class _VarAssign(_Item, _ExprMixin):
         return self._name
 
     def __repr__(self):
-        return "_VarAssign({}, {}, {}, {})".format(
-            repr(self._name),
-            repr(self._expr_str),
-            repr(self._expr),
-            repr(self._text_loc),
-        )
+        return f"_VarAssign({self._name!r}, {self._expr_str!r}, {self._expr!r}, {self._text_loc!r})"
 
 
 # Fixed-length number, possibly needing more than one byte.
@@ -335,13 +313,7 @@ class _FlNum(_ScalarItem, _RepableItem, _ExprMixin):
         return self._len // 8
 
     def __repr__(self):
-        return "_FlNum({}, {}, {}, {}, {})".format(
-            repr(self._expr_str),
-            repr(self._expr),
-            repr(self._len),
-            repr(self._bo),
-            repr(self._text_loc),
-        )
+        return f"_FlNum({self._expr_str!r}, {self._expr!r}, {self._len!r}, {self._bo!r}, {self._text_loc!r})"
 
 
 # LEB128 integer.
@@ -351,12 +323,7 @@ class _Leb128Int(_Item, _RepableItem, _ExprMixin):
         _ExprMixin.__init__(self, expr_str, expr)
 
     def __repr__(self):
-        return "{}({}, {}, {})".format(
-            self.__class__.__name__,
-            repr(self._expr_str),
-            repr(self._expr),
-            repr(self._text_loc),
-        )
+        return f"{self.__class__.__name__}({self._expr_str!r}, {self._expr!r}, {self._text_loc!r})"
 
 
 # Unsigned LEB128 integer.
@@ -384,12 +351,7 @@ class _Str(_Item, _RepableItem, _ExprMixin):
         return self._codec
 
     def __repr__(self):
-        return "_Str({}, {}, {}, {})".format(
-            repr(self._expr_str),
-            repr(self._expr),
-            repr(self._codec),
-            repr(self._text_loc),
-        )
+        return f"_Str({self._expr_str!r}, {self._expr!r}, {self._codec!r}, {self._text_loc!r})"
 
 
 # Group of items.
@@ -404,7 +366,7 @@ class _Group(_Item, _RepableItem):
         return self._items
 
     def __repr__(self):
-        return "_Group({}, {})".format(repr(self._items), repr(self._text_loc))
+        return f"_Group({self._items!r}, {self._text_loc!r})"
 
 
 # Repetition item.
@@ -420,12 +382,7 @@ class _Rep(_Group, _ExprMixin):
         _ExprMixin.__init__(self, expr_str, expr)
 
     def __repr__(self):
-        return "_Rep({}, {}, {}, {})".format(
-            repr(self._items),
-            repr(self._expr_str),
-            repr(self._expr),
-            repr(self._text_loc),
-        )
+        return f"_Rep({self._items!r}, {self._expr_str!r}, {self._expr!r}, {self._text_loc!r})"
 
 
 # Conditional item.
@@ -454,13 +411,7 @@ class _Cond(_Item, _ExprMixin):
         return self._false_item
 
     def __repr__(self):
-        return "_Cond({}, {}, {}, {}, {})".format(
-            repr(self._true_item),
-            repr(self._false_item),
-            repr(self._expr_str),
-            repr(self._expr),
-            repr(self._text_loc),
-        )
+        return f"_Cond({self._true_item!r}, {self._false_item!r}, {self._expr_str!r}, {self._expr!r}, {self._text_loc!r})"
 
 
 # Transformation.
@@ -485,12 +436,7 @@ class _Trans(_Group, _RepableItem):
         return self._func(data)
 
     def __repr__(self):
-        return "_Trans({}, {}, {}, {})".format(
-            repr(self._items),
-            repr(self._name),
-            repr(self._func),
-            repr(self._text_loc),
-        )
+        return f"_Trans({self._items!r}, {self._name!r}, {self._func!r}, {self._text_loc!r})"
 
 
 # Macro definition item.
@@ -517,12 +463,7 @@ class _MacroDef(_Group):
         return self._param_names
 
     def __repr__(self):
-        return "_MacroDef({}, {}, {}, {})".format(
-            repr(self._name),
-            repr(self._param_names),
-            repr(self._items),
-            repr(self._text_loc),
-        )
+        return f"_MacroDef({self._name!r}, {self._param_names!r}, {self._items!r}, {self._text_loc!r})"
 
 
 # Macro expansion parameter.
@@ -548,9 +489,7 @@ class _MacroExpParam:
         return self._text_loc
 
     def __repr__(self):
-        return "_MacroExpParam({}, {}, {})".format(
-            repr(self._expr_str), repr(self._expr), repr(self._text_loc)
-        )
+        return f"_MacroExpParam({self._expr_str!r}, {self._expr!r}, {self._text_loc!r})"
 
 
 # Macro expansion item.
@@ -576,11 +515,7 @@ class _MacroExp(_Item, _RepableItem):
         return self._params
 
     def __repr__(self):
-        return "_MacroExp({}, {}, {})".format(
-            repr(self._name),
-            repr(self._params),
-            repr(self._text_loc),
-        )
+        return f"_MacroExp({self._name!r}, {self._params!r}, {self._text_loc!r})"
 
 
 # A parsing error message: a string and a text location.
@@ -622,7 +557,7 @@ class ParseError(RuntimeError):
 
     def _init(self, msg: str, text_loc: TextLocation):
         super().__init__(msg)
-        self._msgs = []  # type: List[ParseErrorMessage]
+        self._msgs: List[ParseErrorMessage] = []
         self._add_msg(msg, text_loc)
 
     def _add_msg(self, msg: str, text_loc: TextLocation):
@@ -686,7 +621,7 @@ def _norm_const_int(s: str):
 
     for suf in asm_suf_base:
         if pos[-1] == suf:
-            s = "{}0{}{}".format(neg, asm_suf_base[suf], pos.rstrip(suf))
+            s = f"{neg}0{asm_suf_base[suf]}{pos.rstrip(suf)}"
 
     return s
 
@@ -697,9 +632,7 @@ def _encode_str(s: str, codec: str, text_loc: TextLocation):
     try:
         return s.encode(codec)
     except UnicodeEncodeError:
-        _raise_error(
-            "Cannot encode `{}` with the `{}` encoding".format(s, codec), text_loc
-        )
+        _raise_error(f"Cannot encode `{s}` with the `{codec}` encoding", text_loc)
 
 
 # Variables dictionary type (for type hints).
@@ -715,7 +648,7 @@ _py_name_pat = re.compile(r"[a-zA-Z_][a-zA-Z0-9_]*")
 _pos_const_int_pat = re.compile(
     r"(?:0[Xx][A-Fa-f0-9]+|0[Oo][0-7]+|0[Bb][01]+|[A-Fa-f0-9]+[hH]|[0-7]+[qQoO]|[01]+[bB]|\d+)\b"
 )
-_const_int_pat = re.compile(r"(?P<neg>-)?(?:{})".format(_pos_const_int_pat.pattern))
+_const_int_pat = re.compile(rf"(?P<neg>-)?(?:{_pos_const_int_pat.pattern})")
 _const_float_pat = re.compile(
     r"[-+]?(?:(?:\d*\.\d+)|(?:\d+\.))(?:[Ee][+-]?\d+)?(?=\W|)"
 )
@@ -739,7 +672,7 @@ class _Parser:
         self._col_no = 1
         self._label_names = set(labels.keys())
         self._var_names = set(variables.keys())
-        self._macro_defs = {}  # type: _MacroDefsT
+        self._macro_defs: _MacroDefsT = {}
         self._base_item_parse_funcs = [
             self._try_parse_byte,
             self._try_parse_str,
@@ -832,9 +765,9 @@ class _Parser:
 
     # Patterns for _skip_*()
     _comment_pat = re.compile(r"#[^#]*?(?:$|#)", re.M)
-    _ws_or_comments_pat = re.compile(r"(?:\s|{})*".format(_comment_pat.pattern), re.M)
+    _ws_or_comments_pat = re.compile(rf"(?:\s|{_comment_pat.pattern})*", re.M)
     _ws_or_syms_or_comments_pat = re.compile(
-        r"(?:[\s/\\?&:;.,_=|-]|{})*".format(_comment_pat.pattern), re.M
+        rf"(?:[\s/\\?&:;.,_=|-]|{_comment_pat.pattern})*", re.M
     )
 
     # Skips as many whitespaces and comments as possible, but not
@@ -887,12 +820,12 @@ class _Parser:
             return
 
         # Expect as many bytes as there are `%` prefixes
-        items = []  # type: List[_Item]
+        items: List[_Item] = []
 
         for _ in range(len(m.group(0))):
             self._skip_ws_and_comments_and_syms()
             byte_text_loc = self._text_loc
-            bits = []  # type: List[str]
+            bits: List[str] = []
 
             # Expect eight bits
             for _ in range(8):
@@ -933,7 +866,7 @@ class _Parser:
 
         # Validate
         if val < -128 or val > 255:
-            _raise_error("Invalid decimal byte value {}".format(val), begin_text_loc)
+            _raise_error(f"Invalid decimal byte value {val}", begin_text_loc)
 
         # Two's complement
         val %= 256
@@ -1001,7 +934,7 @@ class _Parser:
         val = m.group(0)
 
         for ec in '0abefnrtv"\\':
-            val = val.replace(r"\{}".format(ec), self._lit_str_escape_seq_strs[ec])
+            val = val.replace(f"\\{ec}", self._lit_str_escape_seq_strs[ec])
 
         # Return string
         return val
@@ -1158,7 +1091,7 @@ class _Parser:
             pat = self._block_end_pat
             exp = "!end"
 
-        self._expect_pat(pat, "Expecting an item or `{}` (end of group)".format(exp))
+        self._expect_pat(pat, f"Expecting an item or `{exp}` (end of group)")
 
         # Return item
         return _Group(items, begin_text_loc)
@@ -1173,7 +1106,7 @@ class _Parser:
             expr = ast.parse(expr_str, mode="eval")
         except SyntaxError:
             _raise_error(
-                "Invalid expression `{}`: invalid syntax".format(expr_str),
+                f"Invalid expression `{expr_str}`: invalid syntax",
                 text_loc,
             )
 
@@ -1295,12 +1228,10 @@ class _Parser:
 
         # Validate name
         if name == _icitte_name:
-            _raise_error(
-                "`{}` is a reserved variable name".format(_icitte_name), name_text_loc
-            )
+            _raise_error(f"`{_icitte_name}` is a reserved variable name", name_text_loc)
 
         if name in self._label_names:
-            _raise_error("Existing label named `{}`".format(name), name_text_loc)
+            _raise_error(f"Existing label named `{name}`", name_text_loc)
 
         # Create an expression node from the expression string
         expr_str, expr = self._ast_expr_from_str(m_expr.group(0), expr_text_loc)
@@ -1371,15 +1302,13 @@ class _Parser:
         name = m.group(0)
 
         if name == _icitte_name:
-            _raise_error(
-                "`{}` is a reserved label name".format(_icitte_name), begin_text_loc
-            )
+            _raise_error(f"`{_icitte_name}` is a reserved label name", begin_text_loc)
 
         if name in self._label_names:
-            _raise_error("Duplicate label name `{}`".format(name), begin_text_loc)
+            _raise_error(f"Duplicate label name `{name}`", begin_text_loc)
 
         if name in self._var_names:
-            _raise_error("Existing variable named `{}`".format(name), begin_text_loc)
+            _raise_error(f"Existing variable named `{name}`", begin_text_loc)
 
         # Add to known label names
         self._label_names.add(name)
@@ -1439,7 +1368,7 @@ class _Parser:
 
             if pad_val > 255:
                 _raise_error(
-                    "Invalid padding byte value {}".format(pad_val),
+                    f"Invalid padding byte value {pad_val}",
                     pad_val_text_loc,
                 )
 
@@ -1472,9 +1401,7 @@ class _Parser:
 
         if val <= 0 or (val % 8) != 0:
             _raise_error(
-                "Invalid alignment value {} (not a positive multiple of eight)".format(
-                    val
-                ),
+                f"Invalid alignment value {val} (not a positive multiple of eight)",
                 align_text_loc,
             )
 
@@ -1557,7 +1484,7 @@ class _Parser:
 
         if accept_const_int:
             msg_pos = "" if allow_neg_int else "positive "
-            msg_accepted_parts.insert(0, "a {}constant integer".format(msg_pos))
+            msg_accepted_parts.insert(0, f"a {msg_pos}constant integer")
 
         if len(msg_accepted_parts) == 2:
             msg_accepted = " ".join(msg_accepted_parts)
@@ -1566,7 +1493,7 @@ class _Parser:
 
         self._expect_pat(
             self._inner_expr_prefix_pat,
-            "Expecting {}".format(msg_accepted),
+            f"Expecting {msg_accepted}",
         )
 
         # Expect an expression
@@ -1664,7 +1591,7 @@ class _Parser:
         self._skip_ws_and_comments_and_syms()
         true_items_text_loc = self._text_loc
         true_items = self._parse_items()
-        false_items = []  # type: List[_Item]
+        false_items: List[_Item] = []
         false_items_text_loc = begin_text_loc
 
         # `!else`?
@@ -1800,14 +1727,14 @@ class _Parser:
         name = m.group(0)
 
         if name in self._macro_defs:
-            _raise_error("Duplicate macro named `{}`".format(name), name_text_loc)
+            _raise_error(f"Duplicate macro named `{name}`", name_text_loc)
 
         # Expect `(`
         self._skip_ws_and_comments()
         self._expect_pat(self._left_paren_pat, "Expecting `(`")
 
         # Try to parse comma-separated parameter names
-        param_names = []  # type: List[str]
+        param_names: List[str] = []
         expect_comma = False
 
         while True:
@@ -1829,7 +1756,7 @@ class _Parser:
 
             if m.group(0) in param_names:
                 _raise_error(
-                    "Duplicate macro parameter named `{}`".format(m.group(0)),
+                    f"Duplicate macro parameter named `{m.group(0)}`",
                     param_text_loc,
                 )
 
@@ -1840,8 +1767,8 @@ class _Parser:
         self._skip_ws_and_comments_and_syms()
         old_var_names = self._var_names.copy()
         old_label_names = self._label_names.copy()
-        self._var_names = set()  # type: Set[str]
-        self._label_names = set()  # type: Set[str]
+        self._var_names: Set[str] = set()
+        self._label_names: Set[str] = set()
         items = self._parse_items()
         self._var_names = old_var_names
         self._label_names = old_label_names
@@ -1884,7 +1811,7 @@ class _Parser:
         macro_def = self._macro_defs.get(name)
 
         if macro_def is None:
-            _raise_error("Unknown macro name `{}`".format(name), name_text_loc)
+            _raise_error(f"Unknown macro name `{name}`", name_text_loc)
 
         # Expect `(`
         self._skip_ws_and_comments()
@@ -1892,7 +1819,7 @@ class _Parser:
 
         # Try to parse comma-separated parameter values
         params_text_loc = self._text_loc
-        params = []  # type: List[_MacroExpParam]
+        params: List[_MacroExpParam] = []
         expect_comma = False
 
         while True:
@@ -1917,7 +1844,7 @@ class _Parser:
                         accept_const_float=True,
                         accept_lit_str=True,
                     ),
-                    text_loc=param_text_loc
+                    text_loc=param_text_loc,
                 )
             )
             expect_comma = True
@@ -1926,9 +1853,7 @@ class _Parser:
         if len(params) != len(macro_def.param_names):
             sing_plur = "" if len(params) == 1 else "s"
             _raise_error(
-                "Macro expansion passes {} parameter{} while the definition expects {}".format(
-                    len(params), sing_plur, len(macro_def.param_names)
-                ),
+                f"Macro expansion passes {len(params)} parameter{sing_plur} while the definition expects {len(macro_def.param_names)}",
                 params_text_loc,
             )
 
@@ -1991,7 +1916,7 @@ class _Parser:
     # Accepts and registers macro definitions if `accept_macro_defs`
     # is `True`.
     def _parse_items(self, accept_macro_defs: bool = False) -> List[_Item]:
-        items = []  # type: List[_Item]
+        items: List[_Item] = []
 
         while self._isnt_done():
             # Try to append item
@@ -2019,9 +1944,7 @@ class _Parser:
         self._skip_ws_and_comments_and_syms()
 
         if self._isnt_done():
-            self._raise_error(
-                "Unexpected character `{}`".format(self._normand[self._at])
-            )
+            self._raise_error(f"Unexpected character `{self._normand[self._at]}`")
 
         # Set main group item
         self._res = _Group(items, self._text_loc)
@@ -2114,8 +2037,7 @@ class _NodeVisitor(ast.NodeVisitor):
         self._parent_is_call = False
 
     @abc.abstractmethod
-    def _visit_name(self, name: str):
-        ...
+    def _visit_name(self, name: str): ...
 
 
 # Expression validator: validates that all the names within the
@@ -2131,18 +2053,16 @@ class _ExprValidator(_NodeVisitor):
         # Make sure the name refers to a known and reachable
         # variable/label name.
         if name != _icitte_name and name not in self._allowed_names:
-            msg = "Illegal (unknown or unreachable) variable/label name `{}` in expression `{}`".format(
-                name, self._expr_str
-            )
+            msg = f"Illegal (unknown or unreachable) variable/label name `{name}` in expression `{self._expr_str}`"
 
             allowed_names = self._allowed_names.copy()
             allowed_names.add(_icitte_name)
 
             if len(allowed_names) > 0:
                 allowed_names_str = ", ".join(
-                    sorted(["`{}`".format(name) for name in allowed_names])
+                    sorted([f"`{name}`" for name in allowed_names])
                 )
-                msg += "; the legal names are {{{}}}".format(allowed_names_str)
+                msg += f"; the legal names are {{{allowed_names_str}}}"
 
             _raise_error(
                 msg,
@@ -2165,9 +2085,7 @@ class _GenState:
         self.bo = bo
 
     def __repr__(self):
-        return "_GenState({}, {}, {}, {})".format(
-            repr(self.variables), repr(self.labels), repr(self.offset), repr(self.bo)
-        )
+        return f"_GenState({self.variables!r}, {self.labels!r}, {self.offset!r}, {self.bo!r})"
 
 
 # Fixed-length number item instance.
@@ -2253,8 +2171,8 @@ class _Gen:
         bo: Optional[ByteOrder],
     ):
         self._macro_defs = macro_defs
-        self._fl_num_item_insts = []  # type: List[_FlNumItemInst]
-        self._parse_error_msgs = []  # type: List[ParseErrorMessage]
+        self._fl_num_item_insts: List[_FlNumItemInst] = []
+        self._parse_error_msgs: List[ParseErrorMessage] = []
         self._in_trans = False
         self._gen(group, _GenState(variables, labels, offset, bo))
 
@@ -2301,7 +2219,7 @@ class _Gen:
         accept_float: bool = False,
         accept_str: bool = False,
     ):
-        syms = {}  # type: VariablesT
+        syms: VariablesT = {}
         syms.update(state.labels)
 
         # Set the `ICITTE` name to the current offset
@@ -2318,7 +2236,7 @@ class _Gen:
             val = eval(compile(expr, "", "eval"), None, syms)
         except Exception as exc:
             _raise_error(
-                "Failed to evaluate expression `{}`: {}".format(expr_str, exc),
+                f"Failed to evaluate expression `{expr_str}`: {exc}",
                 text_loc,
             )
 
@@ -2327,7 +2245,7 @@ class _Gen:
             val = int(val)
 
         # Validate result type
-        expected_types = {int}  # type: Set[type]
+        expected_types: Set[type] = {int}
 
         if accept_float:
             expected_types.add(float)
@@ -2336,22 +2254,18 @@ class _Gen:
             expected_types.add(str)
 
         if type(val) not in expected_types:
-            expected_types_str = sorted(
-                ["`{}`".format(t.__name__) for t in expected_types]
-            )
+            expected_types_str = sorted([f"`{t.__name__}`" for t in expected_types])
 
             if len(expected_types_str) == 1:
                 msg_expected = expected_types_str[0]
             elif len(expected_types_str) == 2:
                 msg_expected = " or ".join(expected_types_str)
             else:
-                expected_types_str[-1] = "or {}".format(expected_types_str[-1])
+                expected_types_str[-1] = f"or {expected_types_str[-1]}"
                 msg_expected = ", ".join(expected_types_str)
 
             _raise_error(
-                "Invalid expression `{}`: expecting result type {}, not `{}`".format(
-                    expr_str, msg_expected, type(val).__name__
-                ),
+                f"Invalid expression `{expr_str}`: expecting result type {msg_expected}, not `{type(val).__name__}`",
                 text_loc,
             )
 
@@ -2406,9 +2320,7 @@ class _Gen:
         # Validate current byte order
         if bo is None and item.len > 8:
             _raise_error_for_item(
-                "Current byte order isn't defined at first fixed-length number (`{}`) to encode on more than 8 bits".format(
-                    item.expr_str
-                ),
+                f"Current byte order isn't defined at first fixed-length number (`{item.expr_str}`) to encode on more than 8 bits",
                 item,
             )
 
@@ -2419,9 +2331,7 @@ class _Gen:
         except Exception:
             if self._in_trans:
                 _raise_error_for_item(
-                    "Invalid expression `{}`: failed to evaluate within a transformation block".format(
-                        item.expr_str
-                    ),
+                    f"Invalid expression `{item.expr_str}`: failed to evaluate within a transformation block",
                     item,
                 )
 
@@ -2503,7 +2413,7 @@ class _Gen:
         self, item: _Group, state: _GenState, remove_immediate_labels: bool = True
     ):
         first_fl_num_item_inst_index = len(self._fl_num_item_insts)
-        immediate_labels = {}  # type: LabelsT
+        immediate_labels: LabelsT = {}
 
         # Handle each item
         for subitem in item.items:
@@ -2531,9 +2441,7 @@ class _Gen:
         # Validate result
         if mul < 0:
             _raise_error_for_item(
-                "Invalid expression `{}`: unexpected negative result {:,}".format(
-                    item.expr_str, mul
-                ),
+                f"Invalid expression `{item.expr_str}`: unexpected negative result {mul:,}",
                 item,
             )
 
@@ -2571,9 +2479,7 @@ class _Gen:
             transformed = item.trans(to_trans)
         except Exception as exc:
             _raise_error_for_item(
-                "Cannot apply the {} transformation to this data: {}".format(
-                    item.name, exc
-                ),
+                f"Cannot apply the {item.name} transformation to this data: {exc}",
                 item,
             )
 
@@ -2607,7 +2513,7 @@ class _Gen:
 
     # Handles the macro expansion item `item`.
     def _handle_macro_exp_item(self, item: _MacroExp, state: _GenState):
-        parse_error_msg_text = "While expanding the macro `{}`:".format(item.name)
+        parse_error_msg_text = f"While expanding the macro `{item.name}`:"
 
         try:
             # New state
@@ -2648,9 +2554,7 @@ class _Gen:
         # Validate the new offset
         if new_offset < state.offset:
             _raise_error_for_item(
-                "Invalid expression `{}`: new offset {:,} is less than current offset {:,}".format(
-                    item.expr_str, new_offset, state.offset
-                ),
+                f"Invalid expression `{item.expr_str}`: new offset {new_offset:,} is less than current offset {state.offset:,}",
                 item,
             )
 
@@ -2677,19 +2581,14 @@ class _Gen:
         # Validate range
         if val < -(2 ** (item.len - 1)) or val > 2**item.len - 1:
             _raise_error_for_item(
-                "Value {:,} is outside the {}-bit range when evaluating expression `{}`".format(
-                    val, item.len, item.expr_str
-                ),
+                f"Value {val:,} is outside the {item.len}-bit range when evaluating expression `{item.expr_str}`",
                 item,
             )
 
         # Encode result on 64 bits (to extend the sign bit whatever the
         # value of `item.len`).
         data = struct.pack(
-            "{}{}".format(
-                ">" if bo in (None, ByteOrder.BE) else "<",
-                "Q" if val >= 0 else "q",
-            ),
+            f"{'>' if bo in (None, ByteOrder.BE) else '<'}{'Q' if val >= 0 else 'q'}",
             val,
         )
 
@@ -2716,18 +2615,13 @@ class _Gen:
         # Validate length
         if item.len not in (32, 64):
             _raise_error_for_item(
-                "Invalid {}-bit length for a fixed-length floating point number (value {:,})".format(
-                    item.len, val
-                ),
+                f"Invalid {item.len}-bit length for a fixed-length floating point number (value {val:,})",
                 item,
             )
 
         # Encode and return result
         return struct.pack(
-            "{}{}".format(
-                ">" if bo in (None, ByteOrder.BE) else "<",
-                "f" if item.len == 32 else "d",
-            ),
+            f"{'>' if bo in (None, ByteOrder.BE) else '<'}{'f' if item.len == 32 else 'd'}",
             val,
         )
 
@@ -2772,7 +2666,7 @@ class _Gen:
         self._data = bytearray()
 
         # Item handlers
-        self._item_handlers = {
+        self._item_handlers: Dict[type, Callable[[Any, _GenState], None]] = {
             _AlignOffset: self._handle_align_offset_item,
             _Byte: self._handle_byte_item,
             _Cond: self._handle_cond_item,
@@ -2790,7 +2684,7 @@ class _Gen:
             _Trans: self._handle_trans_item,
             _ULeb128Int: self._handle_leb128_int_item,
             _VarAssign: self._handle_var_assign_item,
-        }  # type: Dict[type, Callable[[Any, _GenState], None]]
+        }
 
         # Handle the group item, _not_ removing the immediate labels
         # because the `labels` property offers them.
@@ -2849,7 +2743,7 @@ def parse(
 
 # Raises a command-line error with the message `msg`.
 def _raise_cli_error(msg: str) -> NoReturn:
-    raise RuntimeError("Command-line error: {}".format(msg))
+    raise RuntimeError(f"Command-line error: {msg}")
 
 
 # Returns the `int` or `float` value out of a CLI assignment value.
@@ -2870,22 +2764,22 @@ def _val_from_assign_val_str(s: str, is_label: bool):
         return int(_norm_const_int(m.group(0)), 0)
 
     exp = "an integer" if is_label else "a number"
-    _raise_cli_error("Invalid assignment value `{}`: expecting {}".format(s, exp))
+    _raise_cli_error(f"Invalid assignment value `{s}`: expecting {exp}")
 
 
 # Returns a dictionary of string to numbers from the list of strings
 # `args` containing `NAME=VAL` entries.
 def _dict_from_arg(args: Optional[List[str]], is_label: bool, is_str_only: bool):
-    d = {}  # type: VariablesT
+    d: VariablesT = {}
 
     if args is None:
         return d
 
     for arg in args:
-        m = re.match(r"({})\s*=\s*(.*)$".format(_py_name_pat.pattern), arg)
+        m = re.match(rf"({_py_name_pat.pattern})\s*=\s*(.*)$", arg)
 
         if m is None:
-            _raise_cli_error("Invalid assignment `{}`".format(arg))
+            _raise_cli_error(f"Invalid assignment `{arg}`")
 
         if is_str_only:
             val = m.group(2)
@@ -2947,9 +2841,7 @@ def _parse_cli_args():
         action="append",
         help="add an initial label (may be repeated)",
     )
-    ap.add_argument(
-        "--version", action="version", version="Normand {}".format(__version__)
-    )
+    ap.add_argument("--version", action="version", version=f"Normand {__version__}")
     ap.add_argument(
         "path",
         metavar="PATH",
@@ -2978,7 +2870,7 @@ def _parse_cli_args():
         _raise_cli_error("Invalid negative offset {}")
 
     # Validate and set byte order
-    bo = None  # type: Optional[ByteOrder]
+    bo: Optional[ByteOrder] = None
 
     if args.byte_order is not None:
         if args.byte_order == "be":
@@ -3023,16 +2915,11 @@ def _run_cli():
     except ParseError as exc:
         import os.path
 
-        prefix = "" if args[0] is None else "{}:".format(os.path.abspath(args[0]))
+        prefix = "" if args[0] is None else f"{os.path.abspath(args[0])}:"
         fail_msg = ""
 
         for msg in reversed(exc.messages):
-            fail_msg += "{}{}:{} - {}".format(
-                prefix,
-                msg.text_location.line_no,
-                msg.text_location.col_no,
-                msg.text,
-            )
+            fail_msg += f"{prefix}{msg.text_location.line_no}:{msg.text_location.col_no} - {msg.text}"
 
             if fail_msg[-1] not in ".:;":
                 fail_msg += "."
