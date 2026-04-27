@@ -1435,8 +1435,8 @@ file. The collector:
 
 . Finds the corresponding compiled test binary in the build directory.
 
-. Runs it with `--list-test-names-only` to discover individual Catch2
-  test cases.
+. Runs it with `--list-tests -v quiet --order decl` to discover
+  individual Catch2 test cases.
 
 . Creates a pytest item for each Catch2 test case.
 
