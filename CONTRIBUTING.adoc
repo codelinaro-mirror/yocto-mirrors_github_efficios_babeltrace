@@ -20,7 +20,7 @@ endif::env-github[]
 
 = Babeltrace{nbsp}2 contributor's guide
 Jérémie Galarneau, Simon Marchi, Philippe Proulx
-23 Janary 2026
+27 April 2026
 :toclevels: 3
 :icons: font
 :nofooter:
@@ -1297,7 +1297,7 @@ backtrace when Valgrind shows errors.
 All {bt2} tests use https://docs.pytest.org/[pytest].
 
 With `--enable-vendor-pytest` at project configuration time, the tests
-use `tests/utils/python/vendor/pytest-6.1.2` for Python{nbsp}3.6 or
+use `tests/utils/python/vendor/pytest-7.0.1` for Python{nbsp}3.6 or
 `tests/utils/python/vendor/pytest-7.4.3` for Python{nbsp}3.7+.
 
 Running the {bt2} tests requires Python, the `bt2` Python bindings, and

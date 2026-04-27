@@ -598,10 +598,10 @@ AS_IF([test "x$have_python" = xyes], [
 
 AM_CONDITIONAL([HAVE_PYTHON_312_OR_GREATER], [test "x$have_python_312_or_greater" = xyes])
 
-# Tests require Python bindings and pytest >= 6.1.0
+# Tests require Python bindings and pytest >= 7.0.0
 AE_IF_FEATURE_ENABLED([tests], [
   AS_IF([test "x$have_python" = "xno"], [
-    AC_MSG_ERROR([Python >= 3.5 is required to build tests. Use ‘--disable-tests’ to disable building tests.])
+    AC_MSG_ERROR([Python >= 3.6 is required to build tests. Use ‘--disable-tests’ to disable building tests.])
   ])
 
   AE_IF_FEATURE_ENABLED([vendor-pytest], [
@@ -610,14 +610,14 @@ AE_IF_FEATURE_ENABLED([tests], [
     HAVE_VENDOR_PYTEST=1
   ], [
     HAVE_VENDOR_PYTEST=0
-    # Check for pytest >= 6.1.0
-    AC_MSG_CHECKING([for pytest >= 6.1.0])
-    AS_IF(["$PYTHON" -c "import pytest; assert tuple(map(int, pytest.__version__.split('.'))) >= (6, 1, 0)" 2>/dev/null], [
+    # Check for pytest >= 7.0.0
+    AC_MSG_CHECKING([for pytest >= 7.0.0])
+    AS_IF(["$PYTHON" -c "import pytest; assert tuple(map(int, pytest.__version__.split('.'))) >= (7, 0, 0)" 2>/dev/null], [
       pytest_version=`"$PYTHON" -c "import pytest; print(pytest.__version__)" 2>/dev/null`
       AC_MSG_RESULT([yes ($pytest_version)])
     ], [
       AC_MSG_RESULT([no])
-      AC_MSG_ERROR([pytest >= 6.1.0 is required to build tests. Use ‘--disable-tests’  to disable building tests or use ‘--enable-vendor-pytest’ to use the in-tree pytest.])
+      AC_MSG_ERROR([pytest >= 7.0.0 is required to build tests. Use ‘--disable-tests’  to disable building tests or use ‘--enable-vendor-pytest’ to use the in-tree pytest.])
     ])
   ])
 

@@ -5,7 +5,7 @@
 // Render with Asciidoctor
 
 = Babeltrace 2
-16 April 2026
+27 April 2026
 :btversion: 2.1
 :bt2: Babeltrace{nbsp}2
 ifdef::env-github[]
@@ -142,7 +142,7 @@ _**If you need to build and run the tests**_:: {empty}
   libraries and `python3-config`)
   (Debian/Ubuntu: `python3-dev`; Fedora: `python3-devel`)
 
-* https://docs.pytest.org/[pytest]{nbsp}≥{nbsp}6.1.0
+* https://docs.pytest.org/[pytest]{nbsp}≥{nbsp}7.0.0
   (Debian/Ubuntu/Fedora: `python3-pytest`)
 +
 Use an in-tree pytest with `--enable-vendor-pytest` if you can't
