@@ -3,7 +3,7 @@
 # Copyright (C) 2019 Philippe Proulx <pproulx@efficios.com>
 #
 
-# pyright: strict, reportTypeCommentUsage=false,  reportMissingTypeStubs=false
+# pyright: strict, reportMissingTypeStubs=false
 
 import os
 import re
@@ -17,7 +17,17 @@ import argparse
 import tempfile
 import multiprocessing
 from abc import ABC, abstractmethod
-from typing import Dict, Union, Iterable, Optional, Sequence, overload
+from typing import (
+    Dict,
+    List,
+    Type,
+    Tuple,
+    Union,
+    Iterable,
+    Optional,
+    Sequence,
+    overload,
+)
 
 import tjson
 
@@ -517,7 +527,7 @@ class _LttngLiveViewerProtocolCodec:
     _COMMAND_HEADER_SIZE_BYTES = struct.calcsize(_COMMAND_HEADER_STRUCT_FMT)
 
     def __init__(self):
-        self._server_minor_version = None  # type: Optional[int]
+        self._server_minor_version: Optional[int] = None
 
     def _unpack(self, fmt: str, data: bytes, offset: int = 0):
         fmt = f"!{fmt}"
@@ -737,7 +747,7 @@ class _LttngDataStreamIndex(Sequence[_LttngIndexEntryT]):
         if beacons:
             stream_class_id = self._entries[0].stream_class_id
 
-            beacons_list = []  # type: list[_LttngDataStreamBeaconIndexEntry]
+            beacons_list: List[_LttngDataStreamBeaconIndexEntry] = []
             for ts in beacons.iter(tjson.IntVal):
                 beacons_list.append(
                     _LttngDataStreamBeaconIndexEntry(stream_class_id, ts.val)
@@ -750,7 +760,7 @@ class _LttngDataStreamIndex(Sequence[_LttngIndexEntryT]):
         )
 
     def _build(self):
-        self._entries = []  # type: list[_LttngIndexEntryT]
+        self._entries: List[_LttngIndexEntryT] = []
 
         with open(self._path, "rb") as f:
             # Read header first
@@ -955,7 +965,7 @@ class LttngMetadataConfigSection:
 
 
 def _parse_metadata_sections_config(metadata_sections_json: tjson.ArrayVal):
-    metadata_sections = []  # type: list[LttngMetadataConfigSection]
+    metadata_sections: List[LttngMetadataConfigSection] = []
     append_empty_section = False
     last_timestamp = 0
     last_line = 0
@@ -995,7 +1005,7 @@ def _split_metadata_sections(
 ):
     metadata_sections = _parse_metadata_sections_config(metadata_sections_json)
 
-    sections = []  # type: list[_LttngMetadataStreamSection]
+    sections: List[_LttngMetadataStreamSection] = []
     with open(metadata_file_path, "r") as metadata_file:
         metadata_lines = [line for line in metadata_file]
 
@@ -1077,7 +1087,7 @@ class LttngTrace(Sequence[_LttngDataStream]):
     def _create_data_streams(
         self, trace_dir: str, beacons_json: Optional[tjson.ObjVal]
     ):
-        data_stream_paths = []  # type: list[str]
+        data_stream_paths: List[str] = []
 
         for filename in os.listdir(trace_dir):
             path = os.path.join(trace_dir, filename)
@@ -1094,7 +1104,7 @@ class LttngTrace(Sequence[_LttngDataStream]):
             data_stream_paths.append(path)
 
         data_stream_paths.sort()
-        self._data_streams = []  # type: list[_LttngDataStream]
+        self._data_streams: List[_LttngDataStream] = []
 
         for data_stream_path in data_stream_paths:
             stream_name = os.path.basename(data_stream_path)
@@ -1112,7 +1122,7 @@ class LttngTrace(Sequence[_LttngDataStream]):
         self, trace_dir: str, metadata_sections_json: Optional[tjson.ArrayVal]
     ):
         metadata_path = os.path.join(trace_dir, "metadata")
-        metadata_sections = []  # type: list[_LttngMetadataStreamSection]
+        metadata_sections: List[_LttngMetadataStreamSection] = []
 
         if metadata_sections_json is None:
             with open(metadata_path, "rb") as metadata_file:
@@ -1163,7 +1173,7 @@ class _LttngLiveViewerSessionStreamState:
         # A stream is considered "announced" when it has been returned
         # to the LTTng live client in response to a "get new stream
         # infos" (`_LttngLiveViewerGetNewStreamInfosCommand`) command.
-        self._announced = False  # type: bool
+        self._announced: bool = False
         pass
 
     @property
@@ -1346,16 +1356,14 @@ class LttngTracingSessionDescriptor:
 class _LttngLiveViewerSessionTracingSessionState:
     def __init__(self, tc_descr: LttngTracingSessionDescriptor, base_stream_id: int):
         self._tc_descr = tc_descr
-        self._client_visible_stream_infos = []  # type: list[_LttngLiveViewerStreamInfo]
-        self._ds_states = {}  # type: dict[int, _LttngLiveViewerSessionDataStreamState]
-        self._ms_states = (
-            {}
-        )  # type: dict[int, _LttngLiveViewerSessionMetadataStreamState]
+        self._client_visible_stream_infos: List[_LttngLiveViewerStreamInfo] = []
+        self._ds_states: Dict[int, _LttngLiveViewerSessionDataStreamState] = {}
+        self._ms_states: Dict[int, _LttngLiveViewerSessionMetadataStreamState] = {}
         self._last_delivered_index_timestamp = 0
         self._last_allocated_stream_id = base_stream_id
 
         for trace in tc_descr.traces:
-            trace_stream_infos = []  # type: list[_LttngLiveViewerStreamInfo]
+            trace_stream_infos: List[_LttngLiveViewerStreamInfo] = []
             trace_id = self._last_allocated_stream_id * 1000
 
             # Metadata stream -> stream info and metadata stream state
@@ -1463,12 +1471,14 @@ class _LttngLiveViewerSession:
         max_query_data_response_size: Optional[int],
     ):
         self._viewer_session_id = viewer_session_id
-        self._ts_states = (
-            {}
-        )  # type: dict[int, _LttngLiveViewerSessionTracingSessionState]
-        self._stream_states = (
-            {}
-        )  # type: dict[int, _LttngLiveViewerSessionDataStreamState | _LttngLiveViewerSessionMetadataStreamState]
+        self._ts_states: Dict[int, _LttngLiveViewerSessionTracingSessionState] = {}
+        self._stream_states: Dict[
+            int,
+            Union[
+                _LttngLiveViewerSessionDataStreamState,
+                _LttngLiveViewerSessionMetadataStreamState,
+            ],
+        ] = {}
         self._max_query_data_response_size = max_query_data_response_size
         total_stream_infos = 0
 
@@ -1484,7 +1494,10 @@ class _LttngLiveViewerSession:
             self._stream_states.update(ts_state.data_stream_states)
             self._stream_states.update(ts_state.metadata_stream_states)
 
-        self._command_handlers = {
+        self._command_handlers: Dict[
+            Type[_LttngLiveViewerCommand],
+            Callable[[Any], _LttngLiveViewerReply],
+        ] = {
             _LttngLiveViewerAttachToTracingSessionCommand: self._handle_attach_to_tracing_session_command,
             _LttngLiveViewerCreateViewerSessionCommand: self._handle_create_viewer_session_command,
             _LttngLiveViewerDetachFromTracingSessionCommand: self._handle_detach_from_tracing_session_command,
@@ -1493,7 +1506,7 @@ class _LttngLiveViewerSession:
             _LttngLiveViewerGetNewStreamInfosCommand: self._handle_get_new_stream_infos_command,
             _LttngLiveViewerGetNextDataStreamIndexEntryCommand: self._handle_get_next_data_stream_index_entry_command,
             _LttngLiveViewerGetTracingSessionInfosCommand: self._handle_get_tracing_session_infos_command,
-        }  # type: dict[type[_LttngLiveViewerCommand], Callable[[Any], _LttngLiveViewerReply]]
+        }
 
     @property
     def viewer_session_id(self):
@@ -1701,7 +1714,7 @@ class _LttngLiveViewerSession:
         )
 
     def _get_stream_infos_ready_for_announcement(self):
-        ready_stream_infos = []  # type: list[_LttngLiveViewerStreamInfo]
+        ready_stream_infos: List[_LttngLiveViewerStreamInfo] = []
 
         for ss in self._stream_states.values():
             if self._stream_is_ready(ss, ss.stream.creation_timestamp):
@@ -1851,7 +1864,7 @@ class LttngLiveServer:
     # Dictionary mapping session name to full session URL.
     @property
     def session_urls(self) -> Dict[str, str]:
-        urls = {}
+        urls: Dict[str, str] = {}
 
         for descr in self._ts_descriptors:
             info = descr.info
@@ -2086,9 +2099,9 @@ class LttngLiveServerProcess:
         self._max_query_data_response_size = max_query_data_response_size
         self._max_minor_version = max_minor_version
         self._port = port
-        self._process = None  # type: Optional[multiprocessing.Process]
-        self._server_port = None  # type: Optional[int]
-        self._session_urls = None  # type: Optional[Dict[str, str]]
+        self._process: Optional[multiprocessing.Process] = None
+        self._server_port: Optional[int] = None
+        self._session_urls: Optional[Dict[str, str]] = None
 
     @property
     def port(self) -> int:
@@ -2126,9 +2139,9 @@ class LttngLiveServerProcess:
     # Blocks until the server is ready to accept connections (port is
     # available).
     def start(self):
-        info_queue = (
+        info_queue: "multiprocessing.Queue[Tuple[int, Dict[str, str]]]" = (
             multiprocessing.Queue()
-        )  # type: multiprocessing.Queue[tuple[int, Dict[str, str]]]
+        )
 
         self._process = multiprocessing.Process(
             target=_lttng_live_server_process_target,
@@ -2224,7 +2237,7 @@ def _session_descriptors_from_path(
     with open(sessions_filename, "r") as sessions_file:
         sessions_json = tjson.load(sessions_file, tjson.ArrayVal)
 
-    sessions = []  # type: list[LttngTracingSessionDescriptor]
+    sessions: List[LttngTracingSessionDescriptor] = []
 
     for session_json in sessions_json.iter(tjson.ObjVal):
         name = session_json.at("name", tjson.StrVal).val
@@ -2234,7 +2247,7 @@ def _session_descriptors_from_path(
         client_count = session_json.at("client-count", tjson.IntVal).val
         traces_json = session_json.at("traces", tjson.ArrayVal)
 
-        traces = []  # type: list[LttngTrace]
+        traces: List[LttngTrace] = []
 
         for trace_json in traces_json.iter(tjson.ObjVal):
             metadata_sections = (
@@ -2248,11 +2261,11 @@ def _session_descriptors_from_path(
                 else None
             )
             path = trace_json.at("path", tjson.StrVal).val
-            creation_timestamp = (
+            creation_timestamp: int = (
                 trace_json.at("creation-timestamp", tjson.IntVal).val
                 if "creation-timestamp" in trace_json
                 else 0
-            )  # type: int
+            )
 
             if not os.path.isabs(path) and trace_path_prefix:
                 path = os.path.join(trace_path_prefix, path)

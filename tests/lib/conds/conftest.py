@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2020-2025 Philippe Proulx <pproulx@efficios.com>
 # SPDX-License-Identifier: MIT
 
-# pyright: strict, reportMissingTypeStubs=false, reportTypeCommentUsage=false
+# pyright: strict, reportMissingTypeStubs=false
 
 import os
 import re
@@ -9,7 +9,7 @@ import signal
 import logging
 import pathlib
 import subprocess
-from typing import Any, Set, List, Tuple, Optional  # noqa: F401
+from typing import Any, Set, List, Tuple, Optional
 
 import tjson
 import pytest
@@ -57,8 +57,8 @@ class _PostCondTriggerDescriptor(_CondTriggerDescriptor):
 def _cond_trigger_descriptors_from_json(
     json_descr_array: tjson.ArrayVal,
 ) -> List[_CondTriggerDescriptor]:
-    descriptors = []  # type: List[_CondTriggerDescriptor]
-    descriptor_names = set()  # type: Set[str]
+    descriptors: List[_CondTriggerDescriptor] = []
+    descriptor_names: Set[str] = set()
 
     for json_descr in json_descr_array.iter(tjson.ObjVal):
         trigger_name = json_descr.at("name", tjson.StrVal).val
@@ -156,7 +156,7 @@ class _CondTriggersTestFile(pytest.File):
             assert os.access(conds_triggers_bin, os.X_OK)
 
         # Create test items
-        items = []  # type: List[_CondTriggerTestItem]
+        items: List[_CondTriggerTestItem] = []
         _logger.info(f"Listing condition triggers from `{conds_triggers_bin}`")
 
         for descriptor in _cond_trigger_descriptors_from_json(

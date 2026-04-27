@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2025 Philippe Proulx <pproulx@efficios.com>
 # SPDX-License-Identifier: MIT
 
-# pyright: strict, reportTypeCommentUsage=false, reportMissingTypeStubs=false, reportPrivateUsage=false
+# pyright: strict, reportMissingTypeStubs=false, reportPrivateUsage=false
 
 import os
 import sys
@@ -116,7 +116,7 @@ def _log_run_cmd(
     }
 
     # Collect all environment variables to log
-    env_to_log = {}  # type: Dict[str, str]
+    env_to_log: Dict[str, str] = {}
 
     for var_name in env_vars_to_log:
         if var_name in env:
@@ -128,7 +128,7 @@ def _log_run_cmd(
                 env_to_log[var_name] = var_val
 
     # Build command parts, sorting environment variables by name
-    cmd_parts = []  # type: List[str]
+    cmd_parts: List[str] = []
 
     for var_name in sorted(env_to_log.keys()):
         cmd_parts.append(f"{var_name}={shlex.quote(env_to_log[var_name])}")
@@ -202,7 +202,7 @@ def run(
     _log_run_cmd(env, exec_path, args, extra_env)
 
     try:
-        res = subprocess.run(  # type: subprocess.CompletedProcess[Any]
+        res: "subprocess.CompletedProcess[Any]" = subprocess.run(
             [str(exec_path)] + args,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -515,12 +515,12 @@ def convert(
 
     # State for unique component naming
     next_suffix = 1
-    all_comps = []  # type: List[_AnyCompT]
+    all_comps: List[_AnyCompT] = []
 
     # Compute greatest operative MIP version if not provided
     if mip_version is None:
         _logger.info("  Computing greatest operative MIP version")
-        descriptors = []  # type: List[bt2.ComponentDescriptor]
+        descriptors: List[bt2.ComponentDescriptor] = []
 
         for comp_spec in itertools.chain(
             all_src_component_specs, flt_component_specs, [sink_component_spec]
@@ -571,7 +571,7 @@ def convert(
         last_out_comp = flt_comp
 
     # Create source components
-    src_comps = []  # type: List[_AnyCompT]
+    src_comps: List[_AnyCompT] = []
 
     for comp_spec in all_src_component_specs:
         src_comp, next_suffix = _create_comp(graph, comp_spec, all_comps, next_suffix)

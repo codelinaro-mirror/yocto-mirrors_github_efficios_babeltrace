@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2023 EfficiOS Inc.
 #
-# pyright: strict, reportTypeCommentUsage=false
+# pyright: strict
 
 import os
 import sys
@@ -79,7 +79,7 @@ def _normand_parse(
 def _reformat_ctf_2_metadata(content: str):
     import json
 
-    json_seq_fragments = []  # type: list[str]
+    json_seq_fragments: List[str] = []
 
     for fragment in json.loads(content):
         json_seq_fragments.append(f"\x1e{json.dumps(fragment, indent=2)}")
@@ -120,8 +120,8 @@ def _generate_from_part(
 
 def generate(input_path: str, base_dir: str, verbose: bool):
     with open(input_path) as input_file:
-        variables = {}  # type: normand.VariablesT
-        labels = {}  # type: normand.LabelsT
+        variables: normand.VariablesT = {}
+        labels: normand.LabelsT = {}
 
         for part in moultipart.parse(input_file):
             variables, labels = _generate_from_part(

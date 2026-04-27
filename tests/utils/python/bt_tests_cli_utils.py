@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2025 Philippe Proulx <pproulx@efficios.com>
 # SPDX-License-Identifier: MIT
 
-# pyright: strict, reportTypeCommentUsage=false, reportMissingTypeStubs=false
+# pyright: strict, reportMissingTypeStubs=false
 
 import os
 import typing
@@ -74,7 +74,7 @@ def run_cli(
     timeout: Optional[float] = None,
     extra_env: Optional[Dict[str, str]] = None,
 ) -> "subprocess.CompletedProcess[str]":
-    cli_args = []  # type: List[str]
+    cli_args: List[str] = []
 
     if plugin_paths is not None:
         cli_args += [

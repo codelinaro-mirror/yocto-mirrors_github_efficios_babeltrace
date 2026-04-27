@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2023-2025 Efficios, Inc.
 # SPDX-License-Identifier: GPL-2.0-only
 
-# pyright: strict, reportMissingTypeStubs=false, reportTypeCommentUsage=false, reportPrivateUsage=false
+# pyright: strict, reportMissingTypeStubs=false, reportPrivateUsage=false
 
 import string
 import typing
@@ -67,7 +67,7 @@ def _field_to_str(
 
                 return "\n".join(lines)
             else:
-                lines = []  # type: List[str]
+                lines: List[str] = []
 
                 if intro is not None:
                     # Structure field has a name: format it and a
@@ -83,7 +83,7 @@ def _field_to_str(
 
                 return "\n".join(lines)
     elif isinstance(field, bt2._ArrayFieldConst):
-        lines = []  # type: List[str]
+        lines: List[str] = []
 
         if intro is not None:
             # Array field has an intro: format it, then format a newline,

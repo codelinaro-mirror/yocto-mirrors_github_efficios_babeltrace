@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2023 EfficiOS, inc.
 #
-# pyright: strict, reportTypeCommentUsage=false
+# pyright: strict
 
 
 import re

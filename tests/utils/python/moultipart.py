@@ -2,10 +2,10 @@
 #
 # Copyright (C) 2023 EfficiOS Inc.
 #
-# pyright: strict, reportTypeCommentUsage=false
+# pyright: strict
 
 import re
-from typing import TextIO
+from typing import List, TextIO
 
 
 # One part of a moultipart document.
@@ -92,7 +92,7 @@ def parse(in_file: TextIO):
     # Read the first header
     cur_part_content = ""
     cur_first_content_line_no = 2
-    parts = []  # type: list[Part]
+    parts: List[Part] = []
     line_no = 1
     line = next(in_file)
     cur_part_header_info = _try_parse_header(line)

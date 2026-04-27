@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2025 Philippe Proulx <pproulx@efficios.com>
 # SPDX-License-Identifier: MIT
 
-# pyright: strict, reportMissingTypeStubs=false, reportTypeCommentUsage=false, reportPrivateUsage=false
+# pyright: strict, reportMissingTypeStubs=false, reportPrivateUsage=false
 
 import os
 import re
@@ -294,7 +294,7 @@ class _Catch2TestFile(pytest.File):
         _logger.debug(result.stdout)
 
         # Parse test names and create corresponding test items
-        items = []  # type: List[_Catch2TestItem]
+        items: List[_Catch2TestItem] = []
 
         for line in result.stdout.strip().split("\n"):
             test_name = line.strip()
