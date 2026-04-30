@@ -23,5 +23,6 @@ TESTS += lib/test_dwarf_complete \
 endif
 
 if USE_PYTHON
-TESTS += bin/intersection/test_multi_trace_intersection.py
+TESTS += bin/intersection/test_multi_trace_intersection.py \
+	bin/intersection/test_python_event_no_context.py
 endif

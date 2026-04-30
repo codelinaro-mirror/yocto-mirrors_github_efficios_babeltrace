@@ -492,6 +492,8 @@ class TraceHandle(object):
 			return
 
 		ptr_list, count = ret
+		if ptr_list is None:
+			return
 		for i in range(count):
 			tmp = EventDeclaration.__new__(EventDeclaration)
 			tmp._ed =  _bt_python_decl_one_from_list(ptr_list, i)
@@ -785,7 +787,7 @@ class Event(collections_abc.Mapping):
 		for scope in _scopes:
 			scope_ptr = _bt_ctf_get_top_level_scope(self._e, scope)
 			ret = _bt_python_field_listcaller(self._e, scope_ptr)
-			if isinstance(ret, list):
+			if isinstance(ret, list) and ret[0] is not None:
 				count += ret[1]
 		return count
 
@@ -834,12 +836,15 @@ class Event(collections_abc.Mapping):
 		fields = []
 		scope_ptr = _bt_ctf_get_top_level_scope(self._e, scope)
 
-		# Returns a list [list_ptr, count]. If list_ptr is NULL, SWIG will only
-		# provide the "count" return value
+		# SWIG returns [list_ptr, count] when the C call wrote a list, or
+		# just the count integer when it returned NULL (SWIG <= 4.2 only;
+		# SWIG >= 4.3 returns [None, garbage]). Treat both NULL forms as
+		# "no fields" since the count is unreliable when list_ptr is NULL
+		# because the C wrapper does not initialize it on error.
 		count = 0
 		list_ptr = None
 		ret = _bt_python_field_listcaller(self._e, scope_ptr)
-		if isinstance(ret, list):
+		if isinstance(ret, list) and ret[0] is not None:
 			list_ptr, count = ret
 
 		for i in range(count):
@@ -893,6 +898,8 @@ class EventDeclaration(object):
 			return
 
 		list_ptr, count = ret
+		if list_ptr is None:
+			return
 		for i in range(count):
 			field_declaration_ptr = _bt_python_field_decl_one_from_list(list_ptr, i)
 			if field_declaration_ptr is not None:
