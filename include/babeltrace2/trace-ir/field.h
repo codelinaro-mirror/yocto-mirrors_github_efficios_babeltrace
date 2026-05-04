@@ -1255,6 +1255,9 @@ extern uint8_t *bt_field_blob_get_data(bt_field *field);
     @parblock
     Readable data of \bt_p{field}.
 
+    This function \em may return \c NULL when the length of \bt_p{field}
+    is&nbsp;0.
+
     The returned pointer remains valid until \bt_p{field} is modified.
     @endparblock
 

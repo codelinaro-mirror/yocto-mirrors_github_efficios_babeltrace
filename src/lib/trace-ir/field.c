@@ -570,15 +570,18 @@ struct bt_field *create_blob_field(struct bt_field_class *fc)
 	init_field((void *) blob_field, fc, &blob_field_methods);
 
 	if (bt_field_class_type_is(fc->type, BT_FIELD_CLASS_TYPE_STATIC_BLOB)) {
-		struct bt_field_class_blob_static *blob_static_fc =
-			(void *) fc;
+		struct bt_field_class_blob_static *blob_static_fc = (void *) fc;
+
 		blob_field->length = blob_static_fc->length;
-		blob_field->data = g_malloc(blob_field->length);
-		if (!blob_field->data) {
-			BT_LIB_LOGE_APPEND_CAUSE(
-				"Failed to allocate BLOB field data: %![fc-]+F",
-				fc);
-			goto error;
+
+		if (blob_field->length > 0) {
+			blob_field->data = g_malloc(blob_field->length);
+			if (!blob_field->data) {
+				BT_LIB_LOGE_APPEND_CAUSE(
+					"Failed to allocate BLOB field data: %![fc-]+F",
+					fc);
+				goto error;
+			}
 		}
 	}
 
