@@ -216,6 +216,9 @@ BT_DIAG_POP
 #    define BT_DIAG_IGNORE_UNUSED_BUT_SET_VARIABLE \
 	_Pragma("GCC diagnostic ignored \"-Wunused-but-set-variable\"")
 #  endif
+#else
+#  define BT_DIAG_IGNORE_UNUSED_BUT_SET_VARIABLE \
+	_Pragma("GCC diagnostic ignored \"-Wunused-but-set-variable\"")
 #endif
 
 #if !defined BT_DIAG_IGNORE_UNUSED_BUT_SET_VARIABLE
