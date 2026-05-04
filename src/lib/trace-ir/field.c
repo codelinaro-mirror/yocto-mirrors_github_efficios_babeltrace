@@ -1037,8 +1037,10 @@ BT_EXPORT
 enum bt_field_string_append_status bt_field_string_append(
 		struct bt_field *field, const char *value)
 {
-	uint64_t length = (uint64_t) strlen(value);
+	uint64_t length;
 
+	BT_ASSERT_PRE_DEV_NON_NULL("value", value, "Value");
+	length = (uint64_t) strlen(value);
 	BT_ASSERT_PRE_DEV_FOR_APPEND_TO_STRING_FIELD_WITH_LENGTH(field, value,
 		length);
 	return append_to_string_field_with_length(field, value, length);
