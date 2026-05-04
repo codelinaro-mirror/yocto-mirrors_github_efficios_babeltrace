@@ -189,7 +189,7 @@ def _make_ctf_2_metadata(payload_fc: str) -> str:
     return string.Template("""
 \x1e{
   "type": "preamble",
-  "version": "2"
+  "version": 2
 }
 \x1e{
   "type": "field-class-alias",
@@ -297,7 +297,7 @@ def _make_ctf_2_metadata(payload_fc: str) -> str:
   "field-class": {
     "type": "fixed-length-signed-integer",
     "length": 8,
-    "byte-order": "big-endian",
+    "byte-order": "little-endian",
     "alignment": 8
   }
 }
@@ -307,7 +307,7 @@ def _make_ctf_2_metadata(payload_fc: str) -> str:
   "field-class": {
     "type": "fixed-length-signed-integer",
     "length": 16,
-    "byte-order": "big-endian",
+    "byte-order": "little-endian",
     "alignment": 8
   }
 }
@@ -317,7 +317,7 @@ def _make_ctf_2_metadata(payload_fc: str) -> str:
   "field-class": {
     "type": "fixed-length-signed-integer",
     "length": 32,
-    "byte-order": "big-endian",
+    "byte-order": "little-endian",
     "alignment": 8
   }
 }
@@ -327,7 +327,7 @@ def _make_ctf_2_metadata(payload_fc: str) -> str:
   "field-class": {
     "type": "fixed-length-signed-integer",
     "length": 64,
-    "byte-order": "big-endian",
+    "byte-order": "little-endian",
     "alignment": 8
   }
 }
@@ -363,13 +363,33 @@ def _make_ctf_2_metadata(payload_fc: str) -> str:
 }
 \x1e{
   "type": "field-class-alias",
-  "name": "u64be",
+  "name": "i64be",
   "field-class": {
     "type": "fixed-length-signed-integer",
     "length": 64,
     "byte-order": "big-endian",
     "alignment": 8
   }
+}
+\x1e{
+  "type": "field-class-alias",
+  "name": "i8",
+  "field-class": "i8le"
+}
+\x1e{
+  "type": "field-class-alias",
+  "name": "i16",
+  "field-class": "i16le"
+}
+\x1e{
+  "type": "field-class-alias",
+  "name": "i32",
+  "field-class": "i32le"
+}
+\x1e{
+  "type": "field-class-alias",
+  "name": "i64",
+  "field-class": "i64le"
 }
 \x1e{
   "type": "field-class-alias",
@@ -423,9 +443,41 @@ def _make_ctf_2_metadata(payload_fc: str) -> str:
 }
 \x1e{
   "type": "field-class-alias",
-  "name": "nt-str",
+  "name": "nt-str-utf-8",
   "field-class": {
     "type": "null-terminated-string"
+  }
+}
+\x1e{
+  "type": "field-class-alias",
+  "name": "nt-str-utf-16be",
+  "field-class": {
+    "type": "null-terminated-string",
+    "encoding": "utf-16be"
+  }
+}
+\x1e{
+  "type": "field-class-alias",
+  "name": "nt-str-utf-16le",
+  "field-class": {
+    "type": "null-terminated-string",
+    "encoding": "utf-16le"
+  }
+}
+\x1e{
+  "type": "field-class-alias",
+  "name": "nt-str-utf-32be",
+  "field-class": {
+    "type": "null-terminated-string",
+    "encoding": "utf-32be"
+  }
+}
+\x1e{
+  "type": "field-class-alias",
+  "name": "nt-str-utf-32le",
+  "field-class": {
+    "type": "null-terminated-string",
+    "encoding": "utf-32le"
   }
 }
 \x1e{
@@ -435,7 +487,7 @@ def _make_ctf_2_metadata(payload_fc: str) -> str:
   "type": "event-record-class",
   "payload-field-class": {
     "type": "structure",
-    "member-field-classes": [
+    "member-classes": [
       {
         "name": "root",
         "field-class": ${payload_fc}
@@ -443,7 +495,7 @@ def _make_ctf_2_metadata(payload_fc: str) -> str:
     ]
   }
 }
-""").substitute(payload_fc=payload_fc).rstrip()
+""").substitute(payload_fc=payload_fc).lstrip("\n").rstrip()
 
 
 def _make_ctf_metadata(payload_fc: str) -> str:
