@@ -115,6 +115,12 @@ def _field_to_str(
             for i in range(field.cls.length - 1, -1, -1)
         )
         return f"{indent_str}{intro_str}[{bits}]"
+    elif isinstance(field, bt2._BlobFieldConst):
+        if len(field) == 0:
+            return f"{indent_str}{intro_str}∅"
+
+        bytes_str = " ".join(f"{b:02x}" for b in field.data)
+        return f"{indent_str}{intro_str}{bytes_str}"
     elif isinstance(field, bt2._BoolFieldConst):
         return f"{indent_str}{intro_str}{'yes' if field else 'no'}"
     elif isinstance(field, bt2._RealFieldConst):
