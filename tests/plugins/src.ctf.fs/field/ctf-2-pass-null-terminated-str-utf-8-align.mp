@@ -1,0 +1,24 @@
+---
+{
+  "type": "structure",
+  "member-classes": [
+    {
+      "name": "pad",
+      "field-class": {
+        "type": "fixed-length-unsigned-integer",
+        "length": 4,
+        "byte-order": "little-endian",
+        "alignment": 1
+      }
+    },
+    {"name": "str", "field-class": "nt-str-utf-8"}
+  ]
+}
+
+---
+[5:8le]              # `pad` (low nibble) + 4 bits of padding
+"café 日本語 🎉" 00   # `str`
+
+---
+pad: 5
+str: "café 日本語 🎉"

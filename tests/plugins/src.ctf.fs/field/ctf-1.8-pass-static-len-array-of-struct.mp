@@ -1,7 +1,7 @@
 ---
 struct {
   struct {
-    u8 a;
+    u8le   a;
     nt_str b;
   } x[3];
 } @[2]

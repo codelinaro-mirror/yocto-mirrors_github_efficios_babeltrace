@@ -1,12 +1,12 @@
 ---
 struct {
-  enum : u8 {
+  enum : u8le {
     MEOW,
     MIX,
   } tag;
 
   variant <tag> {
-    u16 MEOW;
+    u16le  MEOW;
     nt_str MIX;
   } var;
 } @[2]

@@ -1,8 +1,8 @@
 ---
 struct {
-  i16 meow;
-  nt_str mix;
-  flt32 cat;
+  i16le   meow;
+  nt_str  mix;
+  flt32le cat;
 }
 
 ---

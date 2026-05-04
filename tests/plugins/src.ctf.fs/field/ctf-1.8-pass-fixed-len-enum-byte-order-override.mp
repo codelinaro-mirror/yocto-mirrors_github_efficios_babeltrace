@@ -1,0 +1,13 @@
+---
+struct {
+  enum : integer { size = 32; byte_order = le; } { A, B, C } little;
+  enum : integer { size = 32; byte_order = be; } { A, B, C } big;
+}
+
+---
+[305419896:32le]  # `little`
+[305419896:32be]  # `big`
+
+---
+little: 305419896
+big: 305419896

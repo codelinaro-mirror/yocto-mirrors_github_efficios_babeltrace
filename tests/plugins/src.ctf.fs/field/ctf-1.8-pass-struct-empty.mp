@@ -1,11 +1,11 @@
 ---
 struct {
-  u8 a;
+  u8le a;
 
   struct {
-  } b;
+  }    b;
 
-  u8 c;
+  u8le c;
 }
 ---
 01  # `a`
