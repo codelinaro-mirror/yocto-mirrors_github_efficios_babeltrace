@@ -604,7 +604,10 @@ class _FieldTestFile(pytest.File):
 def pytest_collect_file(
     file_path: pathlib.Path, parent: pytest.Collector
 ) -> Optional[_FieldTestFile]:
-    if file_path.suffix == ".mp":
+    if file_path.suffix == ".mp" and (
+        file_path.name.startswith("ctf-2-pass-")
+        or file_path.name.startswith("ctf-1.8-pass-")
+    ):
         return _FieldTestFile.from_parent(  # pyright: ignore[reportUnknownMemberType]
             parent=parent, path=file_path
         )
