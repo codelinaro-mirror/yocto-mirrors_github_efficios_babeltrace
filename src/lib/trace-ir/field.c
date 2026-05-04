@@ -988,13 +988,16 @@ enum bt_field_string_set_value_status bt_field_string_set_value(
 	do {								\
 		BT_ASSERT_PRE_DEV_NO_ERROR();				\
 		BT_ASSERT_PRE_DEV_FIELD_NON_NULL(_field);		\
-		BT_ASSERT_PRE_DEV_NON_NULL("value", (_value), "Value");	\
+		BT_ASSERT_PRE_DEV("value-non-null-when-length-non-zero", \
+			(_length) == 0 || (_value),			\
+			"Value is NULL with non-zero length: "		\
+			"length=%" PRIu64, (_length));			\
 		BT_ASSERT_PRE_DEV_FIELD_HOT(_field);			\
 		BT_ASSERT_PRE_DEV_FIELD_HAS_CLASS_TYPE("field",		\
 			(_field), "string-field",			\
 			BT_FIELD_CLASS_TYPE_STRING, "Field");		\
 		BT_ASSERT_PRE_DEV("value-has-no-null-byte",		\
-			!memchr((_value), '\0', (_length)),		\
+			!(_value) || !memchr((_value), '\0', (_length)), \
 			"String value to append contains a null character: " \
 			"partial-value=\"%.32s\", length=%" PRIu64,	\
 			(_value), (_length));					\
@@ -1005,22 +1008,25 @@ enum bt_field_string_append_status append_to_string_field_with_length(
 		struct bt_field *field, const char *value, uint64_t length)
 {
 	struct bt_field_string *string_field = (void *) field;
-	char *data;
-	uint64_t new_length;
 
 	BT_ASSERT_DBG(field);
-	BT_ASSERT_DBG(value);
-	new_length = length + string_field->length;
+	BT_ASSERT_DBG(length == 0 || value);
 
-	if (G_UNLIKELY(new_length + 1 > string_field->buf->len)) {
-		g_array_set_size(string_field->buf, new_length + 1);
+	if (G_LIKELY(length > 0)) {
+		char *data;
+		uint64_t new_length = length + string_field->length;
+
+		if (G_UNLIKELY(new_length + 1 > string_field->buf->len)) {
+			g_array_set_size(string_field->buf, new_length + 1);
+		}
+
+		data = string_field->buf->data;
+		memcpy(data + string_field->length, value, length);
+		((char *) string_field->buf->data)[new_length] = '\0';
+		string_field->length = new_length;
+		bt_field_set_single(field, true);
 	}
 
-	data = string_field->buf->data;
-	memcpy(data + string_field->length, value, length);
-	((char *) string_field->buf->data)[new_length] = '\0';
-	string_field->length = new_length;
-	bt_field_set_single(field, true);
 	return BT_FUNC_STATUS_OK;
 }
 

@@ -1158,7 +1158,9 @@ extern bt_field_string_append_status bt_field_string_append(
 @bt_pre_not_null{field}
 @bt_pre_is_string_field{field}
 @bt_pre_hot{field}
-@bt_pre_not_null{value}
+@pre
+    <strong>If \bt_p{length} isn't&nbsp;0</strong>, then
+    \bt_p{value} is \em not \c NULL.
 
 @sa bt_field_string_append() &mdash;
     Appends a string to a string field.
