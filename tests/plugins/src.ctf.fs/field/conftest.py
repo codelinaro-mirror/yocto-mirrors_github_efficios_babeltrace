@@ -110,7 +110,11 @@ def _field_to_str(
             assert base == 2
             return f"{indent_str}{intro_str}{bin(int_val)}"
     elif isinstance(field, bt2._BitArrayFieldConst):
-        return f"{indent_str}{intro_str}{bin(int(typing.cast(Any, field)))}"
+        bits = ", ".join(
+            str((field.value_as_integer >> i) & 1)
+            for i in range(field.cls.length - 1, -1, -1)
+        )
+        return f"{indent_str}{intro_str}[{bits}]"
     elif isinstance(field, bt2._BoolFieldConst):
         return f"{indent_str}{intro_str}{'yes' if field else 'no'}"
     elif isinstance(field, bt2._RealFieldConst):
