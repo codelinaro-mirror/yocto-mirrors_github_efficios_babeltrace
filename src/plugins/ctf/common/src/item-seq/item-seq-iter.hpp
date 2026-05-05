@@ -3766,6 +3766,14 @@ private:
               internal::BitOrder BitOrderV, _SaveVal SaveValV>
     _StateHandlingReaction _handleCommonReadFixedLenSIntFieldState()
     {
+        /*
+         * Capture the current field class before
+         * _handleCommonReadFixedLenIntFieldStateAndPrepareToReadNextField()
+         * possibly overwrites `_mCurScalarFc` while preparing the
+         * next state.
+         */
+        const auto& sIntFc = static_cast<const FcT&>(*_mCurScalarFc);
+
         /* Decode the signed integer value */
         const auto val = this->_handleCommonReadFixedLenIntFieldStateAndPrepareToReadNextField<
             bt2c::Signedness::Signed, LenBitsV, ByteOrderV, BitOrderV>(_mItems.fixedLenSIntField);
@@ -3775,7 +3783,7 @@ private:
 
         /* May be a selector of some upcoming optional/variant field */
         if constexpr (SaveValV == _SaveVal::Yes) {
-            this->_saveKeyVal(static_cast<const FcT&>(*_mCurScalarFc).keyValSavingIndexes(), val);
+            this->_saveKeyVal(sIntFc.keyValSavingIndexes(), val);
         }
 
         return _StateHandlingReaction::Stop;
@@ -3795,6 +3803,14 @@ private:
               _SaveVal SaveValV, typename ItemT>
     _StateHandlingReaction _handleCommonReadFixedLenBoolFieldState(ItemT& item)
     {
+        /*
+         * Capture the current field class before
+         * _handleCommonReadFixedLenIntFieldStateAndPrepareToReadNextField()
+         * possibly overwrites `_mCurScalarFc` while preparing the
+         * next state.
+         */
+        const auto& boolFc = _mCurScalarFc->asFixedLenBool();
+
         /* Decode the boolean value as an unsigned integer */
         const auto val = this->_handleCommonReadFixedLenIntFieldStateAndPrepareToReadNextField<
             bt2c::Signedness::Unsigned, LenBitsV, ByteOrderV, BitOrderV>(item);
@@ -3804,7 +3820,7 @@ private:
 
         /* May be a selector of some upcoming optional field */
         if constexpr (SaveValV == _SaveVal::Yes) {
-            this->_saveKeyVal(_mCurScalarFc->asFixedLenBool().keyValSavingIndexes(), val);
+            this->_saveKeyVal(boolFc.keyValSavingIndexes(), val);
         }
 
         return _StateHandlingReaction::Stop;
