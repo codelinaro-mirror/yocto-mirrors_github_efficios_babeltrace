@@ -153,13 +153,26 @@ private:
 
     void _visit(const OptionalFc& fc)
     {
-        if (fc.isOptionalWithBoolSel() &&
-            this->_addOptionalOrVariantKeyFcType(fc) != KeyFcType::Bool) {
-            BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW(
-                bt2c::Error, fc.loc(),
-                "Expecting a class of optional fields with a boolean selector field "
-                "because the `{}` property is absent.",
-                jsonstr::selFieldRanges);
+        const auto keyFcType = this->_addOptionalOrVariantKeyFcType(fc);
+
+        if (fc.isOptionalWithBoolSel()) {
+            if (keyFcType != KeyFcType::Bool) {
+                BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW(
+                    bt2c::Error, fc.loc(),
+                    "Expecting a class of optional fields with a boolean selector field "
+                    "because the `{}` property is absent.",
+                    jsonstr::selFieldRanges);
+            }
+        } else {
+            BT_ASSERT(fc.isOptionalWithUIntSel());
+
+            if (keyFcType != KeyFcType::UInt && keyFcType != KeyFcType::SInt) {
+                BT_CPPLOGE_TEXT_LOC_APPEND_CAUSE_AND_THROW(
+                    bt2c::Error, fc.loc(),
+                    "Expecting a class of optional fields with an integer selector field "
+                    "because the `{}` property is present.",
+                    jsonstr::selFieldRanges);
+            }
         }
 
         try {
