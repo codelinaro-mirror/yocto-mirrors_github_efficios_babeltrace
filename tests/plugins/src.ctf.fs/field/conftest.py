@@ -73,7 +73,7 @@ def _field_to_str(
                     # Structure field has a name: format it and a
                     # newline, and then format all the members indented
                     # (one more level).
-                    lines.append(f"{indent_str}{intro_str.rstrip()}:")
+                    lines.append(f"{indent_str}{intro}:")
                     indent += 1
 
                 for sub_field_name in field:
