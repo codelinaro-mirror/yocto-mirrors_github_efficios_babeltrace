@@ -1,0 +1,174 @@
+// SPDX-FileCopyrightText: 2026 Philippe Proulx <pproulx@efficios.com>
+// SPDX-License-Identifier: CC-BY-4.0
+
+= `src.ctf.fs` field tests
+Philippe Proulx
+:toc: left
+
+This directory holds data-driven tests which verify that the
+`src.ctf.fs` component correctly _decodes_ individual CTF fields.
+
+Each test file targets a single, specific decoder behaviour rather than
+bundling many fields into one shared trace. When a test fails, the
+narrow scope of the file makes the cause of the failure immediately
+obvious: the field class, the data stream, and the expected rendering
+all describe just the one behaviour under test.
+
+Each `.mp` file represents a single pytest test. `conftest.py` collects
+and runs those files. You can "`run`" a single one if you want:
+
+----
+$ bt-pytest ctf-2-pass-fixed-len-bit-array-17-packed-be.mp
+----
+
+== File naming
+
+pytest only collects files matching one of these patterns:
+
+`ctf-1.8-pass-*.mp`::
+    A https://diamon.org/ctf/v1.8.3/[CTF{nbsp}1.8] field
+    which must decode successfully.
+
+`ctf-2-pass-*.mp`::
+    A https://diamon.org/ctf/[CTF{nbsp}2] field which must decode
+    successfully.
+
+== File format
+
+Each `.mp` file is a moultipart file (see `moultipart.py` in the source
+tree) containing exactly three parts, separated by `---` lines:
+
+. **Field class** of the `root` member of the single-event payload
+  structure field class in the trace:
++
+--
+CTF{nbsp}1.8::
+    A TSDL field class (for example, `u8` or a whole
+    `struct { ... }`{nbsp}block).
++
+`conftest.py` wraps this fragment into a
+full TSDL metadata stream. The wrapper predefines a common set of
+integer, float, and string typealiases (`u8`, `u16le`, `i32be`, `flt32`,
+`nt_str`, and so on), so that a test may use them directly.
++
+`conftest.py` produces the member declaration by appending
+`{nbsp}root` to the field class text. For example, a simple `u8` becomes
+`u8{nbsp}root`.
++
+When the fragment must position the
+`root` identifier elsewhere in its syntax (for example, a static-length
+array field class, where the length goes after the member name as in
+`u8{nbsp}root[10]`), use `@` as a placeholder for the member name and the
+wrapper substitutes it for `root` (`u8{nbsp}@[10]`).
+
+CTF{nbsp}2::
+    A JSON field class value (an object or an alias name).
++
+The string must therefore start with `{` or `pass:["]`.
++
+`conftest.py` wraps it into a full CTF{nbsp}2 metadata stream
+and predefines the usual aliases (`u8`, `i32be`, `flt64le`,
+`nt-str-utf-8`, and so on).
+--
+
+. **Data stream contents**, written as
+  https://github.com/efficios/normand[Normand] text.
++
+The default byte order is little-endian, matching the
+metadata stream defaults for CTF{nbsp}1.8.
++
+This is 100% of the data stream to write.
+
+. **Expected YAML-like rendering** of the decoded root payload
+  field, as `_field_to_str()` in `conftest.py` produces it.
++
+Each indentation level adds two spaces. The renderer follows these
+conventions:
++
+--
+Bit array field::
+    `[__bit__, __bit__, …]`, from MSB to LSB.
++
+Example: `[1, 0, 0, 1, 0, 1]`.
+
+Empty bit array field::
+    `[]`.
+
+Boolean field::
+    `yes` or `no`.
+
+Integer field::
+    Decimal, hex, octal, or binary, depending on the preferred
+    display base of the field.
++
+Examples: `72839`, `-1728`, `0xc1fc8d`, `0o755`, `0b110111101`.
+
+Real::
+    Six-decimal fixed-point.
++
+Example: `-1.750000`.
+
+String field::
+    Double-quoted.
++
+Example: `pass:["meow mix"]`.
+
+Empty string field::
+    `pass:[""]`.
+
+BLOB field::
+    Space-separated lowercase hex bytes.
++
+Example: `82 2f c1 1f 08 45`.
+
+Empty BLOB field::
+    `∅`.
+
+Structure field member::
+    `__name__: __value__`.
++
+When `__value__` is a structure or an array field,
+it starts on the next line, indented.
+
+Empty structure field::
+    `∅`.
+
+Array field element::
+    `- __value__`.
++
+When `__value__` is an array field,
+it starts on the next line, indented.
+
+Empty array field::
+    `∅`.
+
+Option with a field::
+    The renderer directly emits the contained field.
+
+Option without a field::
+    `~`.
+
+Variant::
+    The renderer directly emits the selected field.
+--
+
+== How a test runs
+
+For each collected `.mp` file, `_FieldTestItem.runtest()`:
+
+. Parses the three parts.
+
+. Writes a CTF trace into a temporary directory: a `metadata` stream
+  file built from part{nbsp}1 and a `data` stream file built from
+  part{nbsp}2.
+
+. Reads the trace through `bt_tests_utils.tcmi_events()`, which feeds
+  the trace into `src.ctf.fs` and returns the corresponding
+  decoded event objects.
+
+. Asserts that the trace yields exactly one event, formats its `root`
+  payload field through `_field_to_str()`, and compares the result to
+  part{nbsp}3.
+
+On a mismatch, the test shows the file path, the expected output, and
+the actual output.

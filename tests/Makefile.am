@@ -165,6 +165,7 @@ EXTRA_DIST = \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-struct-empty.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-struct.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-variant.mp \
+	plugins/src.ctf.fs/field/README.adoc \
 	plugins/src.ctf.fs/metadata-info-crlf-metadata.expect \
 	plugins/src.ctf.fs/metadata-info-lf-metadata.expect \
 	plugins/src.ctf.fs/metadata-info-succeed1.expect \
