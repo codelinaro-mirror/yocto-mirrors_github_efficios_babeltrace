@@ -159,6 +159,26 @@ EXTRA_DIST = \
 	plugins/sink.text.pretty/test_pretty.py \
 	plugins/src.ctf.fs/empty-event-record.expect \
 	plugins/src.ctf.fs/field/conftest.py \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-align.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-empty-align.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-empty.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-followed.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-len-1.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-len-in-parent-struct.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-len-in-sibling-struct.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-len-with-field-in-between.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-of-dyn-len-array.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-of-enum.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-of-float.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-of-nt-str.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-of-sint.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-of-static-len-array.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-of-struct.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-of-uint-packed-be.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-of-uint-packed-le.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-of-variant.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-uint-sint-4-packed-le.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-str-utf-8-align.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-str-utf-8-ascii.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-str-utf-8-empty.mp \
@@ -257,20 +277,87 @@ EXTRA_DIST = \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-null-terminated-str-utf-8-empty.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-null-terminated-str-utf-8-followed.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-null-terminated-str-utf-8.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-align.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-empty-align.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-empty.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-followed.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-len-1.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-of-dyn-len-array.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-of-enum.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-of-float.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-of-nt-str.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-of-sint.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-of-static-len-array.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-of-struct.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-of-uint-packed-be.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-of-uint-packed-le.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-of-variant.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array-uint-sint-4-packed-le.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-array.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-str-utf-8-align.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-str-utf-8-ascii.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-str-utf-8-empty.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-str-utf-8-followed.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-str-utf-8-null-terminated.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-static-len-str-utf-8.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-struct-after-non-byte-aligned.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-struct-deeply-nested.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-struct-effective-align-from-member.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-struct-effective-align-recursive.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-struct-empty-as-padding.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-struct-empty.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-struct-followed.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-struct-many-members.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-struct-min-align-32.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-struct-min-align-64.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-struct-nested.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-struct-of-uint-1-be.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-struct-of-uint-1-le.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-struct-single-member.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-struct.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-variant-align-1.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-variant-align.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-variant-followed.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-variant-multi-ranges.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-variant-nested.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-variant-of-array.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-variant-of-empty-struct.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-variant-of-struct.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-variant-of-uint1-le.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-variant-sel-in-parent-struct.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-variant-sel-with-field-in-between.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-variant-single-opt.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-pass-variant-sint-sel.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-variant.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-align.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-empty-align.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-empty.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-followed.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-len-1.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-len-in-parent-struct.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-len-in-sibling-struct.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-len-with-field-in-between.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-min-align.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-of-bit-array.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-of-bool.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-of-dyn-len-array.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-of-float.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-of-nt-str.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-of-optional.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-of-sint.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-of-static-len-array.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-of-struct.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-of-uint-packed-be.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-of-uint-packed-le.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-of-variant.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-uint-sint-4-packed-le.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-var-len-uint-len.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-blob-align.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-blob-empty.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-blob-followed.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-blob-media-type.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-blob-var-len-uint-len.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-blob.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-str-utf-16be-align.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-str-utf-16be-empty.mp \
@@ -296,6 +383,7 @@ EXTRA_DIST = \
 	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-str-utf-8-empty.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-str-utf-8-followed.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-str-utf-8-null-terminated.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-str-utf-8-var-len-uint-len.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-str-utf-8.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-fixed-len-bit-array-1-packed-le.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-fixed-len-bit-array-16-be-rev-bit-order.mp \
@@ -450,7 +538,51 @@ EXTRA_DIST = \
 	plugins/src.ctf.fs/field/ctf-2-pass-null-terminated-str-utf-8-empty.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-null-terminated-str-utf-8-followed.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-null-terminated-str-utf-8.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-align.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-disabled.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-followed.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-nested-leaf-disabled.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-nested-leaf-enabled.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-of-dyn-len-array.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-of-empty-dyn-len-array.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-of-empty-struct.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-of-sint.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-of-static-len-array.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-of-struct.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-of-uint1-le.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-of-variant-shared-sel-disabled.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-of-variant-shared-sel-opt-a.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-of-variant-shared-sel-opt-b.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-of-variant-shared-sel-opt-c.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-sel-in-parent-struct.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-sel-in-sibling-struct.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-sel-with-field-in-between.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-sint-sel-neg-range.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-uint-sel-disabled.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-uint-sel-enabled.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-uint-sel-multi-ranges.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional-var-len-uint-sel.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-optional.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-align.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-empty-align.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-empty.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-followed.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-len-1.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-min-align.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-of-bit-array.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-of-bool.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-of-dyn-len-array.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-of-float.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-of-nt-str.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-of-optional.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-of-sint.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-of-static-len-array.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-of-struct.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-of-uint-packed-be.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-of-uint-packed-le.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-of-variant.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array-uint-sint-4-packed-le.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-static-len-array.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-static-len-blob-align.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-static-len-blob-empty.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-static-len-blob-followed.mp \
@@ -481,7 +613,20 @@ EXTRA_DIST = \
 	plugins/src.ctf.fs/field/ctf-2-pass-static-len-str-utf-8-followed.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-static-len-str-utf-8-null-terminated.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-static-len-str-utf-8.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-struct-after-non-byte-aligned.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-struct-deeply-nested.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-struct-effective-align-from-member.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-struct-effective-align-recursive.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-struct-empty-as-padding.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-struct-empty.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-struct-followed.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-struct-many-members.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-struct-min-align-32.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-struct-min-align-64.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-struct-nested.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-struct-of-uint-1-be.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-struct-of-uint-1-le.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-struct-single-member.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-struct.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-var-len-sint-max.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-var-len-sint-min.mp \
@@ -495,6 +640,21 @@ EXTRA_DIST = \
 	plugins/src.ctf.fs/field/ctf-2-pass-var-len-uint-multi-byte.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-var-len-uint-zero.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-var-len-uint.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-variant-align-1.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-variant-align.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-variant-followed.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-variant-multi-ranges.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-variant-nested.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-variant-of-array.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-variant-of-empty-struct.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-variant-of-struct.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-variant-of-uint1-le.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-variant-sel-in-parent-struct.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-variant-sel-in-sibling-struct.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-variant-sel-with-field-in-between.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-variant-single-opt.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-variant-sint-sel.mp \
+	plugins/src.ctf.fs/field/ctf-2-pass-variant-var-len-sint-sel.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-variant.mp \
 	plugins/src.ctf.fs/field/README.adoc \
 	plugins/src.ctf.fs/metadata-info-crlf-metadata.expect \

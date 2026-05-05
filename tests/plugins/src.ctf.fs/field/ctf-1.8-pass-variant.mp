@@ -12,9 +12,11 @@ struct {
 } @[2]
 
 ---
+# first element
 00                # `tag`
 [1995:16]         # `var`
 
+# second element
 01                # `tag`
 "hello there!\0"  # `var`
 ---
