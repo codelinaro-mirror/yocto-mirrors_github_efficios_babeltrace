@@ -49,7 +49,7 @@ def _field_to_str(
     elif isinstance(field, bt2._StructureFieldConst):
         if len(field) == 0:
             # Special case for an empty structure field
-            return f"{indent_str}{intro_str}{{}}"
+            return f"{indent_str}{intro_str}∅"
         else:
             if intro is _ARRAY_ELEM:
                 # Structure field is an array field element itself:
@@ -83,6 +83,10 @@ def _field_to_str(
 
                 return "\n".join(lines)
     elif isinstance(field, bt2._ArrayFieldConst):
+        if len(field) == 0:
+            # Special case for an empty array field
+            return f"{indent_str}{intro_str}∅"
+
         lines: List[str] = []
 
         if intro is not None:
