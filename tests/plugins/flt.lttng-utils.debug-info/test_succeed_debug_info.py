@@ -42,7 +42,7 @@ def _run_convert_with_details(
             mip_version=mip_version,
         )
 
-        return temp_path.read_text()
+        return temp_path.read_text(encoding="utf-8")
 
 
 _MIP_VERSIONS = [pytest.param(0, id="mip-0"), pytest.param(1, id="mip-1")]

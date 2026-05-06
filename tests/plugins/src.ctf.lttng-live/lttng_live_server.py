@@ -1006,7 +1006,7 @@ def _split_metadata_sections(
     metadata_sections = _parse_metadata_sections_config(metadata_sections_json)
 
     sections: List[_LttngMetadataStreamSection] = []
-    with open(metadata_file_path, "r") as metadata_file:
+    with open(metadata_file_path, "r", encoding="utf-8") as metadata_file:
         metadata_lines = [line for line in metadata_file]
 
     metadata_section_idx = 0
@@ -2234,7 +2234,7 @@ def _session_descriptors_from_path(
     #             ]
     #         }
     #     ]
-    with open(sessions_filename, "r") as sessions_file:
+    with open(sessions_filename, "r", encoding="utf-8") as sessions_file:
         sessions_json = tjson.load(sessions_file, tjson.ArrayVal)
 
     sessions: List[LttngTracingSessionDescriptor] = []

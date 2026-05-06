@@ -358,6 +358,6 @@ def test_enum(capfd, pretty_comp_cls, enum_mappings, is_signed, value, expected)
             ),
         )
 
-        output = out_path.read_text()
+        output = out_path.read_text(encoding="utf-8")
         assert sorted_enum_output(output) == sorted_enum_output(expected)
         assert capfd.readouterr().err == ""

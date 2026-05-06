@@ -23,7 +23,7 @@ def test_valid_trace_output(ctf_traces_dir, build_root_dir):
 
     expected = (
         btu.this_src_dir(__file__) / "test-output-ctf-metadata.expect"
-    ).read_text()
+    ).read_text(encoding="utf-8")
 
     assert result.stdout == expected
 

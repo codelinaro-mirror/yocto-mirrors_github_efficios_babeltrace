@@ -36,5 +36,7 @@ def test_basic_bit_array_fields_with_flags(ctf_traces_dir, pretty_comp_cls):
             ),
         )
 
-        expected = (btu.this_src_dir(__file__) / "fl-bm-ctf2.expect").read_text()
-        assert temp_path.read_text() == expected
+        expected = (btu.this_src_dir(__file__) / "fl-bm-ctf2.expect").read_text(
+            encoding="utf-8"
+        )
+        assert temp_path.read_text(encoding="utf-8") == expected

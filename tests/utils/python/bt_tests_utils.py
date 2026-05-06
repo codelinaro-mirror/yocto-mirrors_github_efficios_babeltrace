@@ -209,6 +209,7 @@ def run(
             env=env,
             timeout=timeout,
             universal_newlines=text,
+            encoding="utf-8" if text else None,
         )
     except subprocess.TimeoutExpired as exc:
         if exc.stderr is not None:
@@ -684,11 +685,11 @@ def convert_sink_text_details_test(
         )
 
         # Read the output
-        output = temp_path.read_text().strip()
+        output = temp_path.read_text(encoding="utf-8").strip()
 
         # Get expected output
         if isinstance(expect, pathlib.Path):
-            expected = expect.read_text().strip()
+            expected = expect.read_text(encoding="utf-8").strip()
         else:
             expected = textwrap.dedent(expect).strip()
 
@@ -700,7 +701,7 @@ def convert_sink_text_details_test(
                 isinstance(expect, pathlib.Path)
                 and os.environ.get("BT_TESTS_WRITE_EXPECTED") == "1"
             ):
-                expect.write_text(f"{output}\n")
+                expect.write_text(f"{output}\n", encoding="utf-8")
 
             assert output == old_expected
 

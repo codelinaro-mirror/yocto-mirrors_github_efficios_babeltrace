@@ -149,7 +149,7 @@ def run_cli_sink_text_details_test(
     )
 
     if isinstance(expect, pathlib.Path):
-        expected = expect.read_text().strip()
+        expected = expect.read_text(encoding="utf-8").strip()
     else:
         expected = textwrap.dedent(expect).strip()
 
@@ -162,7 +162,7 @@ def run_cli_sink_text_details_test(
             isinstance(expect, pathlib.Path)
             and os.environ.get("BT_TESTS_WRITE_EXPECTED") == "1"
         ):
-            expect.write_text(f"{output}\n")
+            expect.write_text(f"{output}\n", encoding="utf-8")
 
         assert output == old_expected
 

@@ -161,12 +161,14 @@ def test_packet_end(
 
         # Filter only `Packet end` lines from output
         filtered_output = "\n".join(
-            line for line in temp_path.read_text().splitlines() if "Packet end" in line
+            line
+            for line in temp_path.read_text(encoding="utf-8").splitlines()
+            if "Packet end" in line
         )
 
         expected = (
             _find_expect_file(expect_dir, trace_name, ctf_version, mip_version)
-            .read_text()
+            .read_text(encoding="utf-8")
             .strip()
         )
 

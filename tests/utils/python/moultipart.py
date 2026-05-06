@@ -140,5 +140,5 @@ if __name__ == "__main__":
     import sys
     import pprint
 
-    with open(sys.argv[1]) as f:
+    with open(sys.argv[1], encoding="utf-8") as f:
         pprint.pprint(parse(f))

@@ -468,7 +468,7 @@ class _FieldTestItem(pytest.Item):
 
     def runtest(self) -> None:
         # Parse the moultipart file
-        with open(self._mp_path, "r") as f:
+        with open(self._mp_path, "r", encoding="utf-8") as f:
             parts = moultipart.parse(f)
 
         # Create temporary directory for trace
@@ -478,7 +478,9 @@ class _FieldTestItem(pytest.Item):
 
             # Write metadata stream
             metadata_path = trace_dir / "metadata"
-            metadata_path.write_text(_make_ctf_metadata(parts[0].content.strip()))
+            metadata_path.write_text(
+                _make_ctf_metadata(parts[0].content.strip()), encoding="utf-8"
+            )
 
             # Write data stream
             data_path = trace_dir / "data"

@@ -52,8 +52,12 @@ def _write_file(
 
     os.makedirs(os.path.normpath(os.path.dirname(path)), exist_ok=True)
 
-    with open(path, "w" if isinstance(content, str) else "wb") as f:
-        f.write(content)
+    if isinstance(content, str):
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(content)
+    else:
+        with open(path, "wb") as f:
+            f.write(content)
 
 
 def _normand_parse(
@@ -119,7 +123,7 @@ def _generate_from_part(
 
 
 def generate(input_path: str, base_dir: str, verbose: bool):
-    with open(input_path) as input_file:
+    with open(input_path, encoding="utf-8") as input_file:
         variables: normand.VariablesT = {}
         labels: normand.LabelsT = {}
 

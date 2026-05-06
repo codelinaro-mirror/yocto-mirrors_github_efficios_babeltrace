@@ -328,7 +328,7 @@ def test_compare_to_ctf_fs(
             ctf_traces_dir / "1/succeed/multi-domains", sink_spec, mip_version=0
         )
 
-        expected = output_path.read_text()
+        expected = output_path.read_text(encoding="utf-8")
 
     with _lttng_live_server(
         str(test_data_dir / session_config),

@@ -34,7 +34,7 @@ def test_query_metadata_info(ctf_fs_comp_cls, ctf_traces_dir, trace_name):
 
     assert (
         str(result["text"]).replace("\r\n", "\n").strip()
-        == expect_file.read_text().strip()
+        == expect_file.read_text(encoding="utf-8").strip()
     )
 
 
