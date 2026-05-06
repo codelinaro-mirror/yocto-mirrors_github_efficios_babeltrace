@@ -1,0 +1,184 @@
+// SPDX-FileCopyrightText: 2026 Philippe Proulx <pproulx@efficios.com>
+// SPDX-License-Identifier: CC-BY-4.0
+
+= libbabeltrace2 condition tests
+Philippe Proulx
+:toc: left
+
+This directory holds tests which verify that libbabeltrace2 detects
+violations of its documented _preconditions_ and _postconditions_ and
+aborts the process with the expected condition ID.
+
+When a libbabeltrace2 function detects such a violation, it logs a
+message to the standard error containing
+`Condition{nbsp}ID:{nbsp}pass:[`]__cond-id__pass:[`]` and aborts the
+process through `SIGABRT`. Each test makes the library trip a single,
+specific condition and then checks for both effects.
+
+== Pieces
+
+`conds-triggers.cpp`::
+    Source of the `conds-triggers.bin` test program.
++
+`main()` builds a list of `CondTrigger` objects (see `utils.hpp`).
++
+Each trigger pairs a small {cpp} function which is _designed to violate
+one specific libbabeltrace2 condition_ with the type (`Pre` or `Post`)
+and ID (for example, `graph-create:valid-mip-version`) of that
+condition.
++
+The program supports two subcommands (see `condMain()` in `utils.cpp`):
++
+--
+`list`::
+    Prints, on the standard output, a JSON array of objects
+    describing each trigger:
++
+[source,json]
+----
+[
+    {
+        "name": "graph-create:valid-mip-version",
+        "cond-id": "pre:graph-create:valid-mip-version"
+    },
+    ...
+]
+----
+
+`run __name__`::
+    Looks up the trigger named `__name__` and calls its function.
++
+The function is expected to make libbabeltrace2 abort.
+--
+
+`clk-cls-compat-postconds-triggers.pass:[{cpp,hpp}]`::
+`fc-tc-match-preconds-triggers.pass:[{cpp,hpp}]`::
+    Additional groups of triggers that `conds-triggers.cpp` adds to
+    its trigger list through `addClkClsCompatTriggers()` and
+    `addFcTcMatchTriggers()`.
+
+`utils.pass:[{cpp,hpp}]`::
+    Common types and helpers:
++
+* The `CondTrigger` base class.
+* The `SimpleCondTrigger` and `RunInCondTrigger` flavours.
+* The `makeRunInCompInitTrigger()` factory which schedules a trigger to
+  run inside a component initialization context.
+* `condMain()`.
+
+`conftest.py`::
+    pytest plugin that turns each trigger into a pytest test (see
+    below).
+
+== Add a condition failure test
+
+To cover a new precondition or postcondition, add one trigger to the
+list that `conds-triggers.cpp` builds. There's no test file to write:
+the trigger _is_ the test, and `conftest.py` collects it
+automatically.
+
+. Pick the right place to add the trigger:
++
+--
+* If a topical group already exists (for example,
+  `fc-tc-match-preconds-triggers.cpp` for "`field class belongs to the
+  expected trace class`" preconditions), add the new trigger to
+  the `add*Triggers()` function of that group.
+
+* Otherwise, either add it directly to `main()` in
+  `conds-triggers.cpp` or, if you expect several related triggers,
+  create a new group: a `__topic__-triggers.pass:[{cpp,hpp}]` pair which
+  exposes a single `add__Topic__Triggers(CondTriggers&)` function, and
+  call that function from `main()`.
+--
+
+. Choose the right factory:
++
+--
+`makeSimpleTrigger()`::
+    For conditions that the library checks at the entry of a function
+    callable from anywhere.
++
+For example: "`the field class parameter isn't `NULL``" on a public
+API function.
++
+The trigger lambda runs in the bare process, with no graph or component
+around it.
+
+`makeRunInCompInitTrigger()`::
+    For conditions on APIs which require a component context, most
+    notably anything that uses a `bt2::SelfComponent`, such as
+    creating trace classes, field classes, or messages.
++
+The trigger lambda receives the `bt2::SelfComponent` of a freshly
+initialized source component.
++
+Pass the target MIP version as the `graphMipVersion` argument so that
+the condition is exercised under the right graph mode. If the
+condition exists at every MIP version, loop from{nbsp}0 to
+`bt2::getMaximalMipVersion()` and emit one trigger per version.
+--
+
+. Write the trigger function so that it _violates exactly one
+  condition_, and as late as possible. The body should be the shortest
+  setup that is otherwise valid, ending on the single call which trips
+  the condition.
++
+Don't pile unrelated bad inputs into one trigger:
+when the test fails, you want to know precisely which check
+regressed.
+
+. Pass the matching `CondTrigger::Type` (`Pre` or `Post`) and the
+  condition ID (_without_ the `pre:`/`post:` prefix, which the
+  `CondTrigger` constructor adds itself). The condition ID must match
+  exactly what libbabeltrace2 logs, since `conftest.py` tries to
+  find it verbatim.
+
+. Add a name suffix when more than one trigger shares the same
+  condition ID (for example, the same precondition checked under
+  several MIP versions, or the `opt-different-tc` vs.
+  `sel-different-tc` variants of a "`same trace class`"
+  precondition). The suffix is what disambiguates the resulting
+  pytest test name.
+
+After you rebuild `conds-triggers.bin`, you can run your new test with
+pytest. The test name is the trigger name with every non-word
+character replaced by `pass:[_]`, and prefixed with `test_`. For example, to
+run only the trigger named
+`field-class-array-static-create:fc-has-expected-trace-class:mip0`:
+
+----
+$ bt-pytest conds-triggers.cpp::test_field_class_array_static_create_fc_has_expected_trace_class_mip0
+----
+
+To run all triggers:
+
+----
+$ bt-pytest conds-triggers.cpp
+----
+
+== How a test runs
+
+`conftest.py` collects the file `conds-triggers.cpp` as a pytest
+collection node.
+
+During collection, it:
+
+. Runs `conds-triggers.bin list` and parses the JSON array.
+
+. Creates one test item per trigger, named
+  `test___normalized-trigger-name__`.
+
+For each test item, `_CondTriggerTestItem.runtest()` then:
+
+. Runs `conds-triggers.bin run __trigger-name__` with a 5{nbsp}second
+  timeout (failing the test on timeout, since a hung process means the
+  expected abort never happened).
+
+. Asserts that, on POSIX, the process exited with `-SIGABRT`.
+
+. Asserts that the captured standard error stream contains the
+  expected condition ID.
+
+A test therefore passes only when libbabeltrace2 aborts _and_ reports
+exactly the condition ID the trigger was written to violate.

@@ -61,6 +61,7 @@ EXTRA_DIST = \
 	conftest.py \
 	ctf-writer/test_ctf_writer_trace.py \
 	lib/conds/conftest.py \
+	lib/conds/README.adoc \
 	plugins/flt.lttng-utils.debug-info/bins/i386-linux-gnu/build-id/.build-id/cd/d98cdd87f7fe64c13b6daad553987eafd40cbb.debug \
 	plugins/flt.lttng-utils.debug-info/bins/i386-linux-gnu/build-id/libhello-so \
 	plugins/flt.lttng-utils.debug-info/bins/i386-linux-gnu/debug-link/libhello-so \
