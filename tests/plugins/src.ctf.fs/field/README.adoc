@@ -33,6 +33,14 @@ pytest only collects files matching one of these patterns:
     A https://diamon.org/ctf/[CTF{nbsp}2] field which must decode
     successfully.
 
+`ctf-1.8-fail-*.mp`::
+    A CTF{nbsp}1.8 field which must cause `src.ctf.fs` to raise a
+    decoding error.
+
+`ctf-2-fail-*.mp`::
+    A CTF{nbsp}2 field which must cause `src.ctf.fs` to raise a
+    decoding error.
+
 == File format
 
 Each `.mp` file is a moultipart file (see `moultipart.py` in the source
@@ -79,78 +87,87 @@ metadata stream defaults for CTF{nbsp}1.8.
 +
 This is 100% of the data stream to write.
 
-. **Expected YAML-like rendering** of the decoded root payload
-  field, as `_field_to_str()` in `conftest.py` produces it.
+. Depending on the pass/fail test type:
 +
-Each indentation level adds two spaces. The renderer follows these
-conventions:
+Pass::
+    **Expected YAML-like rendering** of the decoded
+    root payload field, as `_field_to_str()` in `conftest.py` produces
+    it.
 +
---
-Bit array field::
+Each indentation level adds two spaces. The renderer follows
+these conventions:
++
+Bit array field:::
     `[__bit__, __bit__, …]`, from MSB to LSB.
 +
 Example: `[1, 0, 0, 1, 0, 1]`.
 
-Empty bit array field::
+Empty bit array field:::
     `[]`.
 
-Boolean field::
+Boolean field:::
     `yes` or `no`.
 
-Integer field::
+Integer field:::
     Decimal, hex, octal, or binary, depending on the preferred
     display base of the field.
 +
 Examples: `72839`, `-1728`, `0xc1fc8d`, `0o755`, `0b110111101`.
 
-Real::
+Real:::
     Six-decimal fixed-point.
 +
 Example: `-1.750000`.
 
-String field::
+String field:::
     Double-quoted.
 +
 Example: `pass:["meow mix"]`.
 
-Empty string field::
+Empty string field:::
     `pass:[""]`.
 
-BLOB field::
+BLOB field:::
     Space-separated lowercase hex bytes.
 +
 Example: `82 2f c1 1f 08 45`.
 
-Empty BLOB field::
+Empty BLOB field:::
     `∅`.
 
-Structure field member::
+Structure field member:::
     `__name__: __value__`.
 +
 When `__value__` is a structure or an array field,
 it starts on the next line, indented.
 
-Empty structure field::
+Empty structure field:::
     `∅`.
 
-Array field element::
+Array field element:::
     `- __value__`.
 +
 When `__value__` is an array field,
 it starts on the next line, indented.
 
-Empty array field::
+Empty array field:::
     `∅`.
 
-Option with a field::
+Option with a field:::
     The renderer directly emits the contained field.
 
-Option without a field::
+Option without a field:::
     `~`.
 
-Variant::
+Variant:::
     The renderer directly emits the selected field.
---
+
+Fail::
+    **Expected substring** which must appear in the leaf cause message
+    of the `bt2._Error` that the graph raises (index{nbsp}0 in the cause
+    chain, that is, the deepest, originating cause).
++
+Leading and trailing whitespaces are stripped before the comparison.
 
 == How a test runs
 
@@ -162,13 +179,26 @@ For each collected `.mp` file, `_FieldTestItem.runtest()`:
   file built from part{nbsp}1 and a `data` stream file built from
   part{nbsp}2.
 
-. Reads the trace through `bt_tests_utils.tcmi_events()`, which feeds
-  the trace into `src.ctf.fs` and returns the corresponding
-  decoded event objects.
+. Delegates to a mode-specific subclass:
++
+--
+`_PassFieldTestItem`::
+    Reads the trace through `bt_tests_utils.tcmi_events()`, which
+    feeds the trace into `src.ctf.fs` and returns the corresponding
+    decoded event objects.
++
+Asserts that the trace yields exactly one event, formats its `root`
+payload field through `_field_to_str()`, and compares the result to
+part{nbsp}3.
 
-. Asserts that the trace yields exactly one event, formats its `root`
-  payload field through `_field_to_str()`, and compares the result to
-  part{nbsp}3.
+`_FailFieldTestItem`::
+    Reads the trace through `bt_tests_utils.tcmi_events()` and expects
+    it to raise `bt2._Error`. The test asserts that part{nbsp}3 is a
+    substring of the leaf cause message (index{nbsp}0).
++
+If the graph raises no error, or if the leaf cause message doesn't
+contain part{nbsp}3, the test fails.
+--
 
-On a mismatch, the test shows the file path, the expected output, and
-the actual output.
+On a mismatch, the test shows the file path, the expected content,
+and the actual content.

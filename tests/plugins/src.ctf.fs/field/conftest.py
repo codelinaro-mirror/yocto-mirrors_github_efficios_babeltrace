@@ -8,7 +8,7 @@ import typing
 import logging
 import pathlib
 import tempfile
-from typing import Any, List, Tuple, Union, Optional
+from typing import Any, List, Type, Tuple, Union, ClassVar, Optional
 
 import bt2
 import pytest
@@ -527,64 +527,18 @@ def _make_ctf_data(normand_text: str) -> bytearray:
     return normand.parse(f"!le\n{normand_text}").data
 
 
-class _FieldTestItem(pytest.Item):
-    def __init__(self, *, mp_path: pathlib.Path, **kwargs: Any) -> None:
-        super().__init__(**kwargs)  # pyright: ignore[reportUnknownMemberType]
-        self._mp_path = mp_path
-
-    def runtest(self) -> None:
-        # Parse the moultipart file
-        with open(self._mp_path, "r", encoding="utf-8") as f:
-            parts = moultipart.parse(f)
-
-        # Create temporary directory for trace
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            trace_dir = pathlib.Path(tmp_dir) / "trace"
-            trace_dir.mkdir()
-
-            # Write metadata stream
-            metadata_path = trace_dir / "metadata"
-            metadata_path.write_text(
-                _make_ctf_metadata(parts[0].content.strip()), encoding="utf-8"
-            )
-
-            # Write data stream
-            data_path = trace_dir / "data"
-            data_path.write_bytes(_make_ctf_data(parts[1].content))
-
-            # Expected output
-            expected = parts[2].content
-
-            # Run the trace through btu.tcmi_events() and build
-            # actual output (single event).
-            events = btu.tcmi_events(str(trace_dir))
-            assert len(events) == 1
-            payload = events[0].payload_field
-            assert "root" in payload
-            assert len(payload) == 1
-            actual = f"{_field_to_str(None, payload['root'])}\n"
-
-            if actual.strip() != expected.strip():
-                raise _FieldTestException(self._mp_path, expected, actual)
-
-    def reportinfo(self) -> Tuple[Any, None, str]:
-        return self.path, None, self.name
-
-    def repr_failure(
-        self,
-        excinfo: "pytest.ExceptionInfo[BaseException]",
-        style: Any = None,
-    ) -> Any:
-        if isinstance(excinfo.value, _FieldTestException):
-            return excinfo.value.format_output()
-
-        return super().repr_failure(excinfo, style)
-
-
 class _FieldTestException(Exception):
-    def __init__(self, mp_path: pathlib.Path, expected: str, actual: str) -> None:
+    def __init__(self, mp_path: pathlib.Path) -> None:
         super().__init__(f"Field test failed for `{mp_path}`")
         self._mp_path = mp_path
+
+    def format_output(self) -> str:
+        raise NotImplementedError
+
+
+class _PassMismatchException(_FieldTestException):
+    def __init__(self, mp_path: pathlib.Path, expected: str, actual: str) -> None:
+        super().__init__(mp_path)
         self._expected = expected
         self._actual = actual
 
@@ -602,26 +556,154 @@ class _FieldTestException(Exception):
         )
 
 
+class _FailMismatchException(_FieldTestException):
+    def __init__(self, mp_path: pathlib.Path, expected: str, leaf_message: str) -> None:
+        super().__init__(mp_path)
+        self._expected = expected
+        self._leaf_message = leaf_message
+
+    def format_output(self) -> str:
+        return "\n".join(
+            [
+                f"📄 Test file: `{self._mp_path}`",
+                "",
+                "✅ Expected leaf error cause message to contain:",
+                self._expected,
+                "",
+                "❌ Actual leaf error cause message:",
+                self._leaf_message,
+            ]
+        )
+
+
+class _FailNoErrorException(_FieldTestException):
+    def __init__(self, mp_path: pathlib.Path, expected: str) -> None:
+        super().__init__(mp_path)
+        self._expected = expected
+
+    def format_output(self) -> str:
+        return "\n".join(
+            [
+                f"📄 Test file: `{self._mp_path}`",
+                "",
+                "✅ Expected the graph to raise an error containing:",
+                self._expected,
+                "",
+                "❌ Actual: the graph completed without raising an error.",
+            ]
+        )
+
+
+# Base test item: parses the `.mp` file, materializes the trace, and
+# delegates the actual check to _run().
+#
+# Subclasses implement the per-mode behaviour (pass vs. fail).
+class _FieldTestItem(pytest.Item):
+    def __init__(self, *, mp_path: pathlib.Path, **kwargs: Any) -> None:
+        super().__init__(**kwargs)  # pyright: ignore[reportUnknownMemberType]
+        self._mp_path = mp_path
+
+    def runtest(self) -> None:
+        # Parse the moultipart file
+        with open(self._mp_path, "r", encoding="utf-8") as f:
+            parts = moultipart.parse(f)
+
+        # Create temporary directory for trace
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            trace_dir = pathlib.Path(tmp_dir) / "trace"
+            trace_dir.mkdir()
+            (trace_dir / "metadata").write_text(
+                _make_ctf_metadata(parts[0].content.strip()), encoding="utf-8"
+            )
+            (trace_dir / "data").write_bytes(_make_ctf_data(parts[1].content))
+            self._run(trace_dir, parts[2].content)
+
+    def _run(self, trace_dir: pathlib.Path, part3: str) -> None:
+        raise NotImplementedError
+
+    def reportinfo(self) -> Tuple[Any, None, str]:
+        return self.path, None, self.name
+
+    def repr_failure(
+        self,
+        excinfo: "pytest.ExceptionInfo[BaseException]",
+        style: Any = None,
+    ) -> Any:
+        if isinstance(excinfo.value, _FieldTestException):
+            return excinfo.value.format_output()
+
+        return super().repr_failure(excinfo, style)
+
+
+class _PassFieldTestItem(_FieldTestItem):
+    def _run(self, trace_dir: pathlib.Path, part3: str) -> None:
+        # Run the trace through btu.tcmi_events() and build actual
+        # output (single event).
+        events = btu.tcmi_events(str(trace_dir))
+        assert len(events) == 1
+        payload = events[0].payload_field
+        assert "root" in payload
+        assert len(payload) == 1
+        actual = f"{_field_to_str(None, payload['root'])}\n"
+
+        if actual.strip() != part3.strip():
+            raise _PassMismatchException(self._mp_path, part3, actual)
+
+
+class _FailFieldTestItem(_FieldTestItem):
+    def _run(self, trace_dir: pathlib.Path, part3: str) -> None:
+        expected = part3.strip()
+
+        try:
+            btu.tcmi_events(str(trace_dir))
+        except bt2._Error as exc:
+            # Index 0 is the leaf (deepest) cause: the originating
+            # error before any wrapping cause was appended.
+            if expected not in exc[0].message:
+                raise _FailMismatchException(self._mp_path, expected, exc[0].message)
+        else:
+            raise _FailNoErrorException(self._mp_path, expected)
+
+
+# Base test file: collects a single `_FieldTestItem` of the type given by
+# `_item_cls`. Subclasses set `_item_cls` to pick pass vs. fail mode.
 class _FieldTestFile(pytest.File):
+    _item_cls: ClassVar[Type[_FieldTestItem]]
+
     def collect(self) -> List[_FieldTestItem]:
         logger.info(f"Adding field test from `{self.path}`")
 
-        item = _FieldTestItem.from_parent(  # pyright: ignore[reportUnknownMemberType]
-            name="test",
-            parent=self,
-            mp_path=self.path,
-        )
-        return [item]
+        return [
+            self._item_cls.from_parent(  # pyright: ignore[reportUnknownMemberType]
+                name="test",
+                parent=self,
+                mp_path=self.path,
+            )
+        ]
+
+
+class _PassFieldTestFile(_FieldTestFile):
+    _item_cls = _PassFieldTestItem
+
+
+class _FailFieldTestFile(_FieldTestFile):
+    _item_cls = _FailFieldTestItem
 
 
 # pytest hook.
 def pytest_collect_file(
     file_path: pathlib.Path, parent: pytest.Collector
 ) -> Optional[_FieldTestFile]:
-    if file_path.suffix == ".mp" and (
-        file_path.name.startswith("ctf-2-pass-")
-        or file_path.name.startswith("ctf-1.8-pass-")
-    ):
-        return _FieldTestFile.from_parent(  # pyright: ignore[reportUnknownMemberType]
-            parent=parent, path=file_path
-        )
+    if file_path.suffix != ".mp":
+        return
+
+    if file_path.name.startswith(("ctf-2-pass-", "ctf-1.8-pass-")):
+        cls = _PassFieldTestFile
+    elif file_path.name.startswith(("ctf-2-fail-", "ctf-1.8-fail-")):
+        cls = _FailFieldTestFile
+    else:
+        return
+
+    return cls.from_parent(  # pyright: ignore[reportUnknownMemberType]
+        parent=parent, path=file_path
+    )
