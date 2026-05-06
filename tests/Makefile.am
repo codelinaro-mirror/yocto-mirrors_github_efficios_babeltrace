@@ -160,6 +160,10 @@ EXTRA_DIST = \
 	plugins/sink.text.pretty/test_pretty.py \
 	plugins/src.ctf.fs/empty-event-record.expect \
 	plugins/src.ctf.fs/field/conftest.py \
+	plugins/src.ctf.fs/field/ctf-1.8-fail-mixed-byte-order-unaligned-be-le.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-fail-mixed-byte-order-unaligned-le-be.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-fail-not-enough-data.mp \
+	plugins/src.ctf.fs/field/ctf-1.8-fail-variant-no-sel-match.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-align.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-empty-align.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-dyn-len-array-empty.mp \
@@ -330,6 +334,12 @@ EXTRA_DIST = \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-variant-single-opt.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-variant-sint-sel.mp \
 	plugins/src.ctf.fs/field/ctf-1.8-pass-variant.mp \
+	plugins/src.ctf.fs/field/ctf-2-fail-mixed-byte-order-unaligned-be-le.mp \
+	plugins/src.ctf.fs/field/ctf-2-fail-mixed-byte-order-unaligned-le-be.mp \
+	plugins/src.ctf.fs/field/ctf-2-fail-not-enough-data.mp \
+	plugins/src.ctf.fs/field/ctf-2-fail-var-len-sint-oversized.mp \
+	plugins/src.ctf.fs/field/ctf-2-fail-var-len-uint-oversized.mp \
+	plugins/src.ctf.fs/field/ctf-2-fail-variant-no-sel-match.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-align.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-empty-align.mp \
 	plugins/src.ctf.fs/field/ctf-2-pass-dyn-len-array-empty.mp \
