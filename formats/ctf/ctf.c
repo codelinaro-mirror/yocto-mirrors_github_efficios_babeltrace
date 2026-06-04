@@ -1503,6 +1503,22 @@ int ctf_trace_metadata_read(struct ctf_trace *td, FILE *metadata_fp,
 	if (babeltrace_debug)
 		yydebug = 1;
 
+	/* CTF 2 support starts with Babeltrace 2.1 */
+	{
+		const int first = fgetc(fp);
+
+		rewind(fp);
+
+		if (first == 0x1e) {
+			fprintf(stderr,
+				"[warning] This is a CTF 2 trace: you need Babeltrace 2.1+ to read it.\n"
+				"          Babeltrace 1.x has reached end of life and is no longer\n"
+				"          maintained: please upgrade.\n");
+			ret = -1;
+			goto end;
+		}
+	}
+
 	if (packet_metadata(td, fp)) {
 		ret = ctf_trace_metadata_stream_read(td, &fp, &buf);
 		if (ret) {
